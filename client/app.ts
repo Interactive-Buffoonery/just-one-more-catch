@@ -934,7 +934,7 @@ const signInList = () =>
   `<button class="gsi" data-signin="google">${GOOGLE_G}<span>Sign in with Google</span></button>`;
 function fillSignIn() {
   $("#sheetbody").innerHTML =
-    `<h2 id="sheet-title">Sign in</h2><p class="muted small" style="margin:4px 0 16px">Runs on this device move to your account.</p>${signInList()}`;
+    `<h2 id="sheet-title">Sign in</h2><div style="margin-top:16px">${signInList()}</div><p class="muted small" style="margin:12px 0 0">Runs already saved in your local browser are moved to your account once you sign in.</p>`;
 }
 const Appearance = () => `<div class="card" style="margin-top:16px">
     <div class="name">Look</div>
