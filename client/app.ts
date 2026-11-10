@@ -4,6 +4,7 @@ import { VERSIONS, type GameData, type Pack } from "./packs";
 import type { VersionId } from "../shared/versions";
 import CSS from "./styles";
 import { MAX_RUN_BYTES, runBytes } from "../shared/limits";
+import { gameNow, type Clock } from "../shared/clock";
 
 type Row = {
   place: string;
@@ -229,6 +230,7 @@ type Run = {
   mons: Mon[];
   monSeq: number;
   lastBox: "party" | number;
+  clock: Clock;
 };
 const MON_DEFAULTS = {
   nick: "",
@@ -265,6 +267,7 @@ function loadRun(row: RunRow): Run {
     mons: (s.mons || []).map((m: Mon) => ({ ...MON_DEFAULTS, ...m })),
     monSeq: s.monSeq || 0,
     lastBox: s.lastBox ?? 1,
+    clock: s.clock || { mode: "device" },
   };
 }
 const dumpRun = (r: Run) =>
@@ -281,6 +284,7 @@ const dumpRun = (r: Run) =>
     mons: r.mons.map(compactMon),
     monSeq: r.monSeq,
     lastBox: r.lastBox,
+    clock: r.clock,
   });
 
 let bridge: Bridge;
@@ -374,7 +378,7 @@ const pad = (n: number) => String(n).padStart(3, "0");
 const regionalCaught = () => [...R().caught].filter((n) => byN[n]?.j).length;
 
 const gameTime = () => {
-  const h = new Date().getHours(),
+  const h = gameNow(R().clock).hour,
     night = P().nightFrom ?? 24;
   return h >= 4 && h < 10 ? "morning" : h >= 10 && h < night ? "day" : "night";
 };
@@ -442,7 +446,7 @@ function rowStatus(r: Row): { s: string; why?: string } {
   const times = r.cond.filter((c) => TIME[c]).map((c) => TIME[c]);
   if (times.length && !times.map((t) => t.toLowerCase()).includes(nowTime()))
     return { s: "wrongtime", why: times.join(" / ") + " only" };
-  if (days.length && !days.includes(DAYS[new Date().getDay()]))
+  if (days.length && !days.includes(DAYS[gameNow(R().clock).day]))
     return {
       s: "wrongtime",
       why: days.map((d) => cap(d) + "s").join(" / ") + " only",
@@ -672,6 +676,24 @@ function heroCard(h: Pick) {
 }
 const NOT_HERE =
   /Gym|Game Corner|North Gate|Roaming|House|Pokémon Center|Department Store|Prize Corner|Museum|Silph|Magnet Train|Dock|Embedded|Sinjoh|Celadon Mansion|Cinnabar Lab|Dojo/;
+const CLOCK_ICON = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`;
+function fillClock(mode: string) {
+  const c = R().clock,
+    g = gameNow(c),
+    two = (n: number) => String(n).padStart(2, "0"),
+    zones: string[] = (Intl as any).supportedValuesOf?.("timeZone") ?? [];
+  $("#sheetbody").innerHTML =
+    `<h2 id="sheet-title">${ver().name}'s clock</h2>
+    <div class="card" style="margin-top:12px;text-align:center;background:var(--bg)"><div class="small muted">Your game right now</div><div class="big-time">${g.hour % 12 || 12}:${two(g.minute)} ${g.hour < 12 ? "AM" : "PM"}</div><div style="font-weight:700">${cap(DAYS[g.day])} · <span class="tag time">${cap(gameTime())}</span> <span class="small muted">night at ${(P().nightFrom as number) - 12} PM</span></div></div>
+    <div class="small muted" style="margin:16px 0 6px;font-weight:700">How your game keeps time</div>
+    <div class="seg3 wide" role="group" aria-label="How your game keeps time"><button data-clockmode="device" aria-pressed="${mode === "device"}">Follow a time zone</button><button data-clockmode="manual" aria-pressed="${mode === "manual"}">Set it myself</button></div>
+    ${
+      mode === "manual"
+        ? `<div class="row2"><label class="field"><span>Time</span><input id="c-time" type="time" value="${two(g.hour)}:${two(g.minute)}" required></label><label class="field"><span>Day</span><select id="c-day">${DAYS.map((d, i) => `<option value="${i}" ${i === g.day ? "selected" : ""}>${cap(d)}</option>`).join("")}</select></label></div><p class="small muted" style="margin:8px 0 0">Enter the time and day your game shows.</p>`
+        : `<label class="field"><span>Time zone</span><select id="c-tz"><option value="">This device (${Intl.DateTimeFormat().resolvedOptions().timeZone})</option>${zones.map((z) => `<option ${z === c.tz ? "selected" : ""}>${z}</option>`).join("")}</select></label>`
+    }
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button class="chip" data-close="1">Cancel</button><button class="app-primary" data-saveclock="1">Save</button></div>`;
+}
 function Journey() {
   if (!run) return NoRun();
   const r = R(),
@@ -697,6 +719,7 @@ function Journey() {
   <div class="chips">
     <label class="sr" for="here">Where you are in the game</label>
     <select class="pill" id="here" data-k="here">${herePlaces.map((p) => `<option ${p === r.here ? "selected" : ""} value="${p}">Near ${p}${placeLabel(p, all[p]) && ` · ${placeLabel(p, all[p])}`}</option>`).join("")}</select>
+    ${P().nightFrom ? `<button class="pill clockpill" data-clock="1" data-k="clock" aria-label="Game clock: ${cap(nowTime())}, ${cap(DAYS[gameNow(r.clock).day])}. Change">${CLOCK_ICON}<b>${cap(nowTime())}</b> · ${cap(DAYS[gameNow(r.clock).day]).slice(0, 3)}</button>` : ""}
     ${
       P().nightFrom
         ? `<div class="seg3" role="group" aria-label="In-game time of day">
@@ -860,6 +883,8 @@ function fillSheet(s: any) {
         ? fillNewRun()
         : s.kind === "started"
         ? fillStartDate(s.id)
+        : s.kind === "clock"
+        ? fillClock(s.mode)
         : s.kind === "settings"
         ? ($("#sheetbody").innerHTML =
             `<h2 id="sheet-title">Settings</h2>${Account()}${Appearance()}<div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="chip" data-close="1">Done</button></div>`)
@@ -1445,6 +1470,26 @@ async function onClick(e: MouseEvent) {
     openSheet(+d.open);
     return;
   }
+  if (d.clock) {
+    openSheet({ kind: "clock", mode: r.clock.mode, k: "clock" });
+    return;
+  }
+  if (d.clockmode) {
+    ui.sheet.mode = d.clockmode;
+    fillSheet(ui.sheet);
+    return;
+  }
+  if (d.saveclock) {
+    if (ui.sheet.mode === "manual") {
+      const [h, m] = ($("#c-time").value || "").split(":").map(Number);
+      if (isNaN(h) || isNaN(m)) return;
+      r.clock = { mode: "manual", min: +$("#c-day").value * 1440 + h * 60 + m, at: Date.now() };
+    } else r.clock = { mode: "device", tz: $("#c-tz").value || undefined };
+    r.skip.clear();
+    $("#sheet").close();
+    scheduleSave();
+    return;
+  }
   if (d.editmon) {
     openSheet({ kind: "mon", id: +d.editmon });
     return;
@@ -1704,12 +1749,13 @@ export function mount(el: HTMLElement, b: Bridge) {
     if (s)
       (
         root.querySelector(
-          `[data-k="${typeof s === "number" ? "d" + s : s.id ? "m" + s.id : s.b ? "rb" + s.b : "x"}"]`,
+          `[data-k="${typeof s === "number" ? "d" + s : s.k ? s.k : s.id ? "m" + s.id : s.b ? "rb" + s.b : "x"}"]`,
         ) || (root.querySelector("[data-filter][aria-pressed=true]") as any)
       )?.focus();
   });
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "hidden") flushSave();
+    else if (run && !$("#sheet").open) render();
   });
   syncRuns();
   render();
