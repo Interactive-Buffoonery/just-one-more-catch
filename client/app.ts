@@ -364,7 +364,6 @@ const ui: any = {
   mode: "auto",
   saved: "",
   saving: false,
-  sent: false,
 };
 const store = {
   get: (k: string) => {
@@ -982,7 +981,7 @@ const initial = () =>
 
 /* ---- About, Privacy, Terms, Contact ---- */
 const contactLink = (text: string) =>
-  `<button class="linkish" data-tab="about" data-sec="contact">${text}</button>`;
+  `<button class="linkish" data-tab="contact">${text}</button>`;
 function About() {
   return `<div class="narrow doc">
   <section id="about"><h2>About</h2>
@@ -997,13 +996,13 @@ function About() {
     <h3>What we keep</h3>
     <ul><li>Your email address and any other identifying information needed to sign you in.</li>
     <li>Your playthroughs: badges, items, Safari Zone areas, the Pokémon you've caught and what's in your boxes, including any nicknames and notes.</li>
-    <li>Anything you send us through the contact form.</li>
+    <li>Anything you send us through the ${contactLink("contact form")}.</li>
     <li>Analytics about how the site is used, to help us improve it.</li></ul>
-    <p>If you sign in with Google, we only keep what's needed to sign you in.</p>
+    <p>Whether you sign in with Google or an email code, we only keep what's needed to sign you in.</p>
     <h3>What we don't do</h3>
     <p>We never sell or share your data.</p>
     <h3>Where it lives</h3>
-    <p>Your playthroughs are stored with <a href="https://www.convex.dev" target="_blank" rel="noopener">Convex</a>, sign-in is handled by <a href="https://clerk.com" target="_blank" rel="noopener">Clerk</a>, and the site is served by <a href="https://pages.cloudflare.com" target="_blank" rel="noopener">Cloudflare</a>. This site is a personal project.</p>
+    <p>Your playthroughs are stored with <a href="https://www.convex.dev" target="_blank" rel="noopener">Convex</a>, sign-in is handled by <a href="https://clerk.com" target="_blank" rel="noopener">Clerk</a>, and the site is hosted on <a href="https://workers.cloudflare.com" target="_blank" rel="noopener">Cloudflare</a>. This site is a personal project.</p>
     <h3>You're in charge</h3>
     <p>Download all your data or delete your account at any time from Playthroughs, under Account. Deleting your account removes all your data.</p>
     <p>Questions? ${contactLink("Let us know")}.</p>
@@ -1014,17 +1013,11 @@ function About() {
     <li>Do not try to break or overload the site. We will close and block accounts that do.</li></ul>
     <p>Questions or concerns? ${contactLink("Contact us here")}.</p>
   </section>
-  <section id="contact"><h2>Contact</h2>
-    ${
-      ui.sent
-        ? `<p>Thanks, we got your message.</p><button class="chip" data-another="1">Send another</button>`
-        : `<form class="form" data-contact="1">
-      <label class="field"><span>Message</span><textarea id="c-msg" name="message" maxlength="4000" required></textarea></label>
-      <label class="field"><span>Email, if you'd like a reply</span><input id="c-email" name="email" type="email" maxlength="200" autocomplete="email"></label>
-      <button class="app-primary" style="margin-top:14px" type="submit">Send</button>${ui.sendError ? `<p class="small" style="color:var(--coral)">${ui.sendError}</p>` : ""}</form>`
-    }
-  </section>
   <p class="small muted">Last updated 10 November 2026</p></div>`;
+}
+function Contact() {
+  return `<div class="narrow doc"><section><h2>Contact</h2>
+    <p>Our contact form is coming soon.</p></section></div>`;
 }
 
 /* ---- Wiring ---- */
@@ -1034,6 +1027,7 @@ const VIEWS: Record<string, () => string> = {
   boxes: Boxes,
   runs: Runs,
   about: About,
+  contact: Contact,
 };
 function shell() {
   return `<div class="top">
@@ -1042,7 +1036,7 @@ function shell() {
   </div>
   <main id="view"></main>
   <p class="foot">Unofficial fan project, not affiliated with Nintendo, Creatures, GAME FREAK or The Pokémon Company. Free and non-commercial. Encounter data sourced from <a href="https://pokeapi.co" target="_blank" rel="noopener">PokeAPI</a>. Thank you!</p>
-  <nav class="footnav" aria-label="About this site"><button data-tab="about" data-sec="about">About, Privacy &amp; Terms</button></nav>
+  <nav class="footnav" aria-label="About this site"><button data-tab="about" data-sec="about">About, Privacy &amp; Terms</button><button data-tab="contact">Contact</button></nav>
   <div class="dock"><div id="toast"></div><div id="tabs"></div></div>
   <dialog class="sheet" id="sheet" aria-labelledby="sheet-title"><div class="sheetbody" id="sheetbody"></div></dialog>
   <div class="sr" aria-live="polite" id="live"></div>`;
@@ -1215,14 +1209,11 @@ async function onClick(e: MouseEvent) {
     download();
     return;
   }
-  if (d.another) {
-    ui.sent = false;
-    render();
-    return;
-  }
   if (d.delaccount) {
     if (
-      !confirm("Delete your account and all your playthroughs? This can't be undone.")
+      !confirm(
+        "Delete your account and all your playthroughs? This can't be undone.",
+      )
     )
       return;
     await bridge.deleteAccount();
@@ -1339,27 +1330,6 @@ async function onClick(e: MouseEvent) {
   } else return;
   scheduleSave();
   render();
-}
-async function onSubmit(e: SubmitEvent) {
-  const form = e.target as HTMLFormElement;
-  if (!form.dataset.contact) return;
-  e.preventDefault();
-  const btn = form.querySelector("button") as HTMLButtonElement;
-  btn.disabled = true;
-  try {
-    const res = await bridge.contact({
-      message: $("#c-msg").value,
-      email: $("#c-email").value,
-    });
-    ui.sent = res.ok;
-    ui.sendError = res.ok
-      ? ""
-      : "Please write a message, and check the email address.";
-  } catch {
-    ui.sendError = "That didn't send. Please try again.";
-  }
-  render();
-  root.querySelector("#contact")?.scrollIntoView();
 }
 
 const darkMQ = matchMedia("(prefers-color-scheme: dark)");
@@ -1478,7 +1448,6 @@ export function mount(el: HTMLElement, b: Bridge) {
   applyTheme();
   darkMQ.addEventListener("change", applyTheme);
   el.addEventListener("click", onClick);
-  el.addEventListener("submit", onSubmit as any);
   el.addEventListener(
     "toggle",
     (e) => {
