@@ -1,3 +1,5 @@
+@font-face { font-family: "Luckiest Guy"; src: url("/fonts/luckiest-guy/LuckiestGuy-Regular.ttf") format("truetype"); font-display: swap; }
+
 :root {
   color-scheme: light dark;
   --bg: #fff5f7;
@@ -25,9 +27,13 @@ p { margin: 8px 0; }
 ul { padding-left: 24px; }
 li + li { margin-top: 8px; }
 .updated { margin-top: 28px; font-size: 13px; color: var(--soft); }
-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; margin-top: 16px; }
-footer nav { display: flex; gap: 20px; }
-footer a { display: inline-flex; align-items: center; min-height: 44px; }
+footer { margin-top: 28px; text-align: center; color: var(--soft); }
+footer a { color: inherit; text-underline-offset: 2px; }
+.footer-brand { margin: 0; }
+.footer-brand a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 8px; font-family: "Luckiest Guy", ui-rounded, system-ui, sans-serif; font-size: 18px; text-decoration: none; }
+.foot { margin: 12px 0 0; font-size: 12px; line-height: 1.4; }
+.footnav { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin-top: 6px; }
+.footnav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; font-size: 13px; font-weight: 700; }
 [aria-current="page"] { font-weight: 700; }
 
 @media (max-width: 480px) {

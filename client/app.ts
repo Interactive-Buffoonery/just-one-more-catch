@@ -985,7 +985,7 @@ const Appearance = () => `<div class="card" style="margin-top:16px">
 const initial = () =>
   (bridge.auth.displayName || "T").trim()[0]?.toUpperCase() || "T";
 
-/* ---- About, Privacy, Terms, Contact ---- */
+/* ---- About, Contact ---- */
 const contactLink = (text: string) =>
   `<button class="linkish" data-tab="contact">${text}</button>`;
 function About() {
@@ -998,32 +998,11 @@ function About() {
     <li>Colour themes are inspired by <a href="https://rosepinetheme.com" target="_blank" rel="noopener">Rosé Pine</a> and <a href="https://draculatheme.com" target="_blank" rel="noopener">Dracula</a>.</li></ul>
     <p>Spotted a mistake? ${contactLink("Let us know")}.</p>
   </section>
-  <section id="privacy"><h2>Privacy</h2>
-    <h3>What we keep</h3>
-    <ul><li>Your email address and any other identifying information needed to sign you in.</li>
-    <li>Your playthroughs: badges, items, Safari Zone areas, the Pokémon you've caught and what's in your boxes, including any nicknames and notes.</li>
-    <li>Anything you send us through the ${contactLink("contact form")} or by email.</li>
-    <li>Analytics about how the site is used, to help us improve it.</li></ul>
-    <p>Whether you sign in with Google, an email code or a password, we only keep what's needed to sign you in.</p>
-    <h3>What we don't do</h3>
-    <p>We never sell or share your data.</p>
-    <h3>Where it lives</h3>
-    <p>Your playthroughs are stored with <a href="https://www.convex.dev" target="_blank" rel="noopener">Convex</a>, sign-in is handled by <a href="https://clerk.com" target="_blank" rel="noopener">Clerk</a>, messages from the contact form are emailed to us through <a href="https://resend.com" target="_blank" rel="noopener">Resend</a>, and the site is hosted on <a href="https://workers.cloudflare.com" target="_blank" rel="noopener">Cloudflare</a>. This site is a personal project.</p>
-    <h3>You're in charge</h3>
-    <p>Download all your data or delete your account at any time from Playthroughs, under Account. Deleting your account removes all your data.</p>
-    <p>Questions? ${contactLink("Let us know")}.</p>
-  </section>
-  <section id="terms"><h2>Terms</h2>
-    <ul><li>Just One More Catch is free and provided as is. Data can be wrong, and features can change.</li>
-    <li>It's an unofficial fan project, not affiliated with Nintendo, Creatures, GAME FREAK or The Pokémon Company. Pokémon and its names are trademarks of their owners.</li>
-    <li>Do not try to break or overload the site. We will close and block accounts that do.</li></ul>
-    <p>Questions or concerns? ${contactLink("Contact us here")}.</p>
-  </section>
-  <p class="small muted">Last updated 10 November 2026</p></div>`;
+  </div>`;
 }
 function Contact() {
   return `<div class="narrow doc"><section><h2>Contact</h2>
-    <p>Questions, ideas or a mistake in the data? Send us a note. You can also email <a href="mailto:contact@justonemorecatch.app">contact@justonemorecatch.app</a>.</p>
+    <p>Questions, ideas or a mistake in the data? Send us a note.</p>
     ${
       ui.sent
         ? `<p>Thanks, we got your message.</p><button class="chip" data-another="1">Send another</button>`
@@ -1052,7 +1031,7 @@ function shell() {
   <main id="view"></main>
   <div class="footer-brand"><button data-tab="about" data-sec="about" aria-label="About Just One More Catch">Just One More Catch</button></div>
   <p class="foot">Unofficial fan project, not affiliated with Nintendo, Creatures, GAME FREAK or The Pokémon Company. Free and non-commercial. Encounter data sourced from <a href="https://pokeapi.co" target="_blank" rel="noopener">PokeAPI</a>. Thank you!</p>
-  <nav class="footnav" aria-label="About this site"><button data-tab="about" data-sec="about">About, Privacy &amp; Terms</button><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><button data-tab="contact">Contact</button></nav>
+  <nav class="footnav" aria-label="About this site"><button data-tab="about" data-sec="about">About</button><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><button data-tab="contact">Contact</button></nav>
   <div class="dock"><div id="toast"></div><div id="tabs"></div></div>
   <dialog class="sheet" id="sheet" aria-labelledby="sheet-title"><div class="sheetbody" id="sheetbody"></div></dialog>
   <div class="sr" aria-live="polite" id="live"></div>`;
