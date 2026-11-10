@@ -3,7 +3,7 @@
 import { VERSIONS, type GameData, type Pack } from "./packs";
 import type { VersionId } from "../shared/versions";
 import CSS from "./styles";
-import { MAX_RUN_BYTES, runBytes } from "../shared/limits";
+import { MAX_RUN_BYTES, MAX_RUNS, runBytes } from "../shared/limits";
 import { gameNow, type Clock } from "../shared/clock";
 
 type Row = {
@@ -1072,7 +1072,6 @@ const gameChoices = () =>
     .join("")}</div>`;
 const pickGame = () =>
   `<section class="empty"><h2>Pick a game</h2>${gameChoices()}<p class="muted small">No account needed. More games coming soon.</p></section>`;
-const MAX_RUNS = 20;
 function fillNewRun() {
   const full = (bridge.runs?.length || 0) >= MAX_RUNS;
   $("#sheetbody").innerHTML =
@@ -1124,7 +1123,9 @@ function miniCard(row: RunRow, r: Run, at: string) {
 }
 const signInNote = () =>
   bridge.auth.isAuthenticated
-    ? ""
+    ? guestRows().length && !moving
+      ? `<p class="notice" role="status">${waitingNote(guestRows().length)}</p>`
+      : ""
     : `<p class="notice">Saved only in this browser. <button class="linkish" data-signinsheet="1">Make an account or sign in</button> to save your playthroughs and access them on any device!</p>`;
 function Runs() {
   const rows = [...(bridge.runs || [])]
@@ -1301,7 +1302,7 @@ function render() {
         .join("")}</nav>`
     : "";
   $("#toast").innerHTML = ui.undo
-    ? `<div class="toast">${ui.undo.msg}<button data-undo="1">Undo</button></div>`
+    ? `<div class="toast">${ui.undo.msg}${ui.undo.n ? `<button data-undo="1">Undo</button>` : ""}</div>`
     : "";
   if (
     (typeof ui.sheet === "number" || ["settings", "custom"].includes(ui.sheet?.kind)) &&
@@ -1705,13 +1706,29 @@ function withGuest(b: Bridge): Bridge {
   };
 }
 // ponytail: runs one at a time; retries on the next update after a failure
-let moving = false;
+let moving = false,
+  lastLeft = 0;
+function flash(msg: string) {
+  ui.undo = { msg };
+  $("#live").textContent = msg;
+  clearTimeout(undoTimer);
+  undoTimer = setTimeout(() => {
+    ui.undo = null;
+    render();
+  }, 8000);
+  render();
+}
+const plural = (n: number) => `${n} playthrough${n === 1 ? "" : "s"}`;
 async function moveGuestRuns() {
   if (moving || !guestRows().length) return;
   moving = true;
+  let moved = 0,
+    have = bridge.runs?.length || 0;
   try {
     for (const g of guestRows()) {
+      if (!g.movedTo && have >= MAX_RUNS) break;
       const id = g.movedTo || (await raw.createRun(g.version));
+      if (!g.movedTo) have++;
       setGuestRows(
         guestRows().map((r) => (r.id === g.id ? { ...r, movedTo: id } : r)),
       );
@@ -1719,13 +1736,23 @@ async function moveGuestRuns() {
       await raw.setStart(id, Date.parse(g.createdAt));
       setGuestRows(guestRows().filter((r) => r.id !== g.id));
       if (store.get("jomc.run") === g.id) pendingRun = id;
+      moved++;
     }
-  } catch {
-    $("#live").textContent =
-      "Couldn't move your playthroughs to your account yet.";
-  }
+  } catch {}
   moving = false;
+  const left = guestRows().length;
+  if (moved || left !== lastLeft)
+    flash(
+      left
+        ? `${moved ? `Moved ${moved} of ${moved + left} playthroughs to your account. ` : ""}${waitingNote(left)}`
+        : `Moved ${plural(moved)} to your account.`,
+    );
+  lastLeft = left;
 }
+const waitingNote = (left: number) =>
+  (bridge.runs?.length || 0) >= MAX_RUNS
+    ? `${plural(left)} from this browser didn't fit. Your account holds up to ${MAX_RUNS} playthroughs, so delete some on the Dashboard to make room and the rest will move over.`
+    : `${plural(left)} from this browser couldn't move yet. We'll keep trying.`;
 
 let pendingRun: string | null = null;
 function syncRuns() {

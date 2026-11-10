@@ -1,7 +1,7 @@
 import { mutation, query, type QueryCtx } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { v } from "convex/values";
-import { MAX_RUN_BYTES, runBytes } from "../shared/limits";
+import { MAX_RUN_BYTES, MAX_RUNS, runBytes } from "../shared/limits";
 import { VERSION_IDS } from "../shared/versions";
 
 const EMAILS_PER_HOUR = 20;
@@ -45,7 +45,7 @@ export const create = mutation({
   handler: async (ctx, { version }) => {
     const who = await owner(ctx);
     if (!(VERSION_IDS as readonly string[]).includes(version)) throw new Error("Unknown game");
-    if ((await ownedBy(ctx, who)).length >= 20) throw new Error("Too many playthroughs");
+    if ((await ownedBy(ctx, who)).length >= MAX_RUNS) throw new Error("Too many playthroughs");
     return (await ctx.db.insert("runs", { owner: who, version, state: "{}" })) as string;
   },
 });
