@@ -704,7 +704,7 @@ function Journey() {
   </aside></div>`;
 }
 const NoRun = () =>
-  `<div class="narrow"><h2 style="margin:8px 0 12px">Start a new run</h2>${gameList(true)}<p class="muted small" style="margin:12px 4px 32px">More games coming soon.</p></div>`;
+  `<div class="narrow"><h2 style="margin:8px 0 12px">Start a new playthrough</h2>${gameList(true)}<p class="muted small" style="margin:12px 4px 32px">More games coming soon.</p></div>`;
 
 /* ---- Dex ---- */
 const STATUS_TEXT: Record<string, string> = {
@@ -915,18 +915,18 @@ const badgeCount = (r: Run) =>
 function Runs() {
   const rows = bridge.runs || [],
     a = bridge.auth;
-  return `<div class="narrow"><h2>Your runs</h2>
+  return `<div class="narrow"><h2>Your playthroughs</h2>
   ${
     rows
       .map((row) => {
         const r = row.id === run?.id ? R() : loadRun(row),
           v = VERSIONS[row.version];
         return `<div class="row" style="margin-top:12px"><span class="mon" style="${ring(v.ring)}" aria-hidden="true"><b>${v.code === "h" ? "HG" : "SS"}</b></span><div class="grow"><div class="name">${v.name}</div><div class="small muted">${badgeCount(r)} badges · ${r.caught.size} caught · started ${new Date(row.createdAt).toLocaleDateString()}</div></div>
-    ${row.id === run?.id ? `<span class="tag">Playing</span>` : `<button class="chip" data-switch="${row.id}">Play</button>`}<button class="chip" data-delrun="${row.id}" aria-label="Delete this ${v.name} run">Delete</button></div>`;
+    ${row.id === run?.id ? `<span class="tag">Playing</span>` : `<button class="chip" data-switch="${row.id}">Play</button>`}<button class="chip" data-delrun="${row.id}" aria-label="Delete this ${v.name} playthrough">Delete</button></div>`;
       })
-      .join("") || `<p class="muted">No runs yet.</p>`
+      .join("") || `<p class="muted">No playthroughs yet.</p>`
   }
-  <div class="eyebrow">Start a new run</div>
+  <div class="eyebrow">Start a new playthrough</div>
   ${gameList()}
   <div class="eyebrow">Account</div>
   ${a.isAuthenticated ? `<div class="card"><div style="display:flex;gap:12px;align-items:center"><span class="avatar" aria-hidden="true">${esc(initial())}</span><div style="flex:1"><b>${esc(a.displayName || "Trainer")}</b><div class="small muted">Signed in with ${PROVIDER[a.provider || ""] || "your account"}</div></div><button class="chip" data-signout="1">Sign out</button></div>
@@ -940,7 +940,7 @@ const signInList = () =>
   `<button class="gsi" data-signin="google">${GOOGLE_G}<span>Sign in with Google</span></button>`;
 function fillSignIn() {
   $("#sheetbody").innerHTML =
-    `<h2 id="sheet-title">Sign in</h2><div style="margin-top:16px">${signInList()}</div><p class="muted small" style="margin:12px 0 0">Runs already saved in your local browser are moved to your account once you sign in.</p>`;
+    `<h2 id="sheet-title">Sign in</h2><div style="margin-top:16px">${signInList()}</div><p class="muted small" style="margin:12px 0 0">Playthroughs already saved in your local browser are moved to your account once you sign in.</p>`;
 }
 const Appearance = () => `<div class="card" style="margin-top:16px">
     <div class="name">Look</div>
@@ -976,7 +976,7 @@ function About() {
   <section id="privacy"><h2>Privacy</h2>
     <h3>What we keep</h3>
     <ul><li>Your email address and any other identifying information needed to sign you in.</li>
-    <li>Your runs: badges, items, Safari Zone areas, the Pokémon you've caught and what's in your boxes, including any nicknames and notes.</li>
+    <li>Your playthroughs: badges, items, Safari Zone areas, the Pokémon you've caught and what's in your boxes, including any nicknames and notes.</li>
     <li>Anything you send us through the contact form.</li>
     <li>Analytics about how the site is used, to help us improve it.</li></ul>
     <p>If you sign in with Google, we only keep what's needed to sign you in.</p>
@@ -985,7 +985,7 @@ function About() {
     <h3>Where it lives</h3>
     <p>The site runs on <a href="https://lakebed.dev" target="_blank" rel="noopener">Lakebed</a>. This site is a personal project.</p>
     <h3>You're in charge</h3>
-    <p>Download all your data or delete your account at any time from Runs, under Account. Deleting your account removes all your data.</p>
+    <p>Download all your data or delete your account at any time from Playthroughs, under Account. Deleting your account removes all your data.</p>
     <p>Questions? ${contactLink("Let us know")}.</p>
   </section>
   <section id="terms"><h2>Terms</h2>
@@ -1034,8 +1034,8 @@ function render() {
   $("#view").innerHTML =
     a.isLoading || !bridge.runs
       ? `<p class="muted" style="text-align:center;margin-top:40px">Loading…</p>`
-      : (signedIn ? (ui.saveError ? `<p class="small" role="alert" style="text-align:center;margin:4px 0 16px;color:var(--coral)">${ui.saveError}</p>` : "") : `<p class="muted small" style="text-align:center;margin:4px 0 16px">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your runs and view them on any device.</p>`) + VIEWS[ui.tab]();
-  $("#topright").innerHTML = `<span style="display:flex;gap:8px"><button class="pill icon" data-settings="1" data-k="settings" aria-label="Settings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><circle cx="12" cy="12" r="3"/></svg></button>${run ? `<button class="pill" data-tab="runs" aria-label="Current run: ${ver().name}. Switch run">${ver().name}</button>` : ""}${
+      : (signedIn ? (ui.saveError ? `<p class="small" role="alert" style="text-align:center;margin:4px 0 16px;color:var(--coral)">${ui.saveError}</p>` : "") : `<p class="muted small" style="text-align:center;margin:4px 0 16px">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your playthroughs and view them on any device.</p>`) + VIEWS[ui.tab]();
+  $("#topright").innerHTML = `<span style="display:flex;gap:8px"><button class="pill icon" data-settings="1" data-k="settings" aria-label="Settings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><circle cx="12" cy="12" r="3"/></svg></button>${run ? `<button class="pill" data-tab="runs" aria-label="Current playthrough: ${ver().name}. Switch playthrough">${ver().name}</button>` : ""}${
     signedIn
       ? `<button class="avatar" data-tab="runs" aria-label="Account: ${esc(a.displayName || "you")}">${esc(initial())}</button>`
       : a.isLoading
@@ -1047,7 +1047,7 @@ function render() {
         ["journey", "Journey"],
         ["dex", "Dex"],
         ["boxes", "Boxes"],
-        ["runs", "Runs"],
+        ["runs", "Playthroughs"],
       ]
         .map(
           ([t, l]) =>
@@ -1078,7 +1078,7 @@ function scheduleSave(delay = 800) {
   if (state === ui.saved) return;
   clearTimeout(saveTimer);
   if (bridge.auth.isAuthenticated && runBytes(state) > MAX_RUN_BYTES)
-    return showSaveError("This run is too big to save. Try shortening some notes.");
+    return showSaveError("This playthrough is too big to save. Try shortening some notes.");
   saveTimer = setTimeout(async () => {
     try {
       await bridge.saveRun(id, state);
@@ -1194,7 +1194,7 @@ async function onClick(e: MouseEvent) {
   }
   if (d.delaccount) {
     if (
-      !confirm("Delete your account and all your runs? This can't be undone.")
+      !confirm("Delete your account and all your playthroughs? This can't be undone.")
     )
       return;
     await bridge.deleteAccount();
@@ -1224,7 +1224,7 @@ async function onClick(e: MouseEvent) {
     if (
       !row ||
       !confirm(
-        `Delete this ${VERSIONS[row.version].name} run? This can't be undone.`,
+        `Delete this ${VERSIONS[row.version].name} playthrough? This can't be undone.`,
       )
     )
       return;
@@ -1397,7 +1397,7 @@ async function moveGuestRuns() {
       if (store.get("jomc.run") === g.id) pendingRun = id;
     }
   } catch {
-    $("#live").textContent = "Couldn't move your runs to your account yet.";
+    $("#live").textContent = "Couldn't move your playthroughs to your account yet.";
   }
   moving = false;
 }
