@@ -6,7 +6,7 @@
     "dev": "vite",
     "convex": "convex dev",
     "build": "vite build",
-    "deploy": "convex deploy --cmd 'vite build' && wrangler pages deploy dist --project-name just-one-more-catch --branch main"
+    "deploy": "convex deploy --cmd 'env -u VITE_CLERK_PUBLISHABLE_KEY vite build' && wrangler deploy"
   },
   "dependencies": {
     "@clerk/clerk-js": "^6.42.3",
