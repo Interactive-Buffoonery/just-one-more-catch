@@ -61,7 +61,7 @@ const bridge = (): Bridge => ({
   unmountSignIn: (el) => {
     clerk?.unmountSignIn(el);
     if (location.hash.startsWith("#/"))
-      history.replaceState(null, "", location.pathname);
+      history.replaceState(null, "", location.pathname + location.search);
   },
   signOut: () => void clerk?.signOut(),
   createRun: (version) => convex.mutation(api.runs.create, { version }),
@@ -122,7 +122,7 @@ try {
   await clerk.load({ ui });
   if (/sso-callback/.test(location.pathname + location.hash))
     await clerk.handleRedirectCallback({}, async () =>
-      history.replaceState(null, "", "/"),
+      history.replaceState(null, "", location.pathname + location.search),
     );
   clerk.addListener(({ user }) => onUser(user));
 } catch (err) {

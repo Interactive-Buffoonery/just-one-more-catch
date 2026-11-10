@@ -1019,7 +1019,7 @@ const VIEWS: Record<string, () => string> = {
   journey: Journey,
   dex: Dex,
   boxes: Boxes,
-  runs: Runs,
+  playthroughs: Runs,
   about: About,
   contact: Contact,
 };
@@ -1036,12 +1036,26 @@ function shell() {
   <dialog class="sheet" id="sheet" aria-labelledby="sheet-title"><div class="sheetbody" id="sheetbody"></div></dialog>
   <div class="sr" aria-live="polite" id="live"></div>`;
 }
+function tabFromUrl() {
+  const t = new URLSearchParams(location.search).get("tab");
+  return t && Object.hasOwn(VIEWS, t) ? t : "journey";
+}
 function render() {
   const a = bridge.auth,
     signedIn = a.isAuthenticated;
   const k = (document.activeElement as HTMLElement)?.dataset?.k;
   const loading = a.isLoading || !bridge.runs;
   root.classList.toggle("loading", loading);
+  const url = new URL(location.href);
+  // ponytail: bare / shows Journey for now; swap the default when / becomes a dashboard
+  if (url.searchParams.has("tab") || ui.tab !== "journey")
+    url.searchParams.set("tab", ui.tab);
+  if (url.href !== location.href)
+    history[ui.tab === tabFromUrl() ? "replaceState" : "pushState"](
+      null,
+      "",
+      url,
+    );
   $("#view").innerHTML = loading
     ? `<p class="muted" style="text-align:center;padding-top:40px">Loading…</p>`
     : (signedIn
@@ -1051,9 +1065,9 @@ function render() {
         : `<p class="muted small" style="text-align:center;margin:4px 0 16px">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your playthroughs and view them on any device.</p>`) +
       VIEWS[ui.tab]();
   $("#topright").innerHTML =
-    `<span style="display:flex;gap:8px"><button class="pill icon" data-settings="1" data-k="settings" aria-label="Settings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><circle cx="12" cy="12" r="3"/></svg></button>${run ? `<button class="pill" data-tab="runs" aria-label="Current playthrough: ${ver().name}. Switch playthrough">${ver().name}</button>` : ""}${
+    `<span style="display:flex;gap:8px"><button class="pill icon" data-settings="1" data-k="settings" aria-label="Settings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><circle cx="12" cy="12" r="3"/></svg></button>${run ? `<button class="pill" data-tab="playthroughs" aria-label="Current playthrough: ${ver().name}. Switch playthrough">${ver().name}</button>` : ""}${
       signedIn
-        ? `<button class="avatar" data-tab="runs" aria-label="Account: ${esc(a.displayName || "you")}">${esc(initial())}</button>`
+        ? `<button class="avatar" data-tab="playthroughs" aria-label="Account: ${esc(a.displayName || "you")}">${esc(initial())}</button>`
         : a.isLoading
           ? ""
           : `<button class="pill" data-signinsheet="1" data-k="signin">Sign in</button>`
@@ -1063,7 +1077,7 @@ function render() {
         ["journey", "Journey"],
         ["dex", "Dex"],
         ["boxes", "Boxes"],
-        ["runs", "Playthroughs"],
+        ["playthroughs", "Playthroughs"],
       ]
         .map(
           ([t, l]) =>
@@ -1455,6 +1469,13 @@ function syncRuns() {
 
 export function mount(el: HTMLElement, b: Bridge) {
   root = el;
+  ui.tab = tabFromUrl();
+  addEventListener("popstate", () => {
+    if (tabFromUrl() === ui.tab) return;
+    ui.tab = tabFromUrl();
+    ui.undo = null;
+    render();
+  });
   document.title = "Just One More Catch";
   raw = b;
   bridge = withGuest(b);
