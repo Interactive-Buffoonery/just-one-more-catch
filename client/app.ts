@@ -567,9 +567,9 @@ const badgeRow = (list: string[][]) =>
 /* ---- Journey (home) ---- */
 const why = (h: Pick) =>
   isHere(h.r.place)
-    ? h.r.c
-      ? `${h.r.c}% here, your best shot`
-      : "Right here, your best shot"
+    ? ONE_TIME.has(h.r.m)
+      ? ""
+      : "Easiest one to catch here"
     : h.r.chap === currentChap()
       ? "Best odds in this chapter"
       : `Best odds in ${CHAPTERS[h.r.chap].title}`;
@@ -579,7 +579,7 @@ function heroCard(h: Pick) {
     st = rowStatus(h.r);
   return `<section class="hv-field" aria-labelledby="hero-name">
       <div class="hv-band" style="--t1:${a};--t2:${b}"><span class="hv-no" aria-hidden="true">#${pad(num(h.p))}</span>${sprite(h.p, "hv-sprite")}
-        <h2 id="hero-name">${h.p.name}</h2><div>${h.p.types.map((t) => `<span class="hv-type" style="--tc:${TYPE[t]}">${cap(t)}</span>`).join("")}</div><div class="hv-why">${why(h)}</div></div>
+        <h2 id="hero-name">${h.p.name}</h2><div>${h.p.types.map((t) => `<span class="hv-type" style="--tc:${TYPE[t]}">${cap(t)}</span>`).join("")}</div>${why(h) && `<div class="hv-why">${why(h)}</div>`}</div>
       <dl class="hv-facts"><div><dt>Where</dt><dd>${h.r.place}</dd></div><div><dt>How</dt><dd>${METHOD[h.r.m]?.[0] || h.r.m}</dd></div><div><dt>Level</dt><dd>${lvl(h.r) || "?"}</dd></div><div><dt>Chance</dt><dd>${h.r.c ? h.r.c + "%" : "?"}</dd></div></dl>
       ${h.r.cond.some((c) => TIME[c]) || st.s !== "now" ? rowTags(h.r) : ""}
       <div class="hv-actions"><button class="app-primary grow" data-catch="${h.p.n}" data-k="hero-${h.p.n}" aria-label="${h.p.name} caught">Caught it!</button><button class="app-quiet" data-skip="${h.p.n}" data-k="skip">Not now</button></div>
@@ -663,7 +663,7 @@ function Journey() {
     <button class="chip" style="margin-top:6px" data-badge="Elite Four" data-k="b-e4" aria-pressed="${e4()}">Beat the Elite Four</button>
     ${e4() && P().postgame ? `<h3 style="margin-top:12px">${P().postgame![0]}</h3>${badgeRow(P().postgame![1])}` : ""}
     <h3 style="margin-top:12px">Items and moves you have</h3>
-    <div class="chips" style="margin-top:8px">${P().kit.map((k) => `<button class="chip" data-kit="${k[0]}" data-k="k-${k[0]}" aria-pressed="${r.kit.has(k[0])}">${k[1]}</button>`).join("")}</div>
+    <div class="chips" style="margin-top:8px">${P().kit.map((k) => `<button class="chip" data-kit="${k[0]}" data-k="k-${k[0]}" aria-pressed="${r.kit.has(k[0])}"><img src="/items/${k[0]}.png" alt="${k[1]} icon" width="24" height="24" aria-hidden="true">${k[1]}</button>`).join("")}</div>
     ${
       P().safari &&
       unlocked(CHAPTERS.findIndex((c) => c.places.includes("Safari Zone")))

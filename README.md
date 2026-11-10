@@ -39,7 +39,8 @@ python3 scripts/build_data.py crystal
 python3 scripts/build_data.py frlg
 ```
 
-Sprites and badges live in `public/sprites/<pack>/` and `public/badges/`.
+Sprites, badges and item icons live in `public/sprites/<pack>/`,
+`public/badges/` and `public/items/`.
 A new pack needs an entry in `ART` in `scripts/fetch_sprites.py`, then:
 
 ```sh
