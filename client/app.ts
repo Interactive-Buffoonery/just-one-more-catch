@@ -4,12 +4,13 @@ import { VERSIONS, type GameData, type Pack } from "./packs";
 import type { VersionId } from "../shared/versions";
 import CSS from "./styles";
 import { MAX_RUN_BYTES, runBytes } from "../shared/limits";
+import { gameNow, type Clock } from "../shared/clock";
 
 type Row = {
   place: string;
   chap: number;
   m: string;
-  need: string | null;
+  need: string[] | null;
   cond: string[];
   lo: number;
   hi: number;
@@ -229,6 +230,9 @@ type Run = {
   mons: Mon[];
   monSeq: number;
   lastBox: "party" | number;
+  clock: Clock;
+  hidden: Set<string>;
+  showLater: boolean;
 };
 const MON_DEFAULTS = {
   nick: "",
@@ -265,6 +269,9 @@ function loadRun(row: RunRow): Run {
     mons: (s.mons || []).map((m: Mon) => ({ ...MON_DEFAULTS, ...m })),
     monSeq: s.monSeq || 0,
     lastBox: s.lastBox ?? 1,
+    clock: s.clock || { mode: "device" },
+    hidden: new Set(s.hidden || []),
+    showLater: !!s.showLater,
   };
 }
 const dumpRun = (r: Run) =>
@@ -281,6 +288,9 @@ const dumpRun = (r: Run) =>
     mons: r.mons.map(compactMon),
     monSeq: r.monSeq,
     lastBox: r.lastBox,
+    clock: r.clock,
+    hidden: [...r.hidden],
+    showLater: r.showLater,
   });
 
 let bridge: Bridge;
@@ -348,6 +358,7 @@ function useRun(row: RunRow) {
   ui.loadError = false;
   run = loadRun(row);
   CHAPTERS = data.chapters;
+  placeCache = {};
   DEX = data.dex.map((p) => ({
     ...p,
     all: p.rows,
@@ -373,7 +384,7 @@ const pad = (n: number) => String(n).padStart(3, "0");
 const regionalCaught = () => [...R().caught].filter((n) => byN[n]?.j).length;
 
 const gameTime = () => {
-  const h = new Date().getHours(),
+  const h = gameNow(R().clock).hour,
     night = P().nightFrom ?? 24;
   return h >= 4 && h < 10 ? "morning" : h >= 10 && h < night ? "day" : "night";
 };
@@ -406,7 +417,7 @@ function rowStatus(r: Row): { s: string; why?: string } {
           ? "After the Elite Four"
           : `Opens with ${missing} Badge`,
     };
-  for (const need of [ch.kit, METHOD[r.m]?.[1], r.need])
+  for (const need of [ch.kit, METHOD[r.m]?.[1], ...(r.need || [])])
     if (need && !run.kit.has(need))
       return { s: "later", why: `Needs ${kitName(need)}` };
   if (
@@ -441,7 +452,7 @@ function rowStatus(r: Row): { s: string; why?: string } {
   const times = r.cond.filter((c) => TIME[c]).map((c) => TIME[c]);
   if (times.length && !times.map((t) => t.toLowerCase()).includes(nowTime()))
     return { s: "wrongtime", why: times.join(" / ") + " only" };
-  if (days.length && !days.includes(DAYS[new Date().getDay()]))
+  if (days.length && !days.includes(DAYS[gameNow(R().clock).day]))
     return {
       s: "wrongtime",
       why: days.map((d) => cap(d) + "s").join(" / ") + " only",
@@ -510,9 +521,11 @@ const lvl = (r: Row) =>
     : r.lo === r.hi
       ? `Lv ${r.lo}`
       : `Lv ${r.lo} to ${r.hi}`;
-function rowTags(r: Row) {
+function rowTags(r: Row, place = r.place) {
   const st = rowStatus(r),
     t = [`<span class="tag">${METHOD[r.m]?.[0] || r.m}</span>`];
+  if (r.place !== place)
+    t.push(`<span class="tag plain">${r.place.slice(place.length).trim() || r.place}</span>`);
   if (ONE_TIME.has(r.m)) t.push(`<span class="tag plain">One-time</span>`);
   if (lvl(r)) t.push(`<span class="tag plain">${lvl(r)}</span>`);
   if (r.c && r.c < 100 && !ONE_TIME.has(r.m))
@@ -528,8 +541,8 @@ function rowTags(r: Row) {
 }
 const gotBtn = (p: Species) =>
   `<button class="got-btn" data-toggle="${p.n}" data-k="t${p.n}" aria-pressed="${R().caught.has(p.n)}" aria-label="${p.name} caught">${R().caught.has(p.n) ? "✓ Caught" : "Caught?"}</button>`;
-const monRow = (p: Species, r: Row | null) =>
-  `<div class="row">${mon(p)}<div class="grow"><div class="name">${p.name}</div>${r ? rowTags(r) : `<div class="small muted">${howElse(p)}</div>`}</div>${gotBtn(p)}</div>`;
+const monRow = (p: Species, r: Row | null, place?: string) =>
+  `<div class="row">${mon(p)}<div class="grow"><div class="name">${p.name}</div>${r ? rowTags(r, place) : `<div class="small muted">${howElse(p)}</div>`}</div>${gotBtn(p)}</div>`;
 type Pick = { p: Species; r: Row };
 const pref = (a: Pick, b: Pick) =>
   +isHere(b.r.place) - +isHere(a.r.place) ||
@@ -561,6 +574,90 @@ function chapterGroups(chap: number) {
   return g;
 }
 const uniq = (g: Record<string, Pick[]>) => Object.values(g).flat().length;
+// Each row folds into the picker place it belongs to (Safari Zone Plains -> Safari Zone).
+let placeCache: Record<string, string> = {};
+const placeOf = (pl: string) =>
+  (placeCache[pl] ??= NOT_HERE.test(pl)
+    ? pl
+    : CHAPTERS.flatMap((c) => c.places)
+        .filter((c) => pl === c || pl.startsWith(c + " "))
+        .sort((a, b) => b.length - a.length)[0] || pl);
+type Spot = { chap: number; got: number; now: Pick[]; later: Pick[]; once: Pick[] };
+// 0 now, 1 other time of day, 2 not reachable yet, 3 one-time or special
+const rank = (r: Row) => {
+  const s = rowStatus(r).s;
+  return ONE_TIME.has(r.m) || s === "special" ? 3 : s === "later" ? 2 : s === "wrongtime" ? 1 : 0;
+};
+// Per place: caught species, ones you can catch with what you have (any time of day),
+// ones that need more badges or items, and one-time or special ones (left out of the count).
+function spots() {
+  const out: Record<string, Spot> = {};
+  DEX.forEach((p) => {
+    if (!visible(p)) return;
+    const seen = new Set<string>();
+    p.rows
+      .map((r) => ({ r, k: rank(r) }))
+      .sort((a, b) => a.k - b.k || b.r.c - a.r.c)
+      .forEach(({ r, k }) => {
+        const pl = placeOf(r.place);
+        if (seen.has(pl)) return;
+        seen.add(pl);
+        const s = (out[pl] ||= { chap: r.chap, got: 0, now: [], later: [], once: [] });
+        if (R().caught.has(p.n)) s.got += +(k < 2);
+        else (k === 3 ? s.once : k === 2 ? s.later : s.now).push({ p, r });
+      });
+  });
+  return out;
+}
+const complete = (pl: string, s?: Spot) =>
+  !!s && !NOT_HERE.test(pl) && !s.now.length && s.got > 0;
+const placeLabel = (pl: string, s?: Spot) =>
+  !s || NOT_HERE.test(pl)
+    ? ""
+    : complete(pl, s)
+      ? `✓ Complete${s.later.length ? ` · ${s.later.length} later` : ""}`
+      : s.now.length
+        ? `${s.now.length} left`
+        : s.later.length
+          ? `${s.later.length} later`
+          : "";
+const laterBox = (key: string, title: string, list: Pick[], place: string) =>
+  list.length
+    ? `<details class="later" data-chap="${esc(key)}" ${ui.open.has(key) ? "open" : ""}><summary>${title}</summary>${list.map((x) => monRow(x.p, x.r, place)).join("")}</details>`
+    : "";
+function placeBlock(pl: string, s: Spot) {
+  const later = R().showLater
+    ? s.later.map((x) => monRow(x.p, x.r, pl)).join("")
+    : laterBox(`l:${pl}`, complete(pl, s) ? `${s.later.length} more available later` : `Come back later · ${s.later.length}`, s.later, pl),
+    once = laterBox(`o:${pl}`, `One-time and special · ${s.once.length}`, s.once, pl);
+  if (complete(pl, s))
+    return `<div class="done-place"><span class="tick" aria-hidden="true">✓</span><span style="flex:1">${pl} complete</span><span class="count ok">${s.got} / ${s.got}</span></div>${isHere(pl) ? `<p class="small muted" style="margin:6px 2px 0">Everything you can catch here with your current badges and items.</p>` : ""}${later}${once}`;
+  const count = NOT_HERE.test(pl)
+    ? ""
+    : s.now.length
+      ? `${s.got} / ${s.got + s.now.length}`
+      : s.later.length
+        ? "Nothing to catch yet"
+        : "";
+  return `<div class="place"><div class="placehead"><span>${pl}</span><span class="count">${count}</span></div>${s.now
+    .sort((a, b) => rank(a.r) - rank(b.r) || b.r.c - a.r.c)
+    .map((x) => monRow(x.p, x.r, pl))
+    .join("")}${later}${once}</div>`;
+}
+// Places in a chapter, in the chapter's own order, then any extra places its rows use.
+function chapterSpots(all: Record<string, Spot>, i: number) {
+  const list = Object.entries(all).filter(
+    ([pl, s]) => s.chap === i && (s.now.length || s.later.length || s.once.length),
+  );
+  const at = (pl: string) => {
+    const k = CHAPTERS[i].places.indexOf(pl);
+    return k < 0 ? 999 : k;
+  };
+  list.sort((a, b) => at(a[0]) - at(b[0]));
+  const left = new Set(list.flatMap(([, s]) => s.now.map((x) => x.p.n)));
+  const later = new Set(list.flatMap(([, s]) => s.later.map((x) => x.p.n).filter((n) => !left.has(n))));
+  return { html: list.map(([pl, s]) => placeBlock(pl, s)).join(""), left: left.size, later: later.size };
+}
 const badgeRow = (list: string[][]) =>
   `<div style="display:flex;flex-wrap:wrap;margin:6px -6px">${list.map((b) => `<button class="badge" data-badge="${b[0]}" data-k="b-${b[0]}" aria-pressed="${R().badges.has(b[0])}" aria-label="${b[0]} Badge from ${b[1]}" title="${b[0]} Badge · ${b[1]}"><img src="/badges/${b[0].toLowerCase()}.png" alt="${b[0]} Badge" width="32" height="32"></button>`).join("")}</div>`;
 
@@ -587,6 +684,44 @@ function heroCard(h: Pick) {
 }
 const NOT_HERE =
   /Gym|Game Corner|North Gate|Roaming|House|Pokémon Center|Department Store|Prize Corner|Museum|Silph|Magnet Train|Dock|Embedded|Sinjoh|Celadon Mansion|Cinnabar Lab|Dojo/;
+const CLOCK_ICON = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`;
+function fillClock(mode: string) {
+  const c = R().clock,
+    g = gameNow(c),
+    two = (n: number) => String(n).padStart(2, "0"),
+    zones: string[] = (Intl as any).supportedValuesOf?.("timeZone") ?? [];
+  if (c.tz && !zones.includes(c.tz)) zones.unshift(c.tz);
+  $("#sheetbody").innerHTML =
+    `<h2 id="sheet-title">${ver().name}'s clock</h2>
+    <div class="card" style="margin-top:12px;text-align:center;background:var(--bg)"><div class="small muted">Your game right now</div><div class="big-time">${g.hour % 12 || 12}:${two(g.minute)} ${g.hour < 12 ? "AM" : "PM"}</div><div style="font-weight:700">${cap(DAYS[g.day])} · <span class="tag time">${cap(gameTime())}</span> <span class="small muted">night at ${(P().nightFrom as number) - 12} PM</span></div></div>
+    <div class="small muted" style="margin:16px 0 6px;font-weight:700">How your game keeps time</div>
+    <div class="seg3 wide" role="group" aria-label="How your game keeps time"><button data-clockmode="device" aria-pressed="${mode === "device"}">Follow a time zone</button><button data-clockmode="manual" aria-pressed="${mode === "manual"}">Set it myself</button></div>
+    ${
+      mode === "manual"
+        ? `<div class="row2"><label class="field"><span>Time</span><input id="c-time" type="time" value="${two(g.hour)}:${two(g.minute)}" required></label><label class="field"><span>Day</span><select id="c-day">${DAYS.map((d, i) => `<option value="${i}" ${i === g.day ? "selected" : ""}>${cap(d)}</option>`).join("")}</select></label></div><p class="small muted" style="margin:8px 0 0">Enter the time and day your game shows.</p>`
+        : `<label class="field"><span>Time zone</span><select id="c-tz"><option value="">This device (${Intl.DateTimeFormat().resolvedOptions().timeZone})</option>${zones.map((z) => `<option ${z === c.tz ? "selected" : ""}>${z}</option>`).join("")}</select></label>`
+    }
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button class="chip" data-close="1">Cancel</button><button class="app-primary" data-saveclock="1">Save</button></div>`;
+}
+const SECTIONS = [
+  ["next", "Next catch", "Disabling this removes the big suggestion card"],
+  ["near", "Also near you", "Disabling this hides the other Pokémon you can catch where you are"],
+  ["chapter", "This chapter", "Places and Pokémon in your current chapter"],
+  ["evolve", "Evolution options", "Disabling this hides Pokémon you can get by evolving ones you've caught"],
+  ["journey", "Your journey", "Disabling this hides the Your journey section"],
+  ["dex", "Dex progress", "Disabling this hides the Dex progress section"],
+];
+const toggle = (on: boolean, title: string, note: string, attr: string) =>
+  `<button class="sw" role="switch" aria-checked="${on}" ${attr}><span class="grow"><b>${title}</b><small>${note}</small></span><span class="tog${on ? " on" : ""}" aria-hidden="true"></span></button>`;
+function fillCustom() {
+  const r = R();
+  $("#sheetbody").innerHTML =
+    `<h2 id="sheet-title">Customize ${ver().name}</h2><p class="small muted" style="margin:4px 0 10px">Only changes this playthrough.</p>
+    ${SECTIONS.map(([k, t, n]) => toggle(!r.hidden.has(k), t, n, `data-hide="${k}" data-k="h-${k}"`)).join("")}
+    ${toggle(r.showLater, "Show Pokémon I can't reach yet", `List them in each section, not under "Come back later"`, `data-showlater="1" data-k="h-later"`)}
+    <div class="sw"><span class="grow"><b>Badges and items</b><small>Always shown: this is how the app knows what you can catch</small></span><span class="lock">Always on</span></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="chip" data-close="1">Done</button></div>`;
+}
 function Journey() {
   if (!run) return NoRun();
   const r = R(),
@@ -597,7 +732,9 @@ function Journey() {
     .flatMap((c) => c.places)
     .filter((p) => !NOT_HERE.test(p));
   const atHere = now.filter((x) => isHere(x.r.place) && x.p.n !== hero?.p.n);
-  const curG = chapterGroups(cur);
+  const hide = r.hidden,
+    all = spots(),
+    curS = chapterSpots(all, cur);
   const evolve = DEX.filter(
     (p) =>
       visible(p) &&
@@ -610,7 +747,8 @@ function Journey() {
   return `<div class="cols"><div class="colmain">
   <div class="chips">
     <label class="sr" for="here">Where you are in the game</label>
-    <select class="pill" id="here" data-k="here">${herePlaces.map((p) => `<option ${p === r.here ? "selected" : ""} value="${p}">Near ${p}</option>`).join("")}</select>
+    <select class="pill" id="here" data-k="here">${herePlaces.map((p) => `<option ${p === r.here ? "selected" : ""} value="${p}">Near ${p}${placeLabel(p, all[p]) && ` · ${placeLabel(p, all[p])}`}</option>`).join("")}</select>
+    ${P().nightFrom ? `<button class="pill clockpill" data-clock="1" data-k="clock" aria-label="Game clock: ${cap(nowTime())}, ${cap(DAYS[gameNow(r.clock).day])}. Change">${CLOCK_ICON}<b>${cap(nowTime())}</b> · ${cap(DAYS[gameNow(r.clock).day]).slice(0, 3)}</button>` : ""}
     ${
       P().nightFrom
         ? `<div class="seg3" role="group" aria-label="In-game time of day">
@@ -619,23 +757,24 @@ function Journey() {
     </div>`
         : ""
     }
+    <button class="pill" data-custom="1" data-k="custom">Customize</button>
   </div>
-  ${hero ? heroCard(hero) : now.length ? `<section class="hero"><h2>You've skipped every suggestion</h2><p style="margin:6px 0 12px">${now.length} Pokémon are still catchable right now.</p><button class="btn" data-unskip="1" data-k="unskip2">Show them again</button></section>` : `<section class="hero"><h2>Nothing left to catch right now</h2><p style="margin:6px 0 0">Try another time of day, or move ahead in the story.</p></section>`}
-  ${r.skip.size ? `<div style="text-align:right;margin-top:8px"><button class="chip" data-unskip="1" data-k="unskip">Show ${r.skip.size} skipped</button></div>` : ""}
-  ${atHere.length ? `<div class="eyebrow">Also near ${r.here}</div>${atHere.map((x) => monRow(x.p, x.r)).join("")}` : ""}
-  <div class="eyebrow">${CHAPTERS[cur].title} · ${uniq(curG)} to find</div>
+  ${hide.has("next") ? "" : hero ? heroCard(hero) : now.length ? `<section class="hero"><h2>You've skipped every suggestion</h2><p style="margin:6px 0 12px">${now.length} Pokémon are still catchable right now.</p><button class="btn" data-unskip="1" data-k="unskip2">Show them again</button></section>` : `<section class="hero"><h2>Nothing left to catch right now</h2><p style="margin:6px 0 0">Try another time of day, or move ahead in the story.</p></section>`}
+  ${!hide.has("next") && r.skip.size ? `<div style="text-align:right;margin-top:8px"><button class="chip" data-unskip="1" data-k="unskip">Show ${r.skip.size} skipped</button></div>` : ""}
+  ${!hide.has("near") && atHere.length ? `<div class="eyebrow">Also near ${r.here}</div>${atHere.map((x) => monRow(x.p, x.r)).join("")}` : ""}
   ${
-    Object.entries(curG)
-      .map(
-        ([place, list]) =>
-          `<div class="place"><div class="placehead"><span>${place}</span><span>${list.length}</span></div>${list.map((x) => monRow(x.p, x.r)).join("")}</div>`,
-      )
-      .join("") ||
-    `<p class="muted">You've caught everything in this chapter.</p>`
+    hide.has("chapter")
+      ? ""
+      : `<div class="eyebrow">${CHAPTERS[cur].title} · ${curS.left} to find${curS.later ? ` · ${curS.later} later` : ""}</div>
+  ${curS.left || curS.later ? "" : `<p class="muted">You've caught everything in this chapter.</p>`}
+  ${curS.html}`
   }
   </div><aside class="colside">
-  ${evolve.length ? `<div class="eyebrow">Evolution options · ${evolve.length}</div>${evolve.map((p) => monRow(p, null)).join("")}` : ""}
-  <div class="eyebrow">Your journey</div>
+  ${!hide.has("evolve") && evolve.length ? `<div class="eyebrow">Evolution options · ${evolve.length}</div>${evolve.map((p) => monRow(p, null)).join("")}` : ""}
+  ${
+    hide.has("journey")
+      ? ""
+      : `<div class="eyebrow">Your journey</div>
   <div class="card" style="padding:4px 16px">
     ${CHAPTERS.map((c, i) => {
       if (
@@ -644,19 +783,30 @@ function Journey() {
         (!e4() && i === CHAPTERS.length - 1)
       )
         return "";
-      const g = chapterGroups(i),
-        n = uniq(g),
-        open = unlocked(i);
-      return `<details class="chap" data-chap="${i}" ${ui.open.has(i) ? "open" : ""}><summary><span class="node ${open ? "done" : ""}" aria-hidden="true">${open ? "✓" : i + 1}</span><span style="flex:1">${c.title}<span class="sr">${open ? ", reached" : ", not reached yet"}</span></span><span class="muted small">${n ? `${n} ${open ? "still out there" : "to come"}` : "all caught"}</span></summary>
-        ${Object.entries(g)
-          .map(
-            ([place, list]) =>
-              `<div class="place"><div class="placehead"><span>${place}</span></div>${list.map((x) => monRow(x.p, x.r)).join("")}</div>`,
-          )
-          .join("")}<div style="height:10px"></div></details>`;
+      const open = unlocked(i),
+        g = open ? null : chapterGroups(i),
+        cs = open ? chapterSpots(all, i) : null,
+        n = g ? uniq(g) : cs!.left;
+      const label = g
+        ? n ? `${n} to come` : "all caught"
+        : n || cs!.later
+          ? [n && `${n} still out there`, cs!.later && `${cs!.later} later`].filter(Boolean).join(" · ")
+          : "all caught";
+      return `<details class="chap" data-chap="${i}" ${ui.open.has(String(i)) ? "open" : ""}><summary><span class="node ${open ? "done" : ""}" aria-hidden="true">${open ? "✓" : i + 1}</span><span style="flex:1">${c.title}<span class="sr">${open ? ", reached" : ", not reached yet"}</span></span><span class="muted small">${label}</span></summary>
+        ${
+          g
+            ? Object.entries(g)
+                .map(
+                  ([place, list]) =>
+                    `<div class="place"><div class="placehead"><span>${place}</span></div>${list.map((x) => monRow(x.p, x.r)).join("")}</div>`,
+                )
+                .join("")
+            : cs!.html
+        }<div style="height:10px"></div></details>`;
     }).join("")}
-  </div>
-  <div class="eyebrow">Progress</div>
+  </div>`
+  }
+  <div class="eyebrow">Badges and items</div>
   <div class="card">
     <h3>${P().region} badges</h3>
     ${badgeRow(P().badges)}
@@ -672,7 +822,13 @@ function Journey() {
     <div class="chips" style="margin-top:8px">${P().safari!.map((a) => `<button class="chip" data-safari="${a}" data-k="s-${a}" aria-pressed="${r.safari.has(a)}" ${!r.safari.has(a) && r.safari.size >= 6 ? "disabled" : ""}>${a}</button>`).join("")}</div>`
         : ""
     }
-    <div style="display:flex;justify-content:space-between;margin-top:16px"><h3>${P().region} dex</h3><span><b>${regionalCaught()}</b> <span class="muted">/ ${P().regional}</span></span></div>
+  </div>
+  ${
+    hide.has("dex")
+      ? ""
+      : `<div class="eyebrow">Dex progress</div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between"><h3>${P().region} dex</h3><span><b>${regionalCaught()}</b> <span class="muted">/ ${P().regional}</span></span></div>
     <div class="bar" style="margin-top:6px"><i style="width:${(regionalCaught() / P().regional) * 100}%"></i></div>
     ${
       e4() && P().national > P().regional
@@ -680,7 +836,8 @@ function Journey() {
     <div class="bar" style="margin-top:6px"><i style="width:${(r.caught.size / P().national) * 100}%"></i></div>`
         : ""
     }
-  </div>
+  </div>`
+  }
   </aside></div>`;
 }
 const NoRun = () => `<div class="narrow">${pickGame()}</div>`;
@@ -771,6 +928,10 @@ function fillSheet(s: any) {
         ? fillNewRun()
         : s.kind === "started"
         ? fillStartDate(s.id)
+        : s.kind === "custom"
+        ? fillCustom()
+        : s.kind === "clock"
+        ? fillClock(s.mode)
         : s.kind === "settings"
         ? ($("#sheetbody").innerHTML =
             `<h2 id="sheet-title">Settings</h2>${Account()}${Appearance()}<div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="chip" data-close="1">Done</button></div>`)
@@ -1141,7 +1302,7 @@ function render() {
     ? `<div class="toast">${ui.undo.msg}<button data-undo="1">Undo</button></div>`
     : "";
   if (
-    (typeof ui.sheet === "number" || ui.sheet?.kind === "settings") &&
+    (typeof ui.sheet === "number" || ["settings", "custom"].includes(ui.sheet?.kind)) &&
     $("#sheet").open
   )
     fillSheet(ui.sheet);
@@ -1356,6 +1517,31 @@ async function onClick(e: MouseEvent) {
     openSheet(+d.open);
     return;
   }
+  if (d.custom) {
+    openSheet({ kind: "custom", k: "custom" });
+    return;
+  }
+  if (d.clock) {
+    openSheet({ kind: "clock", mode: r.clock.mode, k: "clock" });
+    return;
+  }
+  if (d.clockmode) {
+    ui.sheet.mode = d.clockmode;
+    fillSheet(ui.sheet);
+    $(`[data-clockmode="${d.clockmode}"]`)?.focus();
+    return;
+  }
+  if (d.saveclock) {
+    if (ui.sheet.mode === "manual") {
+      const [h, m] = ($("#c-time").value || "").split(":").map(Number);
+      if (isNaN(h) || isNaN(m)) return;
+      r.clock = { mode: "manual", min: +$("#c-day").value * 1440 + h * 60 + m, at: Date.now() };
+    } else r.clock = { mode: "device", tz: $("#c-tz").value || undefined };
+    r.skip.clear();
+    $("#sheet").close();
+    scheduleSave();
+    return;
+  }
   if (d.editmon) {
     openSheet({ kind: "mon", id: +d.editmon });
     return;
@@ -1407,7 +1593,10 @@ async function onClick(e: MouseEvent) {
       r.time = d.time;
     }
     r.skip.clear();
-  } else if (d.badge) {
+  } else if (d.hide) {
+    r.hidden.has(d.hide) ? r.hidden.delete(d.hide) : r.hidden.add(d.hide);
+  } else if (d.showlater) r.showLater = !r.showLater;
+  else if (d.badge) {
     r.badges.has(d.badge) ? r.badges.delete(d.badge) : r.badges.add(d.badge);
   } else if (d.safari) {
     r.safari.has(d.safari) ? r.safari.delete(d.safari) : r.safari.add(d.safari);
@@ -1591,8 +1780,8 @@ export function mount(el: HTMLElement, b: Bridge) {
       const c = (e.target as HTMLElement).dataset?.chap;
       if (c != null)
         (e.target as HTMLDetailsElement).open
-          ? ui.open.add(+c)
-          : ui.open.delete(+c);
+          ? ui.open.add(c)
+          : ui.open.delete(c);
     },
     true,
   );
@@ -1615,12 +1804,13 @@ export function mount(el: HTMLElement, b: Bridge) {
     if (s)
       (
         root.querySelector(
-          `[data-k="${typeof s === "number" ? "d" + s : s.id ? "m" + s.id : s.b ? "rb" + s.b : "x"}"]`,
+          `[data-k="${typeof s === "number" ? "d" + s : s.k ? s.k : s.id ? "m" + s.id : s.b ? "rb" + s.b : "x"}"]`,
         ) || (root.querySelector("[data-filter][aria-pressed=true]") as any)
       )?.focus();
   });
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "hidden") flushSave();
+    else if (run && ui.tab === "journey" && !$("#sheet").open) render();
   });
   syncRuns();
   render();

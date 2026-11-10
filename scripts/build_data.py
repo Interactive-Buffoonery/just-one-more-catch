@@ -45,6 +45,7 @@ def base_place(loc):
 
 PLACES = [(p, i) for i, c in enumerate(GAME["chapters"]) for p in c["places"]]
 unmatched = set()
+need_hits = set()
 
 
 def chapter_of(place):
@@ -103,7 +104,9 @@ def rows_for(encounters, version):
         loc = nice(a["location_area"]["name"])
         if any(re.search(p, loc) for p in GAME["drop"]):
             continue
-        need = next((v for k, v in GAME["needs"].items() if loc.startswith(k)), None)
+        key = next((k for k in GAME["needs"] if loc == k or loc.startswith(k + " ")), None)
+        need = tuple([GAME["needs"][key]] if isinstance(GAME["needs"][key], str) else GAME["needs"][key]) if key else None
+        need_hits.add(key)
         place = base_place(loc)
         chap = chapter_of(place)
         for v in a["version_details"]:
@@ -115,7 +118,7 @@ def rows_for(encounters, version):
                     continue
                 cond = sorted(c["name"] for c in d["condition_values"] if c["name"] not in DEFAULT_COND)
                 k = (place, GAME.get("methods", {}).get(src, src), need, tuple(cond))
-                r = merged.setdefault(k, {"place": pretty(place), "chap": chap, "m": k[1], "need": need, "cond": cond, "lo": 99, "hi": 0, "by": {}})
+                r = merged.setdefault(k, {"place": pretty(place), "chap": chap, "m": k[1], "need": list(need) if need else None, "cond": cond, "lo": 99, "hi": 0, "by": {}})
                 r["lo"] = min(r["lo"], d["min_level"]); r["hi"] = max(r["hi"], d["max_level"]); r["by"][src] = r["by"].get(src, 0) + d["chance"]
     # methods folded into one (Crystal's three Headbutt tree tables) keep the best table's odds
     for r in merged.values():
@@ -123,7 +126,7 @@ def rows_for(encounters, version):
     # rows that differ only by time of day and cover all three times become one "any time" row
     groups = {}
     for r in merged.values():
-        groups.setdefault((r["place"], r["m"], r["need"], tuple(c for c in r["cond"] if c not in TIME)), []).append(r)
+        groups.setdefault((r["place"], r["m"], tuple(r["need"] or ()), tuple(c for c in r["cond"] if c not in TIME)), []).append(r)
     out = []
     for g in groups.values():
         times = {c for r in g for c in r["cond"] if c in TIME}
@@ -161,6 +164,10 @@ if __name__ == "__main__":
     if unmatched:
         sys.exit("No chapter for: " + ", ".join(sorted(unmatched)))
     assert sum(1 for p in dex if p["j"]) == len(johto)
+    assert not set(GAME["needs"]) - need_hits, f"needs match no area: {set(GAME['needs']) - need_hits}"
+    kit = {v for n in GAME["needs"].values() for v in ([n] if isinstance(n, str) else n)} | {c["kit"] for c in GAME["chapters"] if c.get("kit")}
+    missing = [k for k in kit if not os.path.exists(os.path.join(ROOT, "public", "items", k + ".png"))]
+    assert not missing, f"needs/kit with no item: {missing}"
     if PACK == "hgss":
         assert len(johto) == 256
         assert next(p for p in dex if p["n"] == 35)["types"] == ["normal"], "Clefairy should be Normal in Gen 4"

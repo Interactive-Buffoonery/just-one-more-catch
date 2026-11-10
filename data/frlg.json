@@ -34,7 +34,7 @@
     "Rixy Chamber": "Tanoby Ruins",
     "Viapos Chamber": "Tanoby Ruins"
   },
-  "needs": {"Icefall Cave Waterfall": "waterfall"},
+  "needs": {"Icefall Cave Waterfall": "waterfall", "Cerulean Cave": "surf"},
   "chapters": [
     {"title": "Pallet to Viridian Forest", "needs": [], "places": ["Pallet Town", "Route 1", "Viridian City", "Route 22", "Route 2", "Viridian Forest"]},
     {"title": "Mt. Moon to Cerulean", "needs": ["Boulder"], "places": ["Route 3", "Mt. Moon", "Route 4", "Cerulean City", "Route 24", "Route 25"]},
