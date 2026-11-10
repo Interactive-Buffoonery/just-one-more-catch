@@ -42,7 +42,8 @@ if __name__ == "__main__":
     jobs = [(f"{BASE}badges/{i + 1}.png", os.path.join(ROOT, "public", "badges", f"{b.lower()}.png")) for i, b in enumerate(BADGES)]
     for pack, path in ART.items():
         count = json.load(open(os.path.join(ROOT, "data", pack + ".json")))["species"]
-        jobs += [(f"{BASE}{path}{n}.png", os.path.join(ROOT, "public", "sprites", pack, f"{n}.png")) for n in range(1, count + 1)]
+        for shiny in ("", "shiny/"):
+            jobs += [(f"{BASE}{path}{shiny}{n}.png", os.path.join(ROOT, "public", "sprites", pack, shiny, f"{n}.png")) for n in range(1, count + 1)]
     with ThreadPoolExecutor(4) as ex:  # ponytail: 4 workers, same fair-use pace as fetch_pokeapi.py
         list(ex.map(fetch, jobs))
     print(len(jobs), "sprites in public/")

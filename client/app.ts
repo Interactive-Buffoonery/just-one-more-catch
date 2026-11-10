@@ -500,10 +500,10 @@ const ring = (types: string[]) => {
     b = TYPE[types[1] || types[0]];
   return `background:linear-gradient(135deg,${a} 50%,${b} 50%)`;
 };
-const sprite = (p: Species, cls = "") =>
-  `<img class="sprite ${cls}" src="/sprites/${P().art}/${p.n}.png" alt="${p.name}" width="80" height="80" loading="lazy">`;
-const mon = (p: Species) =>
-  `<span class="mon ${R().caught.has(p.n) ? "got" : ""}" style="${ring(p.types)}" aria-hidden="true"><b>${sprite(p)}</b></span>`;
+const sprite = (p: Species, cls = "", shiny = false) =>
+  `<img class="sprite ${cls}" src="/sprites/${P().art}/${shiny ? "shiny/" : ""}${p.n}.png" alt="${shiny ? "Shiny " : ""}${p.name}" width="80" height="80" loading="lazy">`;
+const mon = (p: Species, shiny = false) =>
+  `<span class="mon ${R().caught.has(p.n) ? "got" : ""}" style="${ring(p.types)}" aria-hidden="true"><b>${sprite(p, "", shiny)}</b></span>`;
 const lvl = (r: Row) =>
   r.m === "npc-trade"
     ? ""
@@ -796,7 +796,7 @@ const allBoxes = (): Mon["box"][] => [
 const GENDER: Record<string, string> = { m: "♂", f: "♀" };
 function monLine(m: Mon, showBox?: boolean) {
   const p = byN[m.n];
-  return `<button class="row monrow" data-editmon="${m.id}" data-k="m${m.id}" aria-label="${esc(m.nick || p.name)}${m.nick ? `, ${p.name}` : ""}${m.shiny ? ", shiny" : ""}, ${esc(boxLabel(m.box))}. Edit">${mon(p)}<span class="grow">
+  return `<button class="row monrow" data-editmon="${m.id}" data-k="m${m.id}" aria-label="${esc(m.nick || p.name)}${m.nick ? `, ${p.name}` : ""}${m.shiny ? ", shiny" : ""}, ${esc(boxLabel(m.box))}. Edit">${mon(p, m.shiny)}<span class="grow">
     <span class="name">${m.nick ? `${esc(m.nick)} <span class="muted small">${p.name}</span>` : p.name}${m.shiny ? ` <span class="shiny" title="Shiny">✦</span>` : ""}</span>
     <span class="tags">${showBox ? `<span class="tag">${esc(boxLabel(m.box))}</span>` : ""}${m.lvl ? `<span class="tag plain">Lv ${m.lvl}</span>` : ""}${m.g ? `<span class="tag plain">${GENDER[m.g]}</span>` : ""}${m.item ? `<span class="tag time">${esc(m.item)}</span>` : ""}${m.note ? `<span class="small muted">${esc(m.note)}</span>` : ""}</span></span></button>`;
 }
@@ -836,7 +836,7 @@ function fillMonSheet(s: any) {
       ? `Where did you put ${p.name}?`
       : `Add another ${p.name}`;
   $("#sheetbody").innerHTML =
-    `<div style="display:flex;gap:12px;align-items:center">${mon(p)}<div><h2 id="sheet-title">${title}</h2></div></div>
+    `<div style="display:flex;gap:12px;align-items:center">${mon(p, !!m?.shiny)}<div><h2 id="sheet-title">${title}</h2></div></div>
     <label class="field"><span>Box</span><select id="f-box">${allBoxes().map((b) => `<option value="${b}" ${b === cur ? "selected" : ""} ${full(b) && b !== cur ? "disabled" : ""}>${esc(boxLabel(b))} (${inBox(b).length}/${boxCap(b)})</option>`).join("")}</select></label>
     <details class="more" ${m ? "open" : ""}><summary>More details <span class="muted small">nickname, level, held item</span></summary><div class="fgrid">
       <label class="field"><span>Nickname</span><input id="f-nick" maxlength="10" autocomplete="off" value="${esc(m?.nick || "")}"></label>
