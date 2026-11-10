@@ -1342,11 +1342,13 @@ function scheduleSave(delay = 800) {
   }, delay);
 }
 function flushSave() {
+  clearTimeout(saveTimer);
   if (run && dumpRun(run) !== ui.saved) {
-    clearTimeout(saveTimer);
-    bridge.saveRun(run.id, dumpRun(run)).then(
+    const id = run.id,
+      state = dumpRun(run);
+    bridge.saveRun(id, state).then(
       () => {
-        ui.saved = dumpRun(R());
+        if (run?.id === id) ui.saved = state;
       },
       () => {},
     );
@@ -1813,6 +1815,8 @@ export function mount(el: HTMLElement, b: Bridge) {
   render();
 }
 export function update(b: Bridge) {
+  if (!bridge.auth.isLoading && !bridge.auth.isAuthenticated &&
+      (b.auth.isLoading || b.auth.isAuthenticated)) flushSave();
   raw = b;
   bridge = withGuest(b);
   syncRuns();

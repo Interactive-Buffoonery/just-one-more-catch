@@ -1,14 +1,14 @@
 import "@fontsource/jetbrains-mono/latin-500.css";
-import { Clerk } from "@clerk/clerk-js";
-import { ui } from "@clerk/ui";
+import type { Clerk } from "@clerk/clerk-js";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex/_generated/api";
 import { mount, update, type Bridge } from "./app";
 
 let clerk: Clerk | undefined;
+const pendingSignIns = new WeakSet<HTMLDivElement>();
 const convex = new ConvexClient(import.meta.env.VITE_CONVEX_URL);
 
-let auth: Bridge["auth"] = { isLoading: true, isAuthenticated: false };
+let auth: Bridge["auth"] = { isLoading: false, isAuthenticated: false };
 let runs: Bridge["runs"];
 let stopRuns: (() => void) | undefined;
 let userId: string | null | undefined;
@@ -17,7 +17,19 @@ const bridge = (): Bridge => ({
   auth,
   runs: auth.isAuthenticated ? runs : [],
   mountSignIn: (el) => {
-    if (!clerk?.loaded) return false;
+    if (!clerk?.loaded) {
+      pendingSignIns.add(el);
+      el.textContent = "Sign-in is loading. You can keep playing as a guest.";
+      void authReady.then(() => {
+        if (!pendingSignIns.delete(el) || !el.isConnected) return;
+        if (clerk?.loaded) bridge().mountSignIn(el);
+        else
+          el.textContent =
+            "Sign-in couldn't load. Reload to try again, or keep playing as a guest.";
+      });
+      return true;
+    }
+    el.textContent = "";
     clerk.mountSignIn(el, {
       routing: "hash",
       withSignUp: true,
@@ -59,6 +71,7 @@ const bridge = (): Bridge => ({
     return true;
   },
   unmountSignIn: (el) => {
+    pendingSignIns.delete(el);
     clerk?.unmountSignIn(el);
     if (location.hash.startsWith("#/"))
       history.replaceState(null, "", location.pathname + location.search);
@@ -119,15 +132,21 @@ function onUser(user: Clerk["user"]) {
 }
 
 mount(document.getElementById("app")!, bridge());
-try {
-  clerk = new Clerk(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
-  await clerk.load({ ui });
-  if (/sso-callback/.test(location.pathname + location.hash))
-    await clerk.handleRedirectCallback({}, async () =>
-      history.replaceState(null, "", location.pathname + location.search),
-    );
-  clerk.addListener(({ user }) => onUser(user));
-} catch (err) {
-  console.warn("Sign-in is unavailable; playing as a guest", err);
-  onUser(null);
-}
+const authReady = (async () => {
+  try {
+    const [{ Clerk }, { ui }] = await Promise.all([
+      import("@clerk/clerk-js"),
+      import("@clerk/ui"),
+    ]);
+    clerk = new Clerk(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
+    await clerk.load({ ui });
+    if (/sso-callback/.test(location.pathname + location.hash))
+      await clerk.handleRedirectCallback({}, async () =>
+        history.replaceState(null, "", location.pathname + location.search),
+      );
+    clerk.addListener(({ user }) => onUser(user));
+  } catch (err) {
+    console.warn("Sign-in is unavailable; playing as a guest", err);
+    onUser(null);
+  }
+})();
