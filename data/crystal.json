@@ -1,0 +1,35 @@
+{
+  "versions": {"crystal": "c"},
+  "pokedex": 3,
+  "species": 251,
+  "gen": "generation-ii",
+  "drop": ["^Unknown All ", "^Pokemart$"],
+  "rename": {
+    "Violet City Poke Mart": "Violet City Pokemon Center",
+    "Roaming Johto": "Roaming Johto",
+    "Route 2 South Towards Viridian City": "Route 2",
+    "Cianwood City Manias House": "Cianwood City",
+    "Ruins Of Alph Outside": "Ruins Of Alph",
+    "Ruins Of Alph Interior A": "Ruins Of Alph",
+    "Ruins Of Alph Interior B": "Ruins Of Alph",
+    "Ruins Of Alph Interior C": "Ruins Of Alph",
+    "Ruins Of Alph Interior D": "Ruins Of Alph",
+    "Mt. Silver Outside": "Mt. Silver",
+    "Mt. Silver Top": "Mt. Silver",
+    "Bell Tower Roof": "Bell Tower"
+  },
+  "needs": {"Union Cave B2F": "surf", "Whirl Islands": "whirlpool", "Mt. Mortar Upper Cave": "waterfall"},
+  "chapters": [
+    {"title": "New Bark to Violet", "needs": [], "places": ["New Bark Town", "Route 29", "Cherrygrove City", "Route 30", "Route 31", "Route 46", "Dark Cave Violet City Entrance", "Violet City", "Sprout Tower"]},
+    {"title": "Ruins of Alph to Azalea", "needs": ["Zephyr"], "places": ["Route 32", "Ruins Of Alph", "Union Cave", "Route 33", "Slowpoke Well", "Azalea Town"]},
+    {"title": "Ilex Forest to National Park", "needs": ["Hive"], "places": ["Ilex Forest", "Route 34", "Goldenrod City Game Corner", "Goldenrod City North Gate", "Goldenrod City", "Route 35", "National Park"]},
+    {"title": "Ecruteak and Olivine", "needs": ["Plain"], "places": ["Route 36", "Route 37", "Ecruteak City", "Burned Tower", "Roaming Johto", "Route 38", "Route 39", "Olivine City"]},
+    {"title": "Cianwood and Whirl Islands", "needs": ["Fog"], "kit": "surf", "places": ["Sea Route 40", "Sea Route 41", "Cianwood City", "Whirl Islands"]},
+    {"title": "Mahogany and Lake of Rage", "needs": ["Fog"], "kit": "surf", "places": ["Route 42", "Mt. Mortar", "Route 43", "Lake Of Rage", "Team Rocket Hq"]},
+    {"title": "Ice Path to Blackthorn", "needs": ["Glacier"], "places": ["Route 44", "Ice Path", "Blackthorn City", "Dragons Den", "Dark Cave Blackthorn City Entrance", "Route 45", "Bell Tower"]},
+    {"title": "Victory Road", "needs": ["Rising"], "places": ["Route 26", "Route 27", "Tohjo Falls", "Victory Road"]},
+    {"title": "Kanto", "needs": ["Elite Four"], "places": ["Vermilion City", "Route 6", "Route 5", "Cerulean City", "Route 24", "Route 25", "Route 9", "Route 10", "Power Plant", "Rock Tunnel", "Route 8", "Route 7", "Celadon City", "Route 16", "Route 17", "Route 18", "Fuchsia City", "Route 15", "Route 14", "Route 13", "Route 12", "Route 11", "Digletts Cave", "Route 2", "Pewter City", "Route 3", "Mt. Moon", "Route 4", "Viridian City", "Route 22", "Route 1", "Pallet Town", "Sea Route 21", "Cinnabar Island", "Sea Route 20", "Sea Route 19"]},
+    {"title": "Mt. Silver", "needs": ["Boulder", "Cascade", "Thunder", "Rainbow", "Soul", "Marsh", "Volcano", "Earth"], "places": ["Route 28", "Mt. Silver"]}
+  ],
+  "methods": {"headbutt-high": "headbutt", "headbutt-low": "headbutt", "headbutt-normal": "headbutt"}
+}
