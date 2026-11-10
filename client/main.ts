@@ -1,3 +1,4 @@
+import "@fontsource/jetbrains-mono/latin-500.css";
 import { Clerk } from "@clerk/clerk-js";
 import { ui } from "@clerk/ui";
 import { ConvexClient } from "convex/browser";

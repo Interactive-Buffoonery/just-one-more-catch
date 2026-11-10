@@ -949,7 +949,7 @@ const gameList = (liveOnly = false) =>
   )
     .map(
       (g) =>
-        `<button ${g[2] ? `data-newrun="${g[2]}"` : "disabled"}><span><b>${g[0]}</b> <span class="muted small">${g[1]}</span></span><span class="small ${g[2] ? "" : "muted"}">${g[2] ? "Start" : "Coming later"}</span></button>`,
+        `<button ${g[2] ? `data-newrun="${g[2]}"` : "disabled"}><span><b>${g[0]}</b> <span class="gen">${g[1]}</span></span><span class="small ${g[2] ? "" : "muted"}">${g[2] ? "Start" : "Coming later"}</span></button>`,
     )
     .join("")}</div>`;
 const MOVE_NOTE =
