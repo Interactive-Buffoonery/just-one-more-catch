@@ -67,6 +67,8 @@ const bridge = (): Bridge => ({
   createRun: (version) => convex.mutation(api.runs.create, { version }),
   saveRun: (id, state) => convex.mutation(api.runs.save, { id, state }),
   deleteRun: (id) => convex.mutation(api.runs.remove, { id }),
+  setStart: (id, startedAt) =>
+    convex.mutation(api.runs.setStart, { id, startedAt }),
   deleteAccount: async () => {
     await convex.mutation(api.runs.deleteAccount, {});
     await clerk?.user?.delete();

@@ -38,7 +38,13 @@ type Mon = {
   item: string;
   note: string;
 };
-type RunRow = { id: string; version: string; state: string; createdAt: string };
+type RunRow = {
+  id: string;
+  version: string;
+  state: string;
+  createdAt: string;
+  updatedAt?: string;
+};
 export type Bridge = {
   auth: {
     isLoading: boolean;
@@ -53,6 +59,7 @@ export type Bridge = {
   createRun(version: string): Promise<string>;
   saveRun(id: string, state: string): Promise<unknown>;
   deleteRun(id: string): Promise<unknown>;
+  setStart(id: string, startedAt: number): Promise<unknown>;
   deleteAccount(): Promise<unknown>;
   contact(input: {
     email: string;
@@ -196,23 +203,6 @@ const HELD_ITEMS = [
   "Thick Club",
   "TwistedSpoon",
   "Up-Grade",
-];
-const GAMES: [string, string, string?][] = [
-  ["Red / Blue / Yellow", "Gen 1"],
-  ["Gold / Silver", "Gen 2"],
-  ["Crystal", "Gen 2", "crystal"],
-  ["Ruby / Sapphire / Emerald", "Gen 3"],
-  ["FireRed", "Gen 3", "firered"],
-  ["LeafGreen", "Gen 3", "leafgreen"],
-  ["Diamond / Pearl / Platinum", "Gen 4"],
-  ["HeartGold", "Gen 4", "heartgold"],
-  ["SoulSilver", "Gen 4", "soulsilver"],
-  ["Black / White", "Gen 5"],
-  ["Black 2 / White 2", "Gen 5"],
-  ["X / Y", "Gen 6"],
-  ["Omega Ruby / Alpha Sapphire", "Gen 6"],
-  ["Sun / Moon", "Gen 7"],
-  ["Ultra Sun / Ultra Moon", "Gen 7"],
 ];
 const LOOKS = [
   ["blossom", "Blossom", "Sakura / Rosé Pine"],
@@ -691,8 +681,7 @@ function Journey() {
   </div>
   </aside></div>`;
 }
-const NoRun = () =>
-  `<div class="narrow"><h2 style="margin:8px 0 12px">Start a new playthrough</h2>${gameList(true)}<p class="muted small" style="margin:12px 4px 32px">More games coming soon.</p></div>`;
+const NoRun = () => `<div class="narrow">${pickGame()}</div>`;
 
 /* ---- Dex ---- */
 const STATUS_TEXT: Record<string, string> = {
@@ -776,9 +765,13 @@ function fillSheet(s: any) {
     ? fillSpecies(s)
     : s.kind === "signin"
       ? fillSignIn()
-      : s.kind === "settings"
+      : s.kind === "newrun"
+        ? fillNewRun()
+        : s.kind === "started"
+        ? fillStartDate(s.id)
+        : s.kind === "settings"
         ? ($("#sheetbody").innerHTML =
-            `<h2 id="sheet-title">Settings</h2>${Appearance()}<div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="chip" data-close="1">Done</button></div>`)
+            `<h2 id="sheet-title">Settings</h2>${Account()}${Appearance()}<div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="chip" data-close="1">Done</button></div>`)
         : s.kind === "box"
           ? fillBoxSheet(s.b)
           : fillMonSheet(s);
@@ -905,39 +898,115 @@ const badgeCount = (r: Run) => {
     r.badges.has(b[0]),
   ).length;
 };
+const cover = (v: (typeof VERSIONS)[VersionId], cls = "") =>
+  `<img class="cover ${cls}" src="/covers/${v.short.toLowerCase()}.jpg" alt="${v.name} box art" width="46" height="46">`;
+const gameChoices = () =>
+  `<div class="game-options">${Object.entries(VERSIONS)
+    .map(
+      ([id, v]) =>
+        `<button class="game-choice" data-newrun="${id}">${cover(v, "sm")}${v.name}</button>`,
+    )
+    .join("")}</div>`;
+const pickGame = () =>
+  `<section class="empty"><h2>Pick a game</h2>${gameChoices()}<p class="muted small">No account needed. More games coming soon.</p></section>`;
+const MAX_RUNS = 20;
+function fillNewRun() {
+  const full = (bridge.runs?.length || 0) >= MAX_RUNS;
+  $("#sheetbody").innerHTML =
+    `<h2 id="sheet-title">New playthrough</h2>${full ? `<p class="muted">You have ${MAX_RUNS} playthroughs. Delete one to start another.</p>` : gameChoices()}<div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="chip" data-close="1">Cancel</button></div>`;
+}
+const ymd = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const startDay = (row: RunRow) => ymd(new Date(row.createdAt));
+function fillStartDate(id: string) {
+  const row = bridge.runs?.find((x) => x.id === id);
+  if (!row) return;
+  $("#sheetbody").innerHTML =
+    `<h2 id="sheet-title">Start date</h2><label class="field"><span>${verOf(row.version).name} started on</span><input id="started" type="date" value="${startDay(row)}" max="${ymd(new Date())}" required></label><div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button class="chip" data-close="1">Cancel</button><button class="app-primary" data-savestart="${row.id}">Save</button></div>`;
+}
+const lastPlayed = (iso: string) => {
+  const day = (d: Date) => new Date(d).setHours(0, 0, 0, 0),
+    n = Math.round((day(new Date()) - day(new Date(iso))) / 864e5);
+  return n <= 0
+    ? "today"
+    : n === 1
+      ? "yesterday"
+      : n < 7
+        ? `${n} days ago`
+        : `on ${new Date(iso).toLocaleDateString()}`;
+};
+const champion = (r: Run) => r.badges.has("Elite Four");
+function nextGoal(r: Run) {
+  const p = verOf(r.version).pack,
+    badge = (list: string[][]) => list.find((b) => !r.badges.has(b[0]));
+  const next = champion(r)
+    ? badge(p.postgame?.[1] || [])
+    : badge(p.badges) || ["the Elite Four"];
+  return next
+    ? `Next: ${next[0]}${next[1] ? ` Badge, ${next[1]}` : ""}`
+    : "Finish the Pokédex";
+}
+function playthroughRow(row: RunRow, r: Run) {
+  const v = verOf(row.version),
+    p = v.pack,
+    all = [...p.badges, ...(p.postgame?.[1] || [])];
+  return `<article class="pt"><div class="pt-id">${cover(v)}<div><h3>${v.name}</h3><span class="small muted">Started ${new Date(row.createdAt).toLocaleDateString()}</span></div></div>
+    <div class="pt-m"><b>${badgeCount(r)} / ${all.length}</b><span class="pt-ml"> badges</span><div class="diamonds" aria-hidden="true">${all.map((b) => `<i class="${r.badges.has(b[0]) ? "on" : ""}"></i>`).join("")}</div></div>
+    <div class="pt-m"><b>${r.caught.size}</b> / ${p.national}<span class="pt-ml"> caught</span><div class="catchbar" aria-hidden="true"><i style="width:${(r.caught.size / p.national) * 100}%"></i></div></div>
+    <div class="pt-goal">${champion(r) ? `<b class="champ">Champion</b> ` : ""}${nextGoal(r)}<span class="small muted">${p.region} · last played ${lastPlayed(row.updatedAt || row.createdAt)}</span></div>
+    <div class="pt-act"><button class="app-quiet" data-switch="${row.id}" aria-label="Continue ${v.name}">Continue <span aria-hidden="true">→</span></button><details class="ptmenu"><summary aria-label="More options for ${v.name}">…</summary><div class="menu"><button data-startsheet="${row.id}">Change start date</button><button data-delrun="${row.id}">Delete playthrough</button></div></details></div></article>`;
+}
 function Runs() {
-  const rows = bridge.runs || [],
-    a = bridge.auth;
-  return `<div class="narrow"><h2>Your playthroughs</h2>
+  const rows = [...(bridge.runs || [])]
+      .map((row) => ({
+        row,
+        r: row.id === run?.id ? R() : loadRun(row),
+        at: row.updatedAt || row.createdAt,
+      }))
+      .sort((x, y) => y.at.localeCompare(x.at)),
+    many = rows.length > 1,
+    f = (many && ui.runFilter) || "all",
+    done = rows.filter((x) => champion(x.r)).length,
+    top = rows[0];
+  const shown = rows.filter(
+    (x) => f === "all" || (f === "finished") === champion(x.r),
+  );
+  return `<div class="dash"><div class="home-title"><h2>Your playthroughs</h2>${rows.length ? `<button class="app-primary" data-newsheet="1">+ New playthrough</button>` : ""}</div>
   ${
-    rows
-      .map((row) => {
-        const r = row.id === run?.id ? R() : loadRun(row),
-          v = verOf(row.version);
-        return `<div class="row" style="margin-top:12px"><span class="mon" style="${ring(v.ring)}" aria-hidden="true"><b>${v.short}</b></span><div class="grow"><div class="name">${v.name}</div><div class="small muted">${badgeCount(r)} badges · ${r.caught.size} caught · started ${new Date(row.createdAt).toLocaleDateString()}</div></div>
-    ${row.id === run?.id ? `<span class="tag">Playing</span>` : `<button class="chip" data-switch="${row.id}">Play</button>`}<button class="chip" data-delrun="${row.id}" aria-label="Delete this ${v.name} playthrough">Delete</button></div>`;
-      })
-      .join("") || `<p class="muted">No playthroughs yet.</p>`
+    !rows.length
+      ? pickGame()
+      : `${
+          many && f === "all"
+            ? `<section class="resume">${cover(verOf(top.row.version), "lg")}<div class="grow"><p class="small">Last played ${lastPlayed(top.at)}</p><h3>${verOf(top.row.version).name}</h3><p class="small">${badgeCount(top.r)} badges · ${top.r.caught.size} caught</p></div><button class="app-primary" data-switch="${top.row.id}">Continue <span aria-hidden="true">→</span></button></section>`
+            : ""
+        }${
+          many
+            ? `<div class="chips pt-filters" role="group" aria-label="Filter playthroughs">${[
+                ["all", "All", rows.length],
+                ["playing", "Playing", rows.length - done],
+                ["finished", "Finished", done],
+              ]
+                .map(
+                  ([k, l, n]) =>
+                    `<button class="chip" data-runfilter="${k}" aria-pressed="${f === k}">${l} ${n}</button>`,
+                )
+                .join("")}</div>`
+            : ""
+        }<div class="pt-head" aria-hidden="true"><span>Game</span><span>Badges</span><span>Caught</span><span>Next goal</span><span></span></div>
+  ${shown.map((x) => playthroughRow(x.row, x.r)).join("") || `<p class="muted">Nothing here yet.</p>`}`
   }
-  <div class="eyebrow">Start a new playthrough</div>
-  ${gameList()}
-  <div class="eyebrow">Account</div>
+  </div>`;
+}
+function Account() {
+  const a = bridge.auth;
+  return `<div class="eyebrow">Account</div>
   ${
     a.isAuthenticated
       ? `<div class="card"><div style="display:flex;gap:12px;align-items:center"><span class="avatar" aria-hidden="true">${esc(initial())}</span><div style="flex:1"><b>${esc(a.displayName || "Trainer")}</b><div class="small muted">${a.email ? `Signed in as ${esc(a.email)}` : "Signed in"}</div></div><button class="chip" data-signout="1">Sign out</button></div>
   <div class="chips" style="margin-top:12px"><button class="chip" data-download="1">Download my data</button><button class="chip" data-delaccount="1">Delete account</button></div></div>`
       : `<div class="card"><button class="chip" data-signinsheet="1">Sign in</button><p class="muted small" style="margin:12px 0 0">${MOVE_NOTE}</p></div>`
-  }</div>`;
+  }`;
 }
-const gameList = (liveOnly = false) =>
-  `<div class="card gamelist" style="padding:4px 16px">${GAMES.filter(
-    (g) => !liveOnly || g[2],
-  )
-    .map(
-      (g) =>
-        `<button ${g[2] ? `data-newrun="${g[2]}"` : "disabled"}><span><b>${g[0]}</b> <span class="gen">${g[1]}</span></span><span class="small ${g[2] ? "" : "muted"}">${g[2] ? "Start" : "Coming later"}</span></button>`,
-    )
-    .join("")}</div>`;
 const MOVE_NOTE =
   "Playthroughs already saved in your local browser are moved to your account once you sign in.";
 function fillSignIn() {
@@ -1005,12 +1074,12 @@ const VIEWS: Record<string, () => string> = {
 };
 function shell() {
   return `<div class="top">
-    <div class="logo"><svg class="mark" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M3 12h6M15 12h6"/></svg><span class="full">Just One More Catch</span></div>
+    <button class="logo" data-tab="playthroughs" aria-label="Just One More Catch, your playthroughs"><svg class="mark" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M3 12h6M15 12h6"/></svg><span class="full">Just One More Catch</span></button>
     <span class="spacer"></span><span id="topright"></span>
   </div>
   <main id="view"></main>
   <div class="footer-brand"><button data-tab="about" data-sec="about" aria-label="About Just One More Catch">Just One More Catch</button></div>
-  <p class="foot">Unofficial fan project, not affiliated with Nintendo, Creatures, GAME FREAK or The Pokémon Company. Free and non-commercial. Encounter data sourced from <a href="https://pokeapi.co" target="_blank" rel="noopener">PokeAPI</a>. Thank you!</p>
+  <p class="foot">Unofficial fan project, not affiliated with Nintendo, Creatures, GAME FREAK or The Pokémon Company. Free and non-commercial. Box art © Nintendo, Creatures and GAME FREAK. Encounter data sourced from <a href="https://pokeapi.co" target="_blank" rel="noopener">PokeAPI</a>. Thank you!</p>
   <nav class="footnav" aria-label="About this site"><button data-tab="about" data-sec="about">About</button><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><button data-tab="contact">Contact</button></nav>
   <div class="dock"><div id="toast"></div><div id="tabs"></div></div>
   <dialog class="sheet" id="sheet" aria-labelledby="sheet-title"><div class="sheetbody" id="sheetbody"></div></dialog>
@@ -1018,18 +1087,18 @@ function shell() {
 }
 function tabFromUrl() {
   const t = new URLSearchParams(location.search).get("tab");
-  return t && Object.hasOwn(VIEWS, t) ? t : "journey";
+  return t && Object.hasOwn(VIEWS, t) ? t : "playthroughs";
 }
 function render() {
   const a = bridge.auth,
     signedIn = a.isAuthenticated;
   const k = (document.activeElement as HTMLElement)?.dataset?.k;
-  const loading = a.isLoading || !bridge.runs || !!opening;
+  const needsGame = ui.tab !== "playthroughs";
+  const loading = a.isLoading || !bridge.runs || (needsGame && !!opening);
   root.classList.toggle("loading", loading);
   const url = new URL(location.href);
-  // ponytail: bare / shows Journey for now; swap the default when / becomes a dashboard
-  if (url.searchParams.has("tab") || ui.tab !== "journey")
-    url.searchParams.set("tab", ui.tab);
+  if (ui.tab === "playthroughs") url.searchParams.delete("tab");
+  else url.searchParams.set("tab", ui.tab);
   if (url.href !== location.href)
     history[ui.tab === tabFromUrl() ? "replaceState" : "pushState"](
       null,
@@ -1038,7 +1107,7 @@ function render() {
     );
   $("#view").innerHTML = loading
     ? `<p class="muted" style="text-align:center;padding-top:40px">Loading…</p>`
-    : ui.loadError
+    : needsGame && ui.loadError
       ? `<p class="small" role="alert" style="text-align:center;padding-top:40px;color:var(--coral)">This game didn't load. Check your connection and reload the page.</p>`
       : (signedIn
         ? ui.saveError
@@ -1047,9 +1116,9 @@ function render() {
         : `<p class="muted small" style="text-align:center;margin:4px 0 16px">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your playthroughs and view them on any device.</p>`) +
       VIEWS[ui.tab]();
   $("#topright").innerHTML =
-    `<span style="display:flex;gap:8px"><button class="pill icon" data-settings="1" data-k="settings" aria-label="Settings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><circle cx="12" cy="12" r="3"/></svg></button>${run ? `<button class="pill" data-tab="playthroughs" aria-label="Current playthrough: ${ver().name}. Switch playthrough">${ver().name}</button>` : ""}${
+    `<span style="display:flex;gap:8px"><button class="pill icon" data-settings="1" data-k="settings" aria-label="Settings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><circle cx="12" cy="12" r="3"/></svg></button>${run ? `<button class="gamepill" data-tab="playthroughs" aria-label="Current playthrough: ${ver().name}. Switch playthrough">${cover(ver())}</button>` : ""}${
       signedIn
-        ? `<button class="avatar" data-tab="playthroughs" aria-label="Account: ${esc(a.displayName || "you")}">${esc(initial())}</button>`
+        ? `<button class="avatar" data-settings="1" aria-label="Account: ${esc(a.displayName || "you")}">${esc(initial())}</button>`
         : a.isLoading
           ? ""
           : `<button class="pill" data-signinsheet="1" data-k="signin">Sign in</button>`
@@ -1059,7 +1128,6 @@ function render() {
         ["journey", "Journey"],
         ["dex", "Dex"],
         ["boxes", "Boxes"],
-        ["playthroughs", "Playthroughs"],
       ]
         .map(
           ([t, l]) =>
@@ -1182,6 +1250,15 @@ async function onClick(e: MouseEvent) {
     $("#sheet").close();
     return;
   }
+  if (d.newsheet) {
+    openSheet({ kind: "newrun" });
+    return;
+  }
+  if (d.runfilter) {
+    ui.runFilter = d.runfilter;
+    render();
+    return;
+  }
   if (d.settings) {
     openSheet({ kind: "settings" });
     return;
@@ -1192,6 +1269,7 @@ async function onClick(e: MouseEvent) {
     return;
   }
   if (d.signout) {
+    $("#sheet").close();
     flushSave();
     run = null;
     bridge.signOut();
@@ -1213,6 +1291,7 @@ async function onClick(e: MouseEvent) {
       )
     )
       return;
+    $("#sheet").close();
     await bridge.deleteAccount();
     run = null;
     bridge.signOut();
@@ -1221,17 +1300,35 @@ async function onClick(e: MouseEvent) {
   if (d.newrun) {
     flushSave();
     t.disabled = true;
-    const id = await bridge.createRun(d.newrun);
-    pendingRun = id;
+    if ($("#sheet").open) $("#sheet").close();
+    pendingRun = await bridge.createRun(d.newrun);
+    refresh();
     return;
   }
   if (d.switch) {
     flushSave();
     const row = bridge.runs?.find((r) => r.id === d.switch);
     if (row) {
-      useRun(row);
+      if (row.id !== run?.id) useRun(row);
       ui.tab = "journey";
       render();
+    }
+    return;
+  }
+  if (d.startsheet) {
+    openSheet({ kind: "started", id: d.startsheet });
+    return;
+  }
+  if (d.savestart) {
+    const day = ($("#started") as HTMLInputElement).value,
+      row = bridge.runs?.find((x) => x.id === d.savestart);
+    if (!row || !/^\d{4}-\d{2}-\d{2}$/.test(day) || day > ymd(new Date())) return;
+    $("#sheet").close();
+    const [y, m, dd] = day.split("-").map(Number);
+    try {
+      await bridge.setStart(row.id, new Date(y, m - 1, dd).getTime());
+    } catch {
+      showSaveError("Couldn't change the start date. Try again.");
     }
     return;
   }
@@ -1400,7 +1497,21 @@ function withGuest(b: Bridge): Bridge {
       return id;
     },
     async saveRun(id, state) {
-      setGuestRows(guestRows().map((r) => (r.id === id ? { ...r, state } : r)));
+      const updatedAt = new Date().toISOString();
+      setGuestRows(
+        guestRows().map((r) => (r.id === id ? { ...r, state, updatedAt } : r)),
+      );
+    },
+    async setStart(id, startedAt) {
+      const createdAt = new Date(startedAt).toISOString();
+      setGuestRows(
+        guestRows().map((r) =>
+          r.id === id
+            ? { ...r, createdAt, updatedAt: r.updatedAt || r.createdAt }
+            : r,
+        ),
+      );
+      refresh();
     },
     async deleteRun(id) {
       setGuestRows(guestRows().filter((r) => r.id !== id));
@@ -1420,6 +1531,7 @@ async function moveGuestRuns() {
         guestRows().map((r) => (r.id === g.id ? { ...r, movedTo: id } : r)),
       );
       await raw.saveRun(id, g.state);
+      await raw.setStart(id, Date.parse(g.createdAt));
       setGuestRows(guestRows().filter((r) => r.id !== g.id));
       if (store.get("jomc.run") === g.id) pendingRun = id;
     }
