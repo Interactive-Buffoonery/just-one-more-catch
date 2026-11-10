@@ -43,10 +43,11 @@ export type Bridge = {
     isLoading: boolean;
     isAuthenticated: boolean;
     displayName?: string;
-    provider?: string | null;
+    email?: string;
   };
   runs: RunRow[] | undefined;
-  signIn(): void;
+  mountSignIn(el: HTMLDivElement): boolean;
+  unmountSignIn(el: HTMLDivElement): void;
   signOut(): void;
   createRun(version: string): Promise<string>;
   saveRun(id: string, state: string): Promise<unknown>;
@@ -277,7 +278,6 @@ const PALETTE: Record<string, { light: string; dark: string }> = {
   blossom: { light: "sakura", dark: "rosepine" },
   vampire: { light: "alucard", dark: "dracula" },
 };
-const PROVIDER: Record<string, string> = { google: "Google" };
 
 /* ---- Run state ---- */
 type Run = {
@@ -296,7 +296,14 @@ type Run = {
   monSeq: number;
   lastBox: "party" | number;
 };
-const MON_DEFAULTS = { nick: "", lvl: "", g: "", shiny: false, item: "", note: "" };
+const MON_DEFAULTS = {
+  nick: "",
+  lvl: "",
+  g: "",
+  shiny: false,
+  item: "",
+  note: "",
+};
 const compactMon = (m: Mon) =>
   Object.fromEntries(
     Object.entries(m).filter(([k, v]) => (MON_DEFAULTS as any)[k] !== v),
@@ -789,10 +796,11 @@ function fillSheet(s: any) {
     : s.kind === "signin"
       ? fillSignIn()
       : s.kind === "settings"
-      ? ($("#sheetbody").innerHTML = `<h2 id="sheet-title">Settings</h2>${Appearance()}<div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="chip" data-close="1">Done</button></div>`)
-      : s.kind === "box"
-      ? fillBoxSheet(s.b)
-      : fillMonSheet(s);
+        ? ($("#sheetbody").innerHTML =
+            `<h2 id="sheet-title">Settings</h2>${Appearance()}<div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="chip" data-close="1">Done</button></div>`)
+        : s.kind === "box"
+          ? fillBoxSheet(s.b)
+          : fillMonSheet(s);
 }
 function openSheet(s: any) {
   ui.sheet = s;
@@ -929,18 +937,30 @@ function Runs() {
   <div class="eyebrow">Start a new playthrough</div>
   ${gameList()}
   <div class="eyebrow">Account</div>
-  ${a.isAuthenticated ? `<div class="card"><div style="display:flex;gap:12px;align-items:center"><span class="avatar" aria-hidden="true">${esc(initial())}</span><div style="flex:1"><b>${esc(a.displayName || "Trainer")}</b><div class="small muted">Signed in with ${PROVIDER[a.provider || ""] || "your account"}</div></div><button class="chip" data-signout="1">Sign out</button></div>
-  <div class="chips" style="margin-top:12px"><button class="chip" data-download="1">Download my data</button><button class="chip" data-delaccount="1">Delete account</button></div></div>` : signInList()}</div>`;
+  ${
+    a.isAuthenticated
+      ? `<div class="card"><div style="display:flex;gap:12px;align-items:center"><span class="avatar" aria-hidden="true">${esc(initial())}</span><div style="flex:1"><b>${esc(a.displayName || "Trainer")}</b><div class="small muted">${a.email ? `Signed in as ${esc(a.email)}` : "Signed in"}</div></div><button class="chip" data-signout="1">Sign out</button></div>
+  <div class="chips" style="margin-top:12px"><button class="chip" data-download="1">Download my data</button><button class="chip" data-delaccount="1">Delete account</button></div></div>`
+      : `<div class="card"><button class="chip" data-signinsheet="1">Sign in</button><p class="muted small" style="margin:12px 0 0">${MOVE_NOTE}</p></div>`
+  }</div>`;
 }
 const gameList = (liveOnly = false) =>
-  `<div class="card gamelist" style="padding:4px 16px">${GAMES.filter((g) => !liveOnly || g[2]).map((g) => `<button ${g[2] ? `data-newrun="${g[2]}"` : "disabled"}><span><b>${g[0]}</b> <span class="muted small">${g[1]}</span></span><span class="small ${g[2] ? "" : "muted"}">${g[2] ? "Start" : "Coming later"}</span></button>`).join("")}</div>`;
-// ponytail: Google's standard "Sign in with Google" button, light and dark variants per Google's branding guide
-const GOOGLE_G = `<svg viewBox="0 0 48 48" width="20" height="20" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>`;
-const signInList = () =>
-  `<button class="gsi" data-signin="google">${GOOGLE_G}<span>Sign in with Google</span></button>`;
+  `<div class="card gamelist" style="padding:4px 16px">${GAMES.filter(
+    (g) => !liveOnly || g[2],
+  )
+    .map(
+      (g) =>
+        `<button ${g[2] ? `data-newrun="${g[2]}"` : "disabled"}><span><b>${g[0]}</b> <span class="muted small">${g[1]}</span></span><span class="small ${g[2] ? "" : "muted"}">${g[2] ? "Start" : "Coming later"}</span></button>`,
+    )
+    .join("")}</div>`;
+const MOVE_NOTE =
+  "Playthroughs already saved in your local browser are moved to your account once you sign in.";
 function fillSignIn() {
   $("#sheetbody").innerHTML =
-    `<h2 id="sheet-title">Sign in</h2><div style="margin-top:16px">${signInList()}</div><p class="muted small" style="margin:12px 0 0">Playthroughs already saved in your local browser are moved to your account once you sign in.</p>`;
+    `<h2 id="sheet-title">Sign in</h2><div id="clerk-signin" style="margin-top:16px"></div><p class="muted small" style="margin:12px 0 0">${MOVE_NOTE}</p>`;
+  const el = $("#clerk-signin") as HTMLDivElement;
+  if (!bridge.mountSignIn(el))
+    el.innerHTML = `<p class="muted" style="margin:0">Sign-in isn't available right now. You can keep playing as a guest.</p>`;
 }
 const Appearance = () => `<div class="card" style="margin-top:16px">
     <div class="name">Look</div>
@@ -1034,14 +1054,20 @@ function render() {
   $("#view").innerHTML =
     a.isLoading || !bridge.runs
       ? `<p class="muted" style="text-align:center;margin-top:40px">Loading…</p>`
-      : (signedIn ? (ui.saveError ? `<p class="small" role="alert" style="text-align:center;margin:4px 0 16px;color:var(--coral)">${ui.saveError}</p>` : "") : `<p class="muted small" style="text-align:center;margin:4px 0 16px">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your playthroughs and view them on any device.</p>`) + VIEWS[ui.tab]();
-  $("#topright").innerHTML = `<span style="display:flex;gap:8px"><button class="pill icon" data-settings="1" data-k="settings" aria-label="Settings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><circle cx="12" cy="12" r="3"/></svg></button>${run ? `<button class="pill" data-tab="runs" aria-label="Current playthrough: ${ver().name}. Switch playthrough">${ver().name}</button>` : ""}${
-    signedIn
-      ? `<button class="avatar" data-tab="runs" aria-label="Account: ${esc(a.displayName || "you")}">${esc(initial())}</button>`
-      : a.isLoading
-        ? ""
-        : `<button class="pill" data-signinsheet="1" data-k="signin">Sign in</button>`
-  }</span>`;
+      : (signedIn
+          ? ui.saveError
+            ? `<p class="small" role="alert" style="text-align:center;margin:4px 0 16px;color:var(--coral)">${ui.saveError}</p>`
+            : ""
+          : `<p class="muted small" style="text-align:center;margin:4px 0 16px">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your playthroughs and view them on any device.</p>`) +
+        VIEWS[ui.tab]();
+  $("#topright").innerHTML =
+    `<span style="display:flex;gap:8px"><button class="pill icon" data-settings="1" data-k="settings" aria-label="Settings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><circle cx="12" cy="12" r="3"/></svg></button>${run ? `<button class="pill" data-tab="runs" aria-label="Current playthrough: ${ver().name}. Switch playthrough">${ver().name}</button>` : ""}${
+      signedIn
+        ? `<button class="avatar" data-tab="runs" aria-label="Account: ${esc(a.displayName || "you")}">${esc(initial())}</button>`
+        : a.isLoading
+          ? ""
+          : `<button class="pill" data-signinsheet="1" data-k="signin">Sign in</button>`
+    }</span>`;
   $("#tabs").innerHTML = !a.isLoading
     ? `<nav class="tabbar" aria-label="Sections">${[
         ["journey", "Journey"],
@@ -1058,7 +1084,11 @@ function render() {
   $("#toast").innerHTML = ui.undo
     ? `<div class="toast">${ui.undo.msg}<button data-undo="1">Undo</button></div>`
     : "";
-  if ((typeof ui.sheet === "number" || ui.sheet?.kind === "settings") && $("#sheet").open) fillSheet(ui.sheet);
+  if (
+    (typeof ui.sheet === "number" || ui.sheet?.kind === "settings") &&
+    $("#sheet").open
+  )
+    fillSheet(ui.sheet);
   if (k)
     (
       root.querySelector(`[data-k="${k}"]`) ||
@@ -1078,7 +1108,9 @@ function scheduleSave(delay = 800) {
   if (state === ui.saved) return;
   clearTimeout(saveTimer);
   if (bridge.auth.isAuthenticated && runBytes(state) > MAX_RUN_BYTES)
-    return showSaveError("This playthrough is too big to save. Try shortening some notes.");
+    return showSaveError(
+      "This playthrough is too big to save. Try shortening some notes.",
+    );
   saveTimer = setTimeout(async () => {
     try {
       await bridge.saveRun(id, state);
@@ -1169,12 +1201,8 @@ async function onClick(e: MouseEvent) {
     return;
   }
   if (d.signinsheet) {
-    openSheet({ kind: "signin" });
-    return;
-  }
-  if (d.signin) {
     flushSave();
-    bridge.signIn();
+    openSheet({ kind: "signin" });
     return;
   }
   if (d.signout) {
@@ -1391,13 +1419,16 @@ async function moveGuestRuns() {
   try {
     for (const g of guestRows()) {
       const id = g.movedTo || (await raw.createRun(g.version));
-      setGuestRows(guestRows().map((r) => (r.id === g.id ? { ...r, movedTo: id } : r)));
+      setGuestRows(
+        guestRows().map((r) => (r.id === g.id ? { ...r, movedTo: id } : r)),
+      );
       await raw.saveRun(id, g.state);
       setGuestRows(guestRows().filter((r) => r.id !== g.id));
       if (store.get("jomc.run") === g.id) pendingRun = id;
     }
   } catch {
-    $("#live").textContent = "Couldn't move your playthroughs to your account yet.";
+    $("#live").textContent =
+      "Couldn't move your playthroughs to your account yet.";
   }
   moving = false;
 }
@@ -1425,7 +1456,11 @@ export function mount(el: HTMLElement, b: Bridge) {
   root = el;
   document.title = "Just One More Catch";
   // ponytail: set here because Zero's capsule favicon option is undocumented
-  const icon = document.querySelector<HTMLLinkElement>("link[rel=icon]") || document.head.appendChild(Object.assign(document.createElement("link"), { rel: "icon" }));
+  const icon =
+    document.querySelector<HTMLLinkElement>("link[rel=icon]") ||
+    document.head.appendChild(
+      Object.assign(document.createElement("link"), { rel: "icon" }),
+    );
   icon.href = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff" stroke="#a8285a" stroke-width="2.4"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M2 12h7M15 12h7"/></svg>')}`;
   raw = b;
   bridge = withGuest(b);
@@ -1468,6 +1503,8 @@ export function mount(el: HTMLElement, b: Bridge) {
   $("#sheet").addEventListener("close", () => {
     const s = ui.sheet;
     ui.sheet = null;
+    if (s?.kind === "signin")
+      bridge.unmountSignIn($("#clerk-signin") as HTMLDivElement);
     render();
     if (s)
       (
@@ -1486,5 +1523,7 @@ export function update(b: Bridge) {
   raw = b;
   bridge = withGuest(b);
   syncRuns();
+  if (b.auth.isAuthenticated && ui.sheet?.kind === "signin")
+    $("#sheet").close();
   if (!$("#sheet").open) render();
 }
