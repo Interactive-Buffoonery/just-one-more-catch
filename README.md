@@ -12,7 +12,7 @@ Live at https://justonemorecatch.app
   justonemorecatch.app.
 - **Back end:** Convex stores playthroughs (one JSON state each) and contact
   messages, and handles account deletion.
-- **Sign-in:** Clerk, with Google and email codes. The sign-in form is Clerk's
+- **Sign-in:** Clerk, with Google, email codes or a password. The sign-in form is Clerk's
   own UI (`@clerk/ui`), styled to match the app.
 - **Guests:** playthroughs live in the browser until someone signs in, then
   move to their account. The site still works as a guest if Clerk fails to

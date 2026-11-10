@@ -998,7 +998,7 @@ function About() {
     <li>Your playthroughs: badges, items, Safari Zone areas, the Pokémon you've caught and what's in your boxes, including any nicknames and notes.</li>
     <li>Anything you send us through the ${contactLink("contact form")}.</li>
     <li>Analytics about how the site is used, to help us improve it.</li></ul>
-    <p>Whether you sign in with Google or an email code, we only keep what's needed to sign you in.</p>
+    <p>Whether you sign in with Google, an email code or a password, we only keep what's needed to sign you in.</p>
     <h3>What we don't do</h3>
     <p>We never sell or share your data.</p>
     <h3>Where it lives</h3>
