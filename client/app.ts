@@ -45,7 +45,7 @@ export type Bridge = {
     provider?: string | null;
   };
   runs: RunRow[] | undefined;
-  signIn(provider: "spacefast" | "google" | "gravatar"): void;
+  signIn(): void;
   signOut(): void;
   createRun(version: string): Promise<string>;
   saveRun(id: string, state: string): Promise<unknown>;
@@ -276,12 +276,7 @@ const PALETTE: Record<string, { light: string; dark: string }> = {
   blossom: { light: "sakura", dark: "rosepine" },
   vampire: { light: "alucard", dark: "dracula" },
 };
-const PROVIDER: Record<string, string> = {
-  spacefast: "an email code",
-  account: "an email code",
-  google: "Google",
-  gravatar: "WordPress.com",
-};
+const PROVIDER: Record<string, string> = { google: "Google" };
 
 /* ---- Run state ---- */
 type Run = {
@@ -935,9 +930,7 @@ const gameList = (liveOnly = false) =>
   `<div class="card gamelist" style="padding:4px 16px">${GAMES.filter((g) => !liveOnly || g[2]).map((g) => `<button ${g[2] ? `data-newrun="${g[2]}"` : "disabled"}><span><b>${g[0]}</b> <span class="muted small">${g[1]}</span></span><span class="small ${g[2] ? "" : "muted"}">${g[2] ? "Start" : "Coming later"}</span></button>`).join("")}</div>`;
 const signInList = () =>
   `<div class="card gamelist" style="padding:4px 16px">${[
-    ["spacefast", "Email code"],
     ["google", "Google"],
-    ["gravatar", "WordPress.com"],
   ]
     .map(
       ([k, l]) =>
@@ -985,11 +978,11 @@ function About() {
     <li>Your runs: badges, items, Safari Zone areas, the Pokémon you've caught and what's in your boxes, including any nicknames and notes.</li>
     <li>Anything you send us through the contact form.</li>
     <li>Analytics about how the site is used, to help us improve it.</li></ul>
-    <p>If you sign in with Google or WordPress.com, we only keep what's needed to sign you in.</p>
+    <p>If you sign in with Google, we only keep what's needed to sign you in.</p>
     <h3>What we don't do</h3>
     <p>We never sell or share your data.</p>
     <h3>Where it lives</h3>
-    <p>The site runs on <a href="https://spacefast.com" target="_blank" rel="noopener">Spacefast</a>. This site is a personal project.</p>
+    <p>The site runs on <a href="https://lakebed.dev" target="_blank" rel="noopener">Lakebed</a>. This site is a personal project.</p>
     <h3>You're in charge</h3>
     <p>Download all your data or delete your account at any time from Runs, under Account. Deleting your account removes all your data.</p>
     <p>Questions? ${contactLink("Let us know")}.</p>
@@ -1173,7 +1166,7 @@ async function onClick(e: MouseEvent) {
   }
   if (d.signin) {
     flushSave();
-    bridge.signIn(d.signin as any);
+    bridge.signIn();
     return;
   }
   if (d.signout) {
