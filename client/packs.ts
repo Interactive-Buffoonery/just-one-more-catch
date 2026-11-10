@@ -13,6 +13,7 @@ export type GameData = {
 };
 export type Pack = {
   load: () => Promise<GameData>;
+  art: string;
   region: string;
   regional: number;
   national: number;
@@ -68,6 +69,7 @@ const JOHTO_KIT = [
 
 const HGSS: Pack = {
   load: () => import("./data/hgss").then((m) => m.default),
+  art: "hgss",
   region: "Johto",
   regional: 256,
   national: 493,
@@ -96,6 +98,7 @@ const HGSS: Pack = {
 
 const CRYSTAL: Pack = {
   load: () => import("./data/crystal").then((m) => m.default),
+  art: "crystal",
   region: "Johto",
   regional: 251,
   national: 251,
@@ -110,6 +113,7 @@ const CRYSTAL: Pack = {
 
 const FRLG: Pack = {
   load: () => import("./data/frlg").then((m) => m.default),
+  art: "frlg",
   region: "Kanto",
   regional: 151,
   national: 386,

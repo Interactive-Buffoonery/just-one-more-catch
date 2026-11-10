@@ -500,8 +500,10 @@ const ring = (types: string[]) => {
     b = TYPE[types[1] || types[0]];
   return `background:linear-gradient(135deg,${a} 50%,${b} 50%)`;
 };
+const sprite = (p: Species, cls = "") =>
+  `<img class="sprite ${cls}" src="/sprites/${P().art}/${p.n}.png" alt="${p.name}" width="80" height="80" loading="lazy">`;
 const mon = (p: Species) =>
-  `<span class="mon ${R().caught.has(p.n) ? "got" : ""}" style="${ring(p.types)}" aria-hidden="true"><b>${num(p)}</b></span>`;
+  `<span class="mon ${R().caught.has(p.n) ? "got" : ""}" style="${ring(p.types)}" aria-hidden="true"><b>${sprite(p)}</b></span>`;
 const lvl = (r: Row) =>
   r.m === "npc-trade"
     ? ""
@@ -560,7 +562,7 @@ function chapterGroups(chap: number) {
 }
 const uniq = (g: Record<string, Pick[]>) => Object.values(g).flat().length;
 const badgeRow = (list: string[][]) =>
-  `<div style="display:flex;flex-wrap:wrap;margin:6px -6px">${list.map((b) => `<button class="badge" data-badge="${b[0]}" data-k="b-${b[0]}" aria-pressed="${R().badges.has(b[0])}" aria-label="${b[0]} Badge from ${b[1]}" title="${b[0]} Badge · ${b[1]}"><i></i></button>`).join("")}</div>`;
+  `<div style="display:flex;flex-wrap:wrap;margin:6px -6px">${list.map((b) => `<button class="badge" data-badge="${b[0]}" data-k="b-${b[0]}" aria-pressed="${R().badges.has(b[0])}" aria-label="${b[0]} Badge from ${b[1]}" title="${b[0]} Badge · ${b[1]}"><img src="/badges/${b[0].toLowerCase()}.png" alt="${b[0]} Badge" width="32" height="32"></button>`).join("")}</div>`;
 
 /* ---- Journey (home) ---- */
 const why = (h: Pick) =>
@@ -576,7 +578,7 @@ function heroCard(h: Pick) {
     b = TYPE[h.p.types[1] || h.p.types[0]],
     st = rowStatus(h.r);
   return `<section class="hv-field" aria-labelledby="hero-name">
-      <div class="hv-band" style="--t1:${a};--t2:${b}"><span class="hv-no" aria-hidden="true">#${pad(num(h.p))}</span>
+      <div class="hv-band" style="--t1:${a};--t2:${b}"><span class="hv-no" aria-hidden="true">#${pad(num(h.p))}</span>${sprite(h.p, "hv-sprite")}
         <h2 id="hero-name">${h.p.name}</h2><div>${h.p.types.map((t) => `<span class="hv-type" style="--tc:${TYPE[t]}">${cap(t)}</span>`).join("")}</div><div class="hv-why">${why(h)}</div></div>
       <dl class="hv-facts"><div><dt>Where</dt><dd>${h.r.place}</dd></div><div><dt>How</dt><dd>${METHOD[h.r.m]?.[0] || h.r.m}</dd></div><div><dt>Level</dt><dd>${lvl(h.r) || "?"}</dd></div><div><dt>Chance</dt><dd>${h.r.c ? h.r.c + "%" : "?"}</dd></div></dl>
       ${h.r.cond.some((c) => TIME[c]) || st.s !== "now" ? rowTags(h.r) : ""}
@@ -1043,7 +1045,7 @@ function About() {
     <p>Just One More Catch is your Pokédex for retro games. It shows you what's available to catch at your point in the story, and where to find it.</p>
     <p>This is a free fan project, and not affiliated with Nintendo, Creatures, GAME FREAK or The Pokémon Company.</p>
     </div><h3>Thanks</h3>
-    <ul><li>Encounter data comes from <a href="https://pokeapi.co" target="_blank" rel="noopener">PokeAPI</a>, a free and open Pokémon database built by volunteers.</li>
+    <ul><li>Encounter data, sprites and badges come from <a href="https://pokeapi.co" target="_blank" rel="noopener">PokeAPI</a>, a free and open Pokémon database built by volunteers.</li>
     <li>Colour themes are inspired by <a href="https://rosepinetheme.com" target="_blank" rel="noopener">Rosé Pine</a> and <a href="https://draculatheme.com" target="_blank" rel="noopener">Dracula</a>.</li></ul>
     <p>Spotted a mistake? ${contactLink("Let us know")}.</p>
   </section>
@@ -1079,7 +1081,7 @@ function shell() {
   </div>
   <main id="view"></main>
   <div class="footer-brand"><button data-tab="about" data-sec="about" aria-label="About Just One More Catch">Just One More Catch</button></div>
-  <p class="foot">Unofficial fan project, not affiliated with Nintendo, Creatures, GAME FREAK or The Pokémon Company. Free and non-commercial. Box art © Nintendo, Creatures and GAME FREAK. Encounter data sourced from <a href="https://pokeapi.co" target="_blank" rel="noopener">PokeAPI</a>. Thank you!</p>
+  <p class="foot">Unofficial fan project, not affiliated with Nintendo, Creatures, GAME FREAK or The Pokémon Company. Free and non-commercial. Box art, sprites and badges © Nintendo, Creatures and GAME FREAK. Encounter data and sprites sourced from <a href="https://pokeapi.co" target="_blank" rel="noopener">PokeAPI</a>. Thank you!</p>
   <nav class="footnav" aria-label="About this site"><button data-tab="about" data-sec="about">About</button><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><button data-tab="contact">Contact</button></nav>
   <div class="dock"><div id="toast"></div><div id="tabs"></div></div>
   <dialog class="sheet" id="sheet" aria-labelledby="sheet-title"><div class="sheetbody" id="sheetbody"></div></dialog>
