@@ -663,7 +663,7 @@ function Journey() {
     <button class="chip" style="margin-top:6px" data-badge="Elite Four" data-k="b-e4" aria-pressed="${e4()}">Beat the Elite Four</button>
     ${e4() && P().postgame ? `<h3 style="margin-top:12px">${P().postgame![0]}</h3>${badgeRow(P().postgame![1])}` : ""}
     <h3 style="margin-top:12px">Items and moves you have</h3>
-    <div class="chips" style="margin-top:8px">${P().kit.map((k) => `<button class="chip" data-kit="${k[0]}" data-k="k-${k[0]}" aria-pressed="${r.kit.has(k[0])}">${k[1]}</button>`).join("")}</div>
+    <div class="chips" style="margin-top:8px">${P().kit.map((k) => `<button class="chip" data-kit="${k[0]}" data-k="k-${k[0]}" aria-pressed="${r.kit.has(k[0])}"><img src="/items/${k[0]}.png" alt="${k[1]} icon" width="24" height="24" aria-hidden="true">${k[1]}</button>`).join("")}</div>
     ${
       P().safari &&
       unlocked(CHAPTERS.findIndex((c) => c.places.includes("Safari Zone")))

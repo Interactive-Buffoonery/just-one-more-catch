@@ -17,6 +17,9 @@ ART = {
 # PokeAPI numbers badges 1-8 for Kanto and 9-16 for Johto, in gym order
 BADGES = ["Boulder", "Cascade", "Thunder", "Rainbow", "Soul", "Marsh", "Volcano", "Earth",
           "Zephyr", "Hive", "Plain", "Fog", "Storm", "Mineral", "Glacier", "Rising"]
+# Kit items: rods are their own items; moves use a disc in the move's type colour
+ITEMS = {"old-rod": "old-rod", "good-rod": "good-rod", "super-rod": "super-rod", "headbutt": "tm-normal",
+         "rock-smash": "tm-fighting", "surf": "tm-water", "whirlpool": "tm-water", "waterfall": "tm-water"}
 
 
 def fetch(job):
@@ -40,6 +43,7 @@ def fetch(job):
 
 if __name__ == "__main__":
     jobs = [(f"{BASE}badges/{i + 1}.png", os.path.join(ROOT, "public", "badges", f"{b.lower()}.png")) for i, b in enumerate(BADGES)]
+    jobs += [(f"{BASE}items/{src}.png", os.path.join(ROOT, "public", "items", f"{key}.png")) for key, src in ITEMS.items()]
     for pack, path in ART.items():
         count = json.load(open(os.path.join(ROOT, "data", pack + ".json")))["species"]
         for shiny in ("", "shiny/"):
