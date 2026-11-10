@@ -38,7 +38,13 @@ type Mon = {
   item: string;
   note: string;
 };
-type RunRow = { id: string; version: string; state: string; createdAt: string };
+type RunRow = {
+  id: string;
+  version: string;
+  state: string;
+  createdAt: string;
+  updatedAt?: string;
+};
 export type Bridge = {
   auth: {
     isLoading: boolean;
@@ -196,23 +202,6 @@ const HELD_ITEMS = [
   "Thick Club",
   "TwistedSpoon",
   "Up-Grade",
-];
-const GAMES: [string, string, string?][] = [
-  ["Red / Blue / Yellow", "Gen 1"],
-  ["Gold / Silver", "Gen 2"],
-  ["Crystal", "Gen 2", "crystal"],
-  ["Ruby / Sapphire / Emerald", "Gen 3"],
-  ["FireRed", "Gen 3", "firered"],
-  ["LeafGreen", "Gen 3", "leafgreen"],
-  ["Diamond / Pearl / Platinum", "Gen 4"],
-  ["HeartGold", "Gen 4", "heartgold"],
-  ["SoulSilver", "Gen 4", "soulsilver"],
-  ["Black / White", "Gen 5"],
-  ["Black 2 / White 2", "Gen 5"],
-  ["X / Y", "Gen 6"],
-  ["Omega Ruby / Alpha Sapphire", "Gen 6"],
-  ["Sun / Moon", "Gen 7"],
-  ["Ultra Sun / Ultra Moon", "Gen 7"],
 ];
 const LOOKS = [
   ["blossom", "Blossom", "Sakura / Rosé Pine"],
@@ -691,8 +680,7 @@ function Journey() {
   </div>
   </aside></div>`;
 }
-const NoRun = () =>
-  `<div class="narrow"><h2 style="margin:8px 0 12px">Start a new playthrough</h2>${gameList(true)}<p class="muted small" style="margin:12px 4px 32px">More games coming soon.</p></div>`;
+const NoRun = () => `<div class="narrow">${pickGame()}</div>`;
 
 /* ---- Dex ---- */
 const STATUS_TEXT: Record<string, string> = {
@@ -776,7 +764,9 @@ function fillSheet(s: any) {
     ? fillSpecies(s)
     : s.kind === "signin"
       ? fillSignIn()
-      : s.kind === "settings"
+      : s.kind === "newrun"
+        ? fillNewRun()
+        : s.kind === "settings"
         ? ($("#sheetbody").innerHTML =
             `<h2 id="sheet-title">Settings</h2>${Appearance()}<div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="chip" data-close="1">Done</button></div>`)
         : s.kind === "box"
@@ -905,39 +895,103 @@ const badgeCount = (r: Run) => {
     r.badges.has(b[0]),
   ).length;
 };
+const cover = (v: (typeof VERSIONS)[VersionId], cls = "") =>
+  `<img class="cover ${cls}" src="/covers/${v.short.toLowerCase()}.jpg" alt="" width="46" height="46">`;
+const gameChoices = () =>
+  `<div class="game-options">${Object.entries(VERSIONS)
+    .map(
+      ([id, v]) =>
+        `<button class="game-choice" data-newrun="${id}">${cover(v, "sm")}${v.name}</button>`,
+    )
+    .join("")}</div>`;
+const pickGame = () =>
+  `<section class="empty"><h2>Pick a game</h2>${gameChoices()}<p class="muted small">No account needed. More games coming soon.</p></section>`;
+const MAX_RUNS = 20;
+function fillNewRun() {
+  const full = (bridge.runs?.length || 0) >= MAX_RUNS;
+  $("#sheetbody").innerHTML =
+    `<h2 id="sheet-title">New playthrough</h2>${full ? `<p class="muted">You have ${MAX_RUNS} playthroughs. Delete one to start another.</p>` : gameChoices()}<div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="chip" data-close="1">Cancel</button></div>`;
+}
+const lastPlayed = (iso: string) => {
+  const day = (d: Date) => new Date(d).setHours(0, 0, 0, 0),
+    n = Math.round((day(new Date()) - day(new Date(iso))) / 864e5);
+  return n <= 0
+    ? "today"
+    : n === 1
+      ? "yesterday"
+      : n < 7
+        ? `${n} days ago`
+        : `on ${new Date(iso).toLocaleDateString()}`;
+};
+const champion = (r: Run) => r.badges.has("Elite Four");
+function nextGoal(r: Run) {
+  const p = verOf(r.version).pack,
+    badge = (list: string[][]) => list.find((b) => !r.badges.has(b[0]));
+  const next = champion(r)
+    ? badge(p.postgame?.[1] || [])
+    : badge(p.badges) || ["the Elite Four"];
+  return next
+    ? `Next: ${next[0]}${next[1] ? ` Badge, ${next[1]}` : ""}`
+    : "Finish the Pokédex";
+}
+function playthroughRow(row: RunRow, r: Run) {
+  const v = verOf(row.version),
+    p = v.pack,
+    all = [...p.badges, ...(p.postgame?.[1] || [])];
+  return `<article class="pt"><div class="pt-id">${cover(v)}<div><h3>${v.name}</h3><span class="small muted">Started ${new Date(row.createdAt).toLocaleDateString()}</span></div></div>
+    <div class="pt-m"><b>${badgeCount(r)} / ${all.length}</b><span class="pt-ml"> badges</span><div class="diamonds" aria-hidden="true">${all.map((b) => `<i class="${r.badges.has(b[0]) ? "on" : ""}"></i>`).join("")}</div></div>
+    <div class="pt-m"><b>${r.caught.size}</b> / ${p.national}<span class="pt-ml"> caught</span><div class="catchbar" aria-hidden="true"><i style="width:${(r.caught.size / p.national) * 100}%"></i></div></div>
+    <div class="pt-goal">${champion(r) ? `<b class="champ">Champion</b> ` : ""}${nextGoal(r)}<span class="small muted">${p.region} · last played ${lastPlayed(row.updatedAt || row.createdAt)}</span></div>
+    <div class="pt-act"><button class="app-quiet" data-switch="${row.id}" aria-label="Continue ${v.name}">Continue <span aria-hidden="true">→</span></button><button class="linkish small muted" data-delrun="${row.id}" aria-label="Delete this ${v.name} playthrough">Delete</button></div></article>`;
+}
 function Runs() {
-  const rows = bridge.runs || [],
-    a = bridge.auth;
-  return `<div class="narrow"><h2>Your playthroughs</h2>
+  const a = bridge.auth,
+    rows = [...(bridge.runs || [])]
+      .map((row) => ({
+        row,
+        r: row.id === run?.id ? R() : loadRun(row),
+        at: row.updatedAt || row.createdAt,
+      }))
+      .sort((x, y) => y.at.localeCompare(x.at)),
+    f = ui.runFilter || "all",
+    many = rows.length > 1,
+    done = rows.filter((x) => champion(x.r)).length,
+    top = rows[0];
+  const shown = rows.filter(
+    (x) => f === "all" || (f === "finished") === champion(x.r),
+  );
+  return `<div class="dash"><div class="home-title"><h2>Your playthroughs</h2>${rows.length ? `<button class="app-primary" data-newsheet="1">+ New playthrough</button>` : ""}</div>
   ${
-    rows
-      .map((row) => {
-        const r = row.id === run?.id ? R() : loadRun(row),
-          v = verOf(row.version);
-        return `<div class="row" style="margin-top:12px"><span class="mon" style="${ring(v.ring)}" aria-hidden="true"><b>${v.short}</b></span><div class="grow"><div class="name">${v.name}</div><div class="small muted">${badgeCount(r)} badges · ${r.caught.size} caught · started ${new Date(row.createdAt).toLocaleDateString()}</div></div>
-    ${row.id === run?.id ? `<span class="tag">Playing</span>` : `<button class="chip" data-switch="${row.id}">Play</button>`}<button class="chip" data-delrun="${row.id}" aria-label="Delete this ${v.name} playthrough">Delete</button></div>`;
-      })
-      .join("") || `<p class="muted">No playthroughs yet.</p>`
+    !rows.length
+      ? pickGame()
+      : `${
+          many && f === "all"
+            ? `<section class="resume">${cover(verOf(top.row.version), "lg")}<div class="grow"><p class="small">Last played ${lastPlayed(top.at)}</p><h3>${verOf(top.row.version).name}</h3><p class="small">${badgeCount(top.r)} badges · ${top.r.caught.size} caught</p></div><button class="app-primary" data-switch="${top.row.id}">Continue <span aria-hidden="true">→</span></button></section>`
+            : ""
+        }${
+          many
+            ? `<div class="chips pt-filters" role="group" aria-label="Filter playthroughs">${[
+                ["all", "All", rows.length],
+                ["playing", "Playing", rows.length - done],
+                ["finished", "Finished", done],
+              ]
+                .map(
+                  ([k, l, n]) =>
+                    `<button class="chip" data-runfilter="${k}" aria-pressed="${f === k}">${l} ${n}</button>`,
+                )
+                .join("")}</div>`
+            : ""
+        }<div class="pt-head" aria-hidden="true"><span>Game</span><span>Badges</span><span>Caught</span><span>Next goal</span><span></span></div>
+  ${shown.map((x) => playthroughRow(x.row, x.r)).join("") || `<p class="muted">Nothing here yet.</p>`}`
   }
-  <div class="eyebrow">Start a new playthrough</div>
-  ${gameList()}
-  <div class="eyebrow">Account</div>
+  <div class="narrow"><div class="eyebrow">Account</div>
   ${
     a.isAuthenticated
       ? `<div class="card"><div style="display:flex;gap:12px;align-items:center"><span class="avatar" aria-hidden="true">${esc(initial())}</span><div style="flex:1"><b>${esc(a.displayName || "Trainer")}</b><div class="small muted">${a.email ? `Signed in as ${esc(a.email)}` : "Signed in"}</div></div><button class="chip" data-signout="1">Sign out</button></div>
   <div class="chips" style="margin-top:12px"><button class="chip" data-download="1">Download my data</button><button class="chip" data-delaccount="1">Delete account</button></div></div>`
       : `<div class="card"><button class="chip" data-signinsheet="1">Sign in</button><p class="muted small" style="margin:12px 0 0">${MOVE_NOTE}</p></div>`
-  }</div>`;
+  }</div></div>`;
 }
-const gameList = (liveOnly = false) =>
-  `<div class="card gamelist" style="padding:4px 16px">${GAMES.filter(
-    (g) => !liveOnly || g[2],
-  )
-    .map(
-      (g) =>
-        `<button ${g[2] ? `data-newrun="${g[2]}"` : "disabled"}><span><b>${g[0]}</b> <span class="gen">${g[1]}</span></span><span class="small ${g[2] ? "" : "muted"}">${g[2] ? "Start" : "Coming later"}</span></button>`,
-    )
-    .join("")}</div>`;
 const MOVE_NOTE =
   "Playthroughs already saved in your local browser are moved to your account once you sign in.";
 function fillSignIn() {
@@ -1010,7 +1064,7 @@ function shell() {
   </div>
   <main id="view"></main>
   <div class="footer-brand"><button data-tab="about" data-sec="about" aria-label="About Just One More Catch">Just One More Catch</button></div>
-  <p class="foot">Unofficial fan project, not affiliated with Nintendo, Creatures, GAME FREAK or The Pokémon Company. Free and non-commercial. Encounter data sourced from <a href="https://pokeapi.co" target="_blank" rel="noopener">PokeAPI</a>. Thank you!</p>
+  <p class="foot">Unofficial fan project, not affiliated with Nintendo, Creatures, GAME FREAK or The Pokémon Company. Free and non-commercial. Box art © Nintendo, Creatures and GAME FREAK. Encounter data sourced from <a href="https://pokeapi.co" target="_blank" rel="noopener">PokeAPI</a>. Thank you!</p>
   <nav class="footnav" aria-label="About this site"><button data-tab="about" data-sec="about">About</button><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><button data-tab="contact">Contact</button></nav>
   <div class="dock"><div id="toast"></div><div id="tabs"></div></div>
   <dialog class="sheet" id="sheet" aria-labelledby="sheet-title"><div class="sheetbody" id="sheetbody"></div></dialog>
@@ -1018,7 +1072,7 @@ function shell() {
 }
 function tabFromUrl() {
   const t = new URLSearchParams(location.search).get("tab");
-  return t && Object.hasOwn(VIEWS, t) ? t : "journey";
+  return t && Object.hasOwn(VIEWS, t) ? t : "playthroughs";
 }
 function render() {
   const a = bridge.auth,
@@ -1027,9 +1081,8 @@ function render() {
   const loading = a.isLoading || !bridge.runs || !!opening;
   root.classList.toggle("loading", loading);
   const url = new URL(location.href);
-  // ponytail: bare / shows Journey for now; swap the default when / becomes a dashboard
-  if (url.searchParams.has("tab") || ui.tab !== "journey")
-    url.searchParams.set("tab", ui.tab);
+  if (ui.tab === "playthroughs") url.searchParams.delete("tab");
+  else url.searchParams.set("tab", ui.tab);
   if (url.href !== location.href)
     history[ui.tab === tabFromUrl() ? "replaceState" : "pushState"](
       null,
@@ -1182,6 +1235,15 @@ async function onClick(e: MouseEvent) {
     $("#sheet").close();
     return;
   }
+  if (d.newsheet) {
+    openSheet({ kind: "newrun" });
+    return;
+  }
+  if (d.runfilter) {
+    ui.runFilter = d.runfilter;
+    render();
+    return;
+  }
   if (d.settings) {
     openSheet({ kind: "settings" });
     return;
@@ -1221,15 +1283,16 @@ async function onClick(e: MouseEvent) {
   if (d.newrun) {
     flushSave();
     t.disabled = true;
-    const id = await bridge.createRun(d.newrun);
-    pendingRun = id;
+    if ($("#sheet").open) $("#sheet").close();
+    pendingRun = await bridge.createRun(d.newrun);
+    refresh();
     return;
   }
   if (d.switch) {
     flushSave();
     const row = bridge.runs?.find((r) => r.id === d.switch);
     if (row) {
-      useRun(row);
+      if (row.id !== run?.id) useRun(row);
       ui.tab = "journey";
       render();
     }
@@ -1400,7 +1463,10 @@ function withGuest(b: Bridge): Bridge {
       return id;
     },
     async saveRun(id, state) {
-      setGuestRows(guestRows().map((r) => (r.id === id ? { ...r, state } : r)));
+      const updatedAt = new Date().toISOString();
+      setGuestRows(
+        guestRows().map((r) => (r.id === id ? { ...r, state, updatedAt } : r)),
+      );
     },
     async deleteRun(id) {
       setGuestRows(guestRows().filter((r) => r.id !== id));
