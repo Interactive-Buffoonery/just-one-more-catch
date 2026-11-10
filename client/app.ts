@@ -9,7 +9,7 @@ type Row = {
   place: string;
   chap: number;
   m: string;
-  need: string | null;
+  need: string[] | null;
   cond: string[];
   lo: number;
   hi: number;
@@ -406,7 +406,7 @@ function rowStatus(r: Row): { s: string; why?: string } {
           ? "After the Elite Four"
           : `Opens with ${missing} Badge`,
     };
-  for (const need of [ch.kit, METHOD[r.m]?.[1], r.need])
+  for (const need of [ch.kit, METHOD[r.m]?.[1], ...(r.need || [])])
     if (need && !run.kit.has(need))
       return { s: "later", why: `Needs ${kitName(need)}` };
   if (
