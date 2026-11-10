@@ -53,7 +53,11 @@ export type Bridge = {
   saveRun(id: string, state: string): Promise<unknown>;
   deleteRun(id: string): Promise<unknown>;
   deleteAccount(): Promise<unknown>;
-  contact(input: { email: string; message: string }): Promise<{ ok: boolean }>;
+  contact(input: {
+    email: string;
+    message: string;
+    website: string;
+  }): Promise<{ ok: boolean }>;
 };
 
 const TYPE: Record<string, string> = {
@@ -364,6 +368,8 @@ const ui: any = {
   mode: "auto",
   saved: "",
   saving: false,
+  sent: false,
+  sendError: "",
 };
 const store = {
   get: (k: string) => {
@@ -996,13 +1002,13 @@ function About() {
     <h3>What we keep</h3>
     <ul><li>Your email address and any other identifying information needed to sign you in.</li>
     <li>Your playthroughs: badges, items, Safari Zone areas, the Pokémon you've caught and what's in your boxes, including any nicknames and notes.</li>
-    <li>Anything you send us through the ${contactLink("contact form")}.</li>
+    <li>Anything you send us through the ${contactLink("contact form")} or by email.</li>
     <li>Analytics about how the site is used, to help us improve it.</li></ul>
     <p>Whether you sign in with Google, an email code or a password, we only keep what's needed to sign you in.</p>
     <h3>What we don't do</h3>
     <p>We never sell or share your data.</p>
     <h3>Where it lives</h3>
-    <p>Your playthroughs are stored with <a href="https://www.convex.dev" target="_blank" rel="noopener">Convex</a>, sign-in is handled by <a href="https://clerk.com" target="_blank" rel="noopener">Clerk</a>, and the site is hosted on <a href="https://workers.cloudflare.com" target="_blank" rel="noopener">Cloudflare</a>. This site is a personal project.</p>
+    <p>Your playthroughs are stored with <a href="https://www.convex.dev" target="_blank" rel="noopener">Convex</a>, sign-in is handled by <a href="https://clerk.com" target="_blank" rel="noopener">Clerk</a>, messages from the contact form are emailed to us through <a href="https://resend.com" target="_blank" rel="noopener">Resend</a>, and the site is hosted on <a href="https://workers.cloudflare.com" target="_blank" rel="noopener">Cloudflare</a>. This site is a personal project.</p>
     <h3>You're in charge</h3>
     <p>Download all your data or delete your account at any time from Playthroughs, under Account. Deleting your account removes all your data.</p>
     <p>Questions? ${contactLink("Let us know")}.</p>
@@ -1017,7 +1023,16 @@ function About() {
 }
 function Contact() {
   return `<div class="narrow doc"><section><h2>Contact</h2>
-    <p>Our contact form is coming soon.</p></section></div>`;
+    <p>Questions, ideas or a mistake in the data? Send us a note. You can also email <a href="mailto:contact@justonemorecatch.app">contact@justonemorecatch.app</a>.</p>
+    ${
+      ui.sent
+        ? `<p>Thanks, we got your message.</p><button class="chip" data-another="1">Send another</button>`
+        : `<form class="form" data-contact="1">
+      <label class="field"><span>Message</span><textarea id="c-msg" name="message" maxlength="4000" required></textarea></label>
+      <label class="field"><span>Email, if you'd like a reply</span><input id="c-email" name="email" type="email" maxlength="200" autocomplete="email"></label>
+      <div class="sr" aria-hidden="true"><label>Leave this empty<input id="c-website" name="website" tabindex="-1" autocomplete="off"></label></div>
+      <button class="app-primary" style="margin-top:14px" type="submit">Send</button>${ui.sendError ? `<p class="small" role="alert" style="color:var(--coral)">${ui.sendError}</p>` : ""}</form>`
+    }</section></div>`;
 }
 
 /* ---- Wiring ---- */
@@ -1046,15 +1061,16 @@ function render() {
   const a = bridge.auth,
     signedIn = a.isAuthenticated;
   const k = (document.activeElement as HTMLElement)?.dataset?.k;
-  $("#view").innerHTML =
-    a.isLoading || !bridge.runs
-      ? `<p class="muted" style="text-align:center;margin-top:40px">Loading…</p>`
-      : (signedIn
-          ? ui.saveError
-            ? `<p class="small" role="alert" style="text-align:center;margin:4px 0 16px;color:var(--coral)">${ui.saveError}</p>`
-            : ""
-          : `<p class="muted small" style="text-align:center;margin:4px 0 16px">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your playthroughs and view them on any device.</p>`) +
-        VIEWS[ui.tab]();
+  const loading = a.isLoading || !bridge.runs;
+  root.classList.toggle("loading", loading);
+  $("#view").innerHTML = loading
+    ? `<p class="muted" style="text-align:center;padding-top:40px">Loading…</p>`
+    : (signedIn
+        ? ui.saveError
+          ? `<p class="small" role="alert" style="text-align:center;margin:4px 0 16px;color:var(--coral)">${ui.saveError}</p>`
+          : ""
+        : `<p class="muted small" style="text-align:center;margin:4px 0 16px">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your playthroughs and view them on any device.</p>`) +
+      VIEWS[ui.tab]();
   $("#topright").innerHTML =
     `<span style="display:flex;gap:8px"><button class="pill icon" data-settings="1" data-k="settings" aria-label="Settings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><circle cx="12" cy="12" r="3"/></svg></button>${run ? `<button class="pill" data-tab="runs" aria-label="Current playthrough: ${ver().name}. Switch playthrough">${ver().name}</button>` : ""}${
       signedIn
@@ -1210,6 +1226,11 @@ async function onClick(e: MouseEvent) {
     download();
     return;
   }
+  if (d.another) {
+    ui.sent = false;
+    render();
+    return;
+  }
   if (d.delaccount) {
     if (
       !confirm(
@@ -1333,6 +1354,36 @@ async function onClick(e: MouseEvent) {
   render();
 }
 
+async function onSubmit(e: SubmitEvent) {
+  const form = e.target as HTMLFormElement;
+  if (!form.dataset.contact) return;
+  e.preventDefault();
+  const btn = form.querySelector("button") as HTMLButtonElement;
+  btn.disabled = true;
+  try {
+    const res = await bridge.contact({
+      message: $("#c-msg").value,
+      email: $("#c-email").value,
+      website: $("#c-website").value,
+    });
+    ui.sent = res.ok;
+    ui.sendError = res.ok
+      ? ""
+      : "Please write a message, and check the email address.";
+  } catch {
+    ui.sendError = "That didn't send. Please try again.";
+  }
+  if (ui.sent) render();
+  else {
+    btn.disabled = false;
+    form.querySelector(".small")?.remove();
+    btn.insertAdjacentHTML(
+      "afterend",
+      `<p class="small" role="alert" style="color:var(--coral)">${ui.sendError}</p>`,
+    );
+  }
+}
+
 const darkMQ = matchMedia("(prefers-color-scheme: dark)");
 function applyTheme() {
   const dark = ui.mode === "dark" || (ui.mode === "auto" && darkMQ.matches);
@@ -1442,6 +1493,7 @@ export function mount(el: HTMLElement, b: Bridge) {
   applyTheme();
   darkMQ.addEventListener("change", applyTheme);
   el.addEventListener("click", onClick);
+  el.addEventListener("submit", onSubmit as any);
   el.addEventListener(
     "toggle",
     (e) => {
