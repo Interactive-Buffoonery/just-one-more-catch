@@ -1,0 +1,96 @@
+import { mutation, query, type QueryCtx } from "./_generated/server";
+import { v } from "convex/values";
+import { MAX_RUN_BYTES, runBytes } from "../shared/limits";
+
+const VERSIONS = ["heartgold", "soulsilver"];
+
+async function owner(ctx: QueryCtx) {
+  const me = await ctx.auth.getUserIdentity();
+  if (!me) throw new Error("Sign in first");
+  return me.tokenIdentifier;
+}
+
+const ownedBy = (ctx: QueryCtx, who: string) =>
+  ctx.db
+    .query("runs")
+    .withIndex("by_owner", (q) => q.eq("owner", who))
+    .collect();
+
+async function mine(ctx: QueryCtx, id: string) {
+  const runId = ctx.db.normalizeId("runs", id);
+  const run = runId && (await ctx.db.get(runId));
+  if (!run || run.owner !== (await owner(ctx))) throw new Error("Not your playthrough");
+  return run;
+}
+
+export const list = query({
+  args: {},
+  handler: async (ctx) => {
+    const me = await ctx.auth.getUserIdentity();
+    if (!me) return [];
+    return (await ownedBy(ctx, me.tokenIdentifier)).map((r) => ({
+      id: r._id as string,
+      version: r.version,
+      state: r.state,
+      createdAt: new Date(r._creationTime).toISOString(),
+    }));
+  },
+});
+
+export const create = mutation({
+  args: { version: v.string() },
+  handler: async (ctx, { version }) => {
+    const who = await owner(ctx);
+    if (!VERSIONS.includes(version)) throw new Error("Unknown game");
+    if ((await ownedBy(ctx, who)).length >= 20) throw new Error("Too many playthroughs");
+    return (await ctx.db.insert("runs", { owner: who, version, state: "{}" })) as string;
+  },
+});
+
+export const save = mutation({
+  args: { id: v.string(), state: v.string() },
+  handler: async (ctx, { id, state }) => {
+    if (runBytes(state) > MAX_RUN_BYTES) throw new Error("Playthrough is too large");
+    JSON.parse(state);
+    const run = await mine(ctx, id);
+    await ctx.db.patch(run._id, { state });
+  },
+});
+
+export const remove = mutation({
+  args: { id: v.string() },
+  handler: async (ctx, { id }) => {
+    const run = await mine(ctx, id);
+    await ctx.db.delete(run._id);
+  },
+});
+
+export const deleteAccount = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const who = await owner(ctx);
+    for (const r of await ownedBy(ctx, who)) await ctx.db.delete(r._id);
+    const sent = await ctx.db
+      .query("messages")
+      .withIndex("by_sender", (q) => q.eq("sender", who))
+      .collect();
+    for (const m of sent) await ctx.db.delete(m._id);
+  },
+});
+
+export const contact = mutation({
+  args: { email: v.string(), message: v.string() },
+  handler: async (ctx, input) => {
+    const email = input.email.trim().slice(0, 200);
+    const message = input.message.trim().slice(0, 4000);
+    if (!message || (email && !email.includes("@"))) return { ok: false };
+    const sender = (await ctx.auth.getUserIdentity())?.tokenIdentifier ?? "anonymous";
+    const latest = await ctx.db
+      .query("messages")
+      .withIndex("by_sender", (q) => q.eq("sender", sender))
+      .order("desc")
+      .first();
+    if (latest?.message !== message) await ctx.db.insert("messages", { sender, email, message });
+    return { ok: true };
+  },
+});

@@ -7,5 +7,4 @@ dist/
 /.spacefast-*
 .spacefast/.spacefast-*
 .spacefast/.space-link-*.tmp
-.lakebed/
-.env.lakebed.server
+.wrangler/

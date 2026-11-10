@@ -1,5 +1,5 @@
 // Ported from the approved mockup: string-rendered views on one root, event delegation, no framework.
-// The preact page owns auth and server calls and hands them in through the bridge.
+// main.ts owns auth and server calls and hands them in through the bridge.
 import GAME from "./data/hgss";
 import CSS from "./styles";
 import { MAX_RUN_BYTES, runBytes } from "../shared/limits";
@@ -983,7 +983,7 @@ function About() {
     <h3>What we don't do</h3>
     <p>We never sell or share your data.</p>
     <h3>Where it lives</h3>
-    <p>The site runs on <a href="https://lakebed.dev" target="_blank" rel="noopener">Lakebed</a>. This site is a personal project.</p>
+    <p>Your playthroughs are stored with <a href="https://www.convex.dev" target="_blank" rel="noopener">Convex</a>, sign-in is handled by <a href="https://clerk.com" target="_blank" rel="noopener">Clerk</a>, and the site is served by <a href="https://pages.cloudflare.com" target="_blank" rel="noopener">Cloudflare</a>. This site is a personal project.</p>
     <h3>You're in charge</h3>
     <p>Download all your data or delete your account at any time from Playthroughs, under Account. Deleting your account removes all your data.</p>
     <p>Questions? ${contactLink("Let us know")}.</p>
