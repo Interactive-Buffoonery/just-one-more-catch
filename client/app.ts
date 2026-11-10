@@ -1023,7 +1023,7 @@ const VIEWS: Record<string, () => string> = {
 };
 function shell() {
   return `<div class="top">
-    <div class="logo"><span class="mark" aria-hidden="true">+1</span><span class="full">Just One More Catch</span></div>
+    <div class="logo"><svg class="mark" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M3 12h6M15 12h6"/></svg><span class="full">Just One More Catch</span></div>
     <span class="spacer"></span><span id="topright"></span>
   </div>
   <main id="view"></main>
@@ -1419,6 +1419,9 @@ function syncRuns() {
 export function mount(el: HTMLElement, b: Bridge) {
   root = el;
   document.title = "Just One More Catch";
+  // ponytail: set here because Zero's capsule favicon option is undocumented
+  const icon = document.querySelector<HTMLLinkElement>("link[rel=icon]") || document.head.appendChild(Object.assign(document.createElement("link"), { rel: "icon" }));
+  icon.href = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff" stroke="#a8285a" stroke-width="2.4"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M2 12h7M15 12h7"/></svg>')}`;
   raw = b;
   bridge = withGuest(b);
   el.className = "app";
