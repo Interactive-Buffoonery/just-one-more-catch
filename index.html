@@ -10,6 +10,7 @@
       .startup { max-width: 680px; margin: 48px auto; padding: 24px; font-family: system-ui, sans-serif; line-height: 1.6; color: #3d2a33; background: #fff; border-radius: 18px; }
       .startup h1 { line-height: 1.2; }
       .startup a { color: #a8285a; display: inline-flex; align-items: center; min-height: 44px; margin-right: 20px; }
+      .startup button { min-height: 44px; padding: 8px 16px; border: 1px solid #a8285a; border-radius: 12px; background: #fff; color: #a8285a; font: inherit; cursor: pointer; }
     </style>
   </head>
   <body>
@@ -20,9 +21,26 @@
         <p>Play as a guest, or sign in to save your playthroughs across devices. Google sign-in uses your basic account information to identify your account.</p>
         <p>This is a free, unofficial fan project, not affiliated with Nintendo, Creatures, GAME FREAK or The Pokémon Company.</p>
         <nav aria-label="About this site"><a href="/privacy/">Privacy policy</a><a href="/terms/">Terms of service</a></nav>
+        <div id="startup-recovery" hidden>
+          <p role="status">The tracker is taking longer to load. Check your connection, or reload to try again. Your saved playthroughs will stay in this browser.</p>
+          <button type="button" id="startup-reload">Reload tracker</button>
+        </div>
         <noscript><p>Enable JavaScript to use the playthrough tracker. You can read our privacy policy and terms without it.</p></noscript>
       </main>
     </div>
+    <script>
+      (function () {
+        function showRecovery() {
+          var recovery = document.getElementById("startup-recovery");
+          if (recovery) recovery.hidden = false;
+        }
+        document.getElementById("startup-reload").addEventListener("click", function () {
+          location.reload();
+        });
+        window.addEventListener("error", showRecovery, true);
+        setTimeout(showRecovery, 12000);
+      })();
+    </script>
     <script type="module" src="/client/main.ts"></script>
   </body>
 </html>
