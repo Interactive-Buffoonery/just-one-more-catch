@@ -35,6 +35,7 @@ export const list = query({
       version: r.version,
       state: r.state,
       createdAt: new Date(r._creationTime).toISOString(),
+      updatedAt: new Date(r.updatedAt ?? r._creationTime).toISOString(),
     }));
   },
 });
@@ -55,7 +56,7 @@ export const save = mutation({
     if (runBytes(state) > MAX_RUN_BYTES) throw new Error("Playthrough is too large");
     JSON.parse(state);
     const run = await mine(ctx, id);
-    await ctx.db.patch(run._id, { state });
+    await ctx.db.patch(run._id, { state, updatedAt: Date.now() });
   },
 });
 

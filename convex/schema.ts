@@ -7,6 +7,7 @@ export default defineSchema({
     owner: v.string(),
     version: v.string(),
     state: v.string(),
+    updatedAt: v.optional(v.number()),
   }).index("by_owner", ["owner"]),
   messages: defineTable({
     sender: v.string(),
