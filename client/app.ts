@@ -348,6 +348,7 @@ function useRun(row: RunRow) {
   ui.loadError = false;
   run = loadRun(row);
   CHAPTERS = data.chapters;
+  placeCache = {};
   DEX = data.dex.map((p) => ({
     ...p,
     all: p.rows,
@@ -510,9 +511,11 @@ const lvl = (r: Row) =>
     : r.lo === r.hi
       ? `Lv ${r.lo}`
       : `Lv ${r.lo} to ${r.hi}`;
-function rowTags(r: Row) {
+function rowTags(r: Row, place = r.place) {
   const st = rowStatus(r),
     t = [`<span class="tag">${METHOD[r.m]?.[0] || r.m}</span>`];
+  if (r.place !== place)
+    t.push(`<span class="tag plain">${r.place.slice(place.length).trim() || r.place}</span>`);
   if (ONE_TIME.has(r.m)) t.push(`<span class="tag plain">One-time</span>`);
   if (lvl(r)) t.push(`<span class="tag plain">${lvl(r)}</span>`);
   if (r.c && r.c < 100 && !ONE_TIME.has(r.m))
@@ -528,8 +531,8 @@ function rowTags(r: Row) {
 }
 const gotBtn = (p: Species) =>
   `<button class="got-btn" data-toggle="${p.n}" data-k="t${p.n}" aria-pressed="${R().caught.has(p.n)}" aria-label="${p.name} caught">${R().caught.has(p.n) ? "✓ Caught" : "Caught?"}</button>`;
-const monRow = (p: Species, r: Row | null) =>
-  `<div class="row">${mon(p)}<div class="grow"><div class="name">${p.name}</div>${r ? rowTags(r) : `<div class="small muted">${howElse(p)}</div>`}</div>${gotBtn(p)}</div>`;
+const monRow = (p: Species, r: Row | null, place?: string) =>
+  `<div class="row">${mon(p)}<div class="grow"><div class="name">${p.name}</div>${r ? rowTags(r, place) : `<div class="small muted">${howElse(p)}</div>`}</div>${gotBtn(p)}</div>`;
 type Pick = { p: Species; r: Row };
 const pref = (a: Pick, b: Pick) =>
   +isHere(b.r.place) - +isHere(a.r.place) ||
@@ -561,6 +564,88 @@ function chapterGroups(chap: number) {
   return g;
 }
 const uniq = (g: Record<string, Pick[]>) => Object.values(g).flat().length;
+// Each row folds into the picker place it belongs to (Safari Zone Plains -> Safari Zone).
+let placeCache: Record<string, string> = {};
+const placeOf = (pl: string) =>
+  (placeCache[pl] ??= NOT_HERE.test(pl)
+    ? pl
+    : CHAPTERS.flatMap((c) => c.places)
+        .filter((c) => pl === c || pl.startsWith(c + " "))
+        .sort((a, b) => b.length - a.length)[0] || pl);
+type Spot = { chap: number; got: number; now: Pick[]; later: Pick[]; once: Pick[] };
+// 0 now, 1 other time of day, 2 not reachable yet, 3 one-time or special
+const rank = (r: Row) => {
+  const s = rowStatus(r).s;
+  return ONE_TIME.has(r.m) || s === "special" ? 3 : s === "later" ? 2 : s === "wrongtime" ? 1 : 0;
+};
+// Per place: caught species, ones you can catch with what you have (any time of day),
+// ones that need more badges or items, and one-time or special ones (left out of the count).
+function spots() {
+  const out: Record<string, Spot> = {};
+  DEX.forEach((p) => {
+    if (!visible(p)) return;
+    const seen = new Set<string>();
+    p.rows
+      .map((r) => ({ r, k: rank(r) }))
+      .sort((a, b) => a.k - b.k || b.r.c - a.r.c)
+      .forEach(({ r, k }) => {
+        const pl = placeOf(r.place);
+        if (seen.has(pl)) return;
+        seen.add(pl);
+        const s = (out[pl] ||= { chap: r.chap, got: 0, now: [], later: [], once: [] });
+        if (R().caught.has(p.n)) s.got += +(k < 2);
+        else (k === 3 ? s.once : k === 2 ? s.later : s.now).push({ p, r });
+      });
+  });
+  return out;
+}
+const complete = (pl: string, s?: Spot) =>
+  !!s && !NOT_HERE.test(pl) && !s.now.length && s.got > 0;
+const placeLabel = (pl: string, s?: Spot) =>
+  !s || NOT_HERE.test(pl)
+    ? ""
+    : complete(pl, s)
+      ? `✓ Complete${s.later.length ? ` · ${s.later.length} later` : ""}`
+      : s.now.length
+        ? `${s.now.length} left`
+        : s.later.length
+          ? `${s.later.length} later`
+          : "";
+const laterBox = (key: string, title: string, list: Pick[], place: string) =>
+  list.length
+    ? `<details class="later" data-chap="${esc(key)}" ${ui.open.has(key) ? "open" : ""}><summary>${title}</summary>${list.map((x) => monRow(x.p, x.r, place)).join("")}</details>`
+    : "";
+function placeBlock(pl: string, s: Spot) {
+  const later = laterBox(`l:${pl}`, complete(pl, s) ? `${s.later.length} more available later` : `Come back later · ${s.later.length}`, s.later, pl),
+    once = laterBox(`o:${pl}`, `One-time and special · ${s.once.length}`, s.once, pl);
+  if (complete(pl, s))
+    return `<div class="done-place"><span class="tick" aria-hidden="true">✓</span><span style="flex:1">${pl} complete</span><span class="count ok">${s.got} / ${s.got}</span></div>${isHere(pl) ? `<p class="small muted" style="margin:6px 2px 0">Everything you can catch here with your current badges and items.</p>` : ""}${later}${once}`;
+  const count = NOT_HERE.test(pl)
+    ? ""
+    : s.now.length
+      ? `${s.got} / ${s.got + s.now.length}`
+      : s.later.length
+        ? "Nothing to catch yet"
+        : "";
+  return `<div class="place"><div class="placehead"><span>${pl}</span><span class="count">${count}</span></div>${s.now
+    .sort((a, b) => rank(a.r) - rank(b.r) || b.r.c - a.r.c)
+    .map((x) => monRow(x.p, x.r, pl))
+    .join("")}${later}${once}</div>`;
+}
+// Places in a chapter, in the chapter's own order, then any extra places its rows use.
+function chapterSpots(all: Record<string, Spot>, i: number) {
+  const list = Object.entries(all).filter(
+    ([pl, s]) => s.chap === i && (s.now.length || s.later.length || s.once.length),
+  );
+  const at = (pl: string) => {
+    const k = CHAPTERS[i].places.indexOf(pl);
+    return k < 0 ? 999 : k;
+  };
+  list.sort((a, b) => at(a[0]) - at(b[0]));
+  const left = new Set(list.flatMap(([, s]) => s.now.map((x) => x.p.n)));
+  const later = new Set(list.flatMap(([, s]) => s.later.map((x) => x.p.n).filter((n) => !left.has(n))));
+  return { html: list.map(([pl, s]) => placeBlock(pl, s)).join(""), left: left.size, later: later.size };
+}
 const badgeRow = (list: string[][]) =>
   `<div style="display:flex;flex-wrap:wrap;margin:6px -6px">${list.map((b) => `<button class="badge" data-badge="${b[0]}" data-k="b-${b[0]}" aria-pressed="${R().badges.has(b[0])}" aria-label="${b[0]} Badge from ${b[1]}" title="${b[0]} Badge · ${b[1]}"><img src="/badges/${b[0].toLowerCase()}.png" alt="${b[0]} Badge" width="32" height="32"></button>`).join("")}</div>`;
 
@@ -597,7 +682,8 @@ function Journey() {
     .flatMap((c) => c.places)
     .filter((p) => !NOT_HERE.test(p));
   const atHere = now.filter((x) => isHere(x.r.place) && x.p.n !== hero?.p.n);
-  const curG = chapterGroups(cur);
+  const all = spots(),
+    curS = chapterSpots(all, cur);
   const evolve = DEX.filter(
     (p) =>
       visible(p) &&
@@ -610,7 +696,7 @@ function Journey() {
   return `<div class="cols"><div class="colmain">
   <div class="chips">
     <label class="sr" for="here">Where you are in the game</label>
-    <select class="pill" id="here" data-k="here">${herePlaces.map((p) => `<option ${p === r.here ? "selected" : ""} value="${p}">Near ${p}</option>`).join("")}</select>
+    <select class="pill" id="here" data-k="here">${herePlaces.map((p) => `<option ${p === r.here ? "selected" : ""} value="${p}">Near ${p}${placeLabel(p, all[p]) && ` · ${placeLabel(p, all[p])}`}</option>`).join("")}</select>
     ${
       P().nightFrom
         ? `<div class="seg3" role="group" aria-label="In-game time of day">
@@ -623,16 +709,9 @@ function Journey() {
   ${hero ? heroCard(hero) : now.length ? `<section class="hero"><h2>You've skipped every suggestion</h2><p style="margin:6px 0 12px">${now.length} Pokémon are still catchable right now.</p><button class="btn" data-unskip="1" data-k="unskip2">Show them again</button></section>` : `<section class="hero"><h2>Nothing left to catch right now</h2><p style="margin:6px 0 0">Try another time of day, or move ahead in the story.</p></section>`}
   ${r.skip.size ? `<div style="text-align:right;margin-top:8px"><button class="chip" data-unskip="1" data-k="unskip">Show ${r.skip.size} skipped</button></div>` : ""}
   ${atHere.length ? `<div class="eyebrow">Also near ${r.here}</div>${atHere.map((x) => monRow(x.p, x.r)).join("")}` : ""}
-  <div class="eyebrow">${CHAPTERS[cur].title} · ${uniq(curG)} to find</div>
-  ${
-    Object.entries(curG)
-      .map(
-        ([place, list]) =>
-          `<div class="place"><div class="placehead"><span>${place}</span><span>${list.length}</span></div>${list.map((x) => monRow(x.p, x.r)).join("")}</div>`,
-      )
-      .join("") ||
-    `<p class="muted">You've caught everything in this chapter.</p>`
-  }
+  <div class="eyebrow">${CHAPTERS[cur].title} · ${curS.left} to find${curS.later ? ` · ${curS.later} later` : ""}</div>
+  ${curS.left || curS.later ? "" : `<p class="muted">You've caught everything in this chapter.</p>`}
+  ${curS.html}
   </div><aside class="colside">
   ${evolve.length ? `<div class="eyebrow">Evolution options · ${evolve.length}</div>${evolve.map((p) => monRow(p, null)).join("")}` : ""}
   <div class="eyebrow">Your journey</div>
@@ -644,16 +723,26 @@ function Journey() {
         (!e4() && i === CHAPTERS.length - 1)
       )
         return "";
-      const g = chapterGroups(i),
-        n = uniq(g),
-        open = unlocked(i);
-      return `<details class="chap" data-chap="${i}" ${ui.open.has(i) ? "open" : ""}><summary><span class="node ${open ? "done" : ""}" aria-hidden="true">${open ? "✓" : i + 1}</span><span style="flex:1">${c.title}<span class="sr">${open ? ", reached" : ", not reached yet"}</span></span><span class="muted small">${n ? `${n} ${open ? "still out there" : "to come"}` : "all caught"}</span></summary>
-        ${Object.entries(g)
-          .map(
-            ([place, list]) =>
-              `<div class="place"><div class="placehead"><span>${place}</span></div>${list.map((x) => monRow(x.p, x.r)).join("")}</div>`,
-          )
-          .join("")}<div style="height:10px"></div></details>`;
+      const open = unlocked(i),
+        g = open ? null : chapterGroups(i),
+        cs = open ? chapterSpots(all, i) : null,
+        n = g ? uniq(g) : cs!.left;
+      const label = g
+        ? n ? `${n} to come` : "all caught"
+        : n || cs!.later
+          ? [n && `${n} still out there`, cs!.later && `${cs!.later} later`].filter(Boolean).join(" · ")
+          : "all caught";
+      return `<details class="chap" data-chap="${i}" ${ui.open.has(String(i)) ? "open" : ""}><summary><span class="node ${open ? "done" : ""}" aria-hidden="true">${open ? "✓" : i + 1}</span><span style="flex:1">${c.title}<span class="sr">${open ? ", reached" : ", not reached yet"}</span></span><span class="muted small">${label}</span></summary>
+        ${
+          g
+            ? Object.entries(g)
+                .map(
+                  ([place, list]) =>
+                    `<div class="place"><div class="placehead"><span>${place}</span></div>${list.map((x) => monRow(x.p, x.r)).join("")}</div>`,
+                )
+                .join("")
+            : cs!.html
+        }<div style="height:10px"></div></details>`;
     }).join("")}
   </div>
   <div class="eyebrow">Progress</div>
@@ -1591,8 +1680,8 @@ export function mount(el: HTMLElement, b: Bridge) {
       const c = (e.target as HTMLElement).dataset?.chap;
       if (c != null)
         (e.target as HTMLDetailsElement).open
-          ? ui.open.add(+c)
-          : ui.open.delete(+c);
+          ? ui.open.add(c)
+          : ui.open.delete(c);
     },
     true,
   );
