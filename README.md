@@ -45,8 +45,13 @@ python3 scripts/build_data.py
   - `.env.local`: Convex dev values (written by `npx convex dev`) and
     `VITE_CLERK_PUBLISHABLE_KEY` with the `pk_test_` key.
   - `.env.production`: `VITE_CLERK_PUBLISHABLE_KEY` with the `pk_live_` key.
-- **Settings in Convex:** `CLERK_JWT_ISSUER_DOMAIN` on each deployment (set
-  with `npx convex env set`, add `--prod` for production).
+- **Settings in Convex:** `CLERK_JWT_ISSUER_DOMAIN`, `RESEND_API_KEY` (a
+  sending-only key for `mail.justonemorecatch.app`) and `CONTACT_TO` (where
+  contact-form messages are emailed) on each deployment. Set them with
+  `npx convex env set`, and add `--prod` for production.
+- **Email:** Cloudflare Email Routing forwards `contact@justonemorecatch.app`
+  to Sarah's inbox. Resend sends the contact-form notifications from
+  `notify@mail.justonemorecatch.app`.
 - The Clerk secret key isn't used anywhere. Keep it out of this repo.
 
 ## Run locally
@@ -66,7 +71,8 @@ with the code `424242`.
 npm run deploy
 ```
 
-- Pushes Convex functions to production. Answer **y** when it asks.
+- Pushes Convex functions to production. Answer **y** when it asks (where it
+  can't prompt, add `--yes` to the `convex deploy` command).
 - Builds the site with `.env.production`. The script removes the dev Clerk key
   first, because `convex deploy` loads `.env.local`.
 - Uploads `dist/` to the Cloudflare Worker with `wrangler deploy`. Run

@@ -1,8 +1,10 @@
 import { mutation, query, type QueryCtx } from "./_generated/server";
+import { internal } from "./_generated/api";
 import { v } from "convex/values";
 import { MAX_RUN_BYTES, runBytes } from "../shared/limits";
 
 const VERSIONS = ["heartgold", "soulsilver"];
+const EMAILS_PER_HOUR = 20;
 
 async function owner(ctx: QueryCtx) {
   const me = await ctx.auth.getUserIdentity();
@@ -79,8 +81,9 @@ export const deleteAccount = mutation({
 });
 
 export const contact = mutation({
-  args: { email: v.string(), message: v.string() },
+  args: { email: v.string(), message: v.string(), website: v.optional(v.string()) },
   handler: async (ctx, input) => {
+    if (input.website) return { ok: true };
     const email = input.email.trim().slice(0, 200);
     const message = input.message.trim().slice(0, 4000);
     if (!message || (email && !email.includes("@"))) return { ok: false };
@@ -90,7 +93,15 @@ export const contact = mutation({
       .withIndex("by_sender", (q) => q.eq("sender", sender))
       .order("desc")
       .first();
-    if (latest?.message !== message) await ctx.db.insert("messages", { sender, email, message });
+    if (latest?.message === message) return { ok: true };
+    await ctx.db.insert("messages", { sender, email, message });
+    // ponytail: soft global cap on notification emails; concurrent sends can slip a few past it, use @convex-dev/rate-limiter if that matters
+    const lastHour = await ctx.db
+      .query("messages")
+      .withIndex("by_creation_time", (q) => q.gt("_creationTime", Date.now() - 3_600_000))
+      .take(EMAILS_PER_HOUR + 1);
+    if (lastHour.length <= EMAILS_PER_HOUR)
+      await ctx.scheduler.runAfter(0, internal.email.notify, { email, message });
     return { ok: true };
   },
 });
