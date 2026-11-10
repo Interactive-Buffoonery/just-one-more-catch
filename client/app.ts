@@ -830,7 +830,7 @@ function fillMonSheet(s: any) {
       inBox(b).filter((x) => x !== m).length >= boxCap(b);
   const title = m
     ? `Edit ${esc(m.nick || p.name)}`
-    : s.isNew
+    : !R().mons.some((x) => x.n === p.n)
       ? `Where did you put ${p.name}?`
       : `Add another ${p.name}`;
   $("#sheetbody").innerHTML =
@@ -854,7 +854,7 @@ function fillMonSheet(s: any) {
       <label class="check span2"><input id="f-shiny" type="checkbox" ${m?.shiny ? "checked" : ""}> Shiny</label>
     </div></details>
     <datalist id="held-items">${HELD_ITEMS.map((i) => `<option value="${esc(i)}">`).join("")}</datalist>
-    <div class="hv-actions" style="margin-top:20px"><button class="app-primary grow" data-savemon="1">Save</button>${m ? `<button class="app-quiet" data-delmon="${m.id}">Remove</button>` : `<button class="app-quiet" data-close="1">${s.isNew ? "Skip" : "Cancel"}</button>`}</div>`;
+    <div class="hv-actions" style="margin-top:20px"><button class="app-primary grow" data-savemon="1">Save</button>${m ? `<button class="app-quiet" data-delmon="${m.id}">Remove</button>` : `<button class="app-quiet" data-close="1">Cancel</button>`}</div>`;
 }
 function fillBoxSheet(b: number) {
   $("#sheetbody").innerHTML =
@@ -1390,11 +1390,6 @@ async function onClick(e: MouseEvent) {
     const n = +(d.toggle || (d.catch as string));
     toggleCaught(n);
     scheduleSave();
-    if (!ui.bulk && r.caught.has(n)) {
-      render();
-      openSheet({ kind: "mon", n, isNew: true });
-      return;
-    }
   } else if (d.skip) r.skip.add(+d.skip);
   else if (d.unskip) r.skip.clear();
   else if (d.undo) {
