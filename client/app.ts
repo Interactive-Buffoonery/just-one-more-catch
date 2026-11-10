@@ -985,7 +985,7 @@ const Appearance = () => `<div class="card" style="margin-top:16px">
 const initial = () =>
   (bridge.auth.displayName || "T").trim()[0]?.toUpperCase() || "T";
 
-/* ---- About, Privacy, Terms, Contact ---- */
+/* ---- About, Contact ---- */
 const contactLink = (text: string) =>
   `<button class="linkish" data-tab="contact">${text}</button>`;
 function About() {
@@ -998,32 +998,11 @@ function About() {
     <li>Colour themes are inspired by <a href="https://rosepinetheme.com" target="_blank" rel="noopener">Rosé Pine</a> and <a href="https://draculatheme.com" target="_blank" rel="noopener">Dracula</a>.</li></ul>
     <p>Spotted a mistake? ${contactLink("Let us know")}.</p>
   </section>
-  <section id="privacy"><h2>Privacy</h2>
-    <h3>What we keep</h3>
-    <ul><li>Your email address and any other identifying information needed to sign you in.</li>
-    <li>Your playthroughs: badges, items, Safari Zone areas, the Pokémon you've caught and what's in your boxes, including any nicknames and notes.</li>
-    <li>Anything you send us through the ${contactLink("contact form")} or by email.</li>
-    <li>Analytics about how the site is used, to help us improve it.</li></ul>
-    <p>Whether you sign in with Google, an email code or a password, we only keep what's needed to sign you in.</p>
-    <h3>What we don't do</h3>
-    <p>We never sell or share your data.</p>
-    <h3>Where it lives</h3>
-    <p>Your playthroughs are stored with <a href="https://www.convex.dev" target="_blank" rel="noopener">Convex</a>, sign-in is handled by <a href="https://clerk.com" target="_blank" rel="noopener">Clerk</a>, messages from the contact form are emailed to us through <a href="https://resend.com" target="_blank" rel="noopener">Resend</a>, and the site is hosted on <a href="https://workers.cloudflare.com" target="_blank" rel="noopener">Cloudflare</a>. This site is a personal project.</p>
-    <h3>You're in charge</h3>
-    <p>Download all your data or delete your account at any time from Playthroughs, under Account. Deleting your account removes all your data.</p>
-    <p>Questions? ${contactLink("Let us know")}.</p>
-  </section>
-  <section id="terms"><h2>Terms</h2>
-    <ul><li>Just One More Catch is free and provided as is. Data can be wrong, and features can change.</li>
-    <li>It's an unofficial fan project, not affiliated with Nintendo, Creatures, GAME FREAK or The Pokémon Company. Pokémon and its names are trademarks of their owners.</li>
-    <li>Do not try to break or overload the site. We will close and block accounts that do.</li></ul>
-    <p>Questions or concerns? ${contactLink("Contact us here")}.</p>
-  </section>
-  <p class="small muted">Last updated 10 November 2026</p></div>`;
+  </div>`;
 }
 function Contact() {
   return `<div class="narrow doc"><section><h2>Contact</h2>
-    <p>Questions, ideas or a mistake in the data? Send us a note. You can also email <a href="mailto:contact@justonemorecatch.app">contact@justonemorecatch.app</a>.</p>
+    <p>Questions, ideas or a mistake in the data? Send us a note.</p>
     ${
       ui.sent
         ? `<p>Thanks, we got your message.</p><button class="chip" data-another="1">Send another</button>`
@@ -1040,7 +1019,7 @@ const VIEWS: Record<string, () => string> = {
   journey: Journey,
   dex: Dex,
   boxes: Boxes,
-  runs: Runs,
+  playthroughs: Runs,
   about: About,
   contact: Contact,
 };
@@ -1052,10 +1031,14 @@ function shell() {
   <main id="view"></main>
   <div class="footer-brand"><button data-tab="about" data-sec="about" aria-label="About Just One More Catch">Just One More Catch</button></div>
   <p class="foot">Unofficial fan project, not affiliated with Nintendo, Creatures, GAME FREAK or The Pokémon Company. Free and non-commercial. Encounter data sourced from <a href="https://pokeapi.co" target="_blank" rel="noopener">PokeAPI</a>. Thank you!</p>
-  <nav class="footnav" aria-label="About this site"><button data-tab="about" data-sec="about">About, Privacy &amp; Terms</button><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><button data-tab="contact">Contact</button></nav>
+  <nav class="footnav" aria-label="About this site"><button data-tab="about" data-sec="about">About</button><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><button data-tab="contact">Contact</button></nav>
   <div class="dock"><div id="toast"></div><div id="tabs"></div></div>
   <dialog class="sheet" id="sheet" aria-labelledby="sheet-title"><div class="sheetbody" id="sheetbody"></div></dialog>
   <div class="sr" aria-live="polite" id="live"></div>`;
+}
+function tabFromUrl() {
+  const t = new URLSearchParams(location.search).get("tab");
+  return t && Object.hasOwn(VIEWS, t) ? t : "journey";
 }
 function render() {
   const a = bridge.auth,
@@ -1063,6 +1046,16 @@ function render() {
   const k = (document.activeElement as HTMLElement)?.dataset?.k;
   const loading = a.isLoading || !bridge.runs;
   root.classList.toggle("loading", loading);
+  const url = new URL(location.href);
+  // ponytail: bare / shows Journey for now; swap the default when / becomes a dashboard
+  if (url.searchParams.has("tab") || ui.tab !== "journey")
+    url.searchParams.set("tab", ui.tab);
+  if (url.href !== location.href)
+    history[ui.tab === tabFromUrl() ? "replaceState" : "pushState"](
+      null,
+      "",
+      url,
+    );
   $("#view").innerHTML = loading
     ? `<p class="muted" style="text-align:center;padding-top:40px">Loading…</p>`
     : (signedIn
@@ -1072,9 +1065,9 @@ function render() {
         : `<p class="muted small" style="text-align:center;margin:4px 0 16px">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your playthroughs and view them on any device.</p>`) +
       VIEWS[ui.tab]();
   $("#topright").innerHTML =
-    `<span style="display:flex;gap:8px"><button class="pill icon" data-settings="1" data-k="settings" aria-label="Settings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><circle cx="12" cy="12" r="3"/></svg></button>${run ? `<button class="pill" data-tab="runs" aria-label="Current playthrough: ${ver().name}. Switch playthrough">${ver().name}</button>` : ""}${
+    `<span style="display:flex;gap:8px"><button class="pill icon" data-settings="1" data-k="settings" aria-label="Settings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><circle cx="12" cy="12" r="3"/></svg></button>${run ? `<button class="pill" data-tab="playthroughs" aria-label="Current playthrough: ${ver().name}. Switch playthrough">${ver().name}</button>` : ""}${
       signedIn
-        ? `<button class="avatar" data-tab="runs" aria-label="Account: ${esc(a.displayName || "you")}">${esc(initial())}</button>`
+        ? `<button class="avatar" data-tab="playthroughs" aria-label="Account: ${esc(a.displayName || "you")}">${esc(initial())}</button>`
         : a.isLoading
           ? ""
           : `<button class="pill" data-signinsheet="1" data-k="signin">Sign in</button>`
@@ -1084,7 +1077,7 @@ function render() {
         ["journey", "Journey"],
         ["dex", "Dex"],
         ["boxes", "Boxes"],
-        ["runs", "Playthroughs"],
+        ["playthroughs", "Playthroughs"],
       ]
         .map(
           ([t, l]) =>
@@ -1476,6 +1469,13 @@ function syncRuns() {
 
 export function mount(el: HTMLElement, b: Bridge) {
   root = el;
+  ui.tab = tabFromUrl();
+  addEventListener("popstate", () => {
+    if (tabFromUrl() === ui.tab) return;
+    ui.tab = tabFromUrl();
+    ui.undo = null;
+    render();
+  });
   document.title = "Just One More Catch";
   raw = b;
   bridge = withGuest(b);
