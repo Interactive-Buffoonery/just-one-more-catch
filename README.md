@@ -1,24 +1,16 @@
 # Just One More Catch
 
-A contact form and its inbox, in one capsule. The form is a mutation writing a
-table — there is no separate forms product to configure.
+Track your Pokémon runs and see where to catch what you're missing at your
+point in the story. HeartGold and SoulSilver for now.
 
-Run locally:
-
-```sh
-sf dev
-```
-
-Deploy:
+- `server/index.ts`: runs (one JSON state per run), contact messages, account deletion.
+- `client/app.ts`: the whole UI, string-rendered with event delegation.
+- `pages/index.tsx`: mounts the UI and bridges auth, queries and mutations.
+- `client/data/hgss.ts`: generated encounter data. Rebuild with:
 
 ```sh
-sf publish
+python3 scripts/fetch_pokeapi.py   # one-time cache into .cache/pokeapi
+python3 scripts/build_data.py
 ```
 
-The starter app includes:
-
-- `/`: the contact form, built with the platform kit (`@spacefast/zero/kit`).
-- `/submissions`: the inbox. The server returns submissions only to signed-in
-  users — the client gate is just presentation.
-
-`AGENTS.md` is the guide for coding agents working in this capsule.
+Run locally with `sf dev`, deploy with `sf publish`.

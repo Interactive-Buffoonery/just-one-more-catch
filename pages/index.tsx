@@ -1,64 +1,57 @@
 "use client";
 
-import { useMutation } from "@spacefast/zero/client";
-import { Alert, Button, Card, Field, Input, TextArea } from "@spacefast/zero/kit";
-import { useState } from "preact/hooks";
+import {
+  signInWithGoogle,
+  signInWithGravatar,
+  signInWithSpacefast,
+  signOut,
+  useAuth,
+  useMutation,
+  useQuery,
+} from "@spacefast/zero/client";
+import { useEffect, useRef } from "preact/hooks";
 
-import { cleanSubmission, type SubmissionInput } from "../shared/contact";
+import { mount, update, type Bridge } from "../client/app";
 
-export default function ContactPage() {
-  const submit = useMutation<[input: SubmissionInput], { ok: boolean }>("submit");
-  const [state, setState] = useState<"idle" | "sending" | "sent" | "invalid">("idle");
+const SIGN_IN = { google: signInWithGoogle, gravatar: signInWithGravatar, spacefast: signInWithSpacefast };
 
-  async function onSubmit(event: SubmitEvent) {
-    event.preventDefault();
-    const form = event.currentTarget as HTMLFormElement;
-    const data = new FormData(form);
-    const input = {
-      name: String(data.get("name") ?? ""),
-      email: String(data.get("email") ?? ""),
-      message: String(data.get("message") ?? ""),
-    };
-    if (!cleanSubmission(input)) {
-      setState("invalid");
-      return;
-    }
-    setState("sending");
-    const result = await submit(input);
-    setState(result.ok ? "sent" : "invalid");
-    if (result.ok) form.reset();
-  }
+type RunRow = Bridge["runs"] extends (infer T)[] | undefined ? T : never;
 
-  return (
-    <Card title="Just One More Catch" subtitle="Submissions land in this capsule's database.">
-      <div class="flex flex-col gap-4">
-        {state === "sent" ? (
-          <Alert tone="success" title="Message sent">
-            Thanks — we read every note.
-          </Alert>
-        ) : null}
-        {state === "invalid" ? (
-          <Alert tone="danger" title="Not quite">
-            Every field is required, and the email needs an @ in it.
-          </Alert>
-        ) : null}
-        <form class="flex flex-col gap-4" onSubmit={(event) => void onSubmit(event)}>
-          <Field label="Name" htmlFor="contact-name">
-            <Input id="contact-name" name="name" autocomplete="name" />
-          </Field>
-          <Field label="Email" htmlFor="contact-email">
-            <Input id="contact-email" name="email" type="email" autocomplete="email" />
-          </Field>
-          <Field label="Message" htmlFor="contact-message" hint="What can we help with?">
-            <TextArea id="contact-message" name="message" rows={5} />
-          </Field>
-          <div class="flex justify-end">
-            <Button type="submit" loading={state === "sending"}>
-              Send message
-            </Button>
-          </div>
-        </form>
-      </div>
-    </Card>
-  );
+export default function App() {
+  const el = useRef<HTMLDivElement>(null);
+  const mounted = useRef(false);
+  const auth = useAuth();
+  const runs = useQuery<RunRow[]>("myRuns");
+  const createRun = useMutation<[string], string>("createRun");
+  const saveRun = useMutation<[string, string], unknown>("saveRun");
+  const deleteRun = useMutation<[string], unknown>("deleteRun");
+  const deleteAccount = useMutation<[], unknown>("deleteAccount");
+  const contact = useMutation<[{ email: string; message: string }], { ok: boolean }>("contact");
+
+  const bridge: Bridge = {
+    auth: {
+      isLoading: auth.isLoading,
+      isAuthenticated: !!auth.isAuthenticated,
+      displayName: auth.identity?.displayName,
+      provider: auth.identity?.provider ?? null,
+    },
+    runs: auth.isAuthenticated ? runs : [],
+    signIn: (provider) => void SIGN_IN[provider](),
+    signOut: () => void signOut(),
+    createRun,
+    saveRun,
+    deleteRun,
+    deleteAccount,
+    contact,
+  };
+
+  useEffect(() => {
+    if (!el.current) return;
+    if (!mounted.current) {
+      mounted.current = true;
+      mount(el.current, bridge);
+    } else update(bridge);
+  });
+
+  return <div ref={el} />;
 }

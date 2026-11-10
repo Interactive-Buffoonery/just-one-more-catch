@@ -1,0 +1,164 @@
+"""Build client/data/hgss.ts from the PokeAPI cache and data/hgss.json.
+
+Run scripts/fetch_pokeapi.py first. Fails on any place no chapter claims.
+"""
+import json, os, re, sys
+
+ROOT = os.path.join(os.path.dirname(__file__), "..")
+CACHE = os.path.join(ROOT, ".cache", "pokeapi")
+GAME = json.load(open(os.path.join(ROOT, "data", "hgss.json")))
+VERSIONS = {"heartgold": "h", "soulsilver": "s"}
+DEFAULT_COND = {"radio-off", "swarm-no", "bug-catching-contest-no", "johto-safari-blocks-inactive", "story-progress-before-national-dex"}
+TIME = {"time-morning", "time-day", "time-night"}
+GENS = ["generation-i", "generation-ii", "generation-iii", "generation-iv", "generation-v", "generation-vi", "generation-vii", "generation-viii", "generation-ix"]
+
+
+def cached(name):
+    with open(os.path.join(CACHE, name + ".json")) as f:
+        return json.load(f)
+
+
+def nice(slug):
+    s = re.sub(r"-area$", "", slug)
+    s = re.sub(r"^(johto|kanto)-", "", s)
+    return s.replace("-", " ").title().replace("Mt ", "Mt. ")
+
+
+def pretty(s):
+    for a, b in [("Kings Rock", "King's Rock"), ("Dragons Den", "Dragon's Den"), ("Team Rocket Hq", "Team Rocket HQ"),
+                 ("Digletts", "Diglett's"), ("Kirks House", "Kirk's House"), ("Bills House", "Bill's House"),
+                 ("Ss Anne", "S.S. Anne"), ("Silph Co", "Silph Co."), (" Of ", " of "), ("Pokemon", "Pokémon"),
+                 (" City Entrance", " (city side)")]:
+        s = s.replace(a, b)
+    return s
+
+
+def base_place(loc):
+    loc = GAME["rename"].get(loc, loc)
+    loc = re.sub(r" (\d+F|B\d+F)( Top)?$", "", loc)
+    loc = re.sub(r"^Mt\. Moon Mt\. Moon ", "Mt. Moon ", loc)
+    return re.sub(r"^Victory Road 1$", "Victory Road", loc)
+
+
+PLACES = [(p, i) for i, c in enumerate(GAME["chapters"]) for p in c["places"]]
+unmatched = set()
+
+
+def chapter_of(place):
+    hits = [(p, i) for p, i in PLACES if place == p or place.startswith(p + " ")]
+    if not hits:
+        unmatched.add(place)
+        return -1
+    return max(hits, key=lambda h: len(h[0]))[1]
+
+
+def gen4_types(p):
+    for past in sorted(p.get("past_types", []), key=lambda x: GENS.index(x["generation"]["name"])):
+        if GENS.index(past["generation"]["name"]) >= 3:
+            return [t["type"]["name"] for t in past["types"]]
+    return [t["type"]["name"] for t in p["types"]]
+
+
+def label(slug):
+    return slug.replace("-", " ").title()
+
+
+def evo_text(chain, name):
+    def walk(node):
+        if node["species"]["name"] == name:
+            return node["evolution_details"]
+        for c in node["evolves_to"]:
+            r = walk(c)
+            if r is not None:
+                return r
+    for d in walk(chain) or []:
+        t, parts = d["trigger"]["name"], []
+        if d.get("min_level"): parts.append(f"Lv {d['min_level']}")
+        if d.get("item"): parts.append(label(d["item"]["name"]))
+        if t == "trade": parts.append("Trade" + (f" holding {label(d['held_item']['name'])}" if d.get("held_item") else ""))
+        elif d.get("held_item"): parts.append(f"Level up holding {label(d['held_item']['name'])}")
+        if d.get("min_happiness"): parts.append("High friendship")
+        if d.get("min_beauty"): parts.append("High beauty")
+        if d.get("time_of_day"): parts.append(d["time_of_day"].title())
+        if d.get("known_move"): parts.append(f"Knows {label(d['known_move']['name'])}")
+        if d.get("known_move_type"): parts.append(f"Knows a {d['known_move_type']['name']} move")
+        if d.get("location"): parts.append(f"Level up at {label(d['location']['name'])}")
+        if d.get("party_species"): parts.append(f"{label(d['party_species']['name'])} in party")
+        if d.get("gender") == 1: parts.append("Female")
+        if d.get("gender") == 2: parts.append("Male")
+        if d.get("relative_physical_stats") is not None: parts.append({1: "Attack higher", -1: "Defense higher", 0: "Attack equals Defense"}[d["relative_physical_stats"]])
+        if parts:
+            return " + ".join(parts)
+    return None
+
+
+def rows_for(encounters, version):
+    merged = {}
+    for a in encounters:
+        if not any(v["version"]["name"] == version for v in a["version_details"]):
+            continue
+        loc = nice(a["location_area"]["name"])
+        if any(re.search(p, loc) for p in GAME["drop"]):
+            continue
+        need = next((v for k, v in GAME["needs"].items() if loc.startswith(k)), None)
+        place = base_place(loc)
+        chap = chapter_of(place)
+        for v in a["version_details"]:
+            if v["version"]["name"] != version:
+                continue
+            for d in v["encounter_details"]:
+                cond = sorted(c["name"] for c in d["condition_values"] if c["name"] not in DEFAULT_COND)
+                k = (place, d["method"]["name"], need, tuple(cond))
+                r = merged.setdefault(k, {"place": pretty(place), "chap": chap, "m": k[1], "need": need, "cond": cond, "lo": 99, "hi": 0, "c": 0})
+                r["lo"] = min(r["lo"], d["min_level"]); r["hi"] = max(r["hi"], d["max_level"]); r["c"] += d["chance"]
+    for r in merged.values():
+        r["c"] = min(r["c"], 100)
+    # rows that differ only by time of day and cover all three times become one "any time" row
+    groups = {}
+    for r in merged.values():
+        groups.setdefault((r["place"], r["m"], r["need"], tuple(c for c in r["cond"] if c not in TIME)), []).append(r)
+    out = []
+    for g in groups.values():
+        times = {c for r in g for c in r["cond"] if c in TIME}
+        same = all(any(c in TIME for c in r["cond"]) and (r["c"], r["lo"], r["hi"]) == (g[0]["c"], g[0]["lo"], g[0]["hi"]) for r in g)
+        if len(g) > 1 and times == TIME and same:
+            out.append({**g[0], "cond": [c for c in g[0]["cond"] if c not in TIME]})
+        else:
+            out.extend(g)
+    return out
+
+
+def species(n, johto):
+    sp, p = cached(f"pokemon_species_{n}"), cached(f"pokemon_{n}")
+    chain_id = sp["evolution_chain"]["url"].rstrip("/").split("/")[-1]
+    chain = cached(f"evolution_chain_{chain_id}")["chain"]
+    enc = cached(f"pokemon_{n}_encounters")
+    name = lambda s: next(x["name"] for x in s["names"] if x["language"]["name"] == "en")
+    rows = {}
+    for version, v in VERSIONS.items():
+        for r in rows_for(enc, version):
+            key = json.dumps(r, sort_keys=True)
+            rows[key] = rows.get(key, "") + v
+    pre = sp["evolves_from_species"]
+    return {
+        "n": n, "j": johto.get(n), "name": name(sp), "types": gen4_types(p),
+        "from": name(cached(f"pokemon_species_{pre['url'].rstrip('/').split('/')[-1]}")) if pre else None,
+        "evo": evo_text(chain, sp["name"]), "baby": sp["is_baby"],
+        "rows": sorted(({**json.loads(k), "v": v} for k, v in rows.items()), key=lambda r: (r["chap"], -r["c"])),
+    }
+
+
+if __name__ == "__main__":
+    johto = {int(e["pokemon_species"]["url"].rstrip("/").split("/")[-1]): e["entry_number"] for e in cached("pokedex_7")["pokemon_entries"]}
+    dex = [species(n, johto) for n in range(1, 494)]
+    if unmatched:
+        sys.exit("No chapter for: " + ", ".join(sorted(unmatched)))
+    assert len(johto) == 256 and sum(1 for p in dex if p["j"]) == 256
+    assert next(p for p in dex if p["n"] == 35)["types"] == ["normal"], "Clefairy should be Normal in Gen 4"
+    assert any(r["m"] == "gift" and r["place"] == "New Bark Town" for r in next(p for p in dex if p["n"] == 152)["rows"])
+    game = {"chapters": [{**c, "places": [pretty(p) for p in c["places"]]} for c in GAME["chapters"]], "dex": dex}
+    out = os.path.join(ROOT, "client", "data")
+    os.makedirs(out, exist_ok=True)
+    with open(os.path.join(out, "hgss.ts"), "w") as f:
+        f.write("// Generated by scripts/build_data.py from PokeAPI. Do not edit.\nexport default " + json.dumps(game, ensure_ascii=False, separators=(",", ":")) + ";\n")
+    print(len(dex), "species,", sum(len(p["rows"]) for p in dex), "rows,", os.path.getsize(os.path.join(out, "hgss.ts")), "bytes")
