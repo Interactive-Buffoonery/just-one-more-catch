@@ -228,6 +228,7 @@ type Run = {
   mons: Mon[];
   monSeq: number;
   lastBox: "party" | number;
+  started?: string;
 };
 const MON_DEFAULTS = {
   nick: "",
@@ -264,6 +265,7 @@ function loadRun(row: RunRow): Run {
     mons: (s.mons || []).map((m: Mon) => ({ ...MON_DEFAULTS, ...m })),
     monSeq: s.monSeq || 0,
     lastBox: s.lastBox ?? 1,
+    started: s.started,
   };
 }
 const dumpRun = (r: Run) =>
@@ -280,6 +282,7 @@ const dumpRun = (r: Run) =>
     mons: r.mons.map(compactMon),
     monSeq: r.monSeq,
     lastBox: r.lastBox,
+    started: r.started,
   });
 
 let bridge: Bridge;
@@ -766,6 +769,8 @@ function fillSheet(s: any) {
       ? fillSignIn()
       : s.kind === "newrun"
         ? fillNewRun()
+        : s.kind === "started"
+        ? fillStartDate(s.id)
         : s.kind === "settings"
         ? ($("#sheetbody").innerHTML =
             `<h2 id="sheet-title">Settings</h2>${Account()}${Appearance()}<div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="chip" data-close="1">Done</button></div>`)
@@ -912,6 +917,21 @@ function fillNewRun() {
   $("#sheetbody").innerHTML =
     `<h2 id="sheet-title">New playthrough</h2>${full ? `<p class="muted">You have ${MAX_RUNS} playthroughs. Delete one to start another.</p>` : gameChoices()}<div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="chip" data-close="1">Cancel</button></div>`;
 }
+const ymd = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const startDay = (row: RunRow, r: Run) =>
+  r.started || ymd(new Date(row.createdAt));
+const dayLabel = (day: string) => {
+  const [y, m, d] = day.split("-").map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString();
+};
+function fillStartDate(id: string) {
+  const row = bridge.runs?.find((x) => x.id === id);
+  if (!row) return;
+  const r = row.id === run?.id ? R() : loadRun(row);
+  $("#sheetbody").innerHTML =
+    `<h2 id="sheet-title">Start date</h2><label class="field"><span>${verOf(row.version).name} started on</span><input id="started" type="date" value="${startDay(row, r)}" max="${ymd(new Date())}" required></label><div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button class="chip" data-close="1">Cancel</button><button class="app-primary" data-savestart="${row.id}">Save</button></div>`;
+}
 const lastPlayed = (iso: string) => {
   const day = (d: Date) => new Date(d).setHours(0, 0, 0, 0),
     n = Math.round((day(new Date()) - day(new Date(iso))) / 864e5);
@@ -938,11 +958,11 @@ function playthroughRow(row: RunRow, r: Run) {
   const v = verOf(row.version),
     p = v.pack,
     all = [...p.badges, ...(p.postgame?.[1] || [])];
-  return `<article class="pt"><div class="pt-id">${cover(v)}<div><h3>${v.name}</h3><span class="small muted">Started ${new Date(row.createdAt).toLocaleDateString()}</span></div></div>
+  return `<article class="pt"><div class="pt-id">${cover(v)}<div><h3>${v.name}</h3><span class="small muted">Started ${dayLabel(startDay(row, r))}</span></div></div>
     <div class="pt-m"><b>${badgeCount(r)} / ${all.length}</b><span class="pt-ml"> badges</span><div class="diamonds" aria-hidden="true">${all.map((b) => `<i class="${r.badges.has(b[0]) ? "on" : ""}"></i>`).join("")}</div></div>
     <div class="pt-m"><b>${r.caught.size}</b> / ${p.national}<span class="pt-ml"> caught</span><div class="catchbar" aria-hidden="true"><i style="width:${(r.caught.size / p.national) * 100}%"></i></div></div>
     <div class="pt-goal">${champion(r) ? `<b class="champ">Champion</b> ` : ""}${nextGoal(r)}<span class="small muted">${p.region} · last played ${lastPlayed(row.updatedAt || row.createdAt)}</span></div>
-    <div class="pt-act"><button class="app-quiet" data-switch="${row.id}" aria-label="Continue ${v.name}">Continue <span aria-hidden="true">→</span></button><details class="ptmenu"><summary aria-label="More options for ${v.name}">…</summary><div class="menu"><button data-delrun="${row.id}">Delete playthrough</button></div></details></div></article>`;
+    <div class="pt-act"><button class="app-quiet" data-switch="${row.id}" aria-label="Continue ${v.name}">Continue <span aria-hidden="true">→</span></button><details class="ptmenu"><summary aria-label="More options for ${v.name}">…</summary><div class="menu"><button data-startsheet="${row.id}">Change start date</button><button data-delrun="${row.id}">Delete playthrough</button></div></details></div></article>`;
 }
 function Runs() {
   const rows = [...(bridge.runs || [])]
@@ -1301,6 +1321,26 @@ async function onClick(e: MouseEvent) {
       ui.tab = "journey";
       render();
     }
+    return;
+  }
+  if (d.startsheet) {
+    openSheet({ kind: "started", id: d.startsheet });
+    return;
+  }
+  if (d.savestart) {
+    const day = ($("#started") as HTMLInputElement).value,
+      row = bridge.runs?.find((x) => x.id === d.savestart);
+    if (!row || !/^\d{4}-\d{2}-\d{2}$/.test(day) || day > ymd(new Date())) return;
+    $("#sheet").close();
+    if (row.id === run?.id) {
+      R().started = day;
+      scheduleSave(0);
+    } else {
+      const r = loadRun(row);
+      r.started = day;
+      await bridge.saveRun(row.id, dumpRun(r));
+    }
+    render();
     return;
   }
   if (d.delrun) {
