@@ -141,6 +141,10 @@ const STORY: Record<string, string> = {
   "bug-catching-contest-yes": "Bug-Catching Contest",
   "trade-any-pokemon": "Trade any Pokémon",
   "headbutt-tree-secret": "Secret tree",
+  "other-virtual-console": "Virtual Console event",
+  "story-progress-beat-elite-four-round-two": "After the Elite Four rematch",
+  "item-old-amber": "Bring the Old Amber",
+  "first-party-pokemon-high-friendship": "Lead Pokémon has high friendship",
 };
 const cap = (s: string) => s[0].toUpperCase() + s.slice(1);
 function specialLabel(c: string) {
@@ -149,7 +153,12 @@ function specialLabel(c: string) {
   if (m) return `Safari: ${m[2]}+ ${m[1]} blocks`;
   m = c.match(/^item-(\w+)-fossil$/);
   if (m) return `Bring a ${cap(m[1])} Fossil`;
-  if (c.startsWith("trade-")) return "Trade a " + cap(c.slice(6));
+  if (c.startsWith("trade-"))
+    return (
+      "Trade a " +
+      cap(c.slice(6)).replace(/-(m|f)$/, (_, g) => (g === "m" ? " ♂" : " ♀"))
+    );
+  if (c.startsWith("starter-")) return "If you chose " + cap(c.slice(8));
   return cap(c.replace(/-/g, " "));
 }
 const coinLabel = (c: string) => {
@@ -190,9 +199,11 @@ const HELD_ITEMS = [
 ];
 const GAMES: [string, string, string?][] = [
   ["Red / Blue / Yellow", "Gen 1"],
-  ["Gold / Silver / Crystal", "Gen 2"],
+  ["Gold / Silver", "Gen 2"],
+  ["Crystal", "Gen 2", "crystal"],
   ["Ruby / Sapphire / Emerald", "Gen 3"],
-  ["FireRed / LeafGreen", "Gen 3"],
+  ["FireRed", "Gen 3", "firered"],
+  ["LeafGreen", "Gen 3", "leafgreen"],
   ["Diamond / Pearl / Platinum", "Gen 4"],
   ["HeartGold", "Gen 4", "heartgold"],
   ["SoulSilver", "Gen 4", "soulsilver"],
@@ -583,7 +594,7 @@ function heroCard(h: Pick) {
     </section>`;
 }
 const NOT_HERE =
-  /Gym|Game Corner|North Gate|Roaming|House|Pokémon Center|Department Store|Prize Corner|Museum|Silph|Magnet Train|Dock|Embedded|Sinjoh/;
+  /Gym|Game Corner|North Gate|Roaming|House|Pokémon Center|Department Store|Prize Corner|Museum|Silph|Magnet Train|Dock|Embedded|Sinjoh|Celadon Mansion|Cinnabar Lab|Dojo/;
 function Journey() {
   if (!run) return NoRun();
   const r = R(),
@@ -672,7 +683,7 @@ function Journey() {
     <div style="display:flex;justify-content:space-between;margin-top:16px"><h3>${P().region} dex</h3><span><b>${regionalCaught()}</b> <span class="muted">/ ${P().regional}</span></span></div>
     <div class="bar" style="margin-top:6px"><i style="width:${(regionalCaught() / P().regional) * 100}%"></i></div>
     ${
-      e4()
+      e4() && P().national > P().regional
         ? `<div style="display:flex;justify-content:space-between;margin-top:12px"><h3>National dex</h3><span><b>${r.caught.size}</b> <span class="muted">/ ${P().national}</span></span></div>
     <div class="bar" style="margin-top:6px"><i style="width:${(r.caught.size / P().national) * 100}%"></i></div>`
         : ""

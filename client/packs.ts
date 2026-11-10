@@ -94,6 +94,39 @@ const HGSS: Pack = {
   boxes: [18, 30],
 };
 
+const CRYSTAL: Pack = {
+  load: () => import("./data/crystal").then((m) => m.default),
+  region: "Johto",
+  regional: 251,
+  national: 251,
+  start: "New Bark Town",
+  starters: [152, 155, 158],
+  badges: JOHTO_BADGES,
+  postgame: ["Kanto badges", kantoBadges("Janine", "Blue")],
+  kit: JOHTO_KIT,
+  nightFrom: 18,
+  boxes: [14, 20],
+};
+
+const FRLG: Pack = {
+  load: () => import("./data/frlg").then((m) => m.default),
+  region: "Kanto",
+  regional: 151,
+  national: 386,
+  start: "Pallet Town",
+  starters: [1, 4, 7],
+  badges: kantoBadges("Koga", "Giovanni"),
+  kit: [
+    ["old-rod", "Old Rod"],
+    ["good-rod", "Good Rod"],
+    ["surf", "Surf"],
+    ["rock-smash", "Rock Smash"],
+    ["super-rod", "Super Rod"],
+    ["waterfall", "Waterfall"],
+  ],
+  boxes: [14, 30],
+};
+
 export const VERSIONS: Record<VersionId, Version> = {
   heartgold: {
     name: "HeartGold",
@@ -112,5 +145,31 @@ export const VERSIONS: Record<VersionId, Version> = {
     pack: HGSS,
     other: "HeartGold",
     ring: ["steel", "water"],
+  },
+  crystal: {
+    name: "Crystal",
+    short: "C",
+    code: "c",
+    gen: "Gen 2",
+    pack: CRYSTAL,
+    ring: ["water", "ice"],
+  },
+  firered: {
+    name: "FireRed",
+    short: "FR",
+    code: "f",
+    gen: "Gen 3",
+    pack: FRLG,
+    other: "LeafGreen",
+    ring: ["fire", "fighting"],
+  },
+  leafgreen: {
+    name: "LeafGreen",
+    short: "LG",
+    code: "l",
+    gen: "Gen 3",
+    pack: FRLG,
+    other: "FireRed",
+    ring: ["grass", "bug"],
   },
 };

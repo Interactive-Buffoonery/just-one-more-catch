@@ -35,6 +35,8 @@ Live at https://justonemorecatch.app
 ```sh
 python3 scripts/fetch_pokeapi.py   # one-time cache into .cache/pokeapi
 python3 scripts/build_data.py hgss
+python3 scripts/build_data.py crystal
+python3 scripts/build_data.py frlg
 ```
 
 ## Accounts and settings
