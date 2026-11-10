@@ -1099,26 +1099,33 @@ const lastPlayed = (iso: string) => {
         : `on ${new Date(iso).toLocaleDateString()}`;
 };
 const champion = (r: Run) => r.badges.has("Elite Four");
-function nextGoal(r: Run) {
-  const p = verOf(r.version).pack,
-    badge = (list: string[][]) => list.find((b) => !r.badges.has(b[0]));
-  const next = champion(r)
-    ? badge(p.postgame?.[1] || [])
-    : badge(p.badges) || ["the Elite Four"];
-  return next
-    ? `Next: ${next[0]}${next[1] ? ` Badge, ${next[1]}` : ""}`
-    : "Finish the Pokédex";
-}
-function playthroughRow(row: RunRow, r: Run) {
+const ptMenu = (row: RunRow, v: (typeof VERSIONS)[VersionId]) =>
+  `<details class="ptmenu"><summary aria-label="More options for ${v.name}">…</summary><div class="menu"><button data-startsheet="${row.id}">Change start date</button><button data-delrun="${row.id}">Delete playthrough</button></div></details>`;
+const meter = (n: number, of: number) =>
+  `<span class="meter" aria-hidden="true"><i style="width:${(n / of) * 100}%"></i></span>`;
+function resumeCard(row: RunRow, r: Run) {
   const v = verOf(row.version),
     p = v.pack,
-    all = [...p.badges, ...(p.postgame?.[1] || [])];
-  return `<article class="pt"><div class="pt-id">${cover(v)}<div><h3>${v.name}</h3><span class="small muted">Started ${new Date(row.createdAt).toLocaleDateString()}</span></div></div>
-    <div class="pt-m"><b>${badgeCount(r)} / ${all.length}</b><span class="pt-ml"> badges</span><div class="diamonds" aria-hidden="true">${all.map((b) => `<i class="${r.badges.has(b[0]) ? "on" : ""}"></i>`).join("")}</div></div>
-    <div class="pt-m"><b>${r.caught.size}</b> / ${p.national}<span class="pt-ml"> caught</span><div class="catchbar" aria-hidden="true"><i style="width:${(r.caught.size / p.national) * 100}%"></i></div></div>
-    <div class="pt-goal">${champion(r) ? `<b class="champ">Champion</b> ` : ""}${nextGoal(r)}<span class="small muted">${p.region} · last played ${lastPlayed(row.updatedAt || row.createdAt)}</span></div>
-    <div class="pt-act"><button class="app-quiet" data-switch="${row.id}" aria-label="Continue ${v.name}">Continue <span aria-hidden="true">→</span></button><details class="ptmenu"><summary aria-label="More options for ${v.name}">…</summary><div class="menu"><button data-startsheet="${row.id}">Change start date</button><button data-delrun="${row.id}">Delete playthrough</button></div></details></div></article>`;
+    all = [...p.badges, ...(p.postgame?.[1] || [])],
+    party = r.mons.filter((m) => m.box === "party");
+  return `<article class="card dash-hero">${cover(v)}
+    <div><div class="hero-title"><h2>${v.name}</h2>${ptMenu(row, v)}</div>
+    <div class="tags"><span class="tag plain">${p.region}</span><span class="tag plain">Started ${new Date(row.createdAt).toLocaleDateString()}</span>${champion(r) ? `<span class="tag time">Champion</span>` : ""}<span class="tag time">${badgeCount(r)} / ${all.length} badges</span></div></div>
+    <div class="hero-full">
+      <div class="hero-badges">${all.map((b) => `<img class="${r.badges.has(b[0]) ? "" : "off"}" src="/badges/${b[0].toLowerCase()}.png" alt="${b[0]} Badge${r.badges.has(b[0]) ? "" : " (not yet)"}" width="24" height="24">`).join("")}</div>
+      <div><div class="split small"><span class="muted">Caught</span><span><b>${r.caught.size}</b> <span class="muted">/ ${p.national}</span></span></div>${meter(r.caught.size, p.national)}</div>
+      <div class="split"><div class="party">${party.map((m) => `<img src="/sprites/${p.art}/${m.shiny ? "shiny/" : ""}${m.n}.png" alt="${esc(m.nick || byN[m.n]?.name || "")}" width="56" height="56">`).join("")}</div><button class="app-primary" data-switch="${row.id}" aria-label="Continue ${v.name}">Continue <span aria-hidden="true">→</span></button></div>
+    </div></article>`;
 }
+function miniCard(row: RunRow, r: Run, at: string) {
+  const v = verOf(row.version),
+    p = v.pack;
+  return `<article class="card mini"><button class="mini-go" data-switch="${row.id}" aria-label="Continue ${v.name}">${cover(v)}<span class="grow"><span class="split"><b class="mini-name">${v.name}</b>${champion(r) ? `<span class="tag time">Champion</span>` : `<span class="small muted">${lastPlayed(at)}</span>`}</span><span class="small muted">${badgeCount(r)} badges · ${r.caught.size} / ${p.national} caught</span>${meter(r.caught.size, p.national)}</span></button>${ptMenu(row, v)}</article>`;
+}
+const signInNote = () =>
+  bridge.auth.isAuthenticated
+    ? ""
+    : `<p class="notice">Saved only in this browser. <button class="linkish" data-signinsheet="1">Make an account or sign in</button> to save your playthroughs and access them on any device!</p>`;
 function Runs() {
   const rows = [...(bridge.runs || [])]
       .map((row) => ({
@@ -1127,38 +1134,32 @@ function Runs() {
         at: row.updatedAt || row.createdAt,
       }))
       .sort((x, y) => y.at.localeCompare(x.at)),
-    many = rows.length > 1,
-    f = (many && ui.runFilter) || "all",
-    done = rows.filter((x) => champion(x.r)).length,
-    top = rows[0];
-  const shown = rows.filter(
-    (x) => f === "all" || (f === "finished") === champion(x.r),
-  );
-  return `<div class="dash"><div class="home-title"><h2>Your playthroughs</h2>${rows.length ? `<button class="app-primary" data-newsheet="1">+ New playthrough</button>` : ""}</div>
-  ${
-    !rows.length
-      ? pickGame()
-      : `${
-          many && f === "all"
-            ? `<section class="resume">${cover(verOf(top.row.version), "lg")}<div class="grow"><p class="small">Last played ${lastPlayed(top.at)}</p><h3>${verOf(top.row.version).name}</h3><p class="small">${badgeCount(top.r)} badges · ${top.r.caught.size} caught</p></div><button class="app-primary" data-switch="${top.row.id}">Continue <span aria-hidden="true">→</span></button></section>`
-            : ""
-        }${
-          many
-            ? `<div class="chips pt-filters" role="group" aria-label="Filter playthroughs">${[
-                ["all", "All", rows.length],
-                ["playing", "Playing", rows.length - done],
-                ["finished", "Finished", done],
-              ]
-                .map(
-                  ([k, l, n]) =>
-                    `<button class="chip" data-runfilter="${k}" aria-pressed="${f === k}">${l} ${n}</button>`,
-                )
-                .join("")}</div>`
-            : ""
-        }<div class="pt-head" aria-hidden="true"><span>Game</span><span>Badges</span><span>Caught</span><span>Next goal</span><span></span></div>
-  ${shown.map((x) => playthroughRow(x.row, x.r)).join("") || `<p class="muted">Nothing here yet.</p>`}`
-  }
-  </div>`;
+    [top, ...rest] = rows;
+  if (!top)
+    return `<div class="dash"><div class="dash-head"><h1>Dashboard</h1></div>
+  <section class="card welcome"><h2>Start your first playthrough</h2><div class="games">${Object.entries(
+    VERSIONS,
+  )
+    .map(
+      ([id, v]) =>
+        `<button class="game-tile" data-newrun="${id}">${cover(v)}<span><b>${v.name}</b><span class="small muted">${v.pack.region}</span></span></button>`,
+    )
+    .join(
+      "",
+    )}</div><p class="small muted">More games coming soon.</p></section>${signInNote()}</div>`;
+  const stat = (n: number, label: string, cls = "") =>
+    `<div class="card stat ${cls}"><b>${n}</b><span class="small muted">${label}</span></div>`;
+  return `<div class="dash"><div class="dash-head"><div><h1>Dashboard</h1><p class="muted">${rows.length} playthrough${rows.length > 1 ? "s" : ""} · last played ${lastPlayed(top.at)}</p></div><button class="app-primary" data-newsheet="1">+ New playthrough</button></div>
+  <div class="hub">${resumeCard(top.row, top.r)}<div class="stats">${stat(rows.length, "Playthroughs")}${stat(rows.filter((x) => champion(x.r)).length, "Champion", "gold")}${stat(
+    rows.reduce((n, x) => n + badgeCount(x.r), 0),
+    "Badges earned",
+  )}${stat(
+    rows.reduce((n, x) => n + x.r.caught.size, 0),
+    "Total caught",
+  )}</div></div>
+  ${rest.length ? `<h2 class="eyebrow">Other playthroughs</h2><div class="minis">${rest.map((x) => miniCard(x.row, x.r, x.at)).join("")}</div>` : ""}
+  ${rows.length < MAX_RUNS ? `<h2 class="eyebrow">Start another</h2><div class="newrow">${gameChoices()}</div>` : ""}
+  ${signInNote()}</div>`;
 }
 function Account() {
   const a = bridge.auth;
@@ -1167,14 +1168,14 @@ function Account() {
     a.isAuthenticated
       ? `<div class="card"><div style="display:flex;gap:12px;align-items:center"><span class="avatar" aria-hidden="true">${esc(initial())}</span><div style="flex:1"><b>${esc(a.displayName || "Trainer")}</b><div class="small muted">${a.email ? `Signed in as ${esc(a.email)}` : "Signed in"}</div></div><button class="chip" data-signout="1">Sign out</button></div>
   <div class="chips" style="margin-top:12px"><button class="chip" data-download="1">Download my data</button><button class="chip" data-delaccount="1">Delete account</button></div></div>`
-      : `<div class="card"><button class="chip" data-signinsheet="1">Sign in</button><p class="muted small" style="margin:12px 0 0">${MOVE_NOTE}</p></div>`
+      : `<div class="card"><b>Save your playthroughs to an account</b><p class="muted small" style="margin:4px 0 14px">Right now they live only in this browser. With an account you can open them on any device. ${MOVE_NOTE}</p><button class="app-primary" data-signinsheet="1">Sign in or create an account</button></div>`
   }`;
 }
 const MOVE_NOTE =
-  "Playthroughs already saved in your local browser are moved to your account once you sign in.";
+  "Anything already saved in this browser moves over when you sign in.";
 function fillSignIn() {
   $("#sheetbody").innerHTML =
-    `<h2 id="sheet-title">Sign in</h2><div id="clerk-signin" style="margin-top:16px"></div><p class="muted small" style="margin:12px 0 0">${MOVE_NOTE}</p>`;
+    `<h2 id="sheet-title">Sign in or create an account</h2><div id="clerk-signin" style="margin-top:16px"></div><p class="muted small" style="margin:12px 0 0">${MOVE_NOTE}</p>`;
   const el = $("#clerk-signin") as HTMLDivElement;
   if (!bridge.mountSignIn(el))
     el.innerHTML = `<p class="muted" style="margin:0">Sign-in isn't available right now. You can keep playing as a guest.</p>`;
@@ -1272,7 +1273,7 @@ function render() {
     ? `<p class="muted" style="text-align:center;padding-top:40px">Loading…</p>`
     : needsGame && ui.loadError
       ? `<p class="small" role="alert" style="text-align:center;padding-top:40px;color:var(--coral)">This game didn't load. Check your connection and reload the page.</p>`
-      : (signedIn
+      : (signedIn || ui.tab === "playthroughs"
         ? ui.saveError
           ? `<p class="small" role="alert" style="text-align:center;margin:4px 0 16px;color:var(--coral)">${ui.saveError}</p>`
           : ""
@@ -1284,10 +1285,11 @@ function render() {
         ? `<button class="avatar" data-settings="1" aria-label="Account: ${esc(a.displayName || "you")}">${esc(initial())}</button>`
         : a.isLoading
           ? ""
-          : `<button class="pill" data-signinsheet="1" data-k="signin">Sign in</button>`
+          : `<button class="pill" data-signinsheet="1" data-k="signin">Sign in / Sign up</button>`
     }</span>`;
   $("#tabs").innerHTML = !a.isLoading
     ? `<nav class="tabbar" aria-label="Sections">${[
+        ["playthroughs", "Dashboard"],
         ["journey", "Journey"],
         ["dex", "Dex"],
         ["boxes", "Boxes"],
@@ -1415,11 +1417,6 @@ async function onClick(e: MouseEvent) {
   }
   if (d.newsheet) {
     openSheet({ kind: "newrun" });
-    return;
-  }
-  if (d.runfilter) {
-    ui.runFilter = d.runfilter;
-    render();
     return;
   }
   if (d.settings) {
