@@ -703,7 +703,7 @@ function Journey() {
   </aside></div>`;
 }
 const NoRun = () =>
-  `<div class="narrow"><h2>Start a new run</h2>${gameList(true)}<p class="muted small">More games coming soon.</p></div>`;
+  `<div class="narrow"><h2 style="margin:8px 0 12px">Start a new run</h2>${gameList(true)}<p class="muted small" style="margin:12px 4px 32px">More games coming soon.</p></div>`;
 
 /* ---- Dex ---- */
 const STATUS_TEXT: Record<string, string> = {
@@ -787,6 +787,8 @@ function fillSheet(s: any) {
     ? fillSpecies(s)
     : s.kind === "signin"
       ? fillSignIn()
+      : s.kind === "settings"
+      ? ($("#sheetbody").innerHTML = `<h2 id="sheet-title">Settings</h2>${Appearance()}<div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="chip" data-close="1">Done</button></div>`)
       : s.kind === "box"
       ? fillBoxSheet(s.b)
       : fillMonSheet(s);
@@ -925,7 +927,6 @@ function Runs() {
   }
   <div class="eyebrow">Start a new run</div>
   ${gameList()}
-  ${Appearance()}
   <div class="eyebrow">Account</div>
   ${a.isAuthenticated ? `<div class="card"><div style="display:flex;gap:12px;align-items:center"><span class="avatar" aria-hidden="true">${esc(initial())}</span><div style="flex:1"><b>${esc(a.displayName || "Trainer")}</b><div class="small muted">Signed in with ${PROVIDER[a.provider || ""] || "your account"}</div></div><button class="chip" data-signout="1">Sign out</button></div>
   <div class="chips" style="margin-top:12px"><button class="chip" data-download="1">Download my data</button><button class="chip" data-delaccount="1">Delete account</button></div></div>` : signInList()}</div>`;
@@ -947,8 +948,7 @@ function fillSignIn() {
   $("#sheetbody").innerHTML =
     `<h2 id="sheet-title">Sign in</h2><p class="muted small">Runs on this device move to your account.</p>${signInList()}`;
 }
-const Appearance = () => `<div class="eyebrow">Appearance</div>
-  <div class="card">
+const Appearance = () => `<div class="card" style="margin-top:16px">
     <div class="name">Look</div>
     <div class="chips" style="margin-top:6px">${LOOKS.map(([k, l, sub]) => `<button class="chip" data-look="${k}" data-k="look-${k}" aria-pressed="${ui.look === k}">${l} <span class="small" style="opacity:.75">${sub}</span></button>`).join("")}</div>
     <div class="name" style="margin-top:14px">Mode</div>
@@ -1041,7 +1041,7 @@ function render() {
     a.isLoading || !bridge.runs
       ? `<p class="muted" style="text-align:center;margin-top:40px">Loading…</p>`
       : (signedIn ? "" : `<p class="muted small" style="text-align:center;margin:4px 0 16px">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your runs and view them on any device.</p>`) + VIEWS[ui.tab]();
-  $("#topright").innerHTML = `<span style="display:flex;gap:8px">${run ? `<button class="pill" data-tab="runs" aria-label="Current run: ${ver().name}. Switch run">${ver().name}</button>` : ""}${
+  $("#topright").innerHTML = `<span style="display:flex;gap:8px"><button class="pill icon" data-settings="1" data-k="settings" aria-label="Settings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><circle cx="12" cy="12" r="3"/></svg></button>${run ? `<button class="pill" data-tab="runs" aria-label="Current run: ${ver().name}. Switch run">${ver().name}</button>` : ""}${
     signedIn
       ? `<button class="avatar" data-tab="runs" aria-label="Account: ${esc(a.displayName || "you")}">${esc(initial())}</button>`
       : a.isLoading
@@ -1064,7 +1064,7 @@ function render() {
   $("#toast").innerHTML = ui.undo
     ? `<div class="toast">${ui.undo.msg}<button data-undo="1">Undo</button></div>`
     : "";
-  if (typeof ui.sheet === "number" && $("#sheet").open) fillSheet(ui.sheet);
+  if ((typeof ui.sheet === "number" || ui.sheet?.kind === "settings") && $("#sheet").open) fillSheet(ui.sheet);
   if (k)
     (
       root.querySelector(`[data-k="${k}"]`) ||
@@ -1159,6 +1159,14 @@ async function onClick(e: MouseEvent) {
     d.sec ? root.querySelector("#" + d.sec)?.scrollIntoView() : scrollTo(0, 0);
     return;
   }
+  if (d.close) {
+    $("#sheet").close();
+    return;
+  }
+  if (d.settings) {
+    openSheet({ kind: "settings" });
+    return;
+  }
   if (d.signinsheet) {
     openSheet({ kind: "signin" });
     return;
@@ -1230,10 +1238,6 @@ async function onClick(e: MouseEvent) {
   const r = R();
   if (d.open) {
     openSheet(+d.open);
-    return;
-  }
-  if (d.close) {
-    $("#sheet").close();
     return;
   }
   if (d.editmon) {
