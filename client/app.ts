@@ -1,6 +1,7 @@
 // Ported from the approved mockup: string-rendered views on one root, event delegation, no framework.
 // main.ts owns auth and server calls and hands them in through the bridge.
-import GAME from "./data/hgss";
+import { VERSIONS, type GameData, type Pack } from "./packs";
+import type { VersionId } from "../shared/versions";
 import CSS from "./styles";
 import { MAX_RUN_BYTES, runBytes } from "../shared/limits";
 
@@ -79,46 +80,7 @@ const TYPE: Record<string, string> = {
   dark: "#5d4c40",
   steel: "#7f97a8",
 };
-const CHAPTERS: {
-  title: string;
-  needs: string[];
-  kit?: string;
-  places: string[];
-}[] = GAME.chapters as any;
-const ALL_DEX: Species[] = (GAME.dex as any[]).map((p) => ({
-  ...p,
-  all: p.rows,
-}));
-const BADGES = [
-  ["Zephyr", "Falkner"],
-  ["Hive", "Bugsy"],
-  ["Plain", "Whitney"],
-  ["Fog", "Morty"],
-  ["Storm", "Chuck"],
-  ["Mineral", "Jasmine"],
-  ["Glacier", "Pryce"],
-  ["Rising", "Clair"],
-];
-const KANTO_BADGES = [
-  ["Boulder", "Brock"],
-  ["Cascade", "Misty"],
-  ["Thunder", "Lt. Surge"],
-  ["Rainbow", "Erika"],
-  ["Soul", "Janine"],
-  ["Marsh", "Sabrina"],
-  ["Volcano", "Blaine"],
-  ["Earth", "Blue"],
-];
-const KIT = [
-  ["old-rod", "Old Rod"],
-  ["headbutt", "Headbutt"],
-  ["rock-smash", "Rock Smash"],
-  ["surf", "Surf"],
-  ["good-rod", "Good Rod"],
-  ["whirlpool", "Whirlpool"],
-  ["waterfall", "Waterfall"],
-  ["super-rod", "Super Rod"],
-];
+let CHAPTERS: GameData["chapters"] = [];
 const METHOD: Record<string, [string, string | null]> = {
   walk: ["Walking", null],
   "old-rod": ["Old Rod", "old-rod"],
@@ -143,21 +105,6 @@ const ONE_TIME = new Set([
   "pokeflute",
   "npc-trade",
 ]);
-const STARTERS = [152, 155, 158];
-const SAFARI = [
-  "Plains",
-  "Meadow",
-  "Savannah",
-  "Peak",
-  "Rocky Beach",
-  "Wetland",
-  "Forest",
-  "Swamp",
-  "Marshland",
-  "Mountain",
-  "Desert",
-  "Wasteland",
-];
 const TIME: Record<string, string> = {
   "time-morning": "Morning",
   "time-day": "Day",
@@ -209,26 +156,8 @@ const coinLabel = (c: string) => {
   const m = c.match(/^coins-(\d+)$/);
   return m ? `${m[1]} coins` : null;
 };
-const VERSIONS: Record<
-  string,
-  { name: string; code: string; other: string; ring: string[] }
-> = {
-  heartgold: {
-    name: "HeartGold",
-    code: "h",
-    other: "SoulSilver",
-    ring: ["fire", "normal"],
-  },
-  soulsilver: {
-    name: "SoulSilver",
-    code: "s",
-    other: "HeartGold",
-    ring: ["steel", "water"],
-  },
-};
-const BOX_COUNT = 18,
-  BOX_SIZE = 30,
-  PARTY_SIZE = 6;
+const verOf = (id: string) => VERSIONS[id as VersionId];
+const PARTY_SIZE = 6;
 const HELD_ITEMS = [
   "Amulet Coin",
   "Black Belt",
@@ -313,6 +242,7 @@ const compactMon = (m: Mon) =>
     Object.entries(m).filter(([k, v]) => (MON_DEFAULTS as any)[k] !== v),
   );
 function loadRun(row: RunRow): Run {
+  const pack = verOf(row.version).pack;
   let s: any = {};
   try {
     s = JSON.parse(row.state) || {};
@@ -325,11 +255,12 @@ function loadRun(row: RunRow): Run {
     safari: new Set(s.safari || []),
     caught: new Set(s.caught || []),
     skip: new Set(s.skip || []),
-    here: s.here || "New Bark Town",
+    here: s.here || pack.start,
     timeAuto: s.timeAuto ?? true,
     time: s.time || "day",
     boxNames:
-      s.boxNames || Array.from({ length: BOX_COUNT }, (_, i) => `Box ${i + 1}`),
+      s.boxNames ||
+      Array.from({ length: pack.boxes[0] }, (_, i) => `Box ${i + 1}`),
     mons: (s.mons || []).map((m: Mon) => ({ ...MON_DEFAULTS, ...m })),
     monSeq: s.monSeq || 0,
     lastBox: s.lastBox ?? 1,
@@ -386,12 +317,40 @@ const store = {
   },
 };
 
+const loaded = new Map<Pack, GameData>();
+let opening: string | null = null;
 function useRun(row: RunRow) {
+  const v = verOf(row.version),
+    data = loaded.get(v.pack);
+  if (!data) {
+    run = null;
+    opening = row.id;
+    v.pack.load().then(
+      (d) => {
+        loaded.set(v.pack, d);
+        if (opening !== row.id) return;
+        opening = null;
+        const latest = bridge.runs?.find((r) => r.id === row.id);
+        if (latest) useRun(latest);
+        if (!$("#sheet").open) render();
+      },
+      () => {
+        if (opening !== row.id) return;
+        opening = null;
+        ui.loadError = true;
+        render();
+      },
+    );
+    return;
+  }
+  opening = null;
+  ui.loadError = false;
   run = loadRun(row);
-  const code = VERSIONS[run.version].code;
-  DEX = ALL_DEX.map((p) => ({
+  CHAPTERS = data.chapters;
+  DEX = data.dex.map((p) => ({
     ...p,
-    rows: p.all.filter((r) => r.v.includes(code)),
+    all: p.rows,
+    rows: p.rows.filter((r: Row) => r.v.includes(v.code)),
   }));
   byName = Object.fromEntries(DEX.map((p) => [p.name, p]));
   byN = Object.fromEntries(DEX.map((p) => [p.n, p]));
@@ -400,7 +359,8 @@ function useRun(row: RunRow) {
   store.set("jomc.run", row.id);
 }
 const R = () => run as Run;
-const ver = () => VERSIONS[R().version];
+const ver = () => verOf(R().version);
+const P = () => ver().pack;
 const e4 = () => R().badges.has("Elite Four");
 const visible = (p: Species) => !!p.j || e4();
 const dexList = () =>
@@ -409,15 +369,16 @@ const dexList = () =>
   );
 const num = (p: Species) => (e4() || !p.j ? p.n : p.j);
 const pad = (n: number) => String(n).padStart(3, "0");
-const johtoCaught = () => [...R().caught].filter((n) => byN[n]?.j).length;
+const regionalCaught = () => [...R().caught].filter((n) => byN[n]?.j).length;
 
-const hgTime = () => {
-  const h = new Date().getHours();
-  return h >= 4 && h < 10 ? "morning" : h >= 10 && h < 20 ? "day" : "night";
+const gameTime = () => {
+  const h = new Date().getHours(),
+    night = P().nightFrom ?? 24;
+  return h >= 4 && h < 10 ? "morning" : h >= 10 && h < night ? "day" : "night";
 };
-const nowTime = () => (R().timeAuto ? hgTime() : R().time);
+const nowTime = () => (R().timeAuto ? gameTime() : R().time);
 const isHere = (pl: string) => pl === R().here || pl.startsWith(R().here + " ");
-const kitName = (k: string) => (KIT.find((x) => x[0] === k) as string[])[1];
+const kitName = (k: string) => (P().kit.find((x) => x[0] === k) as string[])[1];
 const unlocked = (i: number) =>
   CHAPTERS[i].needs.every((b) => R().badges.has(b)) &&
   (!CHAPTERS[i].kit || R().kit.has(CHAPTERS[i].kit as string));
@@ -459,12 +420,12 @@ function rowStatus(r: Row): { s: string; why?: string } {
   )
     return { s: "later", why: "After the Elite Four" };
   const area = r.place.startsWith("Safari Zone ") && r.place.slice(12);
-  if (area && SAFARI.includes(area) && !run.safari.has(area))
+  if (area && P().safari?.includes(area) && !run.safari.has(area))
     return { s: "later", why: `Place the ${area} area` };
   if (
     r.m === "gift" &&
-    r.place === "New Bark Town" &&
-    STARTERS.some((n) => run.caught.has(n))
+    r.place === P().start &&
+    P().starters.some((n) => run.caught.has(n))
   )
     return { s: "special", why: "You chose a different starter" };
   const days = r.cond
@@ -489,21 +450,20 @@ function rowStatus(r: Row): { s: string; why?: string } {
 function howElse(p: Species) {
   const v = ver();
   const elsewhere = (s: Species) => s.all.some((r) => !r.v.includes(v.code));
+  const trade = (s: Species) =>
+    elsewhere(s) && v.other
+      ? `Not in ${v.name}. Trade from ${v.other}.`
+      : `Not in ${v.name}${v.other ? ` or ${v.other}` : ""}. Trade from another game.`;
   if (!p.from) {
     if (p.baby) {
       const parent = DEX.find((x) => x.from === p.name);
       return `Breed ${parent ? parent.name : "its evolution"} and hatch the egg.`;
     }
     if (p.rows.length) return "";
-    return elsewhere(p)
-      ? `Not in ${v.name}. Trade from ${v.other}.`
-      : `Not in ${v.name} or ${v.other}. Trade from another game.`;
+    return trade(p);
   }
   const pre = byName[p.from];
-  if (pre && !pre.rows.length && !pre.from && !pre.baby)
-    return elsewhere(pre)
-      ? `Not in ${v.name}. Trade from ${v.other}.`
-      : `Not in ${v.name} or ${v.other}. Trade from another game.`;
+  if (pre && !pre.rows.length && !pre.from && !pre.baby) return trade(pre);
   const how = p.evo || "evolution";
   return `Evolve ${p.from}: ${how}.${/Trade|Level up at/.test(how) ? " Needs a second game." : ""}`;
 }
@@ -648,10 +608,14 @@ function Journey() {
   <div class="chips">
     <label class="sr" for="here">Where you are in the game</label>
     <select class="pill" id="here" data-k="here">${herePlaces.map((p) => `<option ${p === r.here ? "selected" : ""} value="${p}">Near ${p}</option>`).join("")}</select>
-    <div class="seg3" role="group" aria-label="In-game time of day">
-      <button data-time="auto" data-k="ta" aria-pressed="${r.timeAuto}">Auto (${cap(hgTime())})</button>
+    ${
+      P().nightFrom
+        ? `<div class="seg3" role="group" aria-label="In-game time of day">
+      <button data-time="auto" data-k="ta" aria-pressed="${r.timeAuto}">Auto (${cap(gameTime())})</button>
       ${["morning", "day", "night"].map((x) => `<button data-time="${x}" data-k="t-${x}" aria-pressed="${!r.timeAuto && r.time === x}">${cap(x)}</button>`).join("")}
-    </div>
+    </div>`
+        : ""
+    }
   </div>
   ${hero ? heroCard(hero) : now.length ? `<section class="hero"><h2>You've skipped every suggestion</h2><p style="margin:6px 0 12px">${now.length} Pokémon are still catchable right now.</p><button class="btn" data-unskip="1" data-k="unskip2">Show them again</button></section>` : `<section class="hero"><h2>Nothing left to catch right now</h2><p style="margin:6px 0 0">Try another time of day, or move ahead in the story.</p></section>`}
   ${r.skip.size ? `<div style="text-align:right;margin-top:8px"><button class="chip" data-unskip="1" data-k="unskip">Show ${r.skip.size} skipped</button></div>` : ""}
@@ -691,25 +655,26 @@ function Journey() {
   </div>
   <div class="eyebrow">Progress</div>
   <div class="card">
-    <h3>Johto badges</h3>
-    ${badgeRow(BADGES)}
+    <h3>${P().region} badges</h3>
+    ${badgeRow(P().badges)}
     <button class="chip" style="margin-top:6px" data-badge="Elite Four" data-k="b-e4" aria-pressed="${e4()}">Beat the Elite Four</button>
-    ${e4() ? `<h3 style="margin-top:12px">Kanto badges</h3>${badgeRow(KANTO_BADGES)}` : ""}
+    ${e4() && P().postgame ? `<h3 style="margin-top:12px">${P().postgame![0]}</h3>${badgeRow(P().postgame![1])}` : ""}
     <h3 style="margin-top:12px">Items and moves you have</h3>
-    <div class="chips" style="margin-top:8px">${KIT.map((k) => `<button class="chip" data-kit="${k[0]}" data-k="k-${k[0]}" aria-pressed="${r.kit.has(k[0])}">${k[1]}</button>`).join("")}</div>
+    <div class="chips" style="margin-top:8px">${P().kit.map((k) => `<button class="chip" data-kit="${k[0]}" data-k="k-${k[0]}" aria-pressed="${r.kit.has(k[0])}">${k[1]}</button>`).join("")}</div>
     ${
+      P().safari &&
       unlocked(CHAPTERS.findIndex((c) => c.places.includes("Safari Zone")))
         ? `<h3 style="margin-top:12px">Safari Zone: areas you've placed</h3>
     <p class="small muted" style="margin:4px 0 0">The game lets you place 6 of its 12 areas at a time. Pick the ones you've chosen:</p>
-    <div class="chips" style="margin-top:8px">${SAFARI.map((a) => `<button class="chip" data-safari="${a}" data-k="s-${a}" aria-pressed="${r.safari.has(a)}" ${!r.safari.has(a) && r.safari.size >= 6 ? "disabled" : ""}>${a}</button>`).join("")}</div>`
+    <div class="chips" style="margin-top:8px">${P().safari!.map((a) => `<button class="chip" data-safari="${a}" data-k="s-${a}" aria-pressed="${r.safari.has(a)}" ${!r.safari.has(a) && r.safari.size >= 6 ? "disabled" : ""}>${a}</button>`).join("")}</div>`
         : ""
     }
-    <div style="display:flex;justify-content:space-between;margin-top:16px"><h3>Johto dex</h3><span><b>${johtoCaught()}</b> <span class="muted">/ 256</span></span></div>
-    <div class="bar" style="margin-top:6px"><i style="width:${(johtoCaught() / 256) * 100}%"></i></div>
+    <div style="display:flex;justify-content:space-between;margin-top:16px"><h3>${P().region} dex</h3><span><b>${regionalCaught()}</b> <span class="muted">/ ${P().regional}</span></span></div>
+    <div class="bar" style="margin-top:6px"><i style="width:${(regionalCaught() / P().regional) * 100}%"></i></div>
     ${
       e4()
-        ? `<div style="display:flex;justify-content:space-between;margin-top:12px"><h3>National dex</h3><span><b>${r.caught.size}</b> <span class="muted">/ 493</span></span></div>
-    <div class="bar" style="margin-top:6px"><i style="width:${(r.caught.size / 493) * 100}%"></i></div>`
+        ? `<div style="display:flex;justify-content:space-between;margin-top:12px"><h3>National dex</h3><span><b>${r.caught.size}</b> <span class="muted">/ ${P().national}</span></span></div>
+    <div class="bar" style="margin-top:6px"><i style="width:${(r.caught.size / P().national) * 100}%"></i></div>`
         : ""
     }
   </div>
@@ -729,9 +694,9 @@ const STATUS_TEXT: Record<string, string> = {
 function Dex() {
   if (!run) return NoRun();
   const f = ui.filter,
-    title = e4() ? "National dex" : "Johto dex",
-    total = e4() ? 493 : 256,
-    have = e4() ? R().caught.size : johtoCaught();
+    title = e4() ? "National dex" : `${P().region} dex`,
+    total = e4() ? P().national : P().regional,
+    have = e4() ? R().caught.size : regionalCaught();
   const list = dexList().filter((p) => {
     const s = speciesStatus(p);
     return (
@@ -817,10 +782,10 @@ function openSheet(s: any) {
 const inBox = (b: Mon["box"]) => R().mons.filter((m) => m.box === b);
 const boxLabel = (b: Mon["box"]) =>
   b === "party" ? "Party" : R().boxNames[b - 1];
-const boxCap = (b: Mon["box"]) => (b === "party" ? PARTY_SIZE : BOX_SIZE);
-const ALL_BOXES: Mon["box"][] = [
+const boxCap = (b: Mon["box"]) => (b === "party" ? PARTY_SIZE : P().boxes[1]);
+const allBoxes = (): Mon["box"][] => [
   "party",
-  ...Array.from({ length: BOX_COUNT }, (_, i) => i + 1),
+  ...Array.from({ length: P().boxes[0] }, (_, i) => i + 1),
 ];
 const GENDER: Record<string, string> = { m: "♂", f: "♀" };
 function monLine(m: Mon, showBox?: boolean) {
@@ -838,7 +803,7 @@ function Boxes() {
     if (!ms.length && (f !== "all" || b !== "party")) return "";
     return `<section class="card boxcard"><div class="boxhead"><h3>${esc(boxLabel(b))}</h3><span class="muted small">${inBox(b).length} / ${boxCap(b)}</span><span class="spacer"></span>${b === "party" ? "" : `<button class="chip" data-renamebox="${b}" data-k="rb${b}">Rename</button>`}</div>${ms.map((m) => monLine(m)).join("") || `<p class="small muted" style="margin:0">Nobody in your party yet.</p>`}</section>`;
   };
-  const empty = ALL_BOXES.filter((b) => b !== "party" && !inBox(b).length);
+  const empty = allBoxes().filter((b) => b !== "party" && !inBox(b).length);
   return `<div style="display:flex;gap:12px;align-items:baseline;flex-wrap:wrap"><h2>Boxes</h2><span class="muted">${R().mons.length} Pokémon</span></div>
   <div class="chips" style="margin:12px 0">${[
     ["all", "All"],
@@ -850,7 +815,7 @@ function Boxes() {
         `<button class="chip" data-boxfilter="${k}" data-k="bf-${k}" aria-pressed="${f === k}">${l}</button>`,
     )
     .join("")}</div>
-  <div class="boxgrid">${ALL_BOXES.map(card).join("") || `<p class="muted">Nothing here.</p>`}</div>
+  <div class="boxgrid">${allBoxes().map(card).join("") || `<p class="muted">Nothing here.</p>`}</div>
   ${f === "all" && empty.length ? `<details class="card" style="margin-top:12px"><summary><b>${empty.length} empty boxes</b></summary><div class="chips" style="margin-top:10px">${empty.map((b) => `<button class="chip" data-renamebox="${b}" data-k="rb${b}">${esc(boxLabel(b))}</button>`).join("")}</div></details>` : ""}`;
 }
 function fillMonSheet(s: any) {
@@ -866,7 +831,7 @@ function fillMonSheet(s: any) {
       : `Add another ${p.name}`;
   $("#sheetbody").innerHTML =
     `<div style="display:flex;gap:12px;align-items:center">${mon(p)}<div><h2 id="sheet-title">${title}</h2></div></div>
-    <label class="field"><span>Box</span><select id="f-box">${ALL_BOXES.map((b) => `<option value="${b}" ${b === cur ? "selected" : ""} ${full(b) && b !== cur ? "disabled" : ""}>${esc(boxLabel(b))} (${inBox(b).length}/${boxCap(b)})</option>`).join("")}</select></label>
+    <label class="field"><span>Box</span><select id="f-box">${allBoxes().map((b) => `<option value="${b}" ${b === cur ? "selected" : ""} ${full(b) && b !== cur ? "disabled" : ""}>${esc(boxLabel(b))} (${inBox(b).length}/${boxCap(b)})</option>`).join("")}</select></label>
     <details class="more" ${m ? "open" : ""}><summary>More details <span class="muted small">nickname, level, held item</span></summary><div class="fgrid">
       <label class="field"><span>Nickname</span><input id="f-nick" maxlength="10" autocomplete="off" value="${esc(m?.nick || "")}"></label>
       <label class="field"><span>Level</span><input id="f-lvl" type="number" min="1" max="100" inputmode="numeric" value="${m?.lvl || ""}"></label>
@@ -923,8 +888,12 @@ function saveMon() {
 }
 
 /* ---- Runs, account and sign-in ---- */
-const badgeCount = (r: Run) =>
-  [...BADGES, ...KANTO_BADGES].filter((b) => r.badges.has(b[0])).length;
+const badgeCount = (r: Run) => {
+  const p = verOf(r.version).pack;
+  return [...p.badges, ...(p.postgame?.[1] || [])].filter((b) =>
+    r.badges.has(b[0]),
+  ).length;
+};
 function Runs() {
   const rows = bridge.runs || [],
     a = bridge.auth;
@@ -933,8 +902,8 @@ function Runs() {
     rows
       .map((row) => {
         const r = row.id === run?.id ? R() : loadRun(row),
-          v = VERSIONS[row.version];
-        return `<div class="row" style="margin-top:12px"><span class="mon" style="${ring(v.ring)}" aria-hidden="true"><b>${v.code === "h" ? "HG" : "SS"}</b></span><div class="grow"><div class="name">${v.name}</div><div class="small muted">${badgeCount(r)} badges · ${r.caught.size} caught · started ${new Date(row.createdAt).toLocaleDateString()}</div></div>
+          v = verOf(row.version);
+        return `<div class="row" style="margin-top:12px"><span class="mon" style="${ring(v.ring)}" aria-hidden="true"><b>${v.short}</b></span><div class="grow"><div class="name">${v.name}</div><div class="small muted">${badgeCount(r)} badges · ${r.caught.size} caught · started ${new Date(row.createdAt).toLocaleDateString()}</div></div>
     ${row.id === run?.id ? `<span class="tag">Playing</span>` : `<button class="chip" data-switch="${row.id}">Play</button>`}<button class="chip" data-delrun="${row.id}" aria-label="Delete this ${v.name} playthrough">Delete</button></div>`;
       })
       .join("") || `<p class="muted">No playthroughs yet.</p>`
@@ -1044,7 +1013,7 @@ function render() {
   const a = bridge.auth,
     signedIn = a.isAuthenticated;
   const k = (document.activeElement as HTMLElement)?.dataset?.k;
-  const loading = a.isLoading || !bridge.runs;
+  const loading = a.isLoading || !bridge.runs || !!opening;
   root.classList.toggle("loading", loading);
   const url = new URL(location.href);
   // ponytail: bare / shows Journey for now; swap the default when / becomes a dashboard
@@ -1058,7 +1027,9 @@ function render() {
     );
   $("#view").innerHTML = loading
     ? `<p class="muted" style="text-align:center;padding-top:40px">Loading…</p>`
-    : (signedIn
+    : ui.loadError
+      ? `<p class="small" role="alert" style="text-align:center;padding-top:40px;color:var(--coral)">This game didn't load. Check your connection and reload the page.</p>`
+      : (signedIn
         ? ui.saveError
           ? `<p class="small" role="alert" style="text-align:center;margin:4px 0 16px;color:var(--coral)">${ui.saveError}</p>`
           : ""
@@ -1258,7 +1229,7 @@ async function onClick(e: MouseEvent) {
     if (
       !row ||
       !confirm(
-        `Delete this ${VERSIONS[row.version].name} playthrough? This can't be undone.`,
+        `Delete this ${verOf(row.version).name} playthrough? This can't be undone.`,
       )
     )
       return;
@@ -1461,7 +1432,7 @@ function syncRuns() {
     ui.tab = "journey";
     return;
   }
-  if (!run && rows.length)
+  if (!run && !opening && !ui.loadError && rows.length)
     useRun(
       rows.find((r) => r.id === store.get("jomc.run")) || rows[rows.length - 1],
     );

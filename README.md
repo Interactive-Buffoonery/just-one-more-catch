@@ -26,11 +26,15 @@ Live at https://justonemorecatch.app
 - `client/styles.ts`: all CSS, including the Clerk sign-in styling.
 - `convex/`: back-end functions, schema and `auth.config.ts`.
 - `shared/`: TypeScript used by both sides.
-- `client/data/hgss.ts`: generated encounter data. Rebuild with:
+- `client/packs.ts`: one pack per game (badges, items, dex sizes, boxes),
+  plus the list of versions. A pack's encounter data loads only when one of
+  its playthroughs is opened.
+- `client/data/<pack>.ts`: generated encounter data, built from
+  `data/<pack>.json`. Rebuild with:
 
 ```sh
 python3 scripts/fetch_pokeapi.py   # one-time cache into .cache/pokeapi
-python3 scripts/build_data.py
+python3 scripts/build_data.py hgss
 ```
 
 ## Accounts and settings
