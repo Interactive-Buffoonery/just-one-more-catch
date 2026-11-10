@@ -768,7 +768,7 @@ function fillSheet(s: any) {
         ? fillNewRun()
         : s.kind === "settings"
         ? ($("#sheetbody").innerHTML =
-            `<h2 id="sheet-title">Settings</h2>${Appearance()}<div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="chip" data-close="1">Done</button></div>`)
+            `<h2 id="sheet-title">Settings</h2>${Account()}${Appearance()}<div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="chip" data-close="1">Done</button></div>`)
         : s.kind === "box"
           ? fillBoxSheet(s.b)
           : fillMonSheet(s);
@@ -896,7 +896,7 @@ const badgeCount = (r: Run) => {
   ).length;
 };
 const cover = (v: (typeof VERSIONS)[VersionId], cls = "") =>
-  `<img class="cover ${cls}" src="/covers/${v.short.toLowerCase()}.jpg" alt="" width="46" height="46">`;
+  `<img class="cover ${cls}" src="/covers/${v.short.toLowerCase()}.jpg" alt="${v.name} box art" width="46" height="46">`;
 const gameChoices = () =>
   `<div class="game-options">${Object.entries(VERSIONS)
     .map(
@@ -942,11 +942,10 @@ function playthroughRow(row: RunRow, r: Run) {
     <div class="pt-m"><b>${badgeCount(r)} / ${all.length}</b><span class="pt-ml"> badges</span><div class="diamonds" aria-hidden="true">${all.map((b) => `<i class="${r.badges.has(b[0]) ? "on" : ""}"></i>`).join("")}</div></div>
     <div class="pt-m"><b>${r.caught.size}</b> / ${p.national}<span class="pt-ml"> caught</span><div class="catchbar" aria-hidden="true"><i style="width:${(r.caught.size / p.national) * 100}%"></i></div></div>
     <div class="pt-goal">${champion(r) ? `<b class="champ">Champion</b> ` : ""}${nextGoal(r)}<span class="small muted">${p.region} · last played ${lastPlayed(row.updatedAt || row.createdAt)}</span></div>
-    <div class="pt-act"><button class="app-quiet" data-switch="${row.id}" aria-label="Continue ${v.name}">Continue <span aria-hidden="true">→</span></button><button class="linkish small muted" data-delrun="${row.id}" aria-label="Delete this ${v.name} playthrough">Delete</button></div></article>`;
+    <div class="pt-act"><button class="app-quiet" data-switch="${row.id}" aria-label="Continue ${v.name}">Continue <span aria-hidden="true">→</span></button><details class="ptmenu"><summary aria-label="More options for ${v.name}">…</summary><div class="menu"><button data-delrun="${row.id}">Delete playthrough</button></div></details></div></article>`;
 }
 function Runs() {
-  const a = bridge.auth,
-    rows = [...(bridge.runs || [])]
+  const rows = [...(bridge.runs || [])]
       .map((row) => ({
         row,
         r: row.id === run?.id ? R() : loadRun(row),
@@ -984,13 +983,17 @@ function Runs() {
         }<div class="pt-head" aria-hidden="true"><span>Game</span><span>Badges</span><span>Caught</span><span>Next goal</span><span></span></div>
   ${shown.map((x) => playthroughRow(x.row, x.r)).join("") || `<p class="muted">Nothing here yet.</p>`}`
   }
-  <div class="narrow"><div class="eyebrow">Account</div>
+  </div>`;
+}
+function Account() {
+  const a = bridge.auth;
+  return `<div class="eyebrow">Account</div>
   ${
     a.isAuthenticated
       ? `<div class="card"><div style="display:flex;gap:12px;align-items:center"><span class="avatar" aria-hidden="true">${esc(initial())}</span><div style="flex:1"><b>${esc(a.displayName || "Trainer")}</b><div class="small muted">${a.email ? `Signed in as ${esc(a.email)}` : "Signed in"}</div></div><button class="chip" data-signout="1">Sign out</button></div>
   <div class="chips" style="margin-top:12px"><button class="chip" data-download="1">Download my data</button><button class="chip" data-delaccount="1">Delete account</button></div></div>`
       : `<div class="card"><button class="chip" data-signinsheet="1">Sign in</button><p class="muted small" style="margin:12px 0 0">${MOVE_NOTE}</p></div>`
-  }</div></div>`;
+  }`;
 }
 const MOVE_NOTE =
   "Playthroughs already saved in your local browser are moved to your account once you sign in.";
@@ -1059,7 +1062,7 @@ const VIEWS: Record<string, () => string> = {
 };
 function shell() {
   return `<div class="top">
-    <div class="logo"><svg class="mark" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M3 12h6M15 12h6"/></svg><span class="full">Just One More Catch</span></div>
+    <button class="logo" data-tab="playthroughs" aria-label="Just One More Catch, your playthroughs"><svg class="mark" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M3 12h6M15 12h6"/></svg><span class="full">Just One More Catch</span></button>
     <span class="spacer"></span><span id="topright"></span>
   </div>
   <main id="view"></main>
@@ -1101,9 +1104,9 @@ function render() {
         : `<p class="muted small" style="text-align:center;margin:4px 0 16px">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your playthroughs and view them on any device.</p>`) +
       VIEWS[ui.tab]();
   $("#topright").innerHTML =
-    `<span style="display:flex;gap:8px"><button class="pill icon" data-settings="1" data-k="settings" aria-label="Settings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><circle cx="12" cy="12" r="3"/></svg></button>${run ? `<button class="pill" data-tab="playthroughs" aria-label="Current playthrough: ${ver().name}. Switch playthrough">${ver().name}</button>` : ""}${
+    `<span style="display:flex;gap:8px"><button class="pill icon" data-settings="1" data-k="settings" aria-label="Settings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><circle cx="12" cy="12" r="3"/></svg></button>${run ? `<button class="gamepill" data-tab="playthroughs" aria-label="Current playthrough: ${ver().name}. Switch playthrough">${cover(ver())}</button>` : ""}${
       signedIn
-        ? `<button class="avatar" data-tab="playthroughs" aria-label="Account: ${esc(a.displayName || "you")}">${esc(initial())}</button>`
+        ? `<button class="avatar" data-settings="1" aria-label="Account: ${esc(a.displayName || "you")}">${esc(initial())}</button>`
         : a.isLoading
           ? ""
           : `<button class="pill" data-signinsheet="1" data-k="signin">Sign in</button>`
@@ -1113,7 +1116,6 @@ function render() {
         ["journey", "Journey"],
         ["dex", "Dex"],
         ["boxes", "Boxes"],
-        ["playthroughs", "Playthroughs"],
       ]
         .map(
           ([t, l]) =>
@@ -1255,6 +1257,7 @@ async function onClick(e: MouseEvent) {
     return;
   }
   if (d.signout) {
+    $("#sheet").close();
     flushSave();
     run = null;
     bridge.signOut();
@@ -1276,6 +1279,7 @@ async function onClick(e: MouseEvent) {
       )
     )
       return;
+    $("#sheet").close();
     await bridge.deleteAccount();
     run = null;
     bridge.signOut();
