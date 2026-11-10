@@ -703,7 +703,7 @@ function Journey() {
   </aside></div>`;
 }
 const NoRun = () =>
-  `<div class="narrow"><section class="hero"><h2>Start your first run</h2><p style="margin:6px 0 12px">Pick the game you're playing to begin.</p><button class="btn" data-tab="runs">Choose a game</button></section></div>`;
+  `<div class="narrow"><h2>Start a new run</h2>${gameList(true)}<p class="muted small">More games coming soon.</p></div>`;
 
 /* ---- Dex ---- */
 const STATUS_TEXT: Record<string, string> = {
@@ -785,7 +785,9 @@ function fillSpecies(n: number) {
 function fillSheet(s: any) {
   typeof s === "number"
     ? fillSpecies(s)
-    : s.kind === "box"
+    : s.kind === "signin"
+      ? fillSignIn()
+      : s.kind === "box"
       ? fillBoxSheet(s.b)
       : fillMonSheet(s);
 }
@@ -922,11 +924,28 @@ function Runs() {
       .join("") || `<p class="muted">No runs yet.</p>`
   }
   <div class="eyebrow">Start a new run</div>
-  <div class="card gamelist" style="padding:4px 16px">${GAMES.map((g) => `<button ${g[2] ? `data-newrun="${g[2]}"` : "disabled"}><span><b>${g[0]}</b> <span class="muted small">${g[1]}</span></span><span class="small ${g[2] ? "" : "muted"}">${g[2] ? "Start" : "Coming later"}</span></button>`).join("")}</div>
+  ${gameList()}
   ${Appearance()}
   <div class="eyebrow">Account</div>
-  <div class="card"><div style="display:flex;gap:12px;align-items:center"><span class="avatar" aria-hidden="true">${esc(initial())}</span><div style="flex:1"><b>${esc(a.displayName || "Trainer")}</b><div class="small muted">Signed in with ${PROVIDER[a.provider || ""] || "your account"}</div></div><button class="chip" data-signout="1">Sign out</button></div>
-  <div class="chips" style="margin-top:12px"><button class="chip" data-download="1">Download my data</button><button class="chip" data-delaccount="1">Delete account</button></div></div></div>`;
+  ${a.isAuthenticated ? `<div class="card"><div style="display:flex;gap:12px;align-items:center"><span class="avatar" aria-hidden="true">${esc(initial())}</span><div style="flex:1"><b>${esc(a.displayName || "Trainer")}</b><div class="small muted">Signed in with ${PROVIDER[a.provider || ""] || "your account"}</div></div><button class="chip" data-signout="1">Sign out</button></div>
+  <div class="chips" style="margin-top:12px"><button class="chip" data-download="1">Download my data</button><button class="chip" data-delaccount="1">Delete account</button></div></div>` : signInList()}</div>`;
+}
+const gameList = (liveOnly = false) =>
+  `<div class="card gamelist" style="padding:4px 16px">${GAMES.filter((g) => !liveOnly || g[2]).map((g) => `<button ${g[2] ? `data-newrun="${g[2]}"` : "disabled"}><span><b>${g[0]}</b> <span class="muted small">${g[1]}</span></span><span class="small ${g[2] ? "" : "muted"}">${g[2] ? "Start" : "Coming later"}</span></button>`).join("")}</div>`;
+const signInList = () =>
+  `<div class="card gamelist" style="padding:4px 16px">${[
+    ["spacefast", "Email code"],
+    ["google", "Google"],
+    ["gravatar", "WordPress.com"],
+  ]
+    .map(
+      ([k, l]) =>
+        `<button data-signin="${k}"><b>${l}</b><span class="small">Sign in</span></button>`,
+    )
+    .join("")}</div>`;
+function fillSignIn() {
+  $("#sheetbody").innerHTML =
+    `<h2 id="sheet-title">Sign in</h2><p class="muted small">Runs on this device move to your account.</p>${signInList()}`;
 }
 const Appearance = () => `<div class="eyebrow">Appearance</div>
   <div class="card">
@@ -946,14 +965,6 @@ const Appearance = () => `<div class="eyebrow">Appearance</div>
   </div>`;
 const initial = () =>
   (bridge.auth.displayName || "T").trim()[0]?.toUpperCase() || "T";
-function Welcome() {
-  return `<div class="narrow welcome"><section class="hero"><h2>Find your next catch</h2>
-    <p style="margin:6px 0 14px">Track badges and catches in HeartGold and SoulSilver, and see where to find every Pokémon you're missing at your point in the story.</p>
-    <button class="btn" data-signin="spacefast">Sign in with an email code</button>
-    <button class="btn ghost" data-signin="google">Sign in with Google</button>
-    <button class="btn ghost" data-signin="gravatar">Sign in with WordPress.com</button></section>
-    ${Appearance()}</div>`;
-}
 
 /* ---- About, Privacy, Terms, Contact ---- */
 const contactLink = (text: string) =>
@@ -1009,7 +1020,6 @@ const VIEWS: Record<string, () => string> = {
   boxes: Boxes,
   runs: Runs,
   about: About,
-  welcome: Welcome,
 };
 function shell() {
   return `<div class="top">
@@ -1026,19 +1036,19 @@ function shell() {
 function render() {
   const a = bridge.auth,
     signedIn = a.isAuthenticated;
-  if (!signedIn && ui.tab !== "about") ui.tab = "welcome";
-  if (signedIn && ui.tab === "welcome") ui.tab = "journey";
   const k = (document.activeElement as HTMLElement)?.dataset?.k;
   $("#view").innerHTML =
-    a.isLoading || (signedIn && !bridge.runs)
+    a.isLoading || !bridge.runs
       ? `<p class="muted" style="text-align:center;margin-top:40px">Loading…</p>`
-      : VIEWS[ui.tab]();
-  $("#topright").innerHTML = signedIn
-    ? `<span style="display:flex;gap:8px">${run ? `<button class="pill" data-tab="runs" aria-label="Current run: ${ver().name}. Switch run">${ver().name}</button>` : ""}<button class="avatar" data-tab="runs" aria-label="Account: ${esc(a.displayName || "you")}">${esc(initial())}</button></span>`
-    : ui.tab === "about"
-      ? `<button class="pill" data-tab="welcome">Sign in</button>`
-      : "";
-  $("#tabs").innerHTML = signedIn
+      : (signedIn ? "" : `<p class="muted small" style="text-align:center">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your runs and view them on any device.</p>`) + VIEWS[ui.tab]();
+  $("#topright").innerHTML = `<span style="display:flex;gap:8px">${run ? `<button class="pill" data-tab="runs" aria-label="Current run: ${ver().name}. Switch run">${ver().name}</button>` : ""}${
+    signedIn
+      ? `<button class="avatar" data-tab="runs" aria-label="Account: ${esc(a.displayName || "you")}">${esc(initial())}</button>`
+      : a.isLoading
+        ? ""
+        : `<button class="pill" data-signinsheet="1" data-k="signin">Sign in</button>`
+  }</span>`;
+  $("#tabs").innerHTML = !a.isLoading
     ? `<nav class="tabbar" aria-label="Sections">${[
         ["journey", "Journey"],
         ["dex", "Dex"],
@@ -1149,12 +1159,18 @@ async function onClick(e: MouseEvent) {
     d.sec ? root.querySelector("#" + d.sec)?.scrollIntoView() : scrollTo(0, 0);
     return;
   }
+  if (d.signinsheet) {
+    openSheet({ kind: "signin" });
+    return;
+  }
   if (d.signin) {
+    flushSave();
     bridge.signIn(d.signin as any);
     return;
   }
   if (d.signout) {
     flushSave();
+    run = null;
     bridge.signOut();
     return;
   }
@@ -1320,14 +1336,72 @@ function applyTheme() {
     PALETTE[ui.look][dark ? "dark" : "light"];
 }
 
+/* ---- Guest runs live in this browser until sign-in ---- */
+type GuestRow = RunRow & { movedTo?: string };
+const GUEST = "jomc.guest";
+let raw: Bridge,
+  guestMem = "[]";
+const guestRows = (): GuestRow[] => {
+  try {
+    return JSON.parse(store.get(GUEST) ?? guestMem);
+  } catch {
+    return [];
+  }
+};
+const setGuestRows = (rows: GuestRow[]) => {
+  guestMem = JSON.stringify(rows);
+  store.set(GUEST, guestMem);
+};
+const refresh = () => queueMicrotask(() => update(raw));
+function withGuest(b: Bridge): Bridge {
+  if (b.auth.isLoading || b.auth.isAuthenticated) return b;
+  return {
+    ...b,
+    get runs() {
+      return guestRows();
+    },
+    async createRun(version) {
+      const id = "local-" + Date.now().toString(36);
+      setGuestRows([
+        ...guestRows(),
+        { id, version, state: "{}", createdAt: new Date().toISOString() },
+      ]);
+      refresh();
+      return id;
+    },
+    async saveRun(id, state) {
+      setGuestRows(guestRows().map((r) => (r.id === id ? { ...r, state } : r)));
+    },
+    async deleteRun(id) {
+      setGuestRows(guestRows().filter((r) => r.id !== id));
+      refresh();
+    },
+  };
+}
+// ponytail: runs one at a time; retries on the next update after a failure
+let moving = false;
+async function moveGuestRuns() {
+  if (moving || !guestRows().length) return;
+  moving = true;
+  try {
+    for (const g of guestRows()) {
+      const id = g.movedTo || (await raw.createRun(g.version));
+      setGuestRows(guestRows().map((r) => (r.id === g.id ? { ...r, movedTo: id } : r)));
+      await raw.saveRun(id, g.state);
+      setGuestRows(guestRows().filter((r) => r.id !== g.id));
+      if (store.get("jomc.run") === g.id) pendingRun = id;
+    }
+  } catch {
+    $("#live").textContent = "Couldn't move your runs to your account yet.";
+  }
+  moving = false;
+}
+
 let pendingRun: string | null = null;
 function syncRuns() {
   const rows = bridge.runs;
-  if (!bridge.auth.isAuthenticated) {
-    run = null;
-    return;
-  }
-  if (!rows) return;
+  if (bridge.auth.isLoading || !rows) return;
+  if (bridge.auth.isAuthenticated) void moveGuestRuns();
   if (run && !rows.some((r) => r.id === run!.id)) run = null;
   const want = pendingRun && rows.find((r) => r.id === pendingRun);
   if (want) {
@@ -1345,7 +1419,8 @@ function syncRuns() {
 export function mount(el: HTMLElement, b: Bridge) {
   root = el;
   document.title = "Just One More Catch";
-  bridge = b;
+  raw = b;
+  bridge = withGuest(b);
   el.className = "app";
   const style = document.createElement("style");
   style.textContent = CSS;
@@ -1400,7 +1475,8 @@ export function mount(el: HTMLElement, b: Bridge) {
   render();
 }
 export function update(b: Bridge) {
-  bridge = b;
+  raw = b;
+  bridge = withGuest(b);
   syncRuns();
   if (!$("#sheet").open) render();
 }
