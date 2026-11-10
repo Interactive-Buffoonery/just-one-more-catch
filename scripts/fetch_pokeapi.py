@@ -41,7 +41,8 @@ def species(n):
 
 
 if __name__ == "__main__":
-    get(f"{API}pokedex/7")  # HGSS Johto dex
+    for dex in (2, 3, 7):  # Kanto, original Johto, HGSS Johto
+        get(f"{API}pokedex/{dex}")
     with ThreadPoolExecutor(4) as ex:  # ponytail: 4 workers keeps us well inside PokeAPI fair use
         list(ex.map(species, range(1, 494)))
     print("cached", len(os.listdir(CACHE)), "responses")

@@ -38,6 +38,7 @@ def pretty(s):
 def base_place(loc):
     loc = GAME["rename"].get(loc, loc)
     loc = re.sub(r" (\d+F|B\d+F)( Top)?$", "", loc)
+    loc = GAME["rename"].get(loc, loc)
     loc = re.sub(r"^Mt\. Moon Mt\. Moon ", "Mt. Moon ", loc)
     return re.sub(r"^Victory Road 1$", "Victory Road", loc)
 
@@ -109,12 +110,16 @@ def rows_for(encounters, version):
             if v["version"]["name"] != version:
                 continue
             for d in v["encounter_details"]:
+                src = d["method"]["name"]
+                if src in GAME.get("drop_methods", []):
+                    continue
                 cond = sorted(c["name"] for c in d["condition_values"] if c["name"] not in DEFAULT_COND)
-                k = (place, d["method"]["name"], need, tuple(cond))
-                r = merged.setdefault(k, {"place": pretty(place), "chap": chap, "m": k[1], "need": need, "cond": cond, "lo": 99, "hi": 0, "c": 0})
-                r["lo"] = min(r["lo"], d["min_level"]); r["hi"] = max(r["hi"], d["max_level"]); r["c"] += d["chance"]
+                k = (place, GAME.get("methods", {}).get(src, src), need, tuple(cond))
+                r = merged.setdefault(k, {"place": pretty(place), "chap": chap, "m": k[1], "need": need, "cond": cond, "lo": 99, "hi": 0, "by": {}})
+                r["lo"] = min(r["lo"], d["min_level"]); r["hi"] = max(r["hi"], d["max_level"]); r["by"][src] = r["by"].get(src, 0) + d["chance"]
+    # methods folded into one (Crystal's three Headbutt tree tables) keep the best table's odds
     for r in merged.values():
-        r["c"] = min(r["c"], 100)
+        r["c"] = min(max(r.pop("by").values()), 100)
     # rows that differ only by time of day and cover all three times become one "any time" row
     groups = {}
     for r in merged.values():
