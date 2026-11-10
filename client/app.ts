@@ -231,6 +231,8 @@ type Run = {
   monSeq: number;
   lastBox: "party" | number;
   clock: Clock;
+  hidden: Set<string>;
+  showLater: boolean;
 };
 const MON_DEFAULTS = {
   nick: "",
@@ -268,6 +270,8 @@ function loadRun(row: RunRow): Run {
     monSeq: s.monSeq || 0,
     lastBox: s.lastBox ?? 1,
     clock: s.clock || { mode: "device" },
+    hidden: new Set(s.hidden || []),
+    showLater: !!s.showLater,
   };
 }
 const dumpRun = (r: Run) =>
@@ -285,6 +289,8 @@ const dumpRun = (r: Run) =>
     monSeq: r.monSeq,
     lastBox: r.lastBox,
     clock: r.clock,
+    hidden: [...r.hidden],
+    showLater: r.showLater,
   });
 
 let bridge: Bridge;
@@ -620,7 +626,9 @@ const laterBox = (key: string, title: string, list: Pick[], place: string) =>
     ? `<details class="later" data-chap="${esc(key)}" ${ui.open.has(key) ? "open" : ""}><summary>${title}</summary>${list.map((x) => monRow(x.p, x.r, place)).join("")}</details>`
     : "";
 function placeBlock(pl: string, s: Spot) {
-  const later = laterBox(`l:${pl}`, complete(pl, s) ? `${s.later.length} more available later` : `Come back later · ${s.later.length}`, s.later, pl),
+  const later = R().showLater
+    ? s.later.map((x) => monRow(x.p, x.r, pl)).join("")
+    : laterBox(`l:${pl}`, complete(pl, s) ? `${s.later.length} more available later` : `Come back later · ${s.later.length}`, s.later, pl),
     once = laterBox(`o:${pl}`, `One-time and special · ${s.once.length}`, s.once, pl);
   if (complete(pl, s))
     return `<div class="done-place"><span class="tick" aria-hidden="true">✓</span><span style="flex:1">${pl} complete</span><span class="count ok">${s.got} / ${s.got}</span></div>${isHere(pl) ? `<p class="small muted" style="margin:6px 2px 0">Everything you can catch here with your current badges and items.</p>` : ""}${later}${once}`;
@@ -694,6 +702,25 @@ function fillClock(mode: string) {
     }
     <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button class="chip" data-close="1">Cancel</button><button class="app-primary" data-saveclock="1">Save</button></div>`;
 }
+const SECTIONS = [
+  ["next", "Next catch", "Disabling this removes the big suggestion card"],
+  ["near", "Also near you", "Disabling this hides the other Pokémon you can catch where you are"],
+  ["chapter", "This chapter", "Places and Pokémon in your current chapter"],
+  ["evolve", "Evolution options", "Disabling this hides Pokémon you can get by evolving ones you've caught"],
+  ["journey", "Your journey", "Disabling this hides the Your journey section"],
+  ["dex", "Dex progress", "Disabling this hides the Dex progress section"],
+];
+const toggle = (on: boolean, title: string, note: string, attr: string) =>
+  `<button class="sw" role="switch" aria-checked="${on}" ${attr}><span class="grow"><b>${title}</b><small>${note}</small></span><span class="tog${on ? " on" : ""}" aria-hidden="true"></span></button>`;
+function fillCustom() {
+  const r = R();
+  $("#sheetbody").innerHTML =
+    `<h2 id="sheet-title">Customize ${ver().name}</h2><p class="small muted" style="margin:4px 0 10px">Only changes this playthrough.</p>
+    ${SECTIONS.map(([k, t, n]) => toggle(!r.hidden.has(k), t, n, `data-hide="${k}" data-k="h-${k}"`)).join("")}
+    ${toggle(r.showLater, "Show Pokémon I can't reach yet", `List them in each section, not under "Come back later"`, `data-showlater="1" data-k="h-later"`)}
+    <div class="sw"><span class="grow"><b>Badges and items</b><small>Always shown: this is how the app knows what you can catch</small></span><span class="lock">Always on</span></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="chip" data-close="1">Done</button></div>`;
+}
 function Journey() {
   if (!run) return NoRun();
   const r = R(),
@@ -704,7 +731,8 @@ function Journey() {
     .flatMap((c) => c.places)
     .filter((p) => !NOT_HERE.test(p));
   const atHere = now.filter((x) => isHere(x.r.place) && x.p.n !== hero?.p.n);
-  const all = spots(),
+  const hide = r.hidden,
+    all = spots(),
     curS = chapterSpots(all, cur);
   const evolve = DEX.filter(
     (p) =>
@@ -728,16 +756,24 @@ function Journey() {
     </div>`
         : ""
     }
+    <button class="pill" data-custom="1" data-k="custom">Customize</button>
   </div>
-  ${hero ? heroCard(hero) : now.length ? `<section class="hero"><h2>You've skipped every suggestion</h2><p style="margin:6px 0 12px">${now.length} Pokémon are still catchable right now.</p><button class="btn" data-unskip="1" data-k="unskip2">Show them again</button></section>` : `<section class="hero"><h2>Nothing left to catch right now</h2><p style="margin:6px 0 0">Try another time of day, or move ahead in the story.</p></section>`}
-  ${r.skip.size ? `<div style="text-align:right;margin-top:8px"><button class="chip" data-unskip="1" data-k="unskip">Show ${r.skip.size} skipped</button></div>` : ""}
-  ${atHere.length ? `<div class="eyebrow">Also near ${r.here}</div>${atHere.map((x) => monRow(x.p, x.r)).join("")}` : ""}
-  <div class="eyebrow">${CHAPTERS[cur].title} · ${curS.left} to find${curS.later ? ` · ${curS.later} later` : ""}</div>
+  ${hide.has("next") ? "" : hero ? heroCard(hero) : now.length ? `<section class="hero"><h2>You've skipped every suggestion</h2><p style="margin:6px 0 12px">${now.length} Pokémon are still catchable right now.</p><button class="btn" data-unskip="1" data-k="unskip2">Show them again</button></section>` : `<section class="hero"><h2>Nothing left to catch right now</h2><p style="margin:6px 0 0">Try another time of day, or move ahead in the story.</p></section>`}
+  ${!hide.has("next") && r.skip.size ? `<div style="text-align:right;margin-top:8px"><button class="chip" data-unskip="1" data-k="unskip">Show ${r.skip.size} skipped</button></div>` : ""}
+  ${!hide.has("near") && atHere.length ? `<div class="eyebrow">Also near ${r.here}</div>${atHere.map((x) => monRow(x.p, x.r)).join("")}` : ""}
+  ${
+    hide.has("chapter")
+      ? ""
+      : `<div class="eyebrow">${CHAPTERS[cur].title} · ${curS.left} to find${curS.later ? ` · ${curS.later} later` : ""}</div>
   ${curS.left || curS.later ? "" : `<p class="muted">You've caught everything in this chapter.</p>`}
-  ${curS.html}
+  ${curS.html}`
+  }
   </div><aside class="colside">
-  ${evolve.length ? `<div class="eyebrow">Evolution options · ${evolve.length}</div>${evolve.map((p) => monRow(p, null)).join("")}` : ""}
-  <div class="eyebrow">Your journey</div>
+  ${!hide.has("evolve") && evolve.length ? `<div class="eyebrow">Evolution options · ${evolve.length}</div>${evolve.map((p) => monRow(p, null)).join("")}` : ""}
+  ${
+    hide.has("journey")
+      ? ""
+      : `<div class="eyebrow">Your journey</div>
   <div class="card" style="padding:4px 16px">
     ${CHAPTERS.map((c, i) => {
       if (
@@ -767,8 +803,9 @@ function Journey() {
             : cs!.html
         }<div style="height:10px"></div></details>`;
     }).join("")}
-  </div>
-  <div class="eyebrow">Progress</div>
+  </div>`
+  }
+  <div class="eyebrow">Badges and items</div>
   <div class="card">
     <h3>${P().region} badges</h3>
     ${badgeRow(P().badges)}
@@ -784,7 +821,13 @@ function Journey() {
     <div class="chips" style="margin-top:8px">${P().safari!.map((a) => `<button class="chip" data-safari="${a}" data-k="s-${a}" aria-pressed="${r.safari.has(a)}" ${!r.safari.has(a) && r.safari.size >= 6 ? "disabled" : ""}>${a}</button>`).join("")}</div>`
         : ""
     }
-    <div style="display:flex;justify-content:space-between;margin-top:16px"><h3>${P().region} dex</h3><span><b>${regionalCaught()}</b> <span class="muted">/ ${P().regional}</span></span></div>
+  </div>
+  ${
+    hide.has("dex")
+      ? ""
+      : `<div class="eyebrow">Dex progress</div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between"><h3>${P().region} dex</h3><span><b>${regionalCaught()}</b> <span class="muted">/ ${P().regional}</span></span></div>
     <div class="bar" style="margin-top:6px"><i style="width:${(regionalCaught() / P().regional) * 100}%"></i></div>
     ${
       e4() && P().national > P().regional
@@ -792,7 +835,8 @@ function Journey() {
     <div class="bar" style="margin-top:6px"><i style="width:${(r.caught.size / P().national) * 100}%"></i></div>`
         : ""
     }
-  </div>
+  </div>`
+  }
   </aside></div>`;
 }
 const NoRun = () => `<div class="narrow">${pickGame()}</div>`;
@@ -883,6 +927,8 @@ function fillSheet(s: any) {
         ? fillNewRun()
         : s.kind === "started"
         ? fillStartDate(s.id)
+        : s.kind === "custom"
+        ? fillCustom()
         : s.kind === "clock"
         ? fillClock(s.mode)
         : s.kind === "settings"
@@ -1255,7 +1301,7 @@ function render() {
     ? `<div class="toast">${ui.undo.msg}<button data-undo="1">Undo</button></div>`
     : "";
   if (
-    (typeof ui.sheet === "number" || ui.sheet?.kind === "settings") &&
+    (typeof ui.sheet === "number" || ["settings", "custom"].includes(ui.sheet?.kind)) &&
     $("#sheet").open
   )
     fillSheet(ui.sheet);
@@ -1470,6 +1516,10 @@ async function onClick(e: MouseEvent) {
     openSheet(+d.open);
     return;
   }
+  if (d.custom) {
+    openSheet({ kind: "custom", k: "custom" });
+    return;
+  }
   if (d.clock) {
     openSheet({ kind: "clock", mode: r.clock.mode, k: "clock" });
     return;
@@ -1541,7 +1591,10 @@ async function onClick(e: MouseEvent) {
       r.time = d.time;
     }
     r.skip.clear();
-  } else if (d.badge) {
+  } else if (d.hide) {
+    r.hidden.has(d.hide) ? r.hidden.delete(d.hide) : r.hidden.add(d.hide);
+  } else if (d.showlater) r.showLater = !r.showLater;
+  else if (d.badge) {
     r.badges.has(d.badge) ? r.badges.delete(d.badge) : r.badges.add(d.badge);
   } else if (d.safari) {
     r.safari.has(d.safari) ? r.safari.delete(d.safari) : r.safari.add(d.safari);
