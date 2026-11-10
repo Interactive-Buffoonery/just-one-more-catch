@@ -1,4 +1,8 @@
 {
+  "versions": {"heartgold": "h", "soulsilver": "s"},
+  "pokedex": 7,
+  "species": 493,
+  "gen": "generation-iv",
   "drop": ["^Unknown All ", "^Pokemart$"],
   "rename": {
     "Violet City Poke Mart": "Violet City Pokemon Center",
