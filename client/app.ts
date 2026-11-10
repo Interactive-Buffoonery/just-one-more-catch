@@ -1425,13 +1425,6 @@ function syncRuns() {
 export function mount(el: HTMLElement, b: Bridge) {
   root = el;
   document.title = "Just One More Catch";
-  // ponytail: set here because Zero's capsule favicon option is undocumented
-  const icon =
-    document.querySelector<HTMLLinkElement>("link[rel=icon]") ||
-    document.head.appendChild(
-      Object.assign(document.createElement("link"), { rel: "icon" }),
-    );
-  icon.href = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff" stroke="#a8285a" stroke-width="2.4"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M2 12h7M15 12h7"/></svg>')}`;
   raw = b;
   bridge = withGuest(b);
   el.className = "app";
