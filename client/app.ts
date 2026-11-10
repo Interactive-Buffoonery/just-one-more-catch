@@ -953,8 +953,8 @@ function Runs() {
         at: row.updatedAt || row.createdAt,
       }))
       .sort((x, y) => y.at.localeCompare(x.at)),
-    f = ui.runFilter || "all",
     many = rows.length > 1,
+    f = (many && ui.runFilter) || "all",
     done = rows.filter((x) => champion(x.r)).length,
     top = rows[0];
   const shown = rows.filter(
@@ -1078,7 +1078,8 @@ function render() {
   const a = bridge.auth,
     signedIn = a.isAuthenticated;
   const k = (document.activeElement as HTMLElement)?.dataset?.k;
-  const loading = a.isLoading || !bridge.runs || !!opening;
+  const needsGame = ui.tab !== "playthroughs";
+  const loading = a.isLoading || !bridge.runs || (needsGame && !!opening);
   root.classList.toggle("loading", loading);
   const url = new URL(location.href);
   if (ui.tab === "playthroughs") url.searchParams.delete("tab");
@@ -1091,7 +1092,7 @@ function render() {
     );
   $("#view").innerHTML = loading
     ? `<p class="muted" style="text-align:center;padding-top:40px">Loading…</p>`
-    : ui.loadError
+    : needsGame && ui.loadError
       ? `<p class="small" role="alert" style="text-align:center;padding-top:40px;color:var(--coral)">This game didn't load. Check your connection and reload the page.</p>`
       : (signedIn
         ? ui.saveError
