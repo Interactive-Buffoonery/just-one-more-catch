@@ -2,6 +2,7 @@
 // The preact page owns auth and server calls and hands them in through the bridge.
 import GAME from "./data/hgss";
 import CSS from "./styles";
+import { MAX_RUN_BYTES, runBytes } from "../shared/limits";
 
 type Row = {
   place: string;
@@ -295,6 +296,11 @@ type Run = {
   monSeq: number;
   lastBox: "party" | number;
 };
+const MON_DEFAULTS = { nick: "", lvl: "", g: "", shiny: false, item: "", note: "" };
+const compactMon = (m: Mon) =>
+  Object.fromEntries(
+    Object.entries(m).filter(([k, v]) => (MON_DEFAULTS as any)[k] !== v),
+  );
 function loadRun(row: RunRow): Run {
   let s: any = {};
   try {
@@ -313,7 +319,7 @@ function loadRun(row: RunRow): Run {
     time: s.time || "day",
     boxNames:
       s.boxNames || Array.from({ length: BOX_COUNT }, (_, i) => `Box ${i + 1}`),
-    mons: s.mons || [],
+    mons: (s.mons || []).map((m: Mon) => ({ ...MON_DEFAULTS, ...m })),
     monSeq: s.monSeq || 0,
     lastBox: s.lastBox ?? 1,
   };
@@ -329,7 +335,7 @@ const dumpRun = (r: Run) =>
     timeAuto: r.timeAuto,
     time: r.time,
     boxNames: r.boxNames,
-    mons: r.mons,
+    mons: r.mons.map(compactMon),
     monSeq: r.monSeq,
     lastBox: r.lastBox,
   });
@@ -1028,7 +1034,7 @@ function render() {
   $("#view").innerHTML =
     a.isLoading || !bridge.runs
       ? `<p class="muted" style="text-align:center;margin-top:40px">Loading…</p>`
-      : (signedIn ? "" : `<p class="muted small" style="text-align:center;margin:4px 0 16px">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your runs and view them on any device.</p>`) + VIEWS[ui.tab]();
+      : (signedIn ? (ui.saveError ? `<p class="small" role="alert" style="text-align:center;margin:4px 0 16px;color:var(--coral)">${ui.saveError}</p>` : "") : `<p class="muted small" style="text-align:center;margin:4px 0 16px">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your runs and view them on any device.</p>`) + VIEWS[ui.tab]();
   $("#topright").innerHTML = `<span style="display:flex;gap:8px"><button class="pill icon" data-settings="1" data-k="settings" aria-label="Settings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><circle cx="12" cy="12" r="3"/></svg></button>${run ? `<button class="pill" data-tab="runs" aria-label="Current run: ${ver().name}. Switch run">${ver().name}</button>` : ""}${
     signedIn
       ? `<button class="avatar" data-tab="runs" aria-label="Account: ${esc(a.displayName || "you")}">${esc(initial())}</button>`
@@ -1061,18 +1067,25 @@ function render() {
 }
 
 let saveTimer: any, undoTimer: any;
+function showSaveError(msg: string) {
+  ui.saveError = msg;
+  render();
+}
 function scheduleSave(delay = 800) {
   if (!run) return;
   const id = run.id,
     state = dumpRun(run);
   if (state === ui.saved) return;
   clearTimeout(saveTimer);
+  if (bridge.auth.isAuthenticated && runBytes(state) > MAX_RUN_BYTES)
+    return showSaveError("This run is too big to save. Try shortening some notes.");
   saveTimer = setTimeout(async () => {
     try {
       await bridge.saveRun(id, state);
       if (run?.id === id) ui.saved = state;
+      if (ui.saveError) showSaveError("");
     } catch {
-      $("#live").textContent = "Couldn't save. Trying again.";
+      showSaveError("Couldn't save. Trying again.");
       scheduleSave(5000);
     }
   }, delay);

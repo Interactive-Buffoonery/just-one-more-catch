@@ -5,9 +5,9 @@ import {
   string,
   table,
 } from "lakebed/server";
+import { MAX_RUN_BYTES, runBytes } from "../shared/limits";
 
 // ponytail: a run's whole state (badges, caught, boxes) is one JSON string; split out a mons table if runs outgrow a row
-const MAX_STATE = 200_000;
 const VERSIONS = ["heartgold", "soulsilver"];
 
 export default capsule({
@@ -44,7 +44,7 @@ export default capsule({
     }),
     saveRun: mutation(async (ctx, id: string, state: string) => {
       const { userId } = ctx.auth.requireSignedIn();
-      if (typeof state !== "string" || state.length > MAX_STATE)
+      if (typeof state !== "string" || runBytes(state) > MAX_RUN_BYTES)
         throw new Error("Run is too large");
       JSON.parse(state);
       const run = await ctx.db.runs.get(id);
