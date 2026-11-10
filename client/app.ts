@@ -567,9 +567,9 @@ const badgeRow = (list: string[][]) =>
 /* ---- Journey (home) ---- */
 const why = (h: Pick) =>
   isHere(h.r.place)
-    ? h.r.c
-      ? `${h.r.c}% here, your best shot`
-      : "Right here, your best shot"
+    ? ONE_TIME.has(h.r.m)
+      ? "Only available once, right here"
+      : "Your easiest catch nearby"
     : h.r.chap === currentChap()
       ? "Best odds in this chapter"
       : `Best odds in ${CHAPTERS[h.r.chap].title}`;
