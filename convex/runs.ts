@@ -34,7 +34,7 @@ export const list = query({
       id: r._id as string,
       version: r.version,
       state: r.state,
-      createdAt: new Date(r._creationTime).toISOString(),
+      createdAt: new Date(r.startedAt ?? r._creationTime).toISOString(),
       updatedAt: new Date(r.updatedAt ?? r._creationTime).toISOString(),
     }));
   },
@@ -57,6 +57,15 @@ export const save = mutation({
     JSON.parse(state);
     const run = await mine(ctx, id);
     await ctx.db.patch(run._id, { state, updatedAt: Date.now() });
+  },
+});
+
+export const setStart = mutation({
+  args: { id: v.string(), startedAt: v.number() },
+  handler: async (ctx, { id, startedAt }) => {
+    if (!Number.isFinite(startedAt) || startedAt > Date.now() + 864e5) throw new Error("Pick a past date");
+    const run = await mine(ctx, id);
+    await ctx.db.patch(run._id, { startedAt });
   },
 });
 

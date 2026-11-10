@@ -59,6 +59,7 @@ export type Bridge = {
   createRun(version: string): Promise<string>;
   saveRun(id: string, state: string): Promise<unknown>;
   deleteRun(id: string): Promise<unknown>;
+  setStart(id: string, startedAt: number): Promise<unknown>;
   deleteAccount(): Promise<unknown>;
   contact(input: {
     email: string;
@@ -228,7 +229,6 @@ type Run = {
   mons: Mon[];
   monSeq: number;
   lastBox: "party" | number;
-  started?: string;
 };
 const MON_DEFAULTS = {
   nick: "",
@@ -265,7 +265,6 @@ function loadRun(row: RunRow): Run {
     mons: (s.mons || []).map((m: Mon) => ({ ...MON_DEFAULTS, ...m })),
     monSeq: s.monSeq || 0,
     lastBox: s.lastBox ?? 1,
-    started: s.started,
   };
 }
 const dumpRun = (r: Run) =>
@@ -282,7 +281,6 @@ const dumpRun = (r: Run) =>
     mons: r.mons.map(compactMon),
     monSeq: r.monSeq,
     lastBox: r.lastBox,
-    started: r.started,
   });
 
 let bridge: Bridge;
@@ -919,18 +917,12 @@ function fillNewRun() {
 }
 const ymd = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-const startDay = (row: RunRow, r: Run) =>
-  r.started || ymd(new Date(row.createdAt));
-const dayLabel = (day: string) => {
-  const [y, m, d] = day.split("-").map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString();
-};
+const startDay = (row: RunRow) => ymd(new Date(row.createdAt));
 function fillStartDate(id: string) {
   const row = bridge.runs?.find((x) => x.id === id);
   if (!row) return;
-  const r = row.id === run?.id ? R() : loadRun(row);
   $("#sheetbody").innerHTML =
-    `<h2 id="sheet-title">Start date</h2><label class="field"><span>${verOf(row.version).name} started on</span><input id="started" type="date" value="${startDay(row, r)}" max="${ymd(new Date())}" required></label><div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button class="chip" data-close="1">Cancel</button><button class="app-primary" data-savestart="${row.id}">Save</button></div>`;
+    `<h2 id="sheet-title">Start date</h2><label class="field"><span>${verOf(row.version).name} started on</span><input id="started" type="date" value="${startDay(row)}" max="${ymd(new Date())}" required></label><div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button class="chip" data-close="1">Cancel</button><button class="app-primary" data-savestart="${row.id}">Save</button></div>`;
 }
 const lastPlayed = (iso: string) => {
   const day = (d: Date) => new Date(d).setHours(0, 0, 0, 0),
@@ -958,7 +950,7 @@ function playthroughRow(row: RunRow, r: Run) {
   const v = verOf(row.version),
     p = v.pack,
     all = [...p.badges, ...(p.postgame?.[1] || [])];
-  return `<article class="pt"><div class="pt-id">${cover(v)}<div><h3>${v.name}</h3><span class="small muted">Started ${dayLabel(startDay(row, r))}</span></div></div>
+  return `<article class="pt"><div class="pt-id">${cover(v)}<div><h3>${v.name}</h3><span class="small muted">Started ${new Date(row.createdAt).toLocaleDateString()}</span></div></div>
     <div class="pt-m"><b>${badgeCount(r)} / ${all.length}</b><span class="pt-ml"> badges</span><div class="diamonds" aria-hidden="true">${all.map((b) => `<i class="${r.badges.has(b[0]) ? "on" : ""}"></i>`).join("")}</div></div>
     <div class="pt-m"><b>${r.caught.size}</b> / ${p.national}<span class="pt-ml"> caught</span><div class="catchbar" aria-hidden="true"><i style="width:${(r.caught.size / p.national) * 100}%"></i></div></div>
     <div class="pt-goal">${champion(r) ? `<b class="champ">Champion</b> ` : ""}${nextGoal(r)}<span class="small muted">${p.region} · last played ${lastPlayed(row.updatedAt || row.createdAt)}</span></div>
@@ -1332,15 +1324,12 @@ async function onClick(e: MouseEvent) {
       row = bridge.runs?.find((x) => x.id === d.savestart);
     if (!row || !/^\d{4}-\d{2}-\d{2}$/.test(day) || day > ymd(new Date())) return;
     $("#sheet").close();
-    if (row.id === run?.id) {
-      R().started = day;
-      scheduleSave(0);
-    } else {
-      const r = loadRun(row);
-      r.started = day;
-      await bridge.saveRun(row.id, dumpRun(r));
+    const [y, m, dd] = day.split("-").map(Number);
+    try {
+      await bridge.setStart(row.id, new Date(y, m - 1, dd).getTime());
+    } catch {
+      showSaveError("Couldn't change the start date. Try again.");
     }
-    render();
     return;
   }
   if (d.delrun) {
@@ -1513,6 +1502,17 @@ function withGuest(b: Bridge): Bridge {
         guestRows().map((r) => (r.id === id ? { ...r, state, updatedAt } : r)),
       );
     },
+    async setStart(id, startedAt) {
+      const createdAt = new Date(startedAt).toISOString();
+      setGuestRows(
+        guestRows().map((r) =>
+          r.id === id
+            ? { ...r, createdAt, updatedAt: r.updatedAt || r.createdAt }
+            : r,
+        ),
+      );
+      refresh();
+    },
     async deleteRun(id) {
       setGuestRows(guestRows().filter((r) => r.id !== id));
       refresh();
@@ -1531,6 +1531,7 @@ async function moveGuestRuns() {
         guestRows().map((r) => (r.id === g.id ? { ...r, movedTo: id } : r)),
       );
       await raw.saveRun(id, g.state);
+      await raw.setStart(id, Date.parse(g.createdAt));
       setGuestRows(guestRows().filter((r) => r.id !== g.id));
       if (store.get("jomc.run") === g.id) pendingRun = id;
     }
