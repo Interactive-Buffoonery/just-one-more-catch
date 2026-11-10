@@ -690,6 +690,7 @@ function fillClock(mode: string) {
     g = gameNow(c),
     two = (n: number) => String(n).padStart(2, "0"),
     zones: string[] = (Intl as any).supportedValuesOf?.("timeZone") ?? [];
+  if (c.tz && !zones.includes(c.tz)) zones.unshift(c.tz);
   $("#sheetbody").innerHTML =
     `<h2 id="sheet-title">${ver().name}'s clock</h2>
     <div class="card" style="margin-top:12px;text-align:center;background:var(--bg)"><div class="small muted">Your game right now</div><div class="big-time">${g.hour % 12 || 12}:${two(g.minute)} ${g.hour < 12 ? "AM" : "PM"}</div><div style="font-weight:700">${cap(DAYS[g.day])} · <span class="tag time">${cap(gameTime())}</span> <span class="small muted">night at ${(P().nightFrom as number) - 12} PM</span></div></div>
@@ -1527,6 +1528,7 @@ async function onClick(e: MouseEvent) {
   if (d.clockmode) {
     ui.sheet.mode = d.clockmode;
     fillSheet(ui.sheet);
+    $(`[data-clockmode="${d.clockmode}"]`)?.focus();
     return;
   }
   if (d.saveclock) {
@@ -1808,7 +1810,7 @@ export function mount(el: HTMLElement, b: Bridge) {
   });
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "hidden") flushSave();
-    else if (run && !$("#sheet").open) render();
+    else if (run && ui.tab === "journey" && !$("#sheet").open) render();
   });
   syncRuns();
   render();
