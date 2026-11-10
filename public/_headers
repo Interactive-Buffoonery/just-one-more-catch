@@ -1,0 +1,4 @@
+/sprites/*
+  Cache-Control: public, max-age=2592000
+/badges/*
+  Cache-Control: public, max-age=2592000
