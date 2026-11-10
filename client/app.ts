@@ -5,6 +5,7 @@ import type { VersionId } from "../shared/versions";
 import CSS from "./styles";
 import { MAX_RUN_BYTES, MAX_RUNS, runBytes } from "../shared/limits";
 import { gameNow, type Clock } from "../shared/clock";
+import { summarize, type Summary } from "../shared/summary";
 
 type Row = {
   place: string;
@@ -42,7 +43,7 @@ type Mon = {
 type RunRow = {
   id: string;
   version: string;
-  state: string;
+  summary: Summary;
   createdAt: string;
   updatedAt?: string;
 };
@@ -54,6 +55,7 @@ export type Bridge = {
     email?: string;
   };
   runs: RunRow[] | undefined;
+  getState(id: string): Promise<string>;
   mountSignIn(el: HTMLDivElement): boolean;
   unmountSignIn(el: HTMLDivElement): void;
   signOut(): void;
@@ -246,11 +248,11 @@ const compactMon = (m: Mon) =>
   Object.fromEntries(
     Object.entries(m).filter(([k, v]) => (MON_DEFAULTS as any)[k] !== v),
   );
-function loadRun(row: RunRow): Run {
+function loadRun(row: RunRow, state: string): Run {
   const pack = verOf(row.version).pack;
   let s: any = {};
   try {
-    s = JSON.parse(row.state) || {};
+    s = JSON.parse(state) || {};
   } catch {}
   return {
     id: row.id,
@@ -331,32 +333,33 @@ const store = {
 const loaded = new Map<Pack, GameData>();
 let opening: string | null = null;
 function useRun(row: RunRow) {
-  const v = verOf(row.version),
-    data = loaded.get(v.pack);
-  if (!data) {
-    run = null;
-    opening = row.id;
-    v.pack.load().then(
-      (d) => {
-        loaded.set(v.pack, d);
-        if (opening !== row.id) return;
-        opening = null;
-        const latest = bridge.runs?.find((r) => r.id === row.id);
-        if (latest) useRun(latest);
-        if (!$("#sheet").open) render();
-      },
-      () => {
-        if (opening !== row.id) return;
-        opening = null;
-        ui.loadError = true;
-        render();
-      },
-    );
-    return;
-  }
-  opening = null;
+  const v = verOf(row.version);
+  run = null;
+  opening = row.id;
+  Promise.all([
+    loaded.get(v.pack) || v.pack.load(),
+    bridge.getState(row.id),
+  ]).then(
+    ([d, state]) => {
+      loaded.set(v.pack, d);
+      if (opening !== row.id) return;
+      opening = null;
+      const latest = bridge.runs?.find((r) => r.id === row.id);
+      if (latest) openRun(latest, d, state);
+      if (!$("#sheet").open) render();
+    },
+    () => {
+      if (opening !== row.id) return;
+      opening = null;
+      ui.loadError = !!bridge.runs?.some((r) => r.id === row.id);
+      render();
+    },
+  );
+}
+function openRun(row: RunRow, data: GameData, state: string) {
+  const v = verOf(row.version);
   ui.loadError = false;
-  run = loadRun(row);
+  run = loadRun(row, state);
   CHAPTERS = data.chapters;
   placeCache = {};
   DEX = data.dex.map((p) => ({
@@ -525,7 +528,9 @@ function rowTags(r: Row, place = r.place) {
   const st = rowStatus(r),
     t = [`<span class="tag">${METHOD[r.m]?.[0] || r.m}</span>`];
   if (r.place !== place)
-    t.push(`<span class="tag plain">${r.place.slice(place.length).trim() || r.place}</span>`);
+    t.push(
+      `<span class="tag plain">${r.place.slice(place.length).trim() || r.place}</span>`,
+    );
   if (ONE_TIME.has(r.m)) t.push(`<span class="tag plain">One-time</span>`);
   if (lvl(r)) t.push(`<span class="tag plain">${lvl(r)}</span>`);
   if (r.c && r.c < 100 && !ONE_TIME.has(r.m))
@@ -582,11 +587,23 @@ const placeOf = (pl: string) =>
     : CHAPTERS.flatMap((c) => c.places)
         .filter((c) => pl === c || pl.startsWith(c + " "))
         .sort((a, b) => b.length - a.length)[0] || pl);
-type Spot = { chap: number; got: number; now: Pick[]; later: Pick[]; once: Pick[] };
+type Spot = {
+  chap: number;
+  got: number;
+  now: Pick[];
+  later: Pick[];
+  once: Pick[];
+};
 // 0 now, 1 other time of day, 2 not reachable yet, 3 one-time or special
 const rank = (r: Row) => {
   const s = rowStatus(r).s;
-  return ONE_TIME.has(r.m) || s === "special" ? 3 : s === "later" ? 2 : s === "wrongtime" ? 1 : 0;
+  return ONE_TIME.has(r.m) || s === "special"
+    ? 3
+    : s === "later"
+      ? 2
+      : s === "wrongtime"
+        ? 1
+        : 0;
 };
 // Per place: caught species, ones you can catch with what you have (any time of day),
 // ones that need more badges or items, and one-time or special ones (left out of the count).
@@ -602,7 +619,13 @@ function spots() {
         const pl = placeOf(r.place);
         if (seen.has(pl)) return;
         seen.add(pl);
-        const s = (out[pl] ||= { chap: r.chap, got: 0, now: [], later: [], once: [] });
+        const s = (out[pl] ||= {
+          chap: r.chap,
+          got: 0,
+          now: [],
+          later: [],
+          once: [],
+        });
         if (R().caught.has(p.n)) s.got += +(k < 2);
         else (k === 3 ? s.once : k === 2 ? s.later : s.now).push({ p, r });
       });
@@ -627,9 +650,21 @@ const laterBox = (key: string, title: string, list: Pick[], place: string) =>
     : "";
 function placeBlock(pl: string, s: Spot) {
   const later = R().showLater
-    ? s.later.map((x) => monRow(x.p, x.r, pl)).join("")
-    : laterBox(`l:${pl}`, complete(pl, s) ? `${s.later.length} more available later` : `Come back later · ${s.later.length}`, s.later, pl),
-    once = laterBox(`o:${pl}`, `One-time and special · ${s.once.length}`, s.once, pl);
+      ? s.later.map((x) => monRow(x.p, x.r, pl)).join("")
+      : laterBox(
+          `l:${pl}`,
+          complete(pl, s)
+            ? `${s.later.length} more available later`
+            : `Come back later · ${s.later.length}`,
+          s.later,
+          pl,
+        ),
+    once = laterBox(
+      `o:${pl}`,
+      `One-time and special · ${s.once.length}`,
+      s.once,
+      pl,
+    );
   if (complete(pl, s))
     return `<div class="done-place"><span class="tick" aria-hidden="true">✓</span><span style="flex:1">${pl} complete</span><span class="count ok">${s.got} / ${s.got}</span></div>${isHere(pl) ? `<p class="small muted" style="margin:6px 2px 0">Everything you can catch here with your current badges and items.</p>` : ""}${later}${once}`;
   const count = NOT_HERE.test(pl)
@@ -647,7 +682,8 @@ function placeBlock(pl: string, s: Spot) {
 // Places in a chapter, in the chapter's own order, then any extra places its rows use.
 function chapterSpots(all: Record<string, Spot>, i: number) {
   const list = Object.entries(all).filter(
-    ([pl, s]) => s.chap === i && (s.now.length || s.later.length || s.once.length),
+    ([pl, s]) =>
+      s.chap === i && (s.now.length || s.later.length || s.once.length),
   );
   const at = (pl: string) => {
     const k = CHAPTERS[i].places.indexOf(pl);
@@ -655,8 +691,16 @@ function chapterSpots(all: Record<string, Spot>, i: number) {
   };
   list.sort((a, b) => at(a[0]) - at(b[0]));
   const left = new Set(list.flatMap(([, s]) => s.now.map((x) => x.p.n)));
-  const later = new Set(list.flatMap(([, s]) => s.later.map((x) => x.p.n).filter((n) => !left.has(n))));
-  return { html: list.map(([pl, s]) => placeBlock(pl, s)).join(""), left: left.size, later: later.size };
+  const later = new Set(
+    list.flatMap(([, s]) =>
+      s.later.map((x) => x.p.n).filter((n) => !left.has(n)),
+    ),
+  );
+  return {
+    html: list.map(([pl, s]) => placeBlock(pl, s)).join(""),
+    left: left.size,
+    later: later.size,
+  };
 }
 const badgeRow = (list: string[][]) =>
   `<div style="display:flex;flex-wrap:wrap;margin:6px -6px">${list.map((b) => `<button class="badge" data-badge="${b[0]}" data-k="b-${b[0]}" aria-pressed="${R().badges.has(b[0])}" aria-label="${b[0]} Badge from ${b[1]}" title="${b[0]} Badge · ${b[1]}"><img src="/badges/${b[0].toLowerCase()}.png" alt="${b[0]} Badge" width="32" height="32"></button>`).join("")}</div>`;
@@ -691,8 +735,7 @@ function fillClock(mode: string) {
     two = (n: number) => String(n).padStart(2, "0"),
     zones: string[] = (Intl as any).supportedValuesOf?.("timeZone") ?? [];
   if (c.tz && !zones.includes(c.tz)) zones.unshift(c.tz);
-  $("#sheetbody").innerHTML =
-    `<h2 id="sheet-title">${ver().name}'s clock</h2>
+  $("#sheetbody").innerHTML = `<h2 id="sheet-title">${ver().name}'s clock</h2>
     <div class="card" style="margin-top:12px;text-align:center;background:var(--bg)"><div class="small muted">Your game right now</div><div class="big-time">${g.hour % 12 || 12}:${two(g.minute)} ${g.hour < 12 ? "AM" : "PM"}</div><div style="font-weight:700">${cap(DAYS[g.day])} · <span class="tag time">${cap(gameTime())}</span> <span class="small muted">night at ${(P().nightFrom as number) - 12} PM</span></div></div>
     <div class="small muted" style="margin:16px 0 6px;font-weight:700">How your game keeps time</div>
     <div class="seg3 wide" role="group" aria-label="How your game keeps time"><button data-clockmode="device" aria-pressed="${mode === "device"}">Follow a time zone</button><button data-clockmode="manual" aria-pressed="${mode === "manual"}">Set it myself</button></div>
@@ -705,9 +748,17 @@ function fillClock(mode: string) {
 }
 const SECTIONS = [
   ["next", "Next catch", "Disabling this removes the big suggestion card"],
-  ["near", "Also near you", "Disabling this hides the other Pokémon you can catch where you are"],
+  [
+    "near",
+    "Also near you",
+    "Disabling this hides the other Pokémon you can catch where you are",
+  ],
   ["chapter", "This chapter", "Places and Pokémon in your current chapter"],
-  ["evolve", "Evolution options", "Disabling this hides Pokémon you can get by evolving ones you've caught"],
+  [
+    "evolve",
+    "Evolution options",
+    "Disabling this hides Pokémon you can get by evolving ones you've caught",
+  ],
   ["journey", "Your journey", "Disabling this hides the Your journey section"],
   ["dex", "Dex progress", "Disabling this hides the Dex progress section"],
 ];
@@ -788,9 +839,13 @@ function Journey() {
         cs = open ? chapterSpots(all, i) : null,
         n = g ? uniq(g) : cs!.left;
       const label = g
-        ? n ? `${n} to come` : "all caught"
+        ? n
+          ? `${n} to come`
+          : "all caught"
         : n || cs!.later
-          ? [n && `${n} still out there`, cs!.later && `${cs!.later} later`].filter(Boolean).join(" · ")
+          ? [n && `${n} still out there`, cs!.later && `${cs!.later} later`]
+              .filter(Boolean)
+              .join(" · ")
           : "all caught";
       return `<details class="chap" data-chap="${i}" ${ui.open.has(String(i)) ? "open" : ""}><summary><span class="node ${open ? "done" : ""}" aria-hidden="true">${open ? "✓" : i + 1}</span><span style="flex:1">${c.title}<span class="sr">${open ? ", reached" : ", not reached yet"}</span></span><span class="muted small">${label}</span></summary>
         ${
@@ -813,13 +868,23 @@ function Journey() {
     <button class="chip" style="margin-top:6px" data-badge="Elite Four" data-k="b-e4" aria-pressed="${e4()}">Beat the Elite Four</button>
     ${e4() && P().postgame ? `<h3 style="margin-top:12px">${P().postgame![0]}</h3>${badgeRow(P().postgame![1])}` : ""}
     <h3 style="margin-top:12px">Items and moves you have</h3>
-    <div class="chips" style="margin-top:8px">${P().kit.map((k) => `<button class="chip" data-kit="${k[0]}" data-k="k-${k[0]}" aria-pressed="${r.kit.has(k[0])}"><img src="/items/${k[0]}.png" alt="${k[1]} icon" width="24" height="24" aria-hidden="true">${k[1]}</button>`).join("")}</div>
+    <div class="chips" style="margin-top:8px">${P()
+      .kit.map(
+        (k) =>
+          `<button class="chip" data-kit="${k[0]}" data-k="k-${k[0]}" aria-pressed="${r.kit.has(k[0])}"><img src="/items/${k[0]}.png" alt="${k[1]} icon" width="24" height="24" aria-hidden="true">${k[1]}</button>`,
+      )
+      .join("")}</div>
     ${
       P().safari &&
       unlocked(CHAPTERS.findIndex((c) => c.places.includes("Safari Zone")))
         ? `<h3 style="margin-top:12px">Safari Zone: areas you've placed</h3>
     <p class="small muted" style="margin:4px 0 0">The game lets you place 6 of its 12 areas at a time. Pick the ones you've chosen:</p>
-    <div class="chips" style="margin-top:8px">${P().safari!.map((a) => `<button class="chip" data-safari="${a}" data-k="s-${a}" aria-pressed="${r.safari.has(a)}" ${!r.safari.has(a) && r.safari.size >= 6 ? "disabled" : ""}>${a}</button>`).join("")}</div>`
+    <div class="chips" style="margin-top:8px">${P()
+      .safari!.map(
+        (a) =>
+          `<button class="chip" data-safari="${a}" data-k="s-${a}" aria-pressed="${r.safari.has(a)}" ${!r.safari.has(a) && r.safari.size >= 6 ? "disabled" : ""}>${a}</button>`,
+      )
+      .join("")}</div>`
         : ""
     }
   </div>
@@ -927,17 +992,17 @@ function fillSheet(s: any) {
       : s.kind === "newrun"
         ? fillNewRun()
         : s.kind === "started"
-        ? fillStartDate(s.id)
-        : s.kind === "custom"
-        ? fillCustom()
-        : s.kind === "clock"
-        ? fillClock(s.mode)
-        : s.kind === "settings"
-        ? ($("#sheetbody").innerHTML =
-            `<h2 id="sheet-title">Settings</h2>${Account()}${Appearance()}<div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="chip" data-close="1">Done</button></div>`)
-        : s.kind === "box"
-          ? fillBoxSheet(s.b)
-          : fillMonSheet(s);
+          ? fillStartDate(s.id)
+          : s.kind === "custom"
+            ? fillCustom()
+            : s.kind === "clock"
+              ? fillClock(s.mode)
+              : s.kind === "settings"
+                ? ($("#sheetbody").innerHTML =
+                    `<h2 id="sheet-title">Settings</h2>${Account()}${Appearance()}<div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="chip" data-close="1">Done</button></div>`)
+                : s.kind === "box"
+                  ? fillBoxSheet(s.b)
+                  : fillMonSheet(s);
 }
 function openSheet(s: any) {
   ui.sheet = s;
@@ -998,7 +1063,12 @@ function fillMonSheet(s: any) {
       : `Add another ${p.name}`;
   $("#sheetbody").innerHTML =
     `<div style="display:flex;gap:12px;align-items:center">${mon(p, !!m?.shiny)}<div><h2 id="sheet-title">${title}</h2></div></div>
-    <label class="field"><span>Box</span><select id="f-box">${allBoxes().map((b) => `<option value="${b}" ${b === cur ? "selected" : ""} ${full(b) && b !== cur ? "disabled" : ""}>${esc(boxLabel(b))} (${inBox(b).length}/${boxCap(b)})</option>`).join("")}</select></label>
+    <label class="field"><span>Box</span><select id="f-box">${allBoxes()
+      .map(
+        (b) =>
+          `<option value="${b}" ${b === cur ? "selected" : ""} ${full(b) && b !== cur ? "disabled" : ""}>${esc(boxLabel(b))} (${inBox(b).length}/${boxCap(b)})</option>`,
+      )
+      .join("")}</select></label>
     <details class="more" ${m ? "open" : ""}><summary>More details <span class="muted small">nickname, level, held item</span></summary><div class="fgrid">
       <label class="field"><span>Nickname</span><input id="f-nick" maxlength="10" autocomplete="off" value="${esc(m?.nick || "")}"></label>
       <label class="field"><span>Level</span><input id="f-lvl" type="number" min="1" max="100" inputmode="numeric" value="${m?.lvl || ""}"></label>
@@ -1055,10 +1125,10 @@ function saveMon() {
 }
 
 /* ---- Runs, account and sign-in ---- */
-const badgeCount = (r: Run) => {
-  const p = verOf(r.version).pack;
+const badgeCount = (version: string, s: Summary) => {
+  const p = verOf(version).pack;
   return [...p.badges, ...(p.postgame?.[1] || [])].filter((b) =>
-    r.badges.has(b[0]),
+    s.badges.includes(b[0]),
   ).length;
 };
 const cover = (v: (typeof VERSIONS)[VersionId], cls = "") =>
@@ -1097,29 +1167,30 @@ const lastPlayed = (iso: string) => {
         ? `${n} days ago`
         : `on ${new Date(iso).toLocaleDateString()}`;
 };
-const champion = (r: Run) => r.badges.has("Elite Four");
+const champion = (s: Summary) => s.badges.includes("Elite Four");
 const ptMenu = (row: RunRow, v: (typeof VERSIONS)[VersionId]) =>
   `<details class="ptmenu"><summary aria-label="More options for ${v.name}">…</summary><div class="menu"><button data-startsheet="${row.id}">Change start date</button><button data-delrun="${row.id}">Delete playthrough</button></div></details>`;
 const meter = (n: number, of: number) =>
   `<span class="meter" aria-hidden="true"><i style="width:${(n / of) * 100}%"></i></span>`;
-function resumeCard(row: RunRow, r: Run) {
+function resumeCard(row: RunRow, r: Summary) {
   const v = verOf(row.version),
     p = v.pack,
     all = [...p.badges, ...(p.postgame?.[1] || [])],
-    party = r.mons.filter((m) => m.box === "party");
+    has = new Set(r.badges),
+    party = r.party;
   return `<article class="card dash-hero">${cover(v)}
     <div><div class="hero-title"><h2>${v.name}</h2>${ptMenu(row, v)}</div>
-    <div class="tags"><span class="tag plain">${p.region}</span><span class="tag plain">Started ${new Date(row.createdAt).toLocaleDateString()}</span>${champion(r) ? `<span class="tag time">Champion</span>` : ""}<span class="tag time">${badgeCount(r)} / ${all.length} badges</span></div></div>
+    <div class="tags"><span class="tag plain">${p.region}</span><span class="tag plain">Started ${new Date(row.createdAt).toLocaleDateString()}</span>${champion(r) ? `<span class="tag time">Champion</span>` : ""}<span class="tag time">${badgeCount(row.version, r)} / ${all.length} badges</span></div></div>
     <div class="hero-full">
-      <div class="hero-badges">${all.map((b) => `<img class="${r.badges.has(b[0]) ? "" : "off"}" src="/badges/${b[0].toLowerCase()}.png" alt="${b[0]} Badge${r.badges.has(b[0]) ? "" : " (not yet)"}" width="24" height="24">`).join("")}</div>
-      <div><div class="split small"><span class="muted">Caught</span><span><b>${r.caught.size}</b> <span class="muted">/ ${p.national}</span></span></div>${meter(r.caught.size, p.national)}</div>
+      <div class="hero-badges">${all.map((b) => `<img class="${has.has(b[0]) ? "" : "off"}" src="/badges/${b[0].toLowerCase()}.png" alt="${b[0]} Badge${has.has(b[0]) ? "" : " (not yet)"}" width="24" height="24">`).join("")}</div>
+      <div><div class="split small"><span class="muted">Caught</span><span><b>${r.caught}</b> <span class="muted">/ ${p.national}</span></span></div>${meter(r.caught, p.national)}</div>
       <div class="split"><div class="party">${party.map((m) => `<img src="/sprites/${p.art}/${m.shiny ? "shiny/" : ""}${m.n}.png" alt="${esc(m.nick || byN[m.n]?.name || "")}" width="56" height="56">`).join("")}</div><button class="app-primary" data-switch="${row.id}" aria-label="Continue ${v.name}">Continue <span aria-hidden="true">→</span></button></div>
     </div></article>`;
 }
-function miniCard(row: RunRow, r: Run, at: string) {
+function miniCard(row: RunRow, r: Summary, at: string) {
   const v = verOf(row.version),
     p = v.pack;
-  return `<article class="card mini"><button class="mini-go" data-switch="${row.id}" aria-label="Continue ${v.name}">${cover(v)}<span class="grow"><span class="split"><b class="mini-name">${v.name}</b>${champion(r) ? `<span class="tag time">Champion</span>` : `<span class="small muted">${lastPlayed(at)}</span>`}</span><span class="small muted">${badgeCount(r)} badges · ${r.caught.size} / ${p.national} caught</span>${meter(r.caught.size, p.national)}</span></button>${ptMenu(row, v)}</article>`;
+  return `<article class="card mini"><button class="mini-go" data-switch="${row.id}" aria-label="Continue ${v.name}">${cover(v)}<span class="grow"><span class="split"><b class="mini-name">${v.name}</b>${champion(r) ? `<span class="tag time">Champion</span>` : `<span class="small muted">${lastPlayed(at)}</span>`}</span><span class="small muted">${badgeCount(row.version, r)} badges · ${r.caught} / ${p.national} caught</span>${meter(r.caught, p.national)}</span></button>${ptMenu(row, v)}</article>`;
 }
 const signInNote = () =>
   bridge.auth.isAuthenticated
@@ -1131,7 +1202,7 @@ function Runs() {
   const rows = [...(bridge.runs || [])]
       .map((row) => ({
         row,
-        r: row.id === run?.id ? R() : loadRun(row),
+        r: row.id === run?.id ? summarize(dumpRun(R())) : row.summary,
         at: row.updatedAt || row.createdAt,
       }))
       .sort((x, y) => y.at.localeCompare(x.at)),
@@ -1152,10 +1223,10 @@ function Runs() {
     `<div class="card stat ${cls}"><b>${n}</b><span class="small muted">${label}</span></div>`;
   return `<div class="dash"><div class="dash-head"><div><h1>Dashboard</h1><p class="muted">${rows.length} playthrough${rows.length > 1 ? "s" : ""} · last played ${lastPlayed(top.at)}</p></div><button class="app-primary" data-newsheet="1">+ New playthrough</button></div>
   <div class="hub">${resumeCard(top.row, top.r)}<div class="stats">${stat(rows.length, "Playthroughs")}${stat(rows.filter((x) => champion(x.r)).length, "Champion", "gold")}${stat(
-    rows.reduce((n, x) => n + badgeCount(x.r), 0),
+    rows.reduce((n, x) => n + badgeCount(x.row.version, x.r), 0),
     "Badges earned",
   )}${stat(
-    rows.reduce((n, x) => n + x.r.caught.size, 0),
+    rows.reduce((n, x) => n + x.r.caught, 0),
     "Total caught",
   )}</div></div>
   ${rest.length ? `<h2 class="eyebrow">Other playthroughs</h2><div class="minis">${rest.map((x) => miniCard(x.row, x.r, x.at)).join("")}</div>` : ""}
@@ -1275,11 +1346,11 @@ function render() {
     : needsGame && ui.loadError
       ? `<p class="small" role="alert" style="text-align:center;padding-top:40px;color:var(--coral)">This game didn't load. Check your connection and reload the page.</p>`
       : (signedIn || ui.tab === "playthroughs"
-        ? ui.saveError
-          ? `<p class="small" role="alert" style="text-align:center;margin:4px 0 16px;color:var(--coral)">${ui.saveError}</p>`
-          : ""
-        : `<p class="muted small" style="text-align:center;margin:4px 0 16px">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your playthroughs and view them on any device.</p>`) +
-      VIEWS[ui.tab]();
+          ? ui.saveError
+            ? `<p class="small" role="alert" style="text-align:center;margin:4px 0 16px;color:var(--coral)">${ui.saveError}</p>`
+            : ""
+          : `<p class="muted small" style="text-align:center;margin:4px 0 16px">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your playthroughs and view them on any device.</p>`) +
+        VIEWS[ui.tab]();
   $("#topright").innerHTML =
     `<span style="display:flex;gap:8px"><button class="pill icon" data-settings="1" data-k="settings" aria-label="Settings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><circle cx="12" cy="12" r="3"/></svg></button>${run ? `<button class="gamepill" data-tab="playthroughs" aria-label="Current playthrough: ${ver().name}. Switch playthrough">${cover(ver())}</button>` : ""}${
       signedIn
@@ -1305,7 +1376,8 @@ function render() {
     ? `<div class="toast">${ui.undo.msg}${ui.undo.n ? `<button data-undo="1">Undo</button>` : ""}</div>`
     : "";
   if (
-    (typeof ui.sheet === "number" || ["settings", "custom"].includes(ui.sheet?.kind)) &&
+    (typeof ui.sheet === "number" ||
+      ["settings", "custom"].includes(ui.sheet?.kind)) &&
     $("#sheet").open
   )
     fillSheet(ui.sheet);
@@ -1368,15 +1440,27 @@ function toggleCaught(n: number) {
     render();
   }, 5000);
 }
-function download() {
+async function download() {
+  const rows = bridge.runs || [];
+  let states: string[];
+  try {
+    // ponytail: one query per run, all at once; batch them if a thousand at a time strains the socket
+    states = await Promise.all(
+      rows.map((r) =>
+        r.id === run?.id ? dumpRun(R()) : bridge.getState(r.id),
+      ),
+    );
+  } catch {
+    return showSaveError("Couldn't download your data. Try again.");
+  }
   const data = {
     exportedAt: new Date().toISOString(),
     account: bridge.auth.displayName,
-    runs: (bridge.runs || []).map((r) => ({
+    runs: rows.map((r, i) => ({
       id: r.id,
       game: r.version,
       startedAt: r.createdAt,
-      ...JSON.parse(r.id === run?.id ? dumpRun(R()) : r.state || "{}"),
+      ...JSON.parse(states[i] || "{}"),
     })),
   };
   const a = document.createElement("a");
@@ -1439,7 +1523,7 @@ async function onClick(e: MouseEvent) {
     return;
   }
   if (d.download) {
-    download();
+    await download();
     return;
   }
   if (d.another) {
@@ -1485,7 +1569,8 @@ async function onClick(e: MouseEvent) {
   if (d.savestart) {
     const day = ($("#started") as HTMLInputElement).value,
       row = bridge.runs?.find((x) => x.id === d.savestart);
-    if (!row || !/^\d{4}-\d{2}-\d{2}$/.test(day) || day > ymd(new Date())) return;
+    if (!row || !/^\d{4}-\d{2}-\d{2}$/.test(day) || day > ymd(new Date()))
+      return;
     $("#sheet").close();
     const [y, m, dd] = day.split("-").map(Number);
     try {
@@ -1535,7 +1620,11 @@ async function onClick(e: MouseEvent) {
     if (ui.sheet.mode === "manual") {
       const [h, m] = ($("#c-time").value || "").split(":").map(Number);
       if (isNaN(h) || isNaN(m)) return;
-      r.clock = { mode: "manual", min: +$("#c-day").value * 1440 + h * 60 + m, at: Date.now() };
+      r.clock = {
+        mode: "manual",
+        min: +$("#c-day").value * 1440 + h * 60 + m,
+        at: Date.now(),
+      };
     } else r.clock = { mode: "device", tz: $("#c-tz").value || undefined };
     r.skip.clear();
     $("#sheet").close();
@@ -1650,7 +1739,7 @@ function applyTheme() {
 }
 
 /* ---- Guest runs live in this browser until sign-in ---- */
-type GuestRow = RunRow & { movedTo?: string };
+type GuestRow = Omit<RunRow, "summary"> & { state: string; movedTo?: string };
 const GUEST = "jomc.guest";
 let raw: Bridge,
   guestMem = "[]";
@@ -1671,7 +1760,10 @@ function withGuest(b: Bridge): Bridge {
   return {
     ...b,
     get runs() {
-      return guestRows();
+      return guestRows().map((g) => ({ ...g, summary: summarize(g.state) }));
+    },
+    async getState(id) {
+      return guestRows().find((g) => g.id === id)?.state ?? "{}";
     },
     async createRun(version) {
       const id = "local-" + Date.now().toString(36);
@@ -1842,8 +1934,12 @@ export function mount(el: HTMLElement, b: Bridge) {
   render();
 }
 export function update(b: Bridge) {
-  if (!bridge.auth.isLoading && !bridge.auth.isAuthenticated &&
-      (b.auth.isLoading || b.auth.isAuthenticated)) flushSave();
+  if (
+    !bridge.auth.isLoading &&
+    !bridge.auth.isAuthenticated &&
+    (b.auth.isLoading || b.auth.isAuthenticated)
+  )
+    flushSave();
   raw = b;
   bridge = withGuest(b);
   syncRuns();
