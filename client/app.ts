@@ -1040,7 +1040,7 @@ function render() {
   $("#view").innerHTML =
     a.isLoading || !bridge.runs
       ? `<p class="muted" style="text-align:center;margin-top:40px">Loading…</p>`
-      : (signedIn ? "" : `<p class="muted small" style="text-align:center">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your runs and view them on any device.</p>`) + VIEWS[ui.tab]();
+      : (signedIn ? "" : `<p class="muted small" style="text-align:center;margin:4px 0 16px">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your runs and view them on any device.</p>`) + VIEWS[ui.tab]();
   $("#topright").innerHTML = `<span style="display:flex;gap:8px">${run ? `<button class="pill" data-tab="runs" aria-label="Current run: ${ver().name}. Switch run">${ver().name}</button>` : ""}${
     signedIn
       ? `<button class="avatar" data-tab="runs" aria-label="Account: ${esc(a.displayName || "you")}">${esc(initial())}</button>`
