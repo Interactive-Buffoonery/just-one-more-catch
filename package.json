@@ -1,14 +1,15 @@
 {
   "name": "just-one-more-catch",
   "private": true,
+  "engines": {"node": ">=22.18"},
   "type": "module",
   "packageManager": "pnpm@11.1.3",
   "scripts": {
     "dev": "vite",
     "convex": "convex dev",
-    "build": "vite build",
+    "build": "vite build && node scripts/build_game_pages.ts",
     "check": "tsc --noEmit && node scripts/check_clock.ts && node scripts/check_csv.ts && node scripts/check_summary.ts && node scripts/check_starters.mjs && node scripts/check_dashboard.mjs && node scripts/check_sw.mjs && node scripts/check_sprites.mjs && node --experimental-vm-modules scripts/check_startup.mjs",
-    "build:prod": "env -u VITE_CLERK_PUBLISHABLE_KEY vite build && (grep -qE 'pk_live_[A-Za-z0-9]{20,}' dist/assets/*.js || (echo 'No live Clerk key in the build. Add .env.production (see the main checkout).' >&2; exit 1))",
+    "build:prod": "env -u VITE_CLERK_PUBLISHABLE_KEY vite build && node scripts/build_game_pages.ts && (grep -qE 'pk_live_[A-Za-z0-9]{20,}' dist/assets/*.js || (echo 'No live Clerk key in the build. Add .env.production (see the main checkout).' >&2; exit 1))",
     "deploy": "(test -z \"$(git status --porcelain --ignored public)\" || (echo 'Uncommitted files in public/ would be deployed. Commit or remove them first.' >&2; exit 1)) && convex deploy --cmd 'pnpm build:prod' && wrangler deploy"
   },
   "dependencies": {
