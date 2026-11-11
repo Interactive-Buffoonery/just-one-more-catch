@@ -32,4 +32,29 @@ for (const row of rows) {
   assert.match(singular, /<b>1<\/b> (badge|trial)<\/li>/);
 }
 assert.doesNotMatch(source.slice(source.indexOf('const gameChoices'), source.indexOf('const pickGame')), /aria-label=/);
+
+for (const count of [0, 1, 2]) {
+  const render = runInNewContext(stripTypeScriptTypes(source.slice(source.indexOf('export function Runs()'), source.indexOf('function Account()'))).replace('export ', '') + '\nRuns', {
+    recentRuns: () => Array.from({length: count}, () => ({row: {}, r: {}, at: ''})),
+    partner: () => '<img class="partner" src="/sprites/hgss/25.png" alt="" width="80" height="80">',
+    gameChoices: () => '', signInNote: () => '', resumeCard: () => '', trainerCard: () => '', miniCard: () => '', MAX_RUNS: 10,
+  });
+  const dashboard = render();
+  assert.equal(dashboard.includes('class="trainer hello"'), count === 0);
+  assert.equal(dashboard.includes('Welcome, Trainer'), count === 0);
+  assert.equal(dashboard.includes('Pick your game'), count === 0);
+}
+
+const confirm = runInNewContext(stripTypeScriptTypes(source.slice(source.indexOf('export const confirmGame'), source.indexOf('const gameChoices'))).replace('export ', '') + '\nconfirmGame', {verOf, esc: x => x, cover: () => '<img alt="">'});
+assert.match(confirm('heartgold'), /Start HeartGold\?/);
+assert.match(confirm('heartgold'), /Yes please!/);
+assert.match(confirm('heartgold'), /No thank you, just browsing!/);
+
+assert.match(confirm('heartgold'), /data-confirmrun="heartgold"/);
+assert.match(confirm('heartgold'), /data-close=/);
+const choices = runInNewContext(source.slice(source.indexOf('const gameChoices'), source.indexOf('const pickGame')) + '\ngameChoices', {VERSIONS: realPacks, esc: x => x, cover: () => '<img alt="">'});
+assert.match(choices(), /data-newrun="heartgold"/);
+const app = readFileSync(new URL('../client/app.ts', import.meta.url), 'utf8');
+assert.doesNotMatch(app.slice(app.indexOf('  if (d.newrun) {'), app.indexOf('  if (d.confirmrun) {')), /createRun/);
+assert.match(app, /e\.repeat &&\s*\(e\.key === "Enter" \|\| e\.key === " "\) &&\s*\(e\.target as HTMLElement\)\.closest\("\[data-confirmrun\]"\)\s*\) e\.preventDefault\(\)/);
 console.log('dashboard ok');

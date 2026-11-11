@@ -32,6 +32,7 @@ import { Boxes, fillBoxSheet, fillMonSheet, saveMon } from "./views/boxes";
 import { Dex, dexGrid, fillSpecies } from "./views/dex";
 import { fillClock, fillCustom, Journey, untick } from "./views/journey";
 import {
+  confirmGame,
   exportLabel,
   fillSignIn,
   fillStartDate,
@@ -44,6 +45,8 @@ import {
 import { gameNow } from "../shared/clock";
 import { MAX_RUN_BYTES, runBytes } from "../shared/limits";
 
+let creating = false;
+let pickOpenedAt = 0;
 let opening: string | null = null;
 function useRun(row: RunRow) {
   const v = verOf(row.version);
@@ -72,6 +75,10 @@ function useRun(row: RunRow) {
 }
 
 function fillSheet(s: any) {
+  if (s.kind === "pick") {
+    $("#sheetbody").innerHTML = confirmGame(s.id);
+    return;
+  }
   typeof s === "number"
     ? fillSpecies(s)
     : s.kind === "signin"
@@ -343,11 +350,26 @@ async function onClick(e: MouseEvent) {
     return;
   }
   if (d.newrun) {
+    if (creating) return;
+    pickOpenedAt = performance.now();
+    openSheet({ kind: "pick", id: d.newrun });
+    $("[data-confirmrun]").focus();
+    return;
+  }
+  if (d.confirmrun) {
+    if (creating || performance.now() - pickOpenedAt < 350) return;
     flushSave();
     t.disabled = true;
     if ($("#sheet").open) $("#sheet").close();
-    pendingRun = await bridge.createRun(d.newrun);
-    refresh();
+    creating = true;
+    try {
+      pendingRun = await bridge.createRun(d.confirmrun);
+      refresh();
+    } catch {
+      flash(`${verOf(d.confirmrun).name} playthrough didn't start. Try again.`);
+    } finally {
+      creating = false;
+    }
     return;
   }
   if (d.switch) {
@@ -701,6 +723,11 @@ export function mount(el: HTMLElement, b: Bridge) {
     }),
   );
   el.addEventListener("keydown", (e) => {
+    if (
+      e.repeat &&
+      (e.key === "Enter" || e.key === " ") &&
+      (e.target as HTMLElement).closest("[data-confirmrun]")
+    ) e.preventDefault();
     if (e.key !== "Escape") return;
     menus().forEach((m) => {
       m.open = false;
@@ -708,7 +735,10 @@ export function mount(el: HTMLElement, b: Bridge) {
     });
   });
   $("#sheet").addEventListener("click", (e: Event) => {
-    if ((e.target as HTMLElement).id === "sheet") $("#sheet").close();
+    if ((e.target as HTMLElement).id === "sheet") {
+      if (ui.sheet?.kind === "pick" && performance.now() - pickOpenedAt < 350) return;
+      $("#sheet").close();
+    }
   });
   $("#sheet").addEventListener("close", () => {
     const s = ui.sheet;
@@ -716,6 +746,10 @@ export function mount(el: HTMLElement, b: Bridge) {
     if (s?.kind === "signin")
       bridge.unmountSignIn($("#clerk-signin") as HTMLDivElement);
     render();
+    if (s?.kind === "pick") {
+      (root.querySelector(`[data-newrun="${s.id}"]`) as HTMLElement | null)?.focus();
+      return;
+    }
     if (s)
       (
         root.querySelector(
