@@ -701,12 +701,12 @@ function spots() {
   return out;
 }
 const complete = (pl: string, s?: Spot) =>
-  !!s && !NOT_HERE.test(pl) && !s.now.length && s.got > 0;
+  !!s && !NOT_HERE.test(pl) && !s.now.length && !s.later.length && s.got > 0;
 const placeLabel = (pl: string, s?: Spot) =>
   !s || NOT_HERE.test(pl)
     ? ""
     : complete(pl, s)
-      ? `✓ Complete${s.later.length ? ` · ${s.later.length} later` : ""}`
+      ? "✓ Complete"
       : s.now.length
         ? `${s.now.length} left`
         : s.later.length
@@ -721,9 +721,7 @@ function placeBlock(pl: string, s: Spot) {
       ? s.later.map((x) => monRow(x.p, x.r, pl)).join("")
       : laterBox(
           `l:${pl}`,
-          complete(pl, s)
-            ? `${s.later.length} more available later`
-            : `Come back later · ${s.later.length}`,
+          `Come back later · ${s.later.length}`,
           s.later,
           pl,
         ),
@@ -734,14 +732,16 @@ function placeBlock(pl: string, s: Spot) {
       pl,
     );
   if (complete(pl, s))
-    return `<div class="done-place"><span class="tick" aria-hidden="true">✓</span><span style="flex:1">${pl} complete</span><span class="count ok">${s.got} / ${s.got}</span></div>${isHere(pl) ? `<p class="small muted" style="margin:6px 2px 0">Everything you can catch here with your current badges and items.</p>` : ""}${later}${once}`;
+    return `<div class="done-place"><span class="tick" aria-hidden="true">✓</span><span style="flex:1">${pl} complete</span><span class="count ok">${s.got} / ${s.got}</span></div>${once}`;
   const count = NOT_HERE.test(pl)
     ? ""
     : s.now.length
       ? `${s.got} / ${s.got + s.now.length}`
-      : s.later.length
-        ? "Nothing to catch yet"
-        : "";
+      : s.got
+        ? `${s.got} / ${s.got}`
+        : s.later.length
+          ? "Nothing to catch yet"
+          : "";
   const sorted = s.now.sort((a, b) => b.r.c - a.r.c),
     ready = sorted.filter((x) => rank(x.r) === 0),
     other = sorted.filter((x) => rank(x.r) === 1),
@@ -1009,8 +1009,7 @@ function Journey() {
   ${
     hide.has("chapter")
       ? ""
-      : `<div class="eyebrow">${CHAPTERS[cur].title} · ${curS.left} to find${curS.later ? ` · ${curS.later} later` : ""}</div>
-  ${curS.left || curS.later ? "" : `<p class="muted">You've caught everything in this chapter.</p>`}
+      : `${curS.left || curS.later ? "" : `<p class="muted">You've caught everything in this chapter.</p>`}
   ${curS.html}`
   }
   </div><aside class="colside">
@@ -1029,7 +1028,8 @@ function Journey() {
       const open = unlocked(i),
         g = open ? null : chapterGroups(i),
         cs = open ? chapterSpots(all, i) : null,
-        n = g ? uniq(g) : cs!.left;
+        n = g ? uniq(g) : cs!.left,
+        done = open && !n && !cs!.later;
       const label = !c.places.length
         ? ""
         : g
@@ -1041,7 +1041,7 @@ function Journey() {
               .filter(Boolean)
               .join(" · ")
           : "all caught";
-      return `<details class="chap" data-chap="${i}" ${ui.open.has(String(i)) ? "open" : ""}><summary><span class="node ${open ? "done" : ""}" aria-hidden="true">${open ? "✓" : i + 1}</span><span style="flex:1">${c.title}<span class="sr">${open ? ", reached" : ", not reached yet"}</span></span><span class="muted small">${label}</span></summary>
+      return `<details class="chap" data-chap="${i}" ${ui.open.has(String(i)) ? "open" : ""}><summary><span class="node ${done ? "done" : open ? "wip" : ""}" aria-hidden="true">${done ? "✓" : i + 1}</span><span style="flex:1">${c.title}<span class="sr">${done ? ", everything caught" : open ? ", in progress" : ", not reached yet"}</span></span><span class="muted small">${label}</span></summary>
         ${beats(i)}${
           g
             ? Object.entries(g)
