@@ -189,10 +189,16 @@ function Account() {
   const a = bridge.auth;
   return `<section class="s-id"><div class="tslab id"><h2 class="lg">${esc(trainerName())}</h2>${
     a.isAuthenticated
-      ? `<p>${esc(a.email || "Signed in")}</p><button class="out" data-signout="1">Sign out</button>`
-      : `<p>Saved only in this browser</p><button class="out" data-signinsheet="1">Sign in or create an account</button>`
+      ? `<p>${esc(a.email || "Signed in")}</p>`
+      : `<p>Saved only in this browser</p>`
   }${partner("partner")}</div></section>`;
 }
+const AccountActions = () =>
+  `<section class="s-acct"><h3>Account</h3>${
+    bridge.auth.isAuthenticated
+      ? `<div class="chips"><button class="chip" data-signout="1">Sign out</button></div><details${$("#sheet").open && $("#sheetbody .s-acct details")?.open ? " open" : ""}><summary>More options</summary><button class="danger" data-delaccount="1">Delete account</button></details>`
+      : `<div class="chips"><button class="chip" data-signinsheet="1">Sign in or create an account</button></div>`
+  }</section>`;
 function exportChips() {
   const off = ui.export || !bridge.runs?.length ? "disabled" : "";
   const chip = (kind: string, label: string) =>
@@ -239,8 +245,8 @@ const AvatarPicker = () =>
 export const Settings = () =>
   `<h2 id="sheet-title" class="lg">Settings</h2>
   <div class="sgrid"><div>${Account()}${Appearance()}</div>
-  <div>${AvatarPicker()}<section class="s-data"><h3>Your data</h3><div class="chips">${exportChips()}</div>${exportError()}</section></div></div>
-  <div class="sfoot">${bridge.auth.isAuthenticated ? `<button class="danger" data-delaccount="1">Delete account</button>` : "<span></span>"}<button class="app-primary" data-close="1">Done</button></div>`;
+  <div>${AvatarPicker()}<section class="s-data"><h3>Your data</h3><div class="chips">${exportChips()}</div>${exportError()}</section>${AccountActions()}</div></div>
+  <div class="sfoot"><button class="app-primary" data-close="1">Done</button></div>`;
 
 export const exportLabel = () =>
   `Downloading ${ui.export.done} of ${ui.export.total}…`;

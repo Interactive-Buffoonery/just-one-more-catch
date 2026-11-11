@@ -13,15 +13,17 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
     loaded = false;
     async load() { await loaded; this.loaded = true; }
     user = user;
+    session = user && {getToken: async () => 'token'};
     addListener(fn) { fn({user}); }
     mountSignIn(el) { mounted.push(el); }
     unmountSignIn() {}
   }
   class ConvexClient {
-    setAuth(token, onAuth) { onAuth(!!user); }
+    setAuth(token, onAuth) { Promise.resolve(token({})).then(t => onAuth(!!t)); }
     onUpdate() { return () => {}; }
   }
-  const context = createContext({console:{warn(){}},document:{cookie,getElementById:()=>({})},location:{hash:'',pathname:'/',search},history:{replaceState(){}}});
+  let giveUp;
+  const context = createContext({setTimeout:fn=>giveUp=fn,console:{warn(){}},document:{cookie,getElementById:()=>({})},location:{hash:'',pathname:'/',search},history:{replaceState(){}}});
   const modules = new Map();
   function makeModule(name, exports) {
     if (!modules.has(name)) modules.set(name,new SyntheticModule(Object.keys(exports), function(){for (const [k,v] of Object.entries(exports)) this.setExport(k,v);},{context}));
@@ -41,7 +43,19 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
   await main.evaluate();
   const bridge=bridges[0];
   assert.equal(imports.length>0,signal,signal?`${cookie||search} must load Clerk at startup`:`${cookie||'a guest'} must not download Clerk at startup`);
-  if (signal) return;
+  if (signal) {
+    assert.equal(bridge.auth.isLoading,true,'a returning session must show loading, not the guest view');
+    giveUp();
+    assert.equal(bridges.at(-1).auth.isLoading,false,'a stalled sign-in must fall back to guest play');
+    if (user) {
+      await new Promise(setImmediate);
+      assert.equal(bridges.at(-1).auth.isAuthenticated,false,'the fallback must be guest play, not signed in');
+      release();
+      await new Promise(setImmediate);
+      assert.equal(bridges.at(-1).auth.isAuthenticated,true,'a slow sign-in must still finish after the fallback');
+    }
+    return;
+  }
   if (user) {
     const el={isConnected:true,textContent:''};
     bridge.mountSignIn(el);
@@ -78,6 +92,7 @@ await run({cookie:'__client_uat=0; theme=dark'});
 await run({cookie:'theme=dark; __client_uat=1731300000',signal:true});
 await run({cookie:'__client_uat_abc123=1731300000',signal:true});
 await run({search:'?__clerk_handshake=x',signal:true});
+await run({cookie:'__client_uat=1731300000',user:{id:'user_1'},signal:true});
 
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 const recoveryScript = html.match(/<script>([\s\S]*?)<\/script>/)[1];
