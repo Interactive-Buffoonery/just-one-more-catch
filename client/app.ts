@@ -505,6 +505,7 @@ async function onClick(e: MouseEvent) {
     return;
   } else if (d.goevent) {
     ui.open.add(String(EVENTS[d.goevent].chap));
+    ui.shut.delete(String(EVENTS[d.goevent].chap));
     ui.tab = "journey";
     if ($("#sheet").open) $("#sheet").close();
     render();
@@ -639,11 +640,17 @@ export function mount(el: HTMLElement, b: Bridge) {
   el.addEventListener(
     "toggle",
     (e) => {
-      const c = (e.target as HTMLElement).dataset?.chap;
-      if (c != null)
-        (e.target as HTMLDetailsElement).open
-          ? ui.open.add(c)
-          : ui.open.delete(c);
+      const d = e.target as HTMLDetailsElement,
+        c = d.dataset?.chap,
+        def = d.dataset?.def != null;
+      if (c == null) return;
+      if (d.open) {
+        ui.shut.delete(c);
+        if (!def) ui.open.add(c);
+      } else {
+        ui.open.delete(c);
+        if (def) ui.shut.add(c);
+      }
     },
     true,
   );

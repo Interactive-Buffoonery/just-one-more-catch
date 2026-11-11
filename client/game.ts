@@ -269,6 +269,7 @@ export const ui: any = {
   undo: null,
   sheet: null,
   open: new Set(),
+  shut: new Set(),
   look: "blossom",
   mode: "auto",
   saved: "",
@@ -377,7 +378,18 @@ const needText = (k: string) =>
         : R().kit.has(k)
           ? `Needs ${badgeName(P().hm[k])} to use ${kitName(k)}`
           : `Needs ${kitName(k)}`;
-const chapterNeeds = (i: number) => [
+// Short name for what a chapter waits on.
+export const needLabel = (k: string) =>
+  EVENTS[k]
+    ? EVENTS[k].label
+    : k === "Elite Four"
+      ? "Beat the Elite Four"
+      : isBadge(k)
+        ? badgeName(k)
+        : R().kit.has(k)
+          ? badgeName(P().hm[k])
+          : kitName(k);
+export const chapterNeeds = (i: number) => [
   ...CHAPTERS[i].needs,
   ...(CHAPTERS[i].kit ? [CHAPTERS[i].kit as string] : []),
 ];

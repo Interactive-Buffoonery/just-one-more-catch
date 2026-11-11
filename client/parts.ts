@@ -41,23 +41,26 @@ export const lvl = (r: Row) =>
     : r.lo === r.hi
       ? `Lv ${r.lo}`
       : `Lv ${r.lo} to ${r.hi}`;
-export function rowTags(r: Row, place = r.place) {
+// Each tag, and whether a row shows it beside the name (time of day and what blocks it).
+function tagBits(r: Row, place = r.place, chance = "") {
   const st = rowStatus(r),
-    t = [`<span class="tag">${METHOD[r.m]?.[0] || r.m}</span>`];
+    t: [string, boolean][] = [];
+  const add = (html: string, side = false) => t.push([html, side]);
+  add(`<span class="tag">${METHOD[r.m]?.[0] || r.m}</span>`);
   if (r.place !== place)
-    t.push(
+    add(
       `<span class="tag plain">${r.place.slice(place.length).trim() || r.place}</span>`,
     );
-  if (ONE_TIME.has(r.m)) t.push(`<span class="tag plain">One-time</span>`);
-  if (lvl(r)) t.push(`<span class="tag plain">${lvl(r)}</span>`);
+  if (ONE_TIME.has(r.m)) add(`<span class="tag plain">One-time</span>`);
+  if (lvl(r)) add(`<span class="tag plain">${lvl(r)}</span>`);
   if (r.c && r.c < 100 && !ONE_TIME.has(r.m))
-    t.push(`<span class="tag plain">${r.c}%</span>`);
+    add(`<span class="tag plain">${r.c}%${chance}</span>`);
   r.cond.forEach((c) => {
-    if (TIME[c]) t.push(`<span class="tag time">${TIME[c]}</span>`);
+    if (TIME[c]) add(`<span class="tag time">${TIME[c]}</span>`, true);
     else if (c.startsWith("weekday-"))
-      t.push(`<span class="tag time">${cap(c.slice(8))}s</span>`);
+      add(`<span class="tag time">${cap(c.slice(8))}s</span>`, true);
     else if (OK_COND[c] || coinLabel(c))
-      t.push(`<span class="tag plain">${OK_COND[c] || coinLabel(c)}</span>`);
+      add(`<span class="tag plain">${OK_COND[c] || coinLabel(c)}</span>`);
   });
   if (
     st.need &&
@@ -65,13 +68,18 @@ export function rowTags(r: Row, place = r.place) {
     !R().hidden.has("journey") &&
     inJourney(EVENTS[st.need].chap)
   )
-    t.push(
+    add(
       `<button class="tag goto" data-goevent="${st.need}" aria-label="${st.why}. Show it in Your journey">${st.why}<span aria-hidden="true"> ›</span></button>`,
+      true,
     );
   else if (st.s !== "now" && st.s !== "wrongtime")
-    t.push(`<span class="tag warn">${st.why}</span>`);
-  return `<div class="tags">${t.join("")}</div>`;
+    add(`<span class="tag warn">${st.why}</span>`, true);
+  return t;
 }
+const tagRow = (t: [string, boolean][]) =>
+  `<div class="tags">${t.map((x) => x[0]).join("")}</div>`;
+export const rowTags = (r: Row, place = r.place, chance = "") =>
+  tagRow(tagBits(r, place, chance));
 export const gotBtn = (p: Species, evo = false) =>
   `<button class="got-btn" data-toggle="${p.n}" data-k="t${p.n}" aria-pressed="${R().caught.has(p.n)}" aria-label="${p.name} ${evo ? "caught or evolved" : "caught"}">${R().caught.has(p.n) ? (evo ? "✓ Obtained" : "✓ Caught") : evo ? "Caught/Evolved?" : "Caught?"}</button>`;
 // ponytail: the only guaranteed shiny in the packs so far; move it into pack data when a second one appears
@@ -83,8 +91,11 @@ export const monRow = (
   r: Row | null,
   place?: string,
   evo = false,
-) =>
-  `<div class="row">${mon(p, redGyarados(p, r))}<div class="grow"><div class="name">${p.name}${redGyarados(p, r) ? ` <span class="shiny small">✦ ${RED_NOTE}</span>` : ""}</div>${r ? rowTags(r, place) : `<div class="small muted">${howElse(p)}</div>`}</div>${gotBtn(p, evo)}</div>`;
+) => {
+  const t = r ? tagBits(r, place) : [],
+    side = t.filter((x) => x[1]).map((x) => x[0]);
+  return `<div class="row">${mon(p, redGyarados(p, r))}<div class="grow"><div class="name">${p.name}${redGyarados(p, r) ? ` <span class="shiny small">✦ ${RED_NOTE}</span>` : ""}${side.length ? ` ${side.join(" ")}` : ""}</div>${r ? tagRow(t.filter((x) => !x[1])) : `<div class="small muted">${howElse(p)}</div>`}</div>${gotBtn(p, evo)}</div>`;
+};
 export type Catchable = { p: Species; r: Row };
 const pref = (a: Catchable, b: Catchable) =>
   +isHere(b.r.place) - +isHere(a.r.place) ||
@@ -121,6 +132,7 @@ export const uniq = (g: Record<string, Catchable[]>) =>
 type Spot = {
   chap: number;
   got: number;
+  caught: Species[];
   now: Catchable[];
   later: Catchable[];
   once: Catchable[];
@@ -154,12 +166,14 @@ export function spots() {
         const s = (out[pl] ||= {
           chap: r.chap,
           got: 0,
+          caught: [],
           now: [],
           later: [],
           once: [],
         });
-        if (R().caught.has(p.n)) s.got += +(k < 2);
-        else (k === 3 ? s.once : k === 2 ? s.later : s.now).push({ p, r });
+        if (R().caught.has(p.n)) {
+          if (k < 2) s.got++, s.caught.push(p);
+        } else (k === 3 ? s.once : k === 2 ? s.later : s.now).push({ p, r });
       });
   });
   return out;
@@ -176,52 +190,64 @@ export const placeLabel = (pl: string, s?: Spot) =>
         : s.later.length
           ? `${s.later.length} later`
           : "";
-const laterBox = (
-  key: string,
-  title: string,
-  list: Catchable[],
-  place: string,
-) =>
+// Attributes for a remembered <details>: open when the player opened it, or by default unless they closed it.
+export const fold = (key: string, byDefault = false) =>
+  `data-chap="${esc(key)}"${byDefault ? " data-def" : ""}${ui.open.has(key) || (byDefault && !ui.shut.has(key)) ? " open" : ""}`;
+export const CHEV = `<svg class="chev" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>`;
+export const strip = (list: Species[], caught = false) =>
+  list
+    .map(
+      (p) =>
+        `<span class="st${caught ? " caught" : ""}" aria-hidden="true">${sprite(p)}</span>`,
+    )
+    .join("");
+const AT: Record<string, string> = {
+  "time-morning": "in the morning",
+  "time-day": "by day",
+  "time-night": "at night",
+};
+const subFold = (key: string, title: string, list: Catchable[], pl: string) =>
   list.length
-    ? `<details class="later" data-chap="${esc(key)}" ${ui.open.has(key) ? "open" : ""}><summary>${title}</summary>${list.map((x) => monRow(x.p, x.r, place)).join("")}</details>`
+    ? `<details class="fold" ${fold(key)}><summary>${title} <span class="n">· ${list.length}</span>${CHEV}</summary>${list.map((x) => monRow(x.p, x.r, pl)).join("")}</details>`
     : "";
-function placeBlock(pl: string, s: Spot) {
-  const later = R().showLater
-      ? s.later.map((x) => monRow(x.p, x.r, pl)).join("")
-      : laterBox(`l:${pl}`, `Come back later · ${s.later.length}`, s.later, pl),
-    once = laterBox(
-      `o:${pl}`,
-      `One-time and special · ${s.once.length}`,
-      s.once,
-      pl,
-    );
-  if (complete(pl, s))
-    return `<div class="done-place"><span class="tick" aria-hidden="true">✓</span><span style="flex:1">${pl} complete</span><span class="count ok">${s.got} / ${s.got}</span></div>${once}`;
-  const count = NOT_HERE.test(pl)
-    ? ""
-    : s.now.length
-      ? `${s.got} / ${s.got + s.now.length}`
-      : s.got
-        ? `${s.got} / ${s.got}`
-        : s.later.length
-          ? "Nothing to catch yet"
-          : "";
-  const sorted = s.now.sort((a, b) => b.r.c - a.r.c),
+export function placeCard(pl: string, s: Spot) {
+  const here = isHere(pl),
+    key = `p:${pl}`,
+    rows = (l: Catchable[]) => l.map((x) => monRow(x.p, x.r, pl)).join(""),
+    sorted = s.now.sort((a, b) => b.r.c - a.r.c),
     ready = sorted.filter((x) => rank(x.r) === 0),
     other = sorted.filter((x) => rank(x.r) === 1),
-    otherTime = R().showLater
-      ? other.map((x) => monRow(x.p, x.r, pl)).join("")
-      : laterBox(`t:${pl}`, `Other times · ${other.length}`, other, pl);
-  const key = `p:${pl}`;
-  return `<details class="place" data-chap="${esc(key)}" ${ui.open.has(key) ? "open" : ""}><summary class="placehead"><span>${pl}</span><span class="count">${count}</span></summary>${ready
-    .map((x) => monRow(x.p, x.r, pl))
-    .join("")}${otherTime}${later}${once}</details>`;
+    times = new Set(other.map((x) => x.r.cond.find((c) => TIME[c]))),
+    at = times.size === 1 ? AT[[...times][0] as string] : "",
+    show = R().showLater,
+    body = `<div class="body">${rows(ready)}${show ? rows(other) + rows(s.later) : ""}${s.caught.length ? `<div class="caught-here">Already caught here ${s.caught.map((p) => `<span class="st caught">${sprite(p)}</span>`).join("")}</div>` : ""}${show ? "" : subFold(`t:${pl}`, "Other times", other, pl) + subFold(`l:${pl}`, "Come back later", s.later, pl)}${subFold(`o:${pl}`, "One-time and special", s.once, pl)}</div>`,
+    later = s.later.length && `${s.later.length} later`,
+    open = fold(key, here),
+    title = `<span class="title">${pl}${here ? `<span class="here-tag">You are here</span>` : ""}</span>`;
+  if (!s.now.length && s.got)
+    return `<details class="pl donepl${here ? " here" : ""}" ${open}><summary><span class="head"><span class="tick" aria-hidden="true">✓</span>${title}<span class="count">${[`All ${s.got} caught`, later].filter(Boolean).join(" · ")}${CHEV}</span></span></summary>${body}</details>`;
+  if (!s.now.length)
+    return `<details class="pl quietpl${here ? " here" : ""}" ${open}><summary><span class="head">${title}<span class="count">${[later && "Nothing yet", later, s.once.length && `${s.once.length} one-time`].filter(Boolean).join(" · ")}${CHEV}</span></span></summary>${body}</details>`;
+  const total = s.got + s.now.length,
+    extra = [
+      other.length && `+${other.length} ${at || "other times"}`,
+      later,
+    ].filter(Boolean);
+  return `<details class="pl${here ? " here" : ""}" ${open}><summary>
+    <span class="head">${title}<span class="count"><span class="mini-meter" aria-hidden="true"><i style="width:${(s.got / total) * 100}%"></i></span><span><b>${s.got}</b> / ${total}<span class="sr"> caught</span></span>${CHEV}</span></span>
+    <span class="strip">${strip(ready.map((x) => x.p))}${strip(s.caught, true)}${extra.length ? `<em>${extra.join(" · ")}</em>` : ""}</span>
+  </summary>${body}</details>`;
 }
 // Places in a chapter, in the chapter's own order, then any extra places its rows use.
-export function chapterSpots(all: Record<string, Spot>, i: number) {
+export function chapterSpots(
+  all: Record<string, Spot>,
+  i: number,
+  show = (_pl: string) => true,
+) {
   const list = Object.entries(all).filter(
     ([pl, s]) =>
-      s.chap === i && (s.now.length || s.later.length || s.once.length),
+      s.chap === i &&
+      (s.now.length || s.later.length || s.once.length || s.got),
   );
   const at = (pl: string) => {
     const k = CHAPTERS[i].places.indexOf(pl);
@@ -235,7 +261,10 @@ export function chapterSpots(all: Record<string, Spot>, i: number) {
     ),
   );
   return {
-    html: list.map(([pl, s]) => placeBlock(pl, s)).join(""),
+    html: list
+      .filter(([pl]) => show(pl))
+      .map(([pl, s]) => placeCard(pl, s))
+      .join(""),
     left: left.size,
     later: later.size,
   };
@@ -243,7 +272,7 @@ export function chapterSpots(all: Record<string, Spot>, i: number) {
 export const kitGroup = (title: string, keep: (id: string) => boolean) => {
   const list = P().kit.filter((k) => keep(k[0]));
   return list.length
-    ? `<h3 style="margin-top:12px">${title}</h3><div class="chips" style="margin-top:8px">${list
+    ? `<h3>${title}</h3><div class="chips">${list
         .map(
           (k) =>
             `<button class="chip" data-kit="${k[0]}" data-k="k-${k[0]}" aria-pressed="${R().kit.has(k[0])}"><img src="/items/${k[0]}.png" alt="" width="24" height="24" aria-hidden="true">${k[1]}</button>`,
@@ -251,8 +280,9 @@ export const kitGroup = (title: string, keep: (id: string) => boolean) => {
         .join("")}</div>`
     : "";
 };
+export const badgeIcon = (b: string) => `/badges/${b.toLowerCase()}.png`;
 export const badgeRow = (list: string[][]) =>
-  `<div style="display:flex;flex-wrap:wrap;margin:6px -6px">${list.map((b) => `<button class="badge" data-badge="${b[0]}" data-k="b-${b[0]}" aria-pressed="${R().badges.has(b[0])}" aria-label="${badgeName(b[0])} from ${b[1]}" title="${badgeName(b[0])} · ${b[1]}"><img src="/badges/${b[0].toLowerCase()}.png" alt="${badgeName(b[0])}" width="32" height="32"></button>`).join("")}</div>`;
+  `<div class="badges">${list.map((b) => `<button class="badge" data-badge="${b[0]}" data-k="b-${b[0]}" aria-pressed="${R().badges.has(b[0])}" aria-label="${badgeName(b[0])} from ${b[1]}" title="${badgeName(b[0])} · ${b[1]}"><img src="${badgeIcon(b[0])}" alt="${badgeName(b[0])}" width="32" height="32"></button>`).join("")}</div>`;
 
 // ponytail: Tabler Icons outline paths (MIT), inlined like the settings gear
 const tabIcon = (d: string) =>
