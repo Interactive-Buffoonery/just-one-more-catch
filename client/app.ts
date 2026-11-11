@@ -371,6 +371,7 @@ async function onClick(e: MouseEvent) {
       pendingRun = await bridge.createRun(d.confirmrun);
       refresh();
     } catch {
+      t.disabled = false;
       flash(`${verOf(d.confirmrun).name} playthrough didn't start. Try again.`);
     } finally {
       creating = false;
