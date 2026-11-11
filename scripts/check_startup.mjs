@@ -3,22 +3,25 @@ import {readFileSync} from 'node:fs';
 import {stripTypeScriptTypes} from 'node:module';
 import {createContext, runInNewContext, SourceTextModule, SyntheticModule} from 'node:vm';
 const source = readFileSync(new URL('../client/main.ts', import.meta.url), 'utf8');
-async function run(failImport = false) {
+async function run({failImport = false, cookie = '', search = '', user = null, signal = false} = {}) {
   let release;
   const loaded = new Promise(r => release = r);
   const mounted = [];
   const bridges = [];
+  const imports = [];
   class Clerk {
     loaded = false;
     async load() { await loaded; this.loaded = true; }
-    addListener(fn) { fn({user:null}); }
+    user = user;
+    addListener(fn) { fn({user}); }
     mountSignIn(el) { mounted.push(el); }
     unmountSignIn() {}
   }
   class ConvexClient {
-    setAuth(token, onAuth) { onAuth(false); }
+    setAuth(token, onAuth) { onAuth(!!user); }
+    onUpdate() { return () => {}; }
   }
-  const context = createContext({console:{warn(){}},document:{getElementById:()=>({})},location:{hash:'',pathname:'/',search:''},history:{replaceState(){}}});
+  const context = createContext({console:{warn(){}},document:{cookie,getElementById:()=>({})},location:{hash:'',pathname:'/',search},history:{replaceState(){}}});
   const modules = new Map();
   function makeModule(name, exports) {
     if (!modules.has(name)) modules.set(name,new SyntheticModule(Object.keys(exports), function(){for (const [k,v] of Object.entries(exports)) this.setExport(k,v);},{context}));
@@ -28,6 +31,7 @@ async function run(failImport = false) {
     context,
     initializeImportMeta(meta) {meta.env={VITE_CONVEX_URL:'https://example.convex.cloud',VITE_CLERK_PUBLISHABLE_KEY:'example'};},
     async importModuleDynamically(name) {
+      imports.push(name);
       if (failImport) throw new Error('simulated blocked auth bundle');
       const m=makeModule(name,name==='@clerk/clerk-js'?{Clerk}:{ui:{}});
       await m.link(()=>{}); await m.evaluate(); return m;
@@ -36,9 +40,21 @@ async function run(failImport = false) {
   await main.link(name=>makeModule(name,name==='convex/browser'?{ConvexClient}:name.endsWith('/api')?{api:{runs:{}}}:name==='./app'?{mount:(el,b)=>bridges.push(b),update:b=>bridges.push(b)}:{}));
   await main.evaluate();
   const bridge=bridges[0];
+  assert.equal(imports.length>0,signal,signal?`${cookie||search} must load Clerk at startup`:`${cookie||'a guest'} must not download Clerk at startup`);
+  if (signal) return;
+  if (user) {
+    const el={isConnected:true,textContent:''};
+    bridge.mountSignIn(el);
+    release();
+    await new Promise(setImmediate);
+    assert.equal(mounted.length,0,'an existing session must not mount sign-in');
+    assert.equal(bridges.at(-1).auth.isAuthenticated,true,'an existing session must sign in once Clerk loads');
+    return;
+  }
   assert.equal(bridge.auth.isLoading,false,'guest mode must start before auth resolves');
   const el={isConnected:true,textContent:''};
   bridge.mountSignIn(el);
+  assert.ok(imports.length,'the first sign-in tap must load Clerk');
   bridge.unmountSignIn(el);
   release();
   await new Promise(setImmediate);
@@ -56,7 +72,12 @@ async function run(failImport = false) {
   }
 }
 await run();
-await run(true);
+await run({failImport:true});
+await run({user:{id:'user_1'}});
+await run({cookie:'__client_uat=0; theme=dark'});
+await run({cookie:'theme=dark; __client_uat=1731300000',signal:true});
+await run({cookie:'__client_uat_abc123=1731300000',signal:true});
+await run({search:'?__clerk_handshake=x',signal:true});
 
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 const recoveryScript = html.match(/<script>([\s\S]*?)<\/script>/)[1];
@@ -88,4 +109,4 @@ reload();
 assert.equal(reloaded, true);
 recovery = null;
 assert.doesNotThrow(timeout, 'recovery must be harmless after the app mounts');
-console.log('startup ok: delayed/failed sign-in, cancellation, reopening, and recovery');
+console.log('startup ok: lazy Clerk, session signals, delayed/failed sign-in, cancellation, reopening, and recovery');
