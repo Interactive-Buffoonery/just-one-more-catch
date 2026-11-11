@@ -324,10 +324,10 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .file .meter{height:12px}
 .party{display:flex;flex-wrap:wrap;gap:2px;margin:auto 0 -6px -6px}
 .party img{width:44px;height:44px;image-rendering:pixelated}
-.trainer{background:var(--surface);border-radius:22px;overflow:hidden;display:flex;flex-direction:column;padding-bottom:22px}
+.trainer{container-type:inline-size;background:var(--surface);border-radius:22px;overflow:hidden;display:flex;flex-direction:column;padding-bottom:22px}
 .tslab{background:var(--pink);color:var(--on-pink);min-height:112px;padding:22px 24px;position:relative;overflow:hidden;flex:none}
-.tslab h2{position:relative;z-index:1;font-size:36px;line-height:1;margin:0;max-width:calc(100% - 96px);overflow-wrap:break-word}
-.tslab .partner{position:absolute;right:0;bottom:-28px;width:144px;height:144px;image-rendering:pixelated}
+.tslab h2{position:relative;z-index:1;font-size:36px;line-height:1;margin:0;max-width:calc(100% - clamp(72px,calc(75cqw - 144px),96px));white-space:nowrap;overflow-wrap:break-word}
+.tslab .partner{position:absolute;right:0;bottom:-28px;width:clamp(120px,calc(75cqw - 96px),144px);height:auto;image-rendering:pixelated}
 .record{list-style:none;margin:0;padding:20px 24px 0;display:grid;gap:12px;font-size:16px}
 .record li{display:grid;grid-template-columns:58px 1fr;gap:12px;align-items:baseline;color:var(--soft)}
 .record b{font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-weight:400;font-size:30px;line-height:1;color:var(--ink);text-align:right}
