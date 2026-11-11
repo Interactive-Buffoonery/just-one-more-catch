@@ -128,14 +128,17 @@ const SECTIONS = [
   ["dex", "Dex progress", "Disabling this hides the Dex progress section"],
 ];
 const toggle = (on: boolean, title: string, note: string, attr: string) =>
-  `<button class="sw" role="switch" aria-checked="${on}" ${attr}><span class="grow"><b>${title}</b><small>${note}</small></span><span class="tog${on ? " on" : ""}" aria-hidden="true"></span></button>`;
+  `<button class="sw" role="switch" aria-checked="${on}" ${attr}><span class="grow"><b>${title}</b>${note ? `<small>${note}</small>` : ""}</span><span class="tog${on ? " on" : ""}" aria-hidden="true"></span></button>`;
 export function fillCustom() {
   const r = R();
   $("#sheetbody").innerHTML =
-    `<h2 id="sheet-title">Customize ${ver().name}</h2><p class="small muted" style="margin:4px 0 10px">Only changes this playthrough.</p>
+    `<h2 id="sheet-title">Customize this ${ver().name} playthrough</h2>
+    ${toggle(r.view !== "dexonly", "Journey tab", "", `data-journeytab="1"`)}
+    ${r.view !== "dexonly" ? `<div class="sw"><b class="grow">Start on</b><div class="seg3" role="group" aria-label="Start on">${["journey", "dex"].map((v) => `<button data-startview="${v}" aria-pressed="${r.view === v}">${v === "journey" ? "Journey" : "Dex"}</button>`).join("")}</div></div><p class="eyebrow">Journey sections</p>
     ${SECTIONS.map(([k, t, n]) => toggle(!r.hidden.has(k), t, n, `data-hide="${k}" data-k="h-${k}"`)).join("")}
     ${toggle(r.showLater, "Show Pokémon I can't reach yet", `List them in each section, not under "Come back later"`, `data-showlater="1" data-k="h-later"`)}
     <div class="sw"><span class="grow"><b>${badgesWord()[0].toUpperCase()}${badgesWord().slice(1)} and items</b><small>Always shown: this is how the app knows what you can catch</small></span><span class="lock">Always on</span></div>
+    ` : ""}
     <div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="chip" data-close="1">Done</button></div>`;
 }
 /* ---- Story events: one question on top, the full list in Your journey ---- */

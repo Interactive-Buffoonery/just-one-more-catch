@@ -48,7 +48,7 @@ import { MAX_RUN_BYTES, runBytes } from "../shared/limits";
 let creating = false;
 let pickOpenedAt = 0;
 let opening: string | null = null;
-function useRun(row: RunRow) {
+function useRun(row: RunRow, start = false, customize = false) {
   const v = verOf(row.version);
   closeRun();
   ui.q = "";
@@ -63,7 +63,11 @@ function useRun(row: RunRow) {
       opening = null;
       const latest = bridge.runs?.find((r) => r.id === row.id);
       if (latest) openRun(latest, d, state);
-      if (!$("#sheet").open) render();
+      if (start && run) ui.tab = run.view === "journey" ? "journey" : "dex";
+      render();
+      if (customize && run) {
+        $("#sheetbody").innerHTML = confirmGame(run.version, true);
+      }
     },
     () => {
       if (opening !== row.id) return;
@@ -110,7 +114,7 @@ const TABS = [
   ["boxes", "Boxes"],
 ];
 const tabButtons = (icons: boolean) =>
-  TABS.map(
+  TABS.filter(([t]) => t !== "journey" || run?.view !== "dexonly").map(
     ([t, l]) =>
       `<button data-tab="${t}" ${ui.tab === t ? `aria-current="page"` : ""}>${icons ? TAB_ICONS[t] : ""}<span>${l}</span></button>`,
   ).join("");
@@ -139,9 +143,10 @@ function shell() {
 }
 function tabFromUrl() {
   const t = new URLSearchParams(location.search).get("tab");
-  return t && Object.hasOwn(VIEWS, t) ? t : "playthroughs";
+  return t === "journey" && run?.view === "dexonly" ? "dex" : t && Object.hasOwn(VIEWS, t) ? t : "playthroughs";
 }
 function render() {
+  if (ui.tab === "journey" && run?.view === "dexonly") ui.tab = "dex";
   const a = bridge.auth,
     signedIn = a.isAuthenticated;
   const k = (document.activeElement as HTMLElement)?.dataset?.k;
@@ -178,7 +183,7 @@ function render() {
       : `<div class="falert" role="note">Saved only in this browser<button data-signinsheet="1" data-k="signin-foot">Sign in</button></div>`;
   $("#toptabs").innerHTML = a.isLoading ? "" : tabButtons(false);
   $("#tabs").innerHTML = !a.isLoading
-    ? `<nav class="tabbar" aria-label="Sections">${tabButtons(true)}<button class="tab-settings" data-settings="1" data-k="tab-settings">${SETTINGS_ICON}<span>Settings</span></button></nav>`
+    ? `<nav class="tabbar${run?.view === "dexonly" ? " four" : ""}" aria-label="Sections">${tabButtons(true)}<button class="tab-settings" data-settings="1" data-k="tab-settings">${SETTINGS_ICON}<span>Settings</span></button></nav>`
     : "";
   $("#toast").innerHTML = ui.undo
     ? `<div class="toast">${ui.undo.msg}${ui.undo.n ? `<button data-undo="1">Undo</button>` : ""}</div>`
@@ -361,7 +366,6 @@ async function onClick(e: MouseEvent) {
     if (creating || performance.now() - pickOpenedAt < 350) return;
     flushSave();
     t.disabled = true;
-    if ($("#sheet").open) $("#sheet").close();
     creating = true;
     try {
       pendingRun = await bridge.createRun(d.confirmrun);
@@ -377,9 +381,9 @@ async function onClick(e: MouseEvent) {
     flushSave();
     const row = bridge.runs?.find((r) => r.id === d.switch);
     if (row) {
-      if (row.id !== run?.id) useRun(row);
+      if (row.id !== run?.id) useRun(row, !d.stay);
       if (d.stay) ui.undo = null;
-      else ui.tab = "journey";
+      else ui.tab = run?.view === "journey" ? "journey" : "dex";
       render();
     }
     return;
@@ -507,6 +511,10 @@ async function onClick(e: MouseEvent) {
     if ($("#sheet").open && ui.sheet?.kind === "clock") fillSheet(ui.sheet);
   } else if (d.hide) {
     r.hidden.has(d.hide) ? r.hidden.delete(d.hide) : r.hidden.add(d.hide);
+  } else if (d.journeytab) {
+    r.view = r.view === "dexonly" ? r.startView : "dexonly";
+  } else if (d.startview) {
+    r.view = r.startView = d.startview === "dex" ? "dex" : "journey";
   } else if (d.showlater) r.showLater = !r.showLater;
   else if (d.event) {
     if (forced(d.event)) return;
@@ -639,8 +647,7 @@ function syncRuns() {
   const want = pendingRun && rows.find((r) => r.id === pendingRun);
   if (want) {
     pendingRun = null;
-    useRun(want);
-    ui.tab = "journey";
+    useRun(want, true, true);
     return;
   }
   if (!run && !opening && !ui.loadError && rows.length)

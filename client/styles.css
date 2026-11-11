@@ -607,3 +607,6 @@ button.gb:is(:hover,:focus-visible) .bx{rotate:0deg;translate:0 -10px;box-shadow
 .contact-card .contact-form{display:grid;gap:14px}
 .contact-card .contact-send{justify-self:start}
 .contact-card .field input,.contact-card .field textarea{border-color:var(--soft)}
+
+.tabbar.four{grid-template-columns:repeat(4,1fr)}
+.filters.three{grid-template-columns:repeat(3,1fr)}

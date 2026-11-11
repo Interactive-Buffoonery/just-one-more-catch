@@ -69,6 +69,7 @@ export function tagBits(r: Row, place = r.place, chance = "") {
       add(`<span class="tag plain">${OK_COND[c] || coinLabel(c)}</span>`);
   });
   if (
+    R().view !== "dexonly" &&
     st.need &&
     EVENTS[st.need] &&
     !R().hidden.has("journey") &&
