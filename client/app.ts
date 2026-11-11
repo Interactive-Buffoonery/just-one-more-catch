@@ -1174,27 +1174,31 @@ function fillNewRun() {
 const ymd = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 const startDay = (row: RunRow) => ymd(new Date(row.createdAt));
+const longDay = (day: string) => {
+  const [y, m, d] = day.split("-").map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString(undefined, { dateStyle: "long" });
+};
 function fillStartDate(id: string) {
   const row = bridge.runs?.find((x) => x.id === id);
   if (!row) return;
+  void import("cally");
+  const today = ymd(new Date()),
+    start = startDay(row) > today ? today : startDay(row);
   $("#sheetbody").innerHTML =
     `<h2 id="sheet-title">Start date</h2>
     <p class="start-date-label" id="start-date-label">This ${verOf(row.version).name} playthrough started on</p>
-    <input id="started" type="hidden" value="${startDay(row)}">
-    <calendar-date class="start-calendar" value="${startDay(row)}" max="${ymd(new Date())}" aria-labelledby="start-date-label">
-      <calendar-month></calendar-month>
-    </calendar-date>
-    <p class="small muted start-date-selected" id="start-date-selected" aria-live="polite">${new Date(row.createdAt).toLocaleDateString(undefined, { dateStyle: "long" })}</p>
+    <input id="started" type="hidden" value="${start}">
+    <div role="group" aria-labelledby="start-date-label">
+      <calendar-date class="start-calendar" value="${start}" max="${today}">
+        <calendar-month></calendar-month>
+      </calendar-date>
+    </div>
+    <p class="small muted start-date-selected" id="start-date-selected" aria-live="polite">${longDay(start)}</p>
     <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button class="chip" data-close="1">Cancel</button><button class="app-primary" data-savestart="${row.id}">Save</button></div>`;
   const calendar = $(".start-calendar") as HTMLElement & { value: string };
   calendar.addEventListener("change", () => {
-    const day = calendar.value;
-    ($("#started") as HTMLInputElement).value = day;
-    const [y, m, d] = day.split("-").map(Number);
-    $("#start-date-selected").textContent = new Date(y, m - 1, d).toLocaleDateString(
-      undefined,
-      { dateStyle: "long" },
-    );
+    ($("#started") as HTMLInputElement).value = calendar.value;
+    $("#start-date-selected").textContent = longDay(calendar.value);
   });
 }
 const lastPlayed = (iso: string) => {

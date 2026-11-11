@@ -1,4 +1,3 @@
-import "cally";
 import "@fontsource/jetbrains-mono/latin-500.css";
 import type { Clerk } from "@clerk/clerk-js";
 import { ConvexClient } from "convex/browser";
