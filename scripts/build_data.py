@@ -22,7 +22,7 @@ def cached(name):
 
 def nice(slug):
     s = re.sub(r"-area$", "", slug)
-    s = re.sub(r"^(johto|kanto)-", "", s)
+    s = re.sub(r"^(johto|kanto|alola)-", "", s)
     return s.replace("-", " ").title().replace("Mt ", "Mt. ")
 
 
@@ -30,7 +30,8 @@ def pretty(s):
     for a, b in [("Kings Rock", "King's Rock"), ("Dragons Den", "Dragon's Den"), ("Team Rocket Hq", "Team Rocket HQ"),
                  ("Digletts", "Diglett's"), ("Kirks House", "Kirk's House"), ("Bills House", "Bill's House"),
                  ("Ss Anne", "S.S. Anne"), ("Silph Co", "Silph Co."), (" Of ", " of "), ("Pokemon", "Pokémon"),
-                 (" City Entrance", " (city side)")]:
+                 (" City Entrance", " (city side)"), ("Hauoli", "Hau'oli"), ("Ulaula", "Ula'ula"), ("Poke Pelago", "Poké Pelago"),
+                 ("Team Rockets Castle", "Team Rocket's Castle"), ("Totems Den", "Totem's Den")]:
         s = s.replace(a, b)
     return s
 
@@ -157,11 +158,17 @@ def rows_for(encounters, version, n):
     return out
 
 
+def varieties(sp):
+    return [v["pokemon"]["url"].rstrip("/").split("/")[-1] for v in sp["varieties"]]
+
+
 def species(n, johto):
-    sp, p = cached(f"pokemon_species_{n}"), cached(f"pokemon_{n}")
+    sp = cached(f"pokemon_species_{n}")
+    # a pack's "forms" names the form its wild Pokémon are (Alolan Rattata); every form's encounters count for the species
+    p = next((cached(f"pokemon_{i}") for i in varieties(sp) if cached(f"pokemon_{i}")["name"] in GAME.get("forms", [])), cached(f"pokemon_{n}"))
     chain_id = sp["evolution_chain"]["url"].rstrip("/").split("/")[-1]
     chain = cached(f"evolution_chain_{chain_id}")["chain"]
-    enc = cached(f"pokemon_{n}_encounters")
+    enc = [a for i in varieties(sp) for a in cached(f"pokemon_{i}_encounters")]
     name = lambda s: next(x["name"] for x in s["names"] if x["language"]["name"] == "en")
     rows = {}
     for version, v in VERSIONS.items():

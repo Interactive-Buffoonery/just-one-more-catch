@@ -21,7 +21,7 @@ PACKS = ["crystal", "hgss", "frlg"]
 
 def nice(slug):
     s = re.sub(r"-area$", "", slug)
-    s = re.sub(r"^(johto|kanto)-", "", s)
+    s = re.sub(r"^(johto|kanto|alola)-", "", s)
     return s.replace("-", " ").title().replace("Mt ", "Mt. ")
 
 
@@ -34,8 +34,10 @@ def areas(pack):
     game = json.load(open(os.path.join(ROOT, "data", pack + ".json")))
     out = {}
     for n in range(1, game["species"] + 1):
-        name = next(x["name"] for x in json.load(open(os.path.join(POKEAPI, f"pokemon_species_{n}.json")))["names"] if x["language"]["name"] == "en")
-        for a in json.load(open(os.path.join(POKEAPI, f"pokemon_{n}_encounters.json"))):
+        sp = json.load(open(os.path.join(POKEAPI, f"pokemon_species_{n}.json")))
+        name = next(x["name"] for x in sp["names"] if x["language"]["name"] == "en")
+        forms = [v["pokemon"]["url"].rstrip("/").split("/")[-1] for v in sp["varieties"]]
+        for a in [a for i in forms for a in json.load(open(os.path.join(POKEAPI, f"pokemon_{i}_encounters.json")))]:
             loc = nice(a["location_area"]["name"])
             if any(re.search(p, loc) for p in game["drop"]):
                 continue
@@ -57,7 +59,7 @@ def candidates(area, pack):
     route = re.match(r"(?:Sea )?Route (\d+)", a)
     if route:
         n = int(route.group(1))
-        return [f"{'Johto' if 29 <= n <= 48 else 'Kanto'} Route {n}"]
+        return [f"{'Alola' if pack == 'usum' else 'Johto' if 29 <= n <= 48 else 'Kanto'} Route {n}"]
     if a.startswith("Safari Zone"):
         return ["Johto Safari Zone" if pack == "hgss" else "Kanto Safari Zone"]
     if a.endswith(" Chamber"):
