@@ -9,9 +9,15 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
   const mounted = [];
   const bridges = [];
   const imports = [];
+  let constructed = 0;
+  let loads = 0;
+  class Element { closest() { return true; } }
+  const listeners = {};
+  let idle;
   class Clerk {
+    constructor() { constructed++; }
     loaded = false;
-    async load() { await loaded; this.loaded = true; }
+    async load() { loads++; await loaded; this.loaded = true; }
     user = user;
     session = user && {getToken: async () => 'token'};
     addListener(fn) { fn({user}); }
@@ -23,7 +29,7 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
     onUpdate() { return () => {}; }
   }
   let giveUp;
-  const context = createContext({setTimeout:(fn,delay)=>{if(delay===10000)giveUp=fn;},window:{},console:{warn(){}},document:{cookie,getElementById:()=>({addEventListener(){}})},location:{hash:'',pathname:'/',search},history:{replaceState(){}}});
+  const context = createContext({setTimeout:(fn,delay)=>{if(delay===10000)giveUp=fn;else if(delay===4000)idle=fn;},window:{},Element,console:{warn(){}},document:{cookie,getElementById:()=>({addEventListener(event, fn){listeners[event]=fn;}})},location:{hash:'',pathname:'/',search},history:{replaceState(){}}});
   const modules = new Map();
   function makeModule(name, exports) {
     if (!modules.has(name)) modules.set(name,new SyntheticModule(Object.keys(exports), function(){for (const [k,v] of Object.entries(exports)) this.setExport(k,v);},{context}));
@@ -42,7 +48,7 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
   await main.link(name=>makeModule(name,name==='convex/browser'?{ConvexClient}:name.endsWith('/api')?{api:{runs:{}}}:name==='./app'?{mount:(el,b)=>bridges.push(b),update:b=>bridges.push(b)}:{}));
   await main.evaluate();
   const bridge=bridges[0];
-  assert.equal(imports.length>0,signal,signal?`${cookie||search} must load Clerk at startup`:`${cookie||'a guest'} must not download Clerk at startup`);
+  assert.equal(imports.length>0,signal,signal?`${cookie||search} must load Clerk at startup`:`${cookie||'a guest'} must defer Clerk until idle or intent`);
   if (signal) {
     assert.equal(bridge.auth.isLoading,true,'a returning session must show loading, not the guest view');
     giveUp();
@@ -55,6 +61,30 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
       assert.equal(bridges.at(-1).auth.isAuthenticated,true,'a slow sign-in must still finish after the fallback');
     }
     return;
+  }
+  const initialRenders = bridges.length;
+  idle();
+  await new Promise(setImmediate);
+  assert.equal(imports.length, 2, 'idle downloads both Clerk modules');
+  assert.equal(constructed, 0, 'idle must not construct Clerk');
+  assert.equal(bridges.length, initialRenders, 'idle must not render');
+  assert.equal(mounted.length, 0, 'idle must not mount');
+  listeners.pointerover({target:new Element()});
+  await new Promise(setImmediate);
+  listeners.focusin({target:new Element()});
+  assert.equal(constructed, failImport ? 0 : 1);
+  assert.equal(loads, failImport ? 0 : 1);
+  const beforeRetry = imports.length;
+  listeners.pointerover({target:new Element()});
+  assert.equal(imports.length, beforeRetry, 'passive intent only tries once');
+  if (!user && !failImport) {
+    const open = {isConnected:true,textContent:''};
+    bridge.mountSignIn(open);
+    release();
+    await new Promise(setImmediate);
+    assert.deepEqual(mounted, [open], 'click during load mounts once');
+    bridge.unmountSignIn(open);
+    mounted.length = 0;
   }
   if (user) {
     const el={isConnected:true,textContent:''};
@@ -81,6 +111,7 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
     const open={isConnected:true,textContent:''};
     bridge.mountSignIn(open);
     await new Promise(setImmediate);
+    assert.ok(imports.length > beforeRetry, 'explicit sign-in retries imports');
     assert.match(open.textContent,/couldn't load/);
     assert.equal(bridges.at(-1).auth.isAuthenticated,false);
   }
@@ -124,4 +155,4 @@ reload();
 assert.equal(reloaded, true);
 recovery = null;
 assert.doesNotThrow(timeout, 'recovery must be harmless after the app mounts');
-console.log('startup ok: lazy Clerk, session signals, delayed/failed sign-in, cancellation, reopening, and recovery');
+console.log('startup ok: idle downloads, intent initialization, retry limits, session signals, delayed/failed sign-in, cancellation, reopening, and recovery');
