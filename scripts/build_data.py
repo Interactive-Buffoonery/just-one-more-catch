@@ -162,6 +162,29 @@ def varieties(sp):
     return [v["pokemon"]["url"].rstrip("/").split("/")[-1] for v in sp["varieties"]]
 
 
+def short_form(label, n):
+    if label == "Normal" and n in (26, 103, 105):
+        return "Kanto"
+    label = re.sub(r"^Type: |^Alolan Form$|\s(Style|Core|Pattern|Flower|Cloak|Forme?|Rotom|Kyurem)$", lambda m: "Alolan" if m.group(0) == "Alolan Form" else "", label)
+    return label
+
+
+def form_list(n):
+    forms = []
+    ids = GAME["obtainable_forms"][str(n)]
+    traded = GAME.get("traded_forms", {}).get(str(n), [])
+    assert set(traded) <= set(ids), f"Unknown traded form for {n}"
+    assert ids[0] not in traded, f"Default form cannot be traded: {n}"
+    for slug in ids:
+        f = cached("pokemon_form_" + slug.replace("-", "_"))
+        label = next((x["name"] for x in f["form_names"] if x["language"]["name"] == "en"), f["form_name"].replace("-", " ").title() or "Normal")
+        label = short_form(label, n)
+        if n == 201:
+            label = {"exclamation": "!", "question": "?"}.get(f["form_name"], f["form_name"].upper())
+        forms.append({"id": slug, "name": label, **({"trade": True} if slug in traded else {})})
+    return forms
+
+
 def species(n, johto):
     sp = cached(f"pokemon_species_{n}")
     # a pack's "forms" names the form its wild Pokémon are (Alolan Rattata); every form's encounters count for the species
@@ -177,7 +200,8 @@ def species(n, johto):
             rows[key] = rows.get(key, "") + v
     pre = sp["evolves_from_species"]
     return {
-        "n": n, "j": johto.get(n), "name": name(sp), "types": gen4_types(p),
+        "n": n, "genderRate": sp["gender_rate"], "j": johto.get(n), "name": name(sp), "types": gen4_types(p),
+        **({"forms": form_list(n)} if str(n) in GAME.get("obtainable_forms", {}) else {}),
         "from": name(cached(f"pokemon_species_{pre['url'].rstrip('/').split('/')[-1]}")) if pre else None,
         "evo": evo_text(chain, sp["name"]), "baby": sp["is_baby"],
         "rows": sorted(({**json.loads(k), "v": v} for k, v in rows.items()), key=lambda r: (r["chap"], -r["c"])),

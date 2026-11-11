@@ -134,5 +134,86 @@
     {"place": "Mt. Silver Top", "n": 215, "needs": ["rock-climb"], "src": "https://bulbapedia.bulbagarden.net/wiki/Mt._Silver_Cave", "quote": "Sneasel is only listed in 2F, Upper mountainside and 3F, each marked ''{{m|Rock Climb}} is required to reach this area.''"},
     {"place": "Cherrygrove City", "n": 276, "m": "headbutt", "needs": ["surf", "rock-climb"], "src": "https://bulbapedia.bulbagarden.net/wiki/Cherrygrove_City", "quote": "The four trees on the hill by the sea. Accessible by {{mcolor|Surf|000|surfing}} west into the water, then using {{mcolor|Rock Climb|000}}."},
     {"place": "National Park", "n": 420, "m": "headbutt", "needs": ["rock-climb"], "src": "https://bulbapedia.bulbagarden.net/wiki/National_Park", "quote": "Five trees at top of the hill in the north-east section. Requires {{m|Rock Climb}}."}
-  ]
+  ],
+  "obtainable_forms": {
+    "201": [
+      "unown-a",
+      "unown-b",
+      "unown-c",
+      "unown-d",
+      "unown-e",
+      "unown-f",
+      "unown-g",
+      "unown-h",
+      "unown-i",
+      "unown-j",
+      "unown-k",
+      "unown-l",
+      "unown-m",
+      "unown-n",
+      "unown-o",
+      "unown-p",
+      "unown-q",
+      "unown-r",
+      "unown-s",
+      "unown-t",
+      "unown-u",
+      "unown-v",
+      "unown-w",
+      "unown-x",
+      "unown-y",
+      "unown-z",
+      "unown-exclamation",
+      "unown-question"
+    ],
+    "412": [
+      "burmy-plant",
+      "burmy-sandy",
+      "burmy-trash"
+    ],
+    "413": [
+      "wormadam-plant",
+      "wormadam-sandy",
+      "wormadam-trash"
+    ],
+    "422": [
+      "shellos-west",
+      "shellos-east"
+    ],
+    "423": [
+      "gastrodon-west",
+      "gastrodon-east"
+    ],
+    "479": [
+      "rotom",
+      "rotom-heat",
+      "rotom-wash",
+      "rotom-frost",
+      "rotom-fan",
+      "rotom-mow"
+    ]
+  },
+  "traded_forms": {
+    "412": [
+      "burmy-sandy",
+      "burmy-trash"
+    ],
+    "413": [
+      "wormadam-sandy",
+      "wormadam-trash"
+    ],
+    "422": [
+      "shellos-east"
+    ],
+    "423": [
+      "gastrodon-east"
+    ],
+    "479": [
+      "rotom-heat",
+      "rotom-wash",
+      "rotom-frost",
+      "rotom-fan",
+      "rotom-mow"
+    ]
+  }
 }

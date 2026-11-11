@@ -6,6 +6,8 @@ import { caughtCsv, fetchStates, jsonParts, saveFile } from "./export";
 import {
   bridge,
   byN,
+  hasGenders,
+  visibleForms,
   closeRun,
   dumpRun,
   eventDone,
@@ -28,7 +30,7 @@ import { moveGuestAvatar, moveGuestRuns, withGuest } from "./guest";
 import { SETTINGS_ICON, TAB_ICONS } from "./parts";
 import { Bridge, RunRow } from "./types";
 import { Contact } from "./views/about";
-import { Boxes, fillBoxSheet, fillMonSheet, saveMon } from "./views/boxes";
+import { Boxes, fillBoxSheet, fillMonSheet, saveMon, updateMonSprite } from "./views/boxes";
 import { Dex, dexGrid, fillSpecies } from "./views/dex";
 import { fillClock, fillCustom, Journey, untick } from "./views/journey";
 import {
@@ -472,6 +474,29 @@ async function onClick(e: MouseEvent) {
     openSheet({ kind: "box", b: +d.renamebox });
     return;
   }
+  if (d.gender && d.species) {
+    const p = byN[+d.species],
+      g = d.gender;
+    if (!r.trackGenders || !p || !hasGenders(p) || (g !== "m" && g !== "f")) return;
+    if (r.mons.some((m) => m.n === p.n && m.g === g)) return;
+    const genders = r.genders[p.n] ||= new Set();
+    genders.has(g) ? genders.delete(g) : genders.add(g);
+    r.caught.add(p.n);
+    scheduleSave();
+    render();
+    fillSpecies(p.n);
+    return;
+  }
+  if (d.form && d.species) {
+    const p = byN[+d.species];
+    if (!r.trackForms || (!p || !visibleForms(p).some((f) => f.id === d.form))) return;
+    r.forms.has(d.form) ? r.forms.delete(d.form) : r.forms.add(d.form);
+    r.caught.add(p.n);
+    scheduleSave();
+    render();
+    fillSpecies(p.n);
+    return;
+  }
   if (d.savemon) {
     saveMon();
     $("#sheet").close();
@@ -518,6 +543,8 @@ async function onClick(e: MouseEvent) {
     r.view = r.view === "dexonly" ? r.startView : "dexonly";
   } else if (d.startview) {
     r.view = r.startView = d.startview === "dex" ? "dex" : "journey";
+  } else if (d.dexoption === "trackForms" || d.dexoption === "trackGenders" || d.dexoption === "trackTraded") {
+    r[d.dexoption] = !r[d.dexoption];
   } else if (d.showlater) r.showLater = !r.showLater;
   else if (d.event) {
     if (forced(d.event)) return;
@@ -714,6 +741,10 @@ export function mount(el: HTMLElement, b: Bridge) {
   });
   el.addEventListener("change", (e) => {
     const t = e.target as HTMLInputElement;
+    if (t.id === "f-form" || t.id === "f-shiny") {
+      updateMonSprite();
+      return;
+    }
     if (t.name === "avatar") {
       const n = Number(t.value);
       ui.avatar = n;

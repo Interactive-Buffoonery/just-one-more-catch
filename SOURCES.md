@@ -37,3 +37,82 @@ from PokeAPI and needs no source.
 - https://bulbapedia.bulbagarden.net/wiki/Alola (Alolan forms)
 - https://strategywiki.org/wiki/Pok%C3%A9mon_Ultra_Sun_and_Ultra_Moon
 - The Official Alola Region Strategy Guide (2017): `Pokèmon Ultra Sun & Pokèmon Ultra Moon The Official Alola Region Strategy Guide fix.pdf`
+
+## Obtainable form catalog
+
+`obtainable_forms` in each pack is an allowlist of PokeAPI pokemon-form
+names, in default-first order. The existing `forms` list still selects the
+species' default types and artwork. Form lists do not add encounters or gates.
+
+- PokeAPI `pokemon-species`, `pokemon`, and `pokemon-form` responses supply
+  identifiers, labels, and sprites: https://pokeapi.co/api/v2/pokemon-form/
+- Unown: https://bulbapedia.bulbagarden.net/wiki/Unown_(Pok%C3%A9mon)
+  Crystal has A–Z; FRLG and HGSS also have exclamation and question marks.
+- HGSS normal Gen IV forms (including ordinary trades from DPPt):
+  https://www.serebii.net/games/forms.shtml and
+  https://www.serebii.net/heartgoldsoulsilver/forms.shtml
+  Burmy/Wormadam cloaks, Shellos/Gastrodon seas, Rotom appliances.
+  Event-dependent Deoxys, Shaymin, Arceus and Origin Giratina are excluded.
+- USUM forms and form-changing items:
+  https://www.serebii.net/ultrasunultramoon/forms.shtml and
+  https://www.serebii.net/games/forms.shtml
+  Rotom, Giratina, Forces of Nature, Kyurem, Zygarde (10%/50%), Oricorio,
+  Silvally, Minior cores, and Necrozma's two persistent fusions.
+  Ability-only Zygarde variants are one visible form each.
+- Regional forms: https://www.serebii.net/pokemon/regionalforms.shtml
+  Alolan forms are the defaults in USUM. Kantonian Raichu,
+  Exeggutor and Marowak are also obtainable by evolving in Ultra Space:
+  https://www.serebii.net/ultrasunultramoon/evolution.shtml
+- USUM Shellos/Gastrodon: West Sea via the Seafolk Village trade (and
+  evolution), East Sea via wild Gastrodon (and breeding):
+  https://www.serebii.net/ultrasunultramoon/ingametrade.shtml
+- USUM Flabébé line: yellow, orange and white, through Melemele Meadow SOS
+  encounters, breeding and evolution. Red and blue require imports:
+  https://bulbapedia.bulbagarden.net/wiki/Flab%C3%A9b%C3%A9_(Pok%C3%A9mon)
+- USUM Basculin red/blue stripes, Lycanroc Midday/Midnight, and all seven
+  Minior core colours are ordinary encounters:
+  https://www.serebii.net/pokedex-sm/550.shtml
+  https://www.serebii.net/pokedex-sm/745.shtml
+  https://www.serebii.net/pokedex-sm/774.shtml
+  Dusk Lycanroc requires the distributed Own Tempo Rockruff in Gen VII and
+  is excluded, even though descendants can be traded and bred.
+
+Excluded throughout: distributions, gender-only differences, battle-only
+transformations, Totem sizes, and Furfrou trims (revert in storage). USUM
+transfer-only families are available through the Traded forms option. A form changing through an ordinary in-game item counts;
+cosmetic colour variants count when obtainable in that pack.
+
+- Vivillon: Scatterbug is obtainable through USUM Island Scan, so its 18
+  regional patterns count (ordinary trading covers other console regions).
+  Fancy and Poké Ball patterns are distributions and excluded:
+  https://www.serebii.net/ultrasunultramoon/islandscan.shtml
+  https://bulbapedia.bulbagarden.net/wiki/Vivillon_(Pok%C3%A9mon)
+
+### Traded forms
+
+`traded_forms` flags additional forms requiring another game. The first form
+is always an unflagged baseline, including for transfer-only species; this
+keeps one species default when traded forms are hidden. Counts therefore
+include those baselines, rather than asserting the species is locally caught.
+
+- HGSS: non-default Burmy/Wormadam cloaks, East Sea Shellos/Gastrodon and
+  Rotom appliances require imports, following the approved catalog rule.
+  https://www.serebii.net/heartgoldsoulsilver/forms.shtml
+- USUM transfer-only species: Unown, Burmy/Wormadam, Deerling/Sawsbuck,
+  Pumpkaboo/Gourgeist and Deoxys. Additional forms are flagged as traded.
+  Deoxys has a normal-gameplay origin in ORAS and can change form in USUM.
+  https://www.serebii.net/ultrasunultramoon/unobtainable.shtml
+  https://www.serebii.net/ultrasunultramoon/forms.shtml
+  https://www.serebii.net/omegarubyalphasapphire/legendary.shtml
+- USUM: Kantonian counterparts of Alolan species require imports except
+  Raichu, Exeggutor and Marowak, which can evolve in Ultra Space. Red/blue
+  flowers in the Flabébé line are imports; local yellow/orange/white remain.
+  Regional forms, evolution and flower sources are listed above.
+- Vivillon uses Meadow as the existing fixed default. Other normal regional
+  patterns are traded; no console-region setting is inferred. Both versions
+  of each pack share a catalog, so version-exclusive forms remain local.
+- Furfrou trims, event-origin forms, battle transformations and gender-only
+  differences remain excluded. Spinda's personality-derived markings are
+  not discrete pokemon-form entries and remain outside this catalog.
+  Mothim cloak origins and Scatterbug/Spewpa regional origins have identical
+  appearance and mechanics; their PokeAPI entries are not separate targets.

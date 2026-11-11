@@ -14,17 +14,20 @@ export type Row = {
 export type Species = {
   n: number;
   j: number | null;
+  genderRate: number;
   name: string;
   types: string[];
   from: string | null;
   evo: string | null;
   baby: boolean;
+  forms?: { id: string; name: string; trade?: true }[];
   rows: Row[];
   all: Row[];
 };
 export type Mon = {
   id: number;
   n: number;
+  form?: string;
   box: "party" | number;
   nick: string;
   lvl: number | "";
