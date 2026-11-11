@@ -118,6 +118,8 @@ Sources, in order: Bulbapedia (`Appendix:<Game>_walkthrough` and location
 pages), then Serebii to break ties. Make sure a location page that covers
 several games is describing the one you're working on.
 
+For a second source from a scanned strategy guide, use the `read-guide` skill.
+
 Bulbapedia blocks scripted fetches. To read its pages, use the `audit-access`
 skill's cache (`scripts/access_audit.py`).
 
