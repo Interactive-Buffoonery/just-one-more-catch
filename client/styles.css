@@ -299,6 +299,8 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 [data-game=crystal]{--g:#9fd3e3;--g-deep:#5c9db1}
 [data-game=firered]{--g:#f39478;--g-deep:#c25a3e}
 [data-game=leafgreen]{--g:#a3d382;--g-deep:#5f9a45}
+[data-game=ultrasun]{--g:#f7a24b;--g-deep:#c9701c}
+[data-game=ultramoon]{--g:#b9a4ea;--g-deep:#7d62c4}
 .dash-grid{display:grid;gap:32px 28px}
 .save{display:grid;grid-template-columns:minmax(0,1fr);background:var(--surface);border-radius:22px;overflow:hidden}
 .slab{background:var(--g);color:var(--g-ink);padding:18px 18px 20px;display:grid;grid-template-columns:112px minmax(0,1fr);grid-template-rows:auto 1fr;gap:0 20px}
