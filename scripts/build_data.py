@@ -162,6 +162,17 @@ def varieties(sp):
     return [v["pokemon"]["url"].rstrip("/").split("/")[-1] for v in sp["varieties"]]
 
 
+def form_list(n):
+    forms = []
+    for slug in GAME["obtainable_forms"][str(n)]:
+        f = cached("pokemon_form_" + slug.replace("-", "_"))
+        label = next((x["name"] for x in f["form_names"] if x["language"]["name"] == "en"), f["form_name"].replace("-", " ").title() or "Normal")
+        if n == 201:
+            label = {"exclamation": "!", "question": "?"}.get(f["form_name"], f["form_name"].upper())
+        forms.append({"id": slug, "name": label})
+    return forms
+
+
 def species(n, johto):
     sp = cached(f"pokemon_species_{n}")
     # a pack's "forms" names the form its wild Pokémon are (Alolan Rattata); every form's encounters count for the species
@@ -178,6 +189,7 @@ def species(n, johto):
     pre = sp["evolves_from_species"]
     return {
         "n": n, "j": johto.get(n), "name": name(sp), "types": gen4_types(p),
+        **({"forms": form_list(n)} if str(n) in GAME.get("obtainable_forms", {}) else {}),
         "from": name(cached(f"pokemon_species_{pre['url'].rstrip('/').split('/')[-1]}")) if pre else None,
         "evo": evo_text(chain, sp["name"]), "baby": sp["is_baby"],
         "rows": sorted(({**json.loads(k), "v": v} for k, v in rows.items()), key=lambda r: (r["chap"], -r["c"])),

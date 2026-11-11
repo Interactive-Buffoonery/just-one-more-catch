@@ -113,5 +113,37 @@
     {"place": "Roaming Kanto", "n": 243, "m": "roaming-grass", "needs": ["Elite Four", "network"]},
     {"place": "Roaming Kanto", "n": 244, "m": "roaming-grass", "needs": ["Elite Four", "network"]},
     {"place": "Roaming Kanto", "n": 245, "m": "roaming-grass", "needs": ["Elite Four", "network"]}
-  ]
+  ],
+  "obtainable_forms": {
+    "201": [
+      "unown-a",
+      "unown-b",
+      "unown-c",
+      "unown-d",
+      "unown-e",
+      "unown-f",
+      "unown-g",
+      "unown-h",
+      "unown-i",
+      "unown-j",
+      "unown-k",
+      "unown-l",
+      "unown-m",
+      "unown-n",
+      "unown-o",
+      "unown-p",
+      "unown-q",
+      "unown-r",
+      "unown-s",
+      "unown-t",
+      "unown-u",
+      "unown-v",
+      "unown-w",
+      "unown-x",
+      "unown-y",
+      "unown-z",
+      "unown-exclamation",
+      "unown-question"
+    ]
+  }
 }

@@ -36,7 +36,10 @@ def get(url):
 def species(n):
     sp = get(f"{API}pokemon-species/{n}")
     for v in sp["varieties"]:  # alternate forms (Alolan Rattata) have their own encounters and types
-        get(v["pokemon"]["url"])
+        p = get(v["pokemon"]["url"])
+        if len(sp["varieties"]) > 1 or len(p["forms"]) > 1:
+            for form in p["forms"]:
+                get(form["url"])
         get(v["pokemon"]["url"] + "encounters")
     get(sp["evolution_chain"]["url"])
 
@@ -46,4 +49,12 @@ if __name__ == "__main__":
         get(f"{API}pokedex/{dex}")
     with ThreadPoolExecutor(4) as ex:  # ponytail: 4 workers keeps us well inside PokeAPI fair use
         list(ex.map(species, range(1, 808)))
+    import glob
+    selected = set()
+    for path in glob.glob(os.path.join(os.path.dirname(__file__), "..", "data", "*.json")):
+        with open(path) as f:
+            for forms in json.load(f).get("obtainable_forms", {}).values():
+                selected.update(forms)
+    with ThreadPoolExecutor(4) as ex:
+        list(ex.map(lambda slug: get(f"{API}pokemon-form/{slug}"), sorted(selected)))
     print("cached", len(os.listdir(CACHE)), "responses")

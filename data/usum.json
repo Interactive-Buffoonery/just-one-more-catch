@@ -88,5 +88,168 @@
     {"place": "Heahea Beach", "n": 778, "m": "gift", "needs": ["stickers-80"], "src": "https://bulbapedia.bulbagarden.net/wiki/Totem_Pok%C3%A9mon", "quote": "depending on the number of [[Totem Sticker]]s collected"},
     {"place": "Heahea Beach", "n": 743, "m": "gift", "needs": ["stickers-100"], "src": "https://bulbapedia.bulbagarden.net/wiki/Totem_Pok%C3%A9mon", "quote": "depending on the number of [[Totem Sticker]]s collected"},
     {"place": "Heahea Beach", "n": 784, "m": "gift", "needs": ["stickers-100"], "src": "https://bulbapedia.bulbagarden.net/wiki/Totem_Pok%C3%A9mon", "quote": "depending on the number of [[Totem Sticker]]s collected"}
-  ]
+  ],
+  "obtainable_forms": {
+    "26": [
+      "raichu-alola",
+      "raichu"
+    ],
+    "103": [
+      "exeggutor-alola",
+      "exeggutor"
+    ],
+    "105": [
+      "marowak-alola",
+      "marowak"
+    ],
+    "422": [
+      "shellos-west",
+      "shellos-east"
+    ],
+    "423": [
+      "gastrodon-west",
+      "gastrodon-east"
+    ],
+    "479": [
+      "rotom",
+      "rotom-heat",
+      "rotom-wash",
+      "rotom-frost",
+      "rotom-fan",
+      "rotom-mow"
+    ],
+    "487": [
+      "giratina-altered",
+      "giratina-origin"
+    ],
+    "550": [
+      "basculin-red-striped",
+      "basculin-blue-striped"
+    ],
+    "641": [
+      "tornadus-incarnate",
+      "tornadus-therian"
+    ],
+    "642": [
+      "thundurus-incarnate",
+      "thundurus-therian"
+    ],
+    "645": [
+      "landorus-incarnate",
+      "landorus-therian"
+    ],
+    "646": [
+      "kyurem",
+      "kyurem-black",
+      "kyurem-white"
+    ],
+    "718": [
+      "zygarde-50",
+      "zygarde-10"
+    ],
+    "741": [
+      "oricorio-baile",
+      "oricorio-pom-pom",
+      "oricorio-pau",
+      "oricorio-sensu"
+    ],
+    "745": [
+      "lycanroc-midday",
+      "lycanroc-midnight"
+    ],
+    "773": [
+      "silvally-normal",
+      "silvally-fighting",
+      "silvally-flying",
+      "silvally-poison",
+      "silvally-ground",
+      "silvally-rock",
+      "silvally-bug",
+      "silvally-ghost",
+      "silvally-steel",
+      "silvally-fire",
+      "silvally-water",
+      "silvally-grass",
+      "silvally-electric",
+      "silvally-psychic",
+      "silvally-ice",
+      "silvally-dragon",
+      "silvally-dark",
+      "silvally-fairy"
+    ],
+    "774": [
+      "minior-red",
+      "minior-orange",
+      "minior-yellow",
+      "minior-green",
+      "minior-blue",
+      "minior-indigo",
+      "minior-violet"
+    ],
+    "800": [
+      "necrozma",
+      "necrozma-dusk",
+      "necrozma-dawn"
+    ],
+    "669": [
+      "flabebe-yellow",
+      "flabebe-orange",
+      "flabebe-white"
+    ],
+    "670": [
+      "floette-yellow",
+      "floette-orange",
+      "floette-white"
+    ],
+    "671": [
+      "florges-yellow",
+      "florges-orange",
+      "florges-white"
+    ],
+    "19": [
+      "rattata-alola"
+    ],
+    "20": [
+      "raticate-alola"
+    ],
+    "27": [
+      "sandshrew-alola"
+    ],
+    "28": [
+      "sandslash-alola"
+    ],
+    "37": [
+      "vulpix-alola"
+    ],
+    "38": [
+      "ninetales-alola"
+    ],
+    "50": [
+      "diglett-alola"
+    ],
+    "51": [
+      "dugtrio-alola"
+    ],
+    "52": [
+      "meowth-alola"
+    ],
+    "53": [
+      "persian-alola"
+    ],
+    "74": [
+      "geodude-alola"
+    ],
+    "75": [
+      "graveler-alola"
+    ],
+    "76": [
+      "golem-alola"
+    ],
+    "88": [
+      "grimer-alola"
+    ],
+    "89": [
+      "muk-alola"
+    ]
+  }
 }

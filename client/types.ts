@@ -19,12 +19,14 @@ export type Species = {
   from: string | null;
   evo: string | null;
   baby: boolean;
+  forms?: { id: string; name: string }[];
   rows: Row[];
   all: Row[];
 };
 export type Mon = {
   id: number;
   n: number;
+  form?: string;
   box: "party" | number;
   nick: string;
   lvl: number | "";
