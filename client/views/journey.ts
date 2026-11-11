@@ -4,6 +4,7 @@ import {
   byName,
   cap,
   CHAPTERS,
+  chapterNeeds,
   currentChap,
   DAYS,
   DEX,
@@ -17,7 +18,7 @@ import {
   isBadge,
   isHere,
   laterEvents,
-  METHOD,
+  needLabel,
   NOT_HERE,
   nowTime,
   num,
@@ -28,7 +29,6 @@ import {
   regionalCaught,
   rowStatus,
   run,
-  TIME,
   TYPE,
   ui,
   unlocked,
@@ -36,14 +36,16 @@ import {
   visible,
 } from "../game";
 import {
+  badgeIcon,
   badgeRow,
   Catchable,
   catchableNow,
   chapterGroups,
   chapterSpots,
+  CHEV,
   CLOCK_ICON,
+  fold,
   kitGroup,
-  lvl,
   monRow,
   placeLabel,
   RED_NOTE,
@@ -52,6 +54,7 @@ import {
   SLIDERS_ICON,
   spots,
   sprite,
+  strip,
   uniq,
 } from "../parts";
 import { NoRun } from "./runs";
@@ -70,14 +73,12 @@ const why = (h: Catchable) =>
         : `Best odds in ${CHAPTERS[h.r.chap].title}`;
 function heroCard(h: Catchable) {
   const a = TYPE[h.p.types[0]],
-    b = TYPE[h.p.types[1] || h.p.types[0]],
-    st = rowStatus(h.r);
-  return `<section class="hv-field" aria-labelledby="hero-name">
-      <div class="hv-band" style="--t1:${a};--t2:${b}"><span class="hv-no" aria-hidden="true">#${pad(num(h.p))}</span>${sprite(h.p, "hv-sprite", redGyarados(h.p, h.r))}
-        <h2 id="hero-name">${h.p.name}</h2><div>${h.p.types.map((t) => `<span class="hv-type" style="--tc:${TYPE[t]}">${cap(t)}</span>`).join("")}</div>${why(h) && `<div class="hv-why">${why(h)}</div>`}</div>
-      <dl class="hv-facts"><div><dt>Where</dt><dd>${h.r.place}</dd></div><div><dt>How</dt><dd>${METHOD[h.r.m]?.[0] || h.r.m}</dd></div><div><dt>Level</dt><dd>${lvl(h.r) || "?"}</dd></div><div><dt>Chance</dt><dd>${h.r.c ? h.r.c + "%" : "?"}</dd></div></dl>
-      ${h.r.cond.some((c) => TIME[c]) || st.s !== "now" ? rowTags(h.r) : ""}
-      <div class="hv-actions"><button class="app-primary grow" data-catch="${h.p.n}" data-k="hero-${h.p.n}" aria-label="${h.p.name} caught">Caught it!</button><button class="app-quiet" data-skip="${h.p.n}" data-k="skip">Not now</button></div>
+    b = TYPE[h.p.types[1] || h.p.types[0]];
+  return `<section class="next s-next" aria-labelledby="hero-name" style="--t1:${a};--t2:${b}">
+      <div class="band">${sprite(h.p, "hv-sprite", redGyarados(h.p, h.r))}<div class="k">Next catch · #${pad(num(h.p))}</div>
+        <h2 class="lg" id="hero-name">${h.p.name}</h2>${h.p.types.map((t) => `<span class="type" style="--tc:${TYPE[t]}">${cap(t)}</span>`).join(" ")}${why(h) && `<div class="why">${why(h)}</div>`}</div>
+      ${rowTags(h.r, isHere(h.r.place) ? R().here : "", " chance")}
+      <div class="hv-actions"><button class="app-primary grow" data-catch="${h.p.n}" data-k="hero-${h.p.n}" aria-label="${h.p.name} caught">Caught it</button><button class="app-quiet" data-skip="${h.p.n}" data-k="skip">Not now</button></div>
     </section>`;
 }
 
@@ -104,10 +105,14 @@ const SECTIONS = [
   ["next", "Next catch", "Disabling this removes the big suggestion card"],
   [
     "near",
-    "Also near you",
-    "Disabling this hides the other Pokémon you can catch where you are",
+    "You are here",
+    "Disabling this hides the place you're at from Around you",
   ],
-  ["chapter", "This chapter", "Places and Pokémon in your current chapter"],
+  [
+    "chapter",
+    "Around you",
+    "Disabling this hides the other places in your current chapter",
+  ],
   [
     "evolve",
     "Evolution options",
@@ -177,11 +182,11 @@ function storyCheck() {
   const e = open.find((x) => !ui.snooze.has(x.id));
   if (!e)
     return open.length
-      ? `<div class="row ask-snz"><span class="grow small"><b>${open[0].label}</b> · not yet</span><button class="got-btn" data-unsnooze="1" data-k="ask-now" aria-label="Ask now: ${open[0].label}">Ask now</button></div>`
+      ? `<div class="row ask-snz s-ask"><span class="grow small"><b>${open[0].label}</b> · not yet</span><button class="got-btn" data-unsnooze="1" data-k="ask-now" aria-label="Ask now: ${open[0].label}">Ask now</button></div>`
       : "";
   const opens = opensText(e.id);
-  return `<section class="card ask" aria-labelledby="ask-q"><div class="ask-k">Story check</div><h2 id="ask-q" tabindex="-1">${e.q}</h2>${opens && `<p class="small muted" style="margin:6px 0 0">${opens}</p>`}
-    <div class="ask-actions"><button class="app-primary" data-yes="${e.id}" aria-describedby="ask-q">Yes, got it</button><button class="app-quiet" data-snooze="${e.id}" aria-describedby="ask-q">Not yet</button></div></section>`;
+  return `<section class="card ask s-ask" aria-labelledby="ask-q"><div class="ask-k">Story check</div><h2 id="ask-q" tabindex="-1">${e.q}</h2>${opens && `<p class="small muted">${opens}</p>`}
+    <div class="hv-actions"><button class="app-primary" data-yes="${e.id}" aria-describedby="ask-q">Yes, got it</button><button class="app-quiet" data-snooze="${e.id}" aria-describedby="ask-q">Not yet</button></div></section>`;
 }
 function beat(id: string) {
   const e = EVENTS[id],
@@ -211,19 +216,24 @@ export function untick(id: string) {
     .filter((e) => eventDone(e.id))
     .forEach((e) => untick(e.id));
 }
+const LOCK = `<svg class="lockic" viewBox="0 0 12 12" width="11" height="11" aria-hidden="true"><rect x="2" y="5.5" width="8" height="5.5" rx="1.2" fill="currentColor"/><path d="M4 5.5V4a2 2 0 014 0v1.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>`;
+const ITEMS = (k: string) =>
+  k.endsWith("-rod") || k === "bicycle" || k === "island-scan";
+const count = (got: number, of: number) =>
+  `<span><b>${got}</b> <span class="muted">/ ${of}</span></span>`;
 export function Journey() {
   if (!run) return NoRun();
   const r = R(),
     cur = currentChap(),
-    now = catchableNow();
+    now = catchableNow(),
+    wide = matchMedia("(min-width:960px)").matches;
   const hero = now.find((x) => !r.skip.has(x.p.n));
-  const herePlaces = CHAPTERS.filter((_, i) => unlocked(i))
-    .flatMap((c) => c.places)
-    .filter((p) => !NOT_HERE.test(p));
-  const atHere = now.filter((x) => isHere(x.r.place) && x.p.n !== hero?.p.n);
   const hide = r.hidden,
     all = spots(),
-    curS = chapterSpots(all, cur);
+    around = !hide.has("near") || !hide.has("chapter"),
+    curS = chapterSpots(all, cur, (pl) =>
+      isHere(pl) ? !hide.has("near") : !hide.has("chapter"),
+    );
   const evolve = DEX.filter(
     (p) =>
       visible(p) &&
@@ -233,80 +243,57 @@ export function Journey() {
       p.evo &&
       !/Trade|Level up at/.test(p.evo),
   );
-  return `<div class="cols"><div class="colmain">
-  <div class="chips toolbar">
-    <label class="sr" for="here">Where you are in the game</label>
-    <select class="pill" id="here" data-k="here">${herePlaces.includes(r.here) ? "" : `<option selected disabled>Near ${r.here}</option>`}${herePlaces.map((p) => `<option ${p === r.here ? "selected" : ""} value="${p}">Near ${p}${placeLabel(p, all[p]) && ` · ${placeLabel(p, all[p])}`}</option>`).join("")}</select>
-    ${P().nightFrom ? `<button class="pill clockpill" data-clock="1" data-k="clock" aria-label="Game clock: ${cap(nowTime())}, ${cap(DAYS[gameNow(r.clock).day])}. Change">${CLOCK_ICON}<b>${cap(nowTime())}</b> · ${cap(DAYS[gameNow(r.clock).day]).slice(0, 3)}</button>` : ""}
-    <button class="pill iconpill" data-custom="1" data-k="custom" aria-label="Customize this page">${SLIDERS_ICON}</button>
-  </div>
+  const picker = CHAPTERS.map((c, i) => {
+    const list = unlocked(i) ? c.places.filter((p) => !NOT_HERE.test(p)) : [];
+    return list.length
+      ? `<optgroup label="Chapter ${i + 1}: ${c.title}">${list.map((p) => `<option ${p === r.here ? "selected" : ""} value="${p}">${p}${placeLabel(p, all[p]) && ` · ${placeLabel(p, all[p])}`}</option>`).join("")}</optgroup>`
+      : "";
+  }).join("");
+  const badges = P().badges,
+    kitOn = P().kit.filter((k) => r.kit.has(k[0])).length;
+  return `<div class="jny"><div class="colmain">
+  <section class="s-where" aria-labelledby="where-h">
+    <div class="where-k">Chapter ${cur + 1} · ${CHAPTERS[cur].title}</div>
+    <div class="where-row">
+      <h1 class="lg" id="where-h">${r.here}</h1>
+      <span class="where-chev" aria-hidden="true"><svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span>
+      <select id="here" data-k="here" aria-label="Where you are in the game">${picker.includes(`value="${r.here}"`) ? "" : `<option selected disabled>${r.here}</option>`}${picker}</select>
+    </div>
+    <div class="where-tools">
+      ${P().nightFrom ? `<button class="quietbtn" data-clock="1" data-k="clock" aria-label="Game clock: ${cap(nowTime())}, ${cap(DAYS[gameNow(r.clock).day])}. Change">${CLOCK_ICON}<b>${cap(nowTime())}</b> · ${cap(DAYS[gameNow(r.clock).day]).slice(0, 3)}</button>` : ""}
+      <button class="quietbtn" data-custom="1" data-k="custom">${SLIDERS_ICON}Customize</button>
+    </div>
+  </section>
+  ${hide.has("next") ? "" : hero ? heroCard(hero) : now.length ? `<section class="hero s-next"><h2>You've skipped every suggestion</h2><p>${now.length} Pokémon are still catchable right now.</p><button class="btn" data-unskip="1" data-k="unskip2">Show them again</button></section>` : `<section class="hero s-next"><h2>Nothing left to catch right now</h2><p>Try another time of day, or move ahead in the story.</p></section>`}
+  ${!hide.has("next") && r.skip.size ? `<div class="skipped s-next"><button class="chip" data-unskip="1" data-k="unskip">Show ${r.skip.size} skipped</button></div>` : ""}
   ${hide.has("story") && !hide.has("journey") ? "" : storyCheck()}
-  ${hide.has("next") ? "" : hero ? heroCard(hero) : now.length ? `<section class="hero"><h2>You've skipped every suggestion</h2><p style="margin:6px 0 12px">${now.length} Pokémon are still catchable right now.</p><button class="btn" data-unskip="1" data-k="unskip2">Show them again</button></section>` : `<section class="hero"><h2>Nothing left to catch right now</h2><p style="margin:6px 0 0">Try another time of day, or move ahead in the story.</p></section>`}
-  ${!hide.has("next") && r.skip.size ? `<div style="text-align:right;margin-top:8px"><button class="chip" data-unskip="1" data-k="unskip">Show ${r.skip.size} skipped</button></div>` : ""}
-  ${!hide.has("near") && atHere.length ? `<div class="eyebrow">Also near ${r.here}</div>${atHere.map((x) => monRow(x.p, x.r)).join("")}` : ""}
   ${
-    hide.has("chapter")
-      ? ""
-      : `${curS.left || curS.later ? "" : `<p class="muted">You've caught everything in this chapter.</p>`}
-  ${curS.html}`
+    around && curS.html
+      ? `<section class="s-around" aria-labelledby="around-h">
+    <div class="sec-h"><h2 class="lg" id="around-h">Around you</h2></div>
+    ${curS.left || curS.later ? "" : `<p class="muted">You've caught everything in this chapter.</p>`}
+    <div class="places">${curS.html}</div>
+  </section>`
+      : ""
   }
   </div><aside class="colside">
-  ${!hide.has("evolve") && evolve.length ? `<div class="eyebrow">Evolution options · ${evolve.length}</div>${evolve.map((p) => monRow(p, null, undefined, true)).join("")}` : ""}
-  ${
-    hide.has("journey")
-      ? ""
-      : `<div class="eyebrow">Your journey</div>
-  <div class="card" style="padding:4px 16px">
-    ${CHAPTERS.map((c, i) => {
-      if (!inJourney(i)) return "";
-      const open = unlocked(i),
-        g = open ? null : chapterGroups(i),
-        cs = open ? chapterSpots(all, i) : null,
-        n = g ? uniq(g) : cs!.left,
-        done = open && !n && !cs!.later;
-      const label = [
-        i === cur && "Now",
-        !c.places.length
-          ? ""
-          : g
-            ? n
-              ? `${n} to catch`
-              : "all caught"
-            : n || cs!.later
-              ? [n && `${n} still out there`, cs!.later && `${cs!.later} later`]
-                  .filter(Boolean)
-                  .join(" · ")
-              : "all caught",
-      ]
-        .filter(Boolean)
-        .join(" · ");
-      return `<details class="chap" data-chap="${i}" ${ui.open.has(String(i)) ? "open" : ""}><summary><span class="node ${done ? "done" : open ? "wip" : ""}" aria-hidden="true">${done ? "✓" : i + 1}</span><span style="flex:1">${c.title}<span class="sr">${i === cur ? ", you are here" : ""}${done ? ", everything caught" : open ? ", in progress" : ", not reached yet"}</span></span><span class="muted small">${label}</span></summary>
-        ${beats(i)}${
-          g
-            ? Object.entries(g)
-                .map(
-                  ([place, list]) =>
-                    `<div class="place"><div class="placehead"><span>${place}</span></div>${list.map((x) => monRow(x.p, x.r)).join("")}</div>`,
-                )
-                .join("")
-            : cs!.html
-        }<div style="height:10px"></div></details>`;
-    }).join("")}
-  </div>`
-  }
-  <div class="eyebrow">Badges and items</div>
-  <details class="card fold" data-chap="kit" ${ui.open.has("kit") ? "open" : ""}><summary>${P().badges.filter((b) => r.badges.has(b[0])).length} of ${P().badges.length} badges · ${P().kit.filter((k) => r.kit.has(k[0])).length} of ${P().kit.length} items and moves</summary>
-    <h3 style="margin-top:8px">${P().region} badges</h3>
-    ${badgeRow(P().badges)}
-    <button class="chip" style="margin-top:6px" data-badge="Elite Four" data-k="b-e4" aria-pressed="${e4()}">Beat the Elite Four</button>
-    ${e4() && P().postgame ? `<h3 style="margin-top:12px">${P().postgame![0]}</h3>${badgeRow(P().postgame![1])}` : ""}
-    ${kitGroup("Moves you can use", (k) => !k.endsWith("-rod") && k !== "bicycle")}${kitGroup("Items", (k) => k.endsWith("-rod") || k === "bicycle")}
+  <details class="card kit s-kit" ${fold("kit", wide)}>
+    <summary class="sumrow">
+      <span class="kitbadges" aria-hidden="true">${badges.map((b) => `<img class="${r.badges.has(b[0]) ? "on" : ""}" src="${badgeIcon(b[0])}" alt="" width="19" height="19">`).join("")}</span>
+      <span class="grow small"><span class="sr">Badges and items: ${badges.filter((b) => r.badges.has(b[0])).length} of ${badges.length} badges, </span><b>${kitOn} of ${P().kit.length}</b><br>moves and items</span>
+      ${CHEV}
+    </summary>
+    <h3>${P().region} badges</h3>
+    ${badgeRow(badges)}
+    <div class="chips"><button class="chip" data-badge="Elite Four" data-k="b-e4" aria-pressed="${e4()}">Beat the Elite Four</button></div>
+    ${e4() && P().postgame ? `<h3>${P().postgame![0]}</h3>${badgeRow(P().postgame![1])}` : ""}
+    ${kitGroup("Moves you can use", (k) => !ITEMS(k))}${kitGroup("Items", ITEMS)}
     ${
       P().safari &&
       unlocked(CHAPTERS.findIndex((c) => c.places.includes("Safari Zone")))
-        ? `<h3 style="margin-top:12px">Safari Zone: areas you've placed</h3>
-    <p class="small muted" style="margin:4px 0 0">The game lets you place 6 of its 12 areas at a time. Catchable the ones you've chosen:</p>
-    <div class="chips" style="margin-top:8px">${P()
+        ? `<h3>Safari Zone: areas you've placed</h3>
+    <p class="small muted">The game lets you place 6 of its 12 areas at a time. Catchable the ones you've chosen:</p>
+    <div class="chips">${P()
       .safari!.map(
         (a) =>
           `<button class="chip" data-safari="${a}" data-k="s-${a}" aria-pressed="${r.safari.has(a)}" ${!r.safari.has(a) && r.safari.size >= 6 ? "disabled" : ""}>${a}</button>`,
@@ -316,19 +303,66 @@ export function Journey() {
     }
   </details>
   ${
+    !hide.has("evolve") && evolve.length
+      ? `<details class="card evo s-evo" ${fold("evo")}>
+    <summary class="sumrow"><span class="grow"><span class="title">Evolution options</span> <span class="muted small">· ${evolve.length}</span><span class="strip">${strip(evolve)}</span></span>${CHEV}</summary>
+    <div class="evorows">${evolve.map((p) => monRow(p, null, undefined, true)).join("")}</div>
+  </details>`
+      : ""
+  }
+  ${
+    hide.has("journey")
+      ? ""
+      : `<section class="s-journey" aria-labelledby="journey-h">
+    <div class="sec-h"><h2 class="lg" id="journey-h">Your journey</h2></div>
+    <div class="card chaps">
+    ${CHAPTERS.map((c, i) => {
+      if (!inJourney(i)) return "";
+      const open = unlocked(i),
+        cs = chapterSpots(all, i),
+        n = open ? cs.left : uniq(chapterGroups(i)),
+        done = open && !n && !cs.later;
+      const label = open
+        ? [
+            i === cur && "You are here",
+            c.places.length &&
+              (n || cs.later
+                ? [n && `${n} to catch`, cs.later && `${cs.later} later`]
+                    .filter(Boolean)
+                    .join(" · ")
+                : "All caught"),
+          ]
+            .filter(Boolean)
+            .join(" · ")
+        : `${LOCK}${chapterNeeds(i)
+            .filter((k) => !has(k))
+            .map(needLabel)
+            .join(", ")}${n ? ` · ${n} to catch` : ""}`;
+      return `<details class="chap" ${fold(String(i), wide && i === cur)}><summary><span class="node ${done ? "done" : open ? "wip" : ""}" aria-hidden="true">${done ? "✓" : i + 1}</span><span class="grow"><span class="t">${c.title}<span class="sr">${i === cur ? ", you are here" : ""}${done ? ", everything caught" : open ? ", in progress" : ", not reached yet"}</span></span><span class="c">${label}</span></span>${CHEV}</summary>
+        ${beats(i)}${
+          i === cur && around
+            ? c.places.length
+              ? `<p class="pls">${c.places.join(", ")}</p>`
+              : ""
+            : cs.html && `<div class="places">${cs.html}</div>`
+        }</details>`;
+    }).join("")}
+    </div>
+  </section>`
+  }
+  ${
     hide.has("dex")
       ? ""
-      : `<div class="eyebrow">Dex progress</div>
-  <div class="card">
-    <div style="display:flex;justify-content:space-between"><h3>${P().region} dex</h3><span><b>${regionalCaught()}</b> <span class="muted">/ ${P().regional}</span></span></div>
-    <div class="bar" style="margin-top:6px"><i style="width:${(regionalCaught() / P().regional) * 100}%"></i></div>
+      : `<section class="card s-dex" aria-label="Dex progress">
+    <div class="dexrow"><h3>${P().region} dex</h3>${count(regionalCaught(), P().regional)}</div>
+    <div class="bar"><i style="width:${(regionalCaught() / P().regional) * 100}%"></i></div>
     ${
       e4() && P().national > P().regional
-        ? `<div style="display:flex;justify-content:space-between;margin-top:12px"><h3>National dex</h3><span><b>${r.caught.size}</b> <span class="muted">/ ${P().national}</span></span></div>
-    <div class="bar" style="margin-top:6px"><i style="width:${(r.caught.size / P().national) * 100}%"></i></div>`
+        ? `<div class="dexrow"><h3>National dex</h3>${count(r.caught.size, P().national)}</div>
+    <div class="bar"><i style="width:${(r.caught.size / P().national) * 100}%"></i></div>`
         : ""
     }
-  </div>`
+  </section>`
   }
   </aside></div>`;
 }
