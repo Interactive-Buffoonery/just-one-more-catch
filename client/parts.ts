@@ -38,9 +38,9 @@ const ring = (types: string[]) => {
   return `--t1:${a};--t2:${b}`;
 };
 export const sprite = (p: Species, cls = "", shiny = false, form: string | undefined = p.forms?.[0]?.id) =>
-  `<img class="sprite ${cls}" src="/sprites/${P().art}/${form && p.forms?.some((f) => f.id === form) ? `forms/${shiny ? "shiny/" : ""}${form}` : `${shiny ? "shiny/" : ""}${p.n}`}.png" alt="${shiny ? "Shiny " : ""}${p.name}" width="80" height="80" loading="lazy">`;
+  `<img class="sprite ${cls}" src="/sprites/${P().art}/${R().trackForms && form && p.forms?.some((f) => f.id === form) ? `forms/${shiny ? "shiny/" : ""}${form}` : `${shiny ? "shiny/" : ""}${p.n}`}.png" alt="${shiny ? "Shiny " : ""}${p.name}" width="80" height="80" loading="lazy">`;
 export const mon = (p: Species, shiny = false, form: string | undefined = p.forms?.[0]?.id) =>
-  `<span class="mon ${R().caught.has(p.n) ? "got" : ""}" style="${ring(p.types)}${FIT[P().art]?.[form || p.n] ? `;--z:${FIT[P().art][form || p.n]}%` : ""}" aria-hidden="true"><b>${sprite(p, "", shiny, form)}</b></span>`;
+  `<span class="mon ${R().caught.has(p.n) ? "got" : ""}" style="${ring(p.types)}${FIT[P().art]?.[(R().trackForms && form) || p.n] ? `;--z:${FIT[P().art][(R().trackForms && form) || p.n]}%` : ""}" aria-hidden="true"><b>${sprite(p, "", shiny, form)}</b></span>`;
 export const lvl = (r: Row) =>
   r.m === "npc-trade"
     ? ""

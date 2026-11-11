@@ -1,5 +1,5 @@
 import { $, esc } from "../dom";
-import { byN, HELD_ITEMS, P, PARTY_SIZE, R, run, ui } from "../game";
+import { byN, hasGenders, HELD_ITEMS, P, PARTY_SIZE, R, run, ui } from "../game";
 import { mon } from "../parts";
 import { Mon } from "../types";
 import { NoRun } from "./runs";
@@ -18,7 +18,7 @@ export function monLine(m: Mon, showBox?: boolean) {
   const p = byN[m.n];
   return `<button class="row monrow" data-editmon="${m.id}" data-k="m${m.id}" aria-label="${esc(m.nick || p.name)}${m.nick ? `, ${p.name}` : ""}${m.shiny ? ", shiny" : ""}, ${esc(boxLabel(m.box))}. Edit">${mon(p, m.shiny, m.form || p.forms?.[0]?.id)}<span class="grow">
     <span class="name">${m.nick ? `${esc(m.nick)} <span class="muted small">${p.name}</span>` : p.name}${m.shiny ? ` <span class="shiny" title="Shiny">✦</span>` : ""}</span>
-    <span class="tags">${showBox ? `<span class="tag">${esc(boxLabel(m.box))}</span>` : ""}${p.forms && p.forms.length > 1 ? `<span class="tag plain">${esc((p.forms.find((f) => f.id === m.form) || p.forms[0]).name)}</span>` : ""}${m.lvl ? `<span class="tag plain">Lv ${m.lvl}</span>` : ""}${m.g ? `<span class="tag plain">${GENDER[m.g]}</span>` : ""}${m.item ? `<span class="tag time">${esc(m.item)}</span>` : ""}${m.note ? `<span class="small muted">${esc(m.note)}</span>` : ""}</span></span></button>`;
+    <span class="tags">${showBox ? `<span class="tag">${esc(boxLabel(m.box))}</span>` : ""}${R().trackForms && p.forms && p.forms.length > 1 ? `<span class="tag plain">${esc((p.forms.find((f) => f.id === m.form) || p.forms[0]).name)}</span>` : ""}${m.lvl ? `<span class="tag plain">Lv ${m.lvl}</span>` : ""}${m.g ? `<span class="tag plain">${GENDER[m.g]}</span>` : ""}${m.item ? `<span class="tag time">${esc(m.item)}</span>` : ""}${m.note ? `<span class="small muted">${esc(m.note)}</span>` : ""}</span></span></button>`;
 }
 export function Boxes() {
   if (!run) return NoRun();
@@ -63,7 +63,7 @@ export function fillMonSheet(s: any) {
           `<option value="${b}" ${b === cur ? "selected" : ""} ${full(b) && b !== cur ? "disabled" : ""}>${esc(boxLabel(b))} (${inBox(b).length}/${boxCap(b)})</option>`,
       )
       .join("")}</select></label>
-    ${p.forms && p.forms.length > 1 ? `<label class="field"><span>Form</span><select id="f-form">${p.forms.map((f) => `<option value="${f.id}" ${f.id === (m?.form || p.forms![0].id) ? "selected" : ""}>${esc(f.name)}</option>`).join("")}</select></label>` : ""}
+    ${R().trackForms && p.forms && p.forms.length > 1 ? `<label class="field"><span>Form</span><select id="f-form">${p.forms.map((f) => `<option value="${f.id}" ${f.id === (m?.form || p.forms![0].id) ? "selected" : ""}>${esc(f.name)}</option>`).join("")}</select></label>` : ""}
     <details class="more" ${m ? "open" : ""}><summary>More details <span class="muted small">nickname, level, held item</span></summary><div class="fgrid">
       <label class="field"><span>Nickname</span><input id="f-nick" maxlength="10" autocomplete="off" value="${esc(m?.nick || "")}"></label>
       <label class="field"><span>Level</span><input id="f-lvl" type="number" min="1" max="100" inputmode="numeric" value="${m?.lvl || ""}"></label>
@@ -101,13 +101,14 @@ export function saveMon() {
   const s = ui.sheet,
     v = (id: string) => $("#" + id),
     raw = v("f-box").value,
-    box = raw === "party" ? "party" : +raw;
+    box = raw === "party" ? "party" : +raw,
+    existing = s.id ? R().mons.find((m) => m.id === s.id) : null;
   const lvl = v("f-lvl").value
     ? Math.min(100, Math.max(1, Math.round(+v("f-lvl").value)))
     : "";
   const data = {
     box,
-    form: v("f-form")?.value || byN[s.id ? R().mons.find((m) => m.id === s.id)!.n : s.n].forms?.[0]?.id,
+    form: v("f-form")?.value || existing?.form || byN[existing ? existing.n : s.n].forms?.[0]?.id,
     lvl,
     nick: v("f-nick").value.trim().slice(0, 10),
     g: v("f-g").value,
@@ -124,6 +125,10 @@ export function saveMon() {
     if (ui.undo?.n === s.n && !ui.undo.had) ui.undo.monId = m.id;
   }
   if (data.form) r.forms.add(data.form);
+  const n = existing ? existing.n : s.n;
+  if (hasGenders(byN[n]) && (data.g === "m" || data.g === "f")) {
+    (r.genders[n] ||= new Set()).add(data.g);
+  }
   r.lastBox = box;
   $("#live").textContent = `Saved to ${boxLabel(box)}`;
 }

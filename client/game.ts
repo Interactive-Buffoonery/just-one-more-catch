@@ -179,6 +179,9 @@ type Run = {
   safari: Set<string>;
   caught: Set<number>;
   forms: Set<string>;
+  trackForms: boolean;
+  trackGenders: boolean;
+  genders: Record<number, Set<string>>;
   skip: Set<number>;
   here: string;
   timeAuto: boolean;
@@ -220,6 +223,13 @@ function loadRun(row: RunRow, state: string): Run {
     safari: new Set(s.safari || []),
     caught: new Set(s.caught || []),
     forms: new Set((Array.isArray(s.forms) ? s.forms : []).filter((f: unknown) => typeof f === "string")),
+    trackForms: s.trackForms !== false,
+    trackGenders: s.trackGenders === true,
+    genders: Object.fromEntries(
+      Object.entries(s.genders || {}).filter(([n, gs]) => /^\d+$/.test(n) && Array.isArray(gs)).map(([n, gs]) =>
+        [n, new Set((gs as unknown[]).filter((g) => g === "m" || g === "f"))],
+      ),
+    ),
     skip: new Set(s.skip || []),
     here: s.here || pack.start,
     timeAuto: s.timeAuto ?? true,
@@ -245,6 +255,9 @@ export const dumpRun = (r: Run) =>
     safari: [...r.safari],
     caught: [...r.caught],
     forms: [...r.forms],
+    trackForms: r.trackForms,
+    trackGenders: r.trackGenders,
+    genders: Object.fromEntries(Object.entries(r.genders).map(([n, gs]) => [n, [...gs]])),
     skip: [...r.skip],
     here: r.here,
     timeAuto: r.timeAuto,
@@ -265,6 +278,15 @@ export function collectedForms(p: Species) {
   return new Set((p.forms || []).filter((f) =>
     r.forms.has(f.id) || r.mons.some((m) => m.n === p.n && (m.form || p.forms?.[0]?.id) === f.id),
   ).map((f) => f.id));
+}
+
+export const hasGenders = (p: Species) => p.genderRate > 0 && p.genderRate < 8;
+export const GENDERS = [["m", "♂", "Male"], ["f", "♀", "Female"]] as const;
+export function collectedGenders(p: Species) {
+  const r = R();
+  return new Set(hasGenders(p) ? GENDERS.filter(([g]) =>
+    r.genders[p.n]?.has(g) || r.mons.some((m) => m.n === p.n && m.g === g),
+  ).map(([g]) => g) : []);
 }
 
 export let bridge: Bridge;

@@ -6,6 +6,7 @@ import { caughtCsv, fetchStates, jsonParts, saveFile } from "./export";
 import {
   bridge,
   byN,
+  hasGenders,
   closeRun,
   dumpRun,
   eventDone,
@@ -472,9 +473,22 @@ async function onClick(e: MouseEvent) {
     openSheet({ kind: "box", b: +d.renamebox });
     return;
   }
+  if (d.gender && d.species) {
+    const p = byN[+d.species],
+      g = d.gender;
+    if (!r.trackGenders || !p || !hasGenders(p) || (g !== "m" && g !== "f")) return;
+    if (r.mons.some((m) => m.n === p.n && m.g === g)) return;
+    const genders = r.genders[p.n] ||= new Set();
+    genders.has(g) ? genders.delete(g) : genders.add(g);
+    r.caught.add(p.n);
+    scheduleSave();
+    render();
+    fillSpecies(p.n);
+    return;
+  }
   if (d.form && d.species) {
     const p = byN[+d.species];
-    if (!p?.forms?.some((f) => f.id === d.form)) return;
+    if (!r.trackForms || !p?.forms?.some((f) => f.id === d.form)) return;
     r.forms.has(d.form) ? r.forms.delete(d.form) : r.forms.add(d.form);
     r.caught.add(p.n);
     scheduleSave();
@@ -528,6 +542,8 @@ async function onClick(e: MouseEvent) {
     r.view = r.view === "dexonly" ? r.startView : "dexonly";
   } else if (d.startview) {
     r.view = r.startView = d.startview === "dex" ? "dex" : "journey";
+  } else if (d.dexoption === "trackForms" || d.dexoption === "trackGenders") {
+    r[d.dexoption] = !r[d.dexoption];
   } else if (d.showlater) r.showLater = !r.showLater;
   else if (d.event) {
     if (forced(d.event)) return;

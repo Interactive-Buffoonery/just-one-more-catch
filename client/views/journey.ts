@@ -139,6 +139,9 @@ export function fillCustom() {
     ${toggle(r.showLater, "Show Pokémon I can't reach yet", `List them in each section, not under "Come back later"`, `data-showlater="1" data-k="h-later"`)}
     <div class="sw"><span class="grow"><b>${badgesWord()[0].toUpperCase()}${badgesWord().slice(1)} and items</b><small>Always shown: this is how the app knows what you can catch</small></span><span class="lock">Always on</span></div>
     ` : ""}
+    <p class="eyebrow">Dex</p>
+    ${toggle(r.trackForms, "Forms", "", `data-dexoption="trackForms" data-k="h-forms"`)}
+    ${toggle(r.trackGenders, "Genders", "", `data-dexoption="trackGenders" data-k="h-genders"`)}
     <div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="chip" data-close="1">Done</button></div>`;
 }
 /* ---- Story events: one question on top, the full list in Your journey ---- */
