@@ -748,9 +748,10 @@ function placeBlock(pl: string, s: Spot) {
     otherTime = R().showLater
       ? other.map((x) => monRow(x.p, x.r, pl)).join("")
       : laterBox(`t:${pl}`, `Other times · ${other.length}`, other, pl);
-  return `<div class="place"><div class="placehead"><span>${pl}</span><span class="count">${count}</span></div>${ready
+  const key = `p:${pl}`;
+  return `<details class="place" data-chap="${esc(key)}" ${ui.open.has(key) ? "open" : ""}><summary class="placehead"><span>${pl}</span><span class="count">${count}</span></summary>${ready
     .map((x) => monRow(x.p, x.r, pl))
-    .join("")}${otherTime}${later}${once}</div>`;
+    .join("")}${otherTime}${later}${once}</details>`;
 }
 // Places in a chapter, in the chapter's own order, then any extra places its rows use.
 function chapterSpots(all: Record<string, Spot>, i: number) {
@@ -775,6 +776,17 @@ function chapterSpots(all: Record<string, Spot>, i: number) {
     later: later.size,
   };
 }
+const kitGroup = (title: string, keep: (id: string) => boolean) => {
+  const list = P().kit.filter((k) => keep(k[0]));
+  return list.length
+    ? `<h3 style="margin-top:12px">${title}</h3><div class="chips" style="margin-top:8px">${list
+        .map(
+          (k) =>
+            `<button class="chip" data-kit="${k[0]}" data-k="k-${k[0]}" aria-pressed="${R().kit.has(k[0])}"><img src="/items/${k[0]}.png" alt="" width="24" height="24" aria-hidden="true">${k[1]}</button>`,
+        )
+        .join("")}</div>`
+    : "";
+};
 const badgeRow = (list: string[][]) =>
   `<div style="display:flex;flex-wrap:wrap;margin:6px -6px">${list.map((b) => `<button class="badge" data-badge="${b[0]}" data-k="b-${b[0]}" aria-pressed="${R().badges.has(b[0])}" aria-label="${b[0]} Badge from ${b[1]}" title="${b[0]} Badge · ${b[1]}"><img src="/badges/${b[0].toLowerCase()}.png" alt="${b[0]} Badge" width="32" height="32"></button>`).join("")}</div>`;
 
@@ -826,6 +838,7 @@ const TAB_ICONS: Record<string, string> = {
     "M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5|M12 12l8 -4.5|M12 12l0 9|M12 12l-8 -4.5",
   ),
 };
+const SLIDERS_ICON = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>`;
 const CLOCK_ICON = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`;
 function fillClock(mode: string) {
   const c = R().clock,
@@ -835,6 +848,8 @@ function fillClock(mode: string) {
   if (c.tz && !zones.includes(c.tz)) zones.unshift(c.tz);
   $("#sheetbody").innerHTML = `<h2 id="sheet-title">${ver().name}'s clock</h2>
     <div class="card" style="margin-top:12px;text-align:center;background:var(--bg)"><div class="small muted">Your game right now</div><div class="big-time">${g.hour % 12 || 12}:${two(g.minute)} ${g.hour < 12 ? "AM" : "PM"}</div><div style="font-weight:700">${cap(DAYS[g.day])} · <span class="tag time">${cap(gameTime())}</span> <span class="small muted">night at ${(P().nightFrom as number) - 12} PM</span></div></div>
+    <div class="small muted" style="margin:16px 0 6px;font-weight:700">Show Pokémon for</div>
+    <div class="seg3 wide" role="group" aria-label="Show Pokémon for this time of day"><button data-time="auto" aria-pressed="${R().timeAuto}">Auto (${cap(gameTime())})</button>${["morning", "day", "night"].map((x) => `<button data-time="${x}" aria-pressed="${!R().timeAuto && R().time === x}">${cap(x)}</button>`).join("")}</div>
     <div class="small muted" style="margin:16px 0 6px;font-weight:700">How your game keeps time</div>
     <div class="seg3 wide" role="group" aria-label="How your game keeps time"><button data-clockmode="device" aria-pressed="${mode === "device"}">Follow a time zone</button><button data-clockmode="manual" aria-pressed="${mode === "manual"}">Set it myself</button></div>
     ${
@@ -981,19 +996,11 @@ function Journey() {
       !/Trade|Level up at/.test(p.evo),
   );
   return `<div class="cols"><div class="colmain">
-  <div class="chips">
+  <div class="chips toolbar">
     <label class="sr" for="here">Where you are in the game</label>
     <select class="pill" id="here" data-k="here">${herePlaces.includes(r.here) ? "" : `<option selected disabled>Near ${r.here}</option>`}${herePlaces.map((p) => `<option ${p === r.here ? "selected" : ""} value="${p}">Near ${p}${placeLabel(p, all[p]) && ` · ${placeLabel(p, all[p])}`}</option>`).join("")}</select>
     ${P().nightFrom ? `<button class="pill clockpill" data-clock="1" data-k="clock" aria-label="Game clock: ${cap(nowTime())}, ${cap(DAYS[gameNow(r.clock).day])}. Change">${CLOCK_ICON}<b>${cap(nowTime())}</b> · ${cap(DAYS[gameNow(r.clock).day]).slice(0, 3)}</button>` : ""}
-    ${
-      P().nightFrom
-        ? `<div class="seg3" role="group" aria-label="In-game time of day">
-      <button data-time="auto" data-k="ta" aria-pressed="${r.timeAuto}">Auto (${cap(gameTime())})</button>
-      ${["morning", "day", "night"].map((x) => `<button data-time="${x}" data-k="t-${x}" aria-pressed="${!r.timeAuto && r.time === x}">${cap(x)}</button>`).join("")}
-    </div>`
-        : ""
-    }
-    <button class="pill" data-custom="1" data-k="custom">Customize</button>
+    <button class="pill iconpill" data-custom="1" data-k="custom" aria-label="Customize this page">${SLIDERS_ICON}</button>
   </div>
   ${hide.has("story") && !hide.has("journey") ? "" : storyCheck()}
   ${hide.has("next") ? "" : hero ? heroCard(hero) : now.length ? `<section class="hero"><h2>You've skipped every suggestion</h2><p style="margin:6px 0 12px">${now.length} Pokémon are still catchable right now.</p><button class="btn" data-unskip="1" data-k="unskip2">Show them again</button></section>` : `<section class="hero"><h2>Nothing left to catch right now</h2><p style="margin:6px 0 0">Try another time of day, or move ahead in the story.</p></section>`}
@@ -1049,18 +1056,12 @@ function Journey() {
   </div>`
   }
   <div class="eyebrow">Badges and items</div>
-  <div class="card">
-    <h3>${P().region} badges</h3>
+  <details class="card fold" data-chap="kit" ${ui.open.has("kit") ? "open" : ""}><summary>${P().badges.filter((b) => r.badges.has(b[0])).length} of ${P().badges.length} badges · ${P().kit.filter((k) => r.kit.has(k[0])).length} of ${P().kit.length} items and moves</summary>
+    <h3 style="margin-top:8px">${P().region} badges</h3>
     ${badgeRow(P().badges)}
     <button class="chip" style="margin-top:6px" data-badge="Elite Four" data-k="b-e4" aria-pressed="${e4()}">Beat the Elite Four</button>
     ${e4() && P().postgame ? `<h3 style="margin-top:12px">${P().postgame![0]}</h3>${badgeRow(P().postgame![1])}` : ""}
-    <h3 style="margin-top:12px">Items and moves you have</h3>
-    <div class="chips" style="margin-top:8px">${P()
-      .kit.map(
-        (k) =>
-          `<button class="chip" data-kit="${k[0]}" data-k="k-${k[0]}" aria-pressed="${r.kit.has(k[0])}"><img src="/items/${k[0]}.png" alt="${k[1]} icon" width="24" height="24" aria-hidden="true">${k[1]}</button>`,
-      )
-      .join("")}</div>
+    ${kitGroup("Moves you can use", (k) => !k.endsWith("-rod"))}${kitGroup("Fishing rods", (k) => k.endsWith("-rod"))}
     ${
       P().safari &&
       unlocked(CHAPTERS.findIndex((c) => c.places.includes("Safari Zone")))
@@ -1074,7 +1075,7 @@ function Journey() {
       .join("")}</div>`
         : ""
     }
-  </div>
+  </details>
   ${
     hide.has("dex")
       ? ""
@@ -2042,6 +2043,7 @@ async function onClick(e: MouseEvent) {
       r.time = d.time;
     }
     r.skip.clear();
+    if ($("#sheet").open && ui.sheet?.kind === "clock") fillSheet(ui.sheet);
   } else if (d.hide) {
     r.hidden.has(d.hide) ? r.hidden.delete(d.hide) : r.hidden.add(d.hide);
   } else if (d.showlater) r.showLater = !r.showLater;
