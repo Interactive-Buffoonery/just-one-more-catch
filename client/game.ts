@@ -439,7 +439,12 @@ export function rowStatus(r: Row): { s: string; why?: string; need?: string } {
     r.place === P().start &&
     P().starters.some((n) => run.caught.has(n))
   )
-    return { s: "special", why: "You chose a different starter" };
+    return {
+      s: "special",
+      why: DEX.some((p) => p.rows.includes(r) && run.caught.has(p.n))
+        ? "Your starter"
+        : "Trade only",
+    };
   const days = r.cond
     .filter((c) => c.startsWith("weekday-"))
     .map((c) => c.slice(8));
