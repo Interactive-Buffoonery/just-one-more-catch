@@ -8,7 +8,7 @@ const ids = [...packs.slice(packs.indexOf('export const VERSIONS')).matchAll(/^ 
 assert.ok(ids.length);
 for (const games of [ids, ['example'], [...ids, ...Array.from({length: 20}, (_, i) => 'example' + i)]]) {
   const VERSIONS = Object.fromEntries(games.map(id => [id, {name: id, pack: {region: 'Example'}}]));
-  const render = runInNewContext(source.slice(source.indexOf('const gameChoices'), source.indexOf('const pickGame')) + '\ngameChoices', {CONSOLES: [{name: 'Example', games}], VERSIONS, esc: x => x, cover: () => '<img alt="">'});
+  const render = runInNewContext(source.slice(source.indexOf('const gameChoices'), source.indexOf('const pickGame')) + '\ngameChoices', {imageUrl: x => x, CONSOLES: [{name: 'Example', games}], VERSIONS, esc: x => x, cover: () => '<img alt="">'});
   assert.equal((render().match(/<button /g) || []).length, games.length);
 }
 const realPacks = runInNewContext(stripTypeScriptTypes(packs).replace(/^import .*$/gm, "").replace(/export /g, "") + "\nVERSIONS");
@@ -16,7 +16,7 @@ const game = readFileSync(new URL("../client/game.ts", import.meta.url), "utf8")
 const badgesWord = runInNewContext(stripTypeScriptTypes(game.slice(game.indexOf("export const badgesWord"), game.indexOf(";", game.indexOf("export const badgesWord")) + 1)).replace("export ", "") + "\nbadgesWord");
 const verOf = version => realPacks[version];
 const badgeCount = runInNewContext(stripTypeScriptTypes(source.slice(source.indexOf("const badgeCount"), source.indexOf("export const cover"))) + "\nbadgeCount", {verOf});
-const trainer = runInNewContext(stripTypeScriptTypes(source.slice(source.indexOf('const trainerCard'), source.indexOf('const signInNote'))) + '\ntrainerCard', {
+const trainer = runInNewContext(stripTypeScriptTypes(source.slice(source.indexOf('const trainerCard'), source.indexOf('const signInNote'))) + '\ntrainerCard', {imageUrl: x => x,
   esc: x => x, trainerName: () => 'Trainer', partner: () => '', champion: () => false,
   verOf, badgesWord, badgeCount,
 });
@@ -52,7 +52,7 @@ assert.match(confirm('heartgold'), /No thank you, just browsing!/);
 
 assert.match(confirm('heartgold'), /data-confirmrun="heartgold"/);
 assert.match(confirm('heartgold'), /data-close=/);
-const choices = runInNewContext(source.slice(source.indexOf('const gameChoices'), source.indexOf('const pickGame')) + '\ngameChoices', {CONSOLES: runInNewContext(stripTypeScriptTypes(packs).replace(/^import .*$/gm, '').replace(/export /g, '') + '\nCONSOLES'), VERSIONS: realPacks, esc: x => x, cover: () => '<img alt="">'});
+const choices = runInNewContext(source.slice(source.indexOf('const gameChoices'), source.indexOf('const pickGame')) + '\ngameChoices', {imageUrl: x => x, CONSOLES: runInNewContext(stripTypeScriptTypes(packs).replace(/^import .*$/gm, '').replace(/export /g, '') + '\nCONSOLES'), VERSIONS: realPacks, esc: x => x, cover: () => '<img alt="">'});
 assert.match(choices(), /data-newrun="heartgold"/);
 const app = readFileSync(new URL('../client/app.ts', import.meta.url), 'utf8');
 assert.doesNotMatch(app.slice(app.indexOf('  if (d.newrun) {'), app.indexOf('  if (d.confirmrun) {')), /createRun/);

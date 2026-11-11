@@ -1,9 +1,12 @@
-// ponytail: one runtime cache and no precache list. Old hashed bundles and
-// replaced images stay cached until CACHE is renamed; rename it to purge.
+// ponytail: one runtime cache and no precache list. Hashed bundles persist;
+// image fingerprints replace older copies of the same path when stored.
 const CACHE = "jomc-v2";
 const STATIC = /^\/(assets|sprites|badges|items|covers|fonts|icons)\//;
 
-const put = (key, res) => caches.open(CACHE).then((c) => c.put(key, res)).catch(() => {});
+const put = (key, res) => caches.open(CACHE).then(async (c) => {
+  await c.delete(key, { ignoreSearch: true });
+  await c.put(key, res);
+}).catch(() => {});
 
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (e) =>
@@ -21,7 +24,7 @@ self.addEventListener("message", (e) => {
   const mine = e.data
     .map((u) => new URL(u, location.origin))
     .filter((u) => u.origin === location.origin && STATIC.test(u.pathname))
-    .map((u) => u.pathname);
+    .map((u) => u.pathname + u.search);
   e.waitUntil(
     Promise.all(
       ["/", ...mine].map((path) =>

@@ -4,8 +4,11 @@ import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 
 const store = new Map();
-const path = key => new URL(key.url ?? key, 'https://app.example').pathname;
-const cache = {put: async (key, res) => void store.set(path(key), res)};
+const path = key => new URL(key.url ?? key, 'https://app.example').pathname + new URL(key.url ?? key, 'https://app.example').search;
+const cache = {delete: async key => {
+  const pathname = path(key).split('?')[0];
+  for (const entry of store.keys()) if (entry.split('?')[0] === pathname) store.delete(entry);
+}, put: async (key, res) => void store.set(path(key), res)};
 const handlers = {};
 let online = true;
 const fetched = [];
@@ -54,7 +57,15 @@ handlers.message({
 await stored;
 assert.deepEqual([...store.keys()].sort(), ['/', '/assets/app-abc.js', '/assets/first-visit.js'], 'a first visit stores the app page and only its own static files');
 
+await get('/covers/red.jpg?v=aaaaaaaa');
+await get('/covers/red.jpg?v=bbbbbbbb');
+assert.equal(store.has('/covers/red.jpg?v=aaaaaaaa'), false);
+assert.equal(store.has('/covers/red.jpg?v=bbbbbbbb'), true);
+handlers.message({data: ['https://app.example/sprites/hgss/25.png?v=cccccccc'], waitUntil: p => (stored = p)});
+await stored;
+assert.equal(store.has('/sprites/hgss/25.png?v=cccccccc'), true);
 online = false;
+await get('/sprites/hgss/25.png?v=cccccccc');
 assert.match((await get('/?tab=journey', 'navigate')).body, /^net /, 'offline, the app page comes from the cache');
 assert.match((await get('/assets/app-abc.js')).body, /^net /, 'offline, cached files still load');
 assert.match((await get('/assets/first-visit.js')).body, /^net /, 'offline, first-visit files load');

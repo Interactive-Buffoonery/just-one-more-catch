@@ -1,3 +1,4 @@
+import { imageUrl } from "./image-url.ts";
 import FIT from "./data/sprite-fit";
 import { esc } from "./dom";
 import {
@@ -38,7 +39,7 @@ const ring = (types: string[]) => {
   return `--t1:${a};--t2:${b}`;
 };
 export const sprite = (p: Species, cls = "", shiny = false, form: string | undefined = p.forms?.[0]?.id) =>
-  `<img class="sprite ${cls}" src="/sprites/${P().art}/${R().trackForms && form && p.forms?.some((f) => f.id === form) ? `forms/${shiny ? "shiny/" : ""}${form}` : `${shiny ? "shiny/" : ""}${p.n}`}.png" alt="${shiny ? "Shiny " : ""}${p.name}" width="80" height="80" loading="lazy">`;
+  `<img class="sprite ${cls}" src="${imageUrl(`/sprites/${P().art}/${R().trackForms && form && p.forms?.some((f) => f.id === form) ? `forms/${shiny ? "shiny/" : ""}${form}` : `${shiny ? "shiny/" : ""}${p.n}`}.png`)}" alt="${shiny ? "Shiny " : ""}${p.name}" width="80" height="80" loading="lazy">`;
 export const mon = (p: Species, shiny = false, form: string | undefined = p.forms?.[0]?.id) =>
   `<span class="mon ${R().caught.has(p.n) ? "got" : ""}" style="${ring(p.types)}${FIT[P().art]?.[(R().trackForms && form) || p.n] ? `;--z:${FIT[P().art][(R().trackForms && form) || p.n]}%` : ""}" aria-hidden="true"><b>${sprite(p, "", shiny, form)}</b></span>`;
 export const lvl = (r: Row) =>
@@ -282,12 +283,12 @@ export const kitGroup = (title: string, keep: (id: string) => boolean) => {
     ? `<h3>${title}</h3><div class="chips">${list
         .map(
           (k) =>
-            `<button class="chip" data-kit="${k[0]}" data-k="k-${k[0]}" aria-pressed="${R().kit.has(k[0])}"><img src="/items/${k[0]}.png" alt="" width="24" height="24" aria-hidden="true">${k[1]}</button>`,
+            `<button class="chip" data-kit="${k[0]}" data-k="k-${k[0]}" aria-pressed="${R().kit.has(k[0])}"><img src="${imageUrl(`/items/${k[0]}.png`)}" alt="" width="24" height="24" aria-hidden="true">${k[1]}</button>`,
         )
         .join("")}</div>`
     : "";
 };
-export const badgeIcon = (b: string) => `/badges/${b.toLowerCase()}.png`;
+export const badgeIcon = (b: string) => imageUrl(`/badges/${b.toLowerCase()}.png`);
 export const badgeRow = (list: string[][]) =>
   `<div class="badges">${list.map((b) => `<button class="badge" data-badge="${b[0]}" data-k="b-${b[0]}" aria-pressed="${R().badges.has(b[0])}" aria-label="${badgeName(b[0])} from ${b[1]}" title="${badgeName(b[0])} · ${b[1]}"><img src="${badgeIcon(b[0])}" alt="${badgeName(b[0])}" width="32" height="32"></button>`).join("")}</div>`;
 

@@ -1,7 +1,8 @@
+import { imageUrl } from "../image-url.ts";
 import { ui } from "../game";
 
 export function Contact() {
-  return `<div class="contact-card lb"><div class="lcard"><div class="lslab"><h1 class="lg">Contact</h1><img class="partner" src="/sprites/hgss/441.png" alt="" width="144" height="144"></div><div class="lbody">
+  return `<div class="contact-card lb"><div class="lcard"><div class="lslab"><h1 class="lg">Contact</h1><img class="partner" src="${imageUrl(`/sprites/hgss/441.png`)}" alt="" width="144" height="144"></div><div class="lbody">
     <p>Questions, ideas or a mistake in the data? Send us a note.</p>
     ${
       ui.sent
