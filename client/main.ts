@@ -2,7 +2,8 @@ import "@fontsource/jetbrains-mono/latin-500.css";
 import type { Clerk } from "@clerk/clerk-js";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex/_generated/api";
-import { mount, update, type Bridge } from "./app";
+import { mount, update } from "./app";
+import type { Bridge } from "./types";
 
 let clerk: Clerk | undefined;
 const pendingSignIns = new WeakSet<HTMLDivElement>();
@@ -146,6 +147,21 @@ function onUser(user: Clerk["user"]) {
 }
 
 mount(document.getElementById("app")!, bridge());
+if (import.meta.env.PROD && "serviceWorker" in navigator) {
+  const firstVisit = !navigator.serviceWorker.controller;
+  void navigator.serviceWorker
+    .register("/sw.js")
+    .then(() => navigator.serviceWorker.ready)
+    .then((reg) => {
+      // ponytail: files still downloading at this moment are missed; they get
+      // stored on the next visit.
+      if (firstVisit)
+        reg.active?.postMessage(
+          performance.getEntriesByType("resource").map((e) => e.name),
+        );
+    })
+    .catch(() => {});
+}
 const authReady = (async () => {
   try {
     const [{ Clerk }, { ui }] = await Promise.all([

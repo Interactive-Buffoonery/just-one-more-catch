@@ -5,19 +5,24 @@ export type GameNow = { day: number; hour: number; minute: number }; // day 0 = 
 const WEEK = 7 * 24 * 60;
 const WEEKDAYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 
-function inZone(now: number, tz?: string): GameNow {
-  const read = (timeZone?: string) =>
-    Object.fromEntries(
-      new Intl.DateTimeFormat("en-US", { timeZone, hour: "numeric", minute: "numeric", hourCycle: "h23", weekday: "long" })
-        .formatToParts(now)
-        .map((x) => [x.type, x.value]),
-    );
-  let p;
-  try {
-    p = read(tz);
-  } catch {
-    p = read();
+const formatters = new Map<string | undefined, Intl.DateTimeFormat>();
+function formatter(timeZone?: string) {
+  let f = formatters.get(timeZone);
+  if (!f) {
+    f = new Intl.DateTimeFormat("en-US", { timeZone, hour: "numeric", minute: "numeric", hourCycle: "h23", weekday: "long" });
+    formatters.set(timeZone, f);
   }
+  return f;
+}
+
+function inZone(now: number, tz?: string): GameNow {
+  let f;
+  try {
+    f = formatter(tz);
+  } catch {
+    f = formatter();
+  }
+  const p = Object.fromEntries(f.formatToParts(now).map((x) => [x.type, x.value]));
   return { day: WEEKDAYS.indexOf(p.weekday.toLowerCase()), hour: +p.hour % 24, minute: +p.minute };
 }
 
