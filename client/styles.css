@@ -123,6 +123,7 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .gamelist button{display:flex;justify-content:space-between;gap:8px;width:100%;min-height:48px;align-items:center;border:0;border-top:1px solid var(--line);background:transparent;padding:0 4px;text-align:left}
 .gamelist button:first-child{border-top:0}
 .gen{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;font-weight:500;color:var(--soft);border:1px solid var(--line);border-radius:2px;padding:1px 6px;margin-left:6px;vertical-align:1px}
+#clerk-signin .cl-lastAuthenticationStrategyBadge{display:none}
 #clerk-signin .cl-cardBox{overflow:visible}
 #clerk-signin .cl-socialButtons{justify-items:center}
 #clerk-signin .cl-socialButtonsBlockButton{width:auto;min-height:44px;padding:0 16px;border-radius:999px;box-shadow:0 0 0 1px var(--line);font-weight:700}
@@ -593,3 +594,16 @@ button.gb:is(:hover,:focus-visible) .bx{rotate:0deg;translate:0 -10px;box-shadow
 @media (max-width:639px){.pickbody .hv-actions>*{flex:1 1 100%}}
 
 .app .footer-brand a{display:inline-flex;align-items:center;min-height:44px;color:var(--soft);font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-size:18px;text-decoration:none}
+
+/* mirrors public/legal.css card; keep in sync */
+.contact-card.lb{max-width:640px;margin:0 auto;display:grid;gap:26px}
+.contact-card .lcard{background:var(--surface);border-radius:22px;overflow:hidden;container-type:inline-size}
+.contact-card .lslab{background:var(--pink);color:var(--on-pink);min-height:112px;padding:22px 24px;position:relative;overflow:hidden}
+.contact-card .lslab h1{position:relative;z-index:1;font-size:36px;line-height:1;margin:0}
+.contact-card .lslab .partner{position:absolute;right:0;bottom:-28px;width:clamp(120px,calc(75cqw - 96px),144px);height:auto;image-rendering:pixelated}
+.contact-card .lbody{padding:18px 24px 22px}
+.contact-card .lbody p{margin:0 0 10px;line-height:1.55}.contact-card .lbody p:last-child{margin-bottom:0}
+.contact-card .lg{font-family:"Luckiest Guy",system-ui,sans-serif;font-weight:400}
+.contact-card .contact-form{display:grid;gap:14px}
+.contact-card .contact-send{justify-self:start}
+.contact-card .field input,.contact-card .field textarea{border-color:var(--soft)}

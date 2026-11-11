@@ -9,5 +9,5 @@ dist/
 .spacefast/.space-link-*.tmp
 .wrangler/
 .DS_Store
-__pycache__/
-.playwright-mcp/
+/__pycache__/
+/.playwright-mcp/

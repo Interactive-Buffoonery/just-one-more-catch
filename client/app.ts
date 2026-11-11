@@ -332,7 +332,9 @@ async function onClick(e: MouseEvent) {
   }
   if (d.another) {
     ui.sent = false;
+    ui.sendError = "";
     render();
+    document.getElementById("c-msg")?.focus();
     return;
   }
   if (d.delaccount) {
@@ -578,13 +580,18 @@ async function onSubmit(e: SubmitEvent) {
   } catch {
     ui.sendError = "That didn't send. Please try again.";
   }
-  if (ui.sent) render();
+  if (ui.sent) {
+    render();
+    document.getElementById("contact-thanks")?.focus();
+  }
   else {
+    document.getElementById("c-msg")?.setAttribute("aria-invalid", "true");
+    document.getElementById("c-msg")?.setAttribute("aria-describedby", "contact-error");
     btn.disabled = false;
     form.querySelector(".small")?.remove();
     btn.insertAdjacentHTML(
       "afterend",
-      `<p class="small" role="alert" style="color:var(--coral)">${ui.sendError}</p>`,
+      `<p id="contact-error" class="small" role="alert" style="color:var(--coral)">${ui.sendError}</p>`,
     );
   }
 }
