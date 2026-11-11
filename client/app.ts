@@ -1020,7 +1020,7 @@ function Journey() {
         ? ""
         : g
         ? n
-          ? `${n} to come`
+          ? `${n} to catch`
           : "all caught"
         : n || cs!.later
           ? [n && `${n} still out there`, cs!.later && `${cs!.later} later`]
