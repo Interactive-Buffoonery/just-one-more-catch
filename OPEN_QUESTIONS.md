@@ -33,12 +33,8 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 ## Ultra Sun and Ultra Moon
 
 - Brooklet Hill Main and North: are these the first lake (open before Lana's trial) or the trial pools (Waterium)? South is gated.
-- Trainers' School: do Gastly and Drifloon only appear after the Big Wave Beach rumor, once Hala's grand trial is done?
-- Route 13: can you reach it from Route 12 without Mudsdale Gallop? If not, Tapu Village and everything past it need Mudsdale too.
-- Route 15 Main: besides Sandygast, is the rest of the route behind Sharpedo Jet (after Acerola's trial)?
-- Kala'e Bay: is the grassy island (Bagon, Slowpoke, Yungoos and friends) only reachable by Lapras Paddle?
-- Mahalo Trail: Nebby can be taken after the Hau'oli Cemetery Ilima battle, before the Elite Four. Should the Solgaleo/Lunala row open earlier?
+- Route 13: the guide has Mudsdale given at the start of Route 12, so Gallop is likely in hand. Confirm nothing on Route 13 needs more.
+- Route 15 Main: the guide says more than half the route waits for a Ride Pokémon that breaks the rocks in the water. Which encounter rows are out there?
 - Poni Breaker Coast: can the fishing spots and Wimpod be reached from shore?
-- Sandy Cave: is it on Melemele (Big Wave Beach), and can the cave floor be walked before Lapras Paddle?
-- Heahea Beach sticker gifts: which chapter can you first reach each tier?
-- PC boxes: confirm 32 boxes of 30.
+- Mahalo Trail: Solgaleo and Lunala now open with the Dragonium (the Ultra Megalopolis chapter). In the game they come right after Ultra Necrozma, during Mina's trial.
+- Totem Stickers 70: sticker 70 is on Route 15's large island. If that needs Sharpedo Jet, 70 waits for the Haina Desert chapter (as set). Confirm.
