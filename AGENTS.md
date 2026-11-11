@@ -4,7 +4,7 @@
 - Front end: plain TypeScript in `client/`, built with Vite. No framework; `client/app.ts` renders strings and uses event delegation.
 - `client/main.ts` is the only file that talks to Clerk or Convex. Keep the `Bridge` type in `client/app.ts` as the boundary.
 - `shared/` is pure TypeScript used by both sides.
-- Hosting: a static Cloudflare Worker (`wrangler.jsonc`, `npm run deploy`). Keep the site static. See README.md for the full setup.
+- Hosting: a static Cloudflare Worker (`wrangler.jsonc`, `pnpm run deploy`). Keep the site static. See README.md for the full setup.
 - Guest playthroughs live in localStorage and move to the account on sign-in. Keep guest mode working when Clerk fails to load.
 
 <!-- convex-ai-start -->

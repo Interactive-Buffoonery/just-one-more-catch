@@ -60,13 +60,13 @@ changing a pack.
 - **Cloudflare:** Worker `just-one-more-catch`. The domain's DNS is on
   Cloudflare, including Clerk's records, which must stay "DNS only".
 - **Settings in files** (git-ignored, never commit them):
-  - `.env.local`: Convex dev values (written by `npx convex dev`) and
+  - `.env.local`: Convex dev values (written by `pnpm exec convex dev`) and
     `VITE_CLERK_PUBLISHABLE_KEY` with the `pk_test_` key.
   - `.env.production`: `VITE_CLERK_PUBLISHABLE_KEY` with the `pk_live_` key.
 - **Settings in Convex:** `CLERK_JWT_ISSUER_DOMAIN`, `RESEND_API_KEY` (a
   sending-only key for `mail.justonemorecatch.app`) and `CONTACT_TO` (where
   contact-form messages are emailed) on each deployment. Set them with
-  `npx convex env set`, and add `--prod` for production.
+  `pnpm exec convex env set`, and add `--prod` for production.
 - **Email:** Cloudflare Email Routing forwards `contact@justonemorecatch.app`
   to Sarah's inbox. Resend sends the contact-form notifications from
   `notify@mail.justonemorecatch.app`.
@@ -75,10 +75,14 @@ changing a pack.
 ## Run locally
 
 ```sh
-npm install
-npx convex dev        # back end; keep it running
-npm run dev           # site on http://localhost:5173
+pnpm install
+pnpm exec convex dev  # back end; keep it running
+pnpm dev              # site on http://localhost:5173
 ```
+
+New worktrees: run `scripts/setup-worktree.sh`. It copies `.env.local` and
+`.env.production` from the main checkout and installs dependencies. T3 Code
+runs it automatically when it creates a worktree.
 
 In development, Clerk accepts test emails like `name+clerk_test@example.com`
 with the code `424242`.
@@ -86,12 +90,13 @@ with the code `424242`.
 ## Deploy
 
 ```sh
-npm run deploy
+pnpm run deploy
 ```
 
 - Pushes Convex functions to production. Answer **y** when it asks (where it
   can't prompt, add `--yes` to the `convex deploy` command).
 - Builds the site with `.env.production`. The script removes the dev Clerk key
-  first, because `convex deploy` loads `.env.local`.
+  first, because `convex deploy` loads `.env.local`, then stops the deploy if
+  the build doesn't contain the live (`pk_live_`) key.
 - Uploads `dist/` to the Cloudflare Worker with `wrangler deploy`. Run
-  `npx wrangler login` once first.
+  `pnpm exec wrangler login` once first.
