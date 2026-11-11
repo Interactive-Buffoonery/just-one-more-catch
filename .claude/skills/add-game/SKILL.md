@@ -113,7 +113,7 @@ is hand-written, so it needs a source.
   gating on the nearest badge.
 - **Don't gate encounter methods per place.** The app already requires the
   right rod, Surf, Headbutt or Rock Smash for each encounter method
-  (`METHOD` in `client/app.ts`). Area `needs` only cover getting to a place.
+  (`METHOD` in `client/game.ts`). Area `needs` only cover getting to a place.
 
 Sources, in order: Bulbapedia (`Appendix:<Game>_walkthrough` and location
 pages), then StrategyWiki, the official guides and Serebii to break ties.
@@ -134,7 +134,7 @@ skill's cache (`scripts/access_audit.py`).
 3. `python3 scripts/fetch_pokeapi.py`, then `python3 scripts/build_data.py <pack>`.
    `fetch_pokeapi.py` and `pretty()` in `build_data.py` are
    written for the Johto and Kanto games; a new generation may need them
-   extended. A new encounter method needs a `METHOD` entry in `client/app.ts`.
+   extended. A new encounter method needs a `METHOD` entry in `client/game.ts`.
    The build fails on:
    - an area that no chapter claims, or an area `needs` or `row_needs` that
      matches nothing

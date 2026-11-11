@@ -2,7 +2,8 @@ import "@fontsource/jetbrains-mono/latin-500.css";
 import type { Clerk } from "@clerk/clerk-js";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex/_generated/api";
-import { mount, update, type Bridge } from "./app";
+import { mount, update } from "./app";
+import type { Bridge } from "./types";
 
 let clerk: Clerk | undefined;
 const pendingSignIns = new WeakSet<HTMLDivElement>();
