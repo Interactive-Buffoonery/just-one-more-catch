@@ -1061,7 +1061,7 @@ function Journey() {
     ${badgeRow(P().badges)}
     <button class="chip" style="margin-top:6px" data-badge="Elite Four" data-k="b-e4" aria-pressed="${e4()}">Beat the Elite Four</button>
     ${e4() && P().postgame ? `<h3 style="margin-top:12px">${P().postgame![0]}</h3>${badgeRow(P().postgame![1])}` : ""}
-    ${kitGroup("Moves you can use", (k) => !k.endsWith("-rod"))}${kitGroup("Fishing rods", (k) => k.endsWith("-rod"))}
+    ${kitGroup("Moves you can use", (k) => !k.endsWith("-rod") && k !== "bicycle")}${kitGroup("Items", (k) => k.endsWith("-rod") || k === "bicycle")}
     ${
       P().safari &&
       unlocked(CHAPTERS.findIndex((c) => c.places.includes("Safari Zone")))

@@ -19,6 +19,7 @@
     "Bell Tower Roof": "Bell Tower"
   },
   "needs": {
+    "Route 17": {"needs": "bicycle", "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Route_17", "quote": "only people with [[Bicycle]]s or Motorcycles are permitted to travel on the road"},
     "Ice Path B3F": {"needs": "strength", "src": "https://bulbapedia.bulbagarden.net/wiki/Ice_Path", "quote": "a {{m|Strength}} puzzle involving pushing [[Movable boulder|boulders]] into holes in order to progress", "guide": "Nintendo Power Pokemon Crystal guide, p58: \"With the boulders in place, you can reach the ladder to B3.\""},
     "Sea Route 19": {"needs": "surf", "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Route_19", "quote": "The [[route]] will be cleared as soon as the player has visited the route for the first time via Route 20", "guide": "Nintendo Power Pokemon Crystal guide, p73: \"There's also some construction going on that will keep you from Cinnabar Island for a short time.\""},
     "Power Plant": {"needs": "surf", "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Power_Plant", "quote": "{{m|Surf}}ing{{sup/1}}{{sup/2}}{{sup/3|FRLG}}{{sup/4|HGSS}} or [[Secret Technique|Sea Skimming]]{{sup/7|PE}} from {{rt|10|Kanto}} is required to reach it."},

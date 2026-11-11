@@ -16,7 +16,7 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 - Route 44: is all the grass reachable on foot?
 - Whirl Islands B3F: does it need Waterfall?
 - Tohjo Falls: is Surf enough for every part?
-- Mt. Silver: how do 1F Top and Top map to the cave, and when does Moltres appear?
+- Mt. Silver: how do 1F Top, 2F to 4F and Top map to the cave, which of them need Rock Climb, and when does Moltres appear? (Only Mountainside and Sneasel are gated so far.)
 - Fuchsia City: are the headbutt trees behind a Cut tree?
 - Saffron Magnet Train: what triggers the Pikachu trade?
 - Silph Co.: what unlocks Steven's Beldum gift?
