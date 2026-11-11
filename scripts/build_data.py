@@ -98,6 +98,9 @@ def evo_text(chain, name):
 
 
 def as_list(v):
+    """An area need: a string, a list, or {"needs": ..., "src": url, "quote": ...} when it has a source."""
+    if isinstance(v, dict):
+        v = v["needs"]
     return [v] if isinstance(v, str) else list(v)
 
 
