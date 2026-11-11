@@ -45,6 +45,8 @@ import {
 import { gameNow } from "../shared/clock";
 import { MAX_RUN_BYTES, runBytes } from "../shared/limits";
 
+let creating = false;
+let pickOpenedAt = 0;
 let opening: string | null = null;
 function useRun(row: RunRow) {
   const v = verOf(row.version);
@@ -348,16 +350,26 @@ async function onClick(e: MouseEvent) {
     return;
   }
   if (d.newrun) {
+    if (creating) return;
+    pickOpenedAt = performance.now();
     openSheet({ kind: "pick", id: d.newrun });
     $("[data-confirmrun]").focus();
     return;
   }
   if (d.confirmrun) {
+    if (creating || performance.now() - pickOpenedAt < 350) return;
     flushSave();
     t.disabled = true;
     if ($("#sheet").open) $("#sheet").close();
-    pendingRun = await bridge.createRun(d.confirmrun);
-    refresh();
+    creating = true;
+    try {
+      pendingRun = await bridge.createRun(d.confirmrun);
+      refresh();
+    } catch {
+      flash(`${verOf(d.confirmrun).name} playthrough didn't start. Try again.`);
+    } finally {
+      creating = false;
+    }
     return;
   }
   if (d.switch) {

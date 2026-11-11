@@ -37,7 +37,7 @@ export const cover = (
   `<img class="cover ${cls}" src="/covers/${v.short.toLowerCase()}.jpg" alt="${alt}" width="46" height="46">`;
 export const confirmGame = (id: string) => {
   const v = verOf(id);
-  return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">Start ${esc(v.name)}?</h2><div class="hv-actions"><button class="app-primary" data-confirmrun="${esc(id)}" autofocus>Yes please!</button><button class="app-quiet" data-close="1">No thank you, just browsing!</button></div></div>`;
+  return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">Start ${esc(v.name)}?</h2><div class="hv-actions"><button class="app-primary" data-confirmrun="${esc(id)}">Yes please!</button><button class="app-quiet" data-close="1">No thank you, just browsing!</button></div></div>`;
 };
 const gameChoices = (heading = "new-game-heading", regions = false) =>
   `<div class="slide s2"><div class="reel" role="group" aria-labelledby="${heading}">${Object.entries(VERSIONS)
