@@ -1,0 +1,6 @@
+#!/bin/sh
+# A previous HEAD of all zeros means git just created this worktree.
+[ "$1" = "0000000000000000000000000000000000000000" ] || exit 0
+# Run the main checkout's script, not the new branch's copy.
+main=$(git worktree list --porcelain | sed -n '1s/^worktree //p')
+exec sh "$main/scripts/setup-worktree.sh"

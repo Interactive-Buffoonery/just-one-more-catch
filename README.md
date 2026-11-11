@@ -80,9 +80,13 @@ pnpm exec convex dev  # back end; keep it running
 pnpm dev              # site on http://localhost:5173
 ```
 
-New worktrees: run `scripts/setup-worktree.sh`. It copies `.env.local` and
-`.env.production` from the main checkout and installs dependencies. T3 Code
-runs it automatically when it creates a worktree.
+New worktrees: `scripts/setup-worktree.sh` copies `.env.local` and
+`.env.production` from the main checkout and installs dependencies. A git
+hook runs it on `git worktree add` once you turn hooks on in the main
+checkout: `git config core.hooksPath "$PWD/.githooks"`. Setup runs the
+branch's install scripts, so for a branch you don't trust, use
+`git worktree add --no-checkout` to skip the hook and review it before
+installing.
 
 In development, Clerk accepts test emails like `name+clerk_test@example.com`
 with the code `424242`.
