@@ -1,6 +1,7 @@
 import { $, esc } from "../dom";
 import {
   badgeName,
+  badgesWord,
   bridge,
   byN,
   dumpRun,
@@ -118,7 +119,7 @@ function resumeCard(row: RunRow, r: Summary, at: string) {
     <div class="slab">${cover(v, "box")}<p class="last">Last played ${lastPlayed(at)}</p><button class="go lg" data-switch="${row.id}" aria-label="Continue ${v.name}">Continue</button></div>
     <div class="file">
       <div class="file-head"><div><h2 class="lg">${v.name}</h2><p class="soft">${p.region} · Started ${longDay(startDay(row))}${champTag(r)}</p></div>${ptMenu(row, v)}</div>
-      <div><p class="lead"><b>${badgeCount(row.version, r)}</b> of ${groups.flatMap(([, l]) => l).length} badges</p>
+      <div><p class="lead"><b>${badgeCount(row.version, r)}</b> of ${groups.flatMap(([, l]) => l).length} ${badgesWord(p)}</p>
         <div class="case">${groups
           .map(
             ([label, list]) =>
@@ -148,7 +149,7 @@ function miniCard(row: RunRow, r: Summary, at: string) {
     )
     .join(
       "",
-    )}</span><span class="sr">${badgeCount(row.version, r)} badges,</span><span class="got"><b>${r.caught}</b> of ${p.national}<span class="sr"> caught</span>${meter(r.caught, p.national)}</span></button>${ptMenu(row, v)}</div>`;
+    )}</span><span class="sr">${badgeCount(row.version, r)} ${badgesWord(p)},</span><span class="got"><b>${r.caught}</b> of ${p.national}<span class="sr"> caught</span>${meter(r.caught, p.national)}</span></button>${ptMenu(row, v)}</div>`;
 }
 const trainerCard = (rows: { row: RunRow; r: Summary }[]) =>
   `<aside class="trainer"><div class="tslab"><h2 class="lg">${esc(trainerName())}</h2>${partner("partner")}</div>
@@ -182,7 +183,7 @@ export function switcher(id?: string | null) {
       const v = verOf(row.version),
         b = badgeCount(row.version, r),
         on = row.id === id;
-      return `<button data-switch="${row.id}" data-stay="1" data-k="gsw"${on ? ` aria-current="true"` : ""}>${cover(v, "", "")}<span class="grow">${v.name}<small>${r.caught} caught · ${b} badge${b === 1 ? "" : "s"}</small></span>${on ? `<span class="gtick" aria-hidden="true">✓</span>` : ""}</button>`;
+      return `<button data-switch="${row.id}" data-stay="1" data-k="gsw"${on ? ` aria-current="true"` : ""}>${cover(v, "", "")}<span class="grow">${v.name}<small>${r.caught} caught · ${b} ${badgesWord(v.pack, b)}</small></span>${on ? `<span class="gtick" aria-hidden="true">✓</span>` : ""}</button>`;
     })
     .join(
       "",

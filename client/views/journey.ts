@@ -1,6 +1,7 @@
 import { $ } from "../dom";
 import {
   badgeName,
+  badgesWord,
   byName,
   cap,
   CHAPTERS,
@@ -134,7 +135,7 @@ export function fillCustom() {
     `<h2 id="sheet-title">Customize ${ver().name}</h2><p class="small muted" style="margin:4px 0 10px">Only changes this playthrough.</p>
     ${SECTIONS.map(([k, t, n]) => toggle(!r.hidden.has(k), t, n, `data-hide="${k}" data-k="h-${k}"`)).join("")}
     ${toggle(r.showLater, "Show Pokémon I can't reach yet", `List them in each section, not under "Come back later"`, `data-showlater="1" data-k="h-later"`)}
-    <div class="sw"><span class="grow"><b>Badges and items</b><small>Always shown: this is how the app knows what you can catch</small></span><span class="lock">Always on</span></div>
+    <div class="sw"><span class="grow"><b>${badgesWord()[0].toUpperCase()}${badgesWord().slice(1)} and items</b><small>Always shown: this is how the app knows what you can catch</small></span><span class="lock">Always on</span></div>
     <div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="chip" data-close="1">Done</button></div>`;
 }
 /* ---- Story events: one question on top, the full list in Your journey ---- */
@@ -281,10 +282,10 @@ export function Journey() {
   <details class="card kit s-kit" ${fold("kit", wide)}>
     <summary class="sumrow">
       <span class="kitbadges" aria-hidden="true">${badges.map((b) => `<img class="${r.badges.has(b[0]) ? "on" : ""}" src="${badgeIcon(b[0])}" alt="" width="19" height="19">`).join("")}</span>
-      <span class="grow small"><span class="sr">Badges and items: </span><b>${badgesOn} of ${badges.length}</b><br>badges<span class="sr">, ${kitOn} of ${P().kit.length} moves and items</span></span>
+      <span class="grow small"><span class="sr">${badgesWord()[0].toUpperCase()}${badgesWord().slice(1)} and items: </span><b>${badgesOn} of ${badges.length}</b><br>${badgesWord()}<span class="sr">, ${kitOn} of ${P().kit.length} moves and items</span></span>
       ${CHEV}
     </summary>
-    <h3>${P().region} badges</h3>
+    <h3>${P().region} ${badgesWord()}</h3>
     ${badgeRow(badges)}
     <div class="chips"><button class="chip" data-badge="Elite Four" data-k="b-e4" aria-pressed="${e4()}">Beat the Elite Four</button></div>
     ${e4() && P().postgame ? `<h3>${P().postgame![0]}</h3>${badgeRow(P().postgame![1])}` : ""}
