@@ -178,6 +178,7 @@ type Run = {
   events: Set<string>;
   safari: Set<string>;
   caught: Set<number>;
+  forms: Set<string>;
   skip: Set<number>;
   here: string;
   timeAuto: boolean;
@@ -218,6 +219,7 @@ function loadRun(row: RunRow, state: string): Run {
     events: new Set(s.events || []),
     safari: new Set(s.safari || []),
     caught: new Set(s.caught || []),
+    forms: new Set((Array.isArray(s.forms) ? s.forms : []).filter((f: unknown) => typeof f === "string")),
     skip: new Set(s.skip || []),
     here: s.here || pack.start,
     timeAuto: s.timeAuto ?? true,
@@ -242,6 +244,7 @@ export const dumpRun = (r: Run) =>
     events: [...r.events],
     safari: [...r.safari],
     caught: [...r.caught],
+    forms: [...r.forms],
     skip: [...r.skip],
     here: r.here,
     timeAuto: r.timeAuto,
@@ -256,6 +259,13 @@ export const dumpRun = (r: Run) =>
     view: r.view,
     startView: r.startView,
   });
+
+export function collectedForms(p: Species) {
+  const r = R();
+  return new Set((p.forms || []).filter((f) =>
+    r.forms.has(f.id) || r.mons.some((m) => m.n === p.n && (m.form || p.forms?.[0]?.id) === f.id),
+  ).map((f) => f.id));
+}
 
 export let bridge: Bridge;
 export const setBridge = (b: Bridge) => {
@@ -328,6 +338,14 @@ export function openRun(row: RunRow, data: GameData, state: string) {
   }));
   byName = Object.fromEntries(DEX.map((p) => [p.name, p]));
   byN = Object.fromEntries(DEX.map((p) => [p.n, p]));
+  for (const m of run.mons) {
+    const p = byN[m.n],
+      form = p?.forms?.find((f) => f.id === m.form) || p?.forms?.[0];
+    if (form) {
+      run.forms.add(form.id);
+      run.caught.add(m.n);
+    }
+  }
   ui.saved = dumpRun(run);
   ui.skip = new Set();
   ui.snooze = new Set();

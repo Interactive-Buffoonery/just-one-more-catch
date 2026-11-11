@@ -84,6 +84,13 @@ export function fillMonSheet(s: any) {
     <datalist id="held-items">${HELD_ITEMS.map((i) => `<option value="${esc(i)}">`).join("")}</datalist>
     <div class="hv-actions" style="margin-top:20px"><button class="app-primary grow" data-savemon="1">Save</button>${m ? `<button class="app-quiet" data-delmon="${m.id}">Remove</button>` : `<button class="app-quiet" data-close="1">Cancel</button>`}</div>`;
 }
+export function updateMonSprite() {
+  const s = ui.sheet,
+    m = s.id ? R().mons.find((m) => m.id === s.id) : null,
+    p = byN[m ? m.n : s.n];
+  $("#sheetbody .mon").outerHTML = mon(p, $("#f-shiny").checked, $("#f-form")?.value || p.forms?.[0]?.id);
+}
+
 export function fillBoxSheet(b: number) {
   $("#sheetbody").innerHTML =
     `<h2 id="sheet-title">Rename ${esc(boxLabel(b))}</h2>
@@ -116,6 +123,7 @@ export function saveMon() {
     r.caught.add(s.n);
     if (ui.undo?.n === s.n && !ui.undo.had) ui.undo.monId = m.id;
   }
+  if (data.form) r.forms.add(data.form);
   r.lastBox = box;
   $("#live").textContent = `Saved to ${boxLabel(box)}`;
 }

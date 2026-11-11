@@ -611,3 +611,11 @@ button.gb:is(:hover,:focus-visible) .bx{rotate:0deg;translate:0 -10px;box-shadow
 .tabbar.four{grid-template-columns:repeat(4,1fr)}
 .filters.three{grid-template-columns:repeat(3,1fr)}
 @media (max-width:959px){.dextools{flex-wrap:wrap}.dextools .search{flex-basis:100%}}
+
+/* ---- Form grid ---- */
+.forms{display:grid;grid-template-columns:repeat(auto-fill,minmax(66px,1fr));gap:6px}
+.app .form{display:grid;justify-items:center;gap:2px;padding:8px 2px 6px;min-height:72px;border:1px solid var(--line);border-radius:12px;background:var(--surface);font-size:12.5px;font-weight:800;color:var(--soft);line-height:1.15}
+.form .sprite{width:48px;height:48px;max-width:none;margin:-2px 0}
+.form span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+.app .form[aria-pressed=true]{background:var(--teal-soft);border-color:var(--teal);color:var(--ink)}
+.app .form[aria-pressed=false] .sprite{opacity:.45;filter:grayscale(.5)}

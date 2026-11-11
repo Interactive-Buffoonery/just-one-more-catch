@@ -28,7 +28,7 @@ import { moveGuestAvatar, moveGuestRuns, withGuest } from "./guest";
 import { SETTINGS_ICON, TAB_ICONS } from "./parts";
 import { Bridge, RunRow } from "./types";
 import { Contact } from "./views/about";
-import { Boxes, fillBoxSheet, fillMonSheet, saveMon } from "./views/boxes";
+import { Boxes, fillBoxSheet, fillMonSheet, saveMon, updateMonSprite } from "./views/boxes";
 import { Dex, dexGrid, fillSpecies } from "./views/dex";
 import { fillClock, fillCustom, Journey, untick } from "./views/journey";
 import {
@@ -472,6 +472,16 @@ async function onClick(e: MouseEvent) {
     openSheet({ kind: "box", b: +d.renamebox });
     return;
   }
+  if (d.form && d.species) {
+    const p = byN[+d.species];
+    if (!p?.forms?.some((f) => f.id === d.form)) return;
+    r.forms.has(d.form) ? r.forms.delete(d.form) : r.forms.add(d.form);
+    r.caught.add(p.n);
+    scheduleSave();
+    render();
+    fillSpecies(p.n);
+    return;
+  }
   if (d.savemon) {
     saveMon();
     $("#sheet").close();
@@ -714,6 +724,10 @@ export function mount(el: HTMLElement, b: Bridge) {
   });
   el.addEventListener("change", (e) => {
     const t = e.target as HTMLInputElement;
+    if (t.id === "f-form" || t.id === "f-shiny") {
+      updateMonSprite();
+      return;
+    }
     if (t.name === "avatar") {
       const n = Number(t.value);
       ui.avatar = n;
