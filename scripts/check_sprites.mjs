@@ -66,9 +66,9 @@ for (const pack of packs) {
   assert(existsSync(dir), `${dir} is missing. ${FIX}`);
   assert(fit[pack], `${pack} is missing from client/data/sprite-fit.ts. ${FIX}`);
   const zoom = {};
-  for (const sub of ['', 'shiny/'])
+  for (const sub of ['', 'shiny/', 'forms/', 'forms/shiny/'].filter((sub) => existsSync(dir + '/' + sub)))
     for (const name of readdirSync(dir + '/' + sub).filter((f) => f.endsWith('.png'))) {
-      const n = parseInt(name);
+      const key = name.slice(0, -4), n = /^\d+$/.test(key) ? +key : key;
       zoom[n] = Math.min(zoom[n] ?? ZOOM, measure(`${dir}/${sub}${name}`));
       count++;
     }
