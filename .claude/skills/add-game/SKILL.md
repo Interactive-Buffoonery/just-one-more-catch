@@ -32,7 +32,8 @@ A **need** is one of: a badge name from `client/packs.ts` (`"Zephyr"`,
 
 The app applies the HM rule itself: a kit id listed in the pack's `hm` only
 counts once the player has that badge too. Don't add the badge next to every
-HM need.
+HM need. This only covers kit ids in `hm`: an HM modelled as an event (FRLG's
+Cut) needs its badge listed next to it by hand.
 
 **`events`** are story milestones the player ticks in Your journey, or answers
 in the Story check card:
@@ -52,8 +53,12 @@ in the Story check card:
 - `after` (optional): events that must come first. Ticking this one counts
   them as done.
 - `by` (optional): a badge or event the game can't reach without this event
-  having happened, so owning it proves the event. Only set it when the route
-  makes that certain. Optional side events never get a `by`.
+  having happened, so owning it proves the event. The app treats `by` as proof:
+  once the player has it, the event shows as done and can't be unticked. Only
+  set it when every route to the `by` passes through this event, with a source
+  that says so. Leave it off if a trade, another route or a skippable step can
+  get around it (FRLG Cut can be traded in, so the Thunder Badge doesn't prove
+  the S.S. Anne). Optional side events never get a `by`.
 
 **`row_needs`** gate one Pokémon inside an open area (gifts, legendaries,
 statics, roamers):
@@ -62,8 +67,9 @@ statics, roamers):
 {"place": "Dragons Den", "n": 147, "m": "gift", "needs": ["Rising", "dragonbreath"]}
 ```
 
-`place` matches the raw PokeAPI area name before `rename`, by prefix, just like
-area `needs`. `n` is the national dex number and `m` (optional) the method
+`place` matches the area name as `nice()` in `scripts/build_data.py` writes it
+(title case, no `-area` suffix or region prefix, so `dragons-den-area` is
+`"Dragons Den"`), before `rename`, by prefix, just like area `needs`. `n` is the national dex number and `m` (optional) the method
 after `methods` mapping. These needs add to the area's.
 
 When a row needs a postgame event, put `"Elite Four"` first in its needs so the
@@ -110,18 +116,34 @@ automated fetches; read it through `https://web.archive.org/web/2026/<url>`.
 
 ## Steps
 
-1. Add the pack to `client/packs.ts` and `shared/versions`. Source each value
-   as listed above.
+1. Add the pack to `client/packs.ts` (the pack, its `kit` and `hm`, and a
+   `VERSIONS` entry) and `shared/versions.ts`. Source each value as listed
+   above. Every kit id a need uses must be in the pack's `kit`.
 2. Write `data/<pack>.json`. Copy the shape of an existing pack.
 3. `python3 scripts/fetch_pokeapi.py`, then `python3 scripts/build_data.py <pack>`.
-   The build fails on any area that no chapter claims, on any area `needs` or
-   `row_needs` that matches nothing, and on an event whose chapter needs it. Fix each one with a sourced chapter, not just
-   whichever chapter is closest.
-4. Add sprites: an `ART` entry in `scripts/fetch_sprites.py`, then run it.
+   `fetch_pokeapi.py` and `pretty()` in `build_data.py` are
+   written for the Johto and Kanto games; a new generation may need them
+   extended. A new encounter method needs a `METHOD` entry in `client/app.ts`.
+   The build fails on:
+   - an area that no chapter claims, or an area `needs` or `row_needs` that
+     matches nothing
+   - an event id that isn't a lowercase slug, is repeated, or clashes with an
+     item icon; a `chap` out of range; an unknown `after` id
+   - an event loop, or an event that can never be asked because its chapter
+     needs it first
+   - a need or kit id with no icon in `public/items/`
+
+   Fix each one with a sourced chapter, not just whichever chapter is closest.
+   The build doesn't check badge names or `by` values against `packs.ts`, so
+   check those by hand: a typo locks content for good.
+4. Add sprites: an `ART` entry in `scripts/fetch_sprites.py` (plus `ITEMS` for
+   a new kit icon and `BADGES` for a new region), then run it.
 5. Verify with a second pass that doesn't trust the first. Send one read-only
    agent per game to check every chapter and area gate against Bulbapedia.
    It reports only mistakes, each with a URL and a quote. Have a different
-   model double-check what it flags, then fix the confirmed ones.
+   model double-check what it flags, then fix the confirmed ones. Where the
+   two disagree and no source settles it, leave it as-is and list it as
+   unverified. Stop when a pass confirms no new mistakes.
 6. When changing an existing pack, rebuild and compare the old and new
    `client/data/<pack>.ts` row by row (save the old file first). Only the rows
    you meant to move should change chapter or needs.

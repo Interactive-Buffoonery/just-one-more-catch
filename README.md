@@ -47,6 +47,10 @@ A new pack needs an entry in `ART` in `scripts/fetch_sprites.py`, then:
 python3 scripts/fetch_sprites.py   # downloads only missing files
 ```
 
+Story gates (chapters, story steps, HM badge rules) are written by hand and
+must be sourced. See `.claude/skills/add-game/SKILL.md` before adding or
+changing a pack.
+
 ## Accounts and settings
 
 - **Convex:** project `just-one-more-catch`. Dev deployment
