@@ -609,3 +609,52 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
 
 .run .mini{min-width:0;flex-wrap:wrap}
 .run .mini>span{flex-wrap:wrap}
+
+.slide{--bleed:16px;--gap:14px;--w:96px;--padt:16px;container:slide/inline-size;position:relative;margin:0 calc(-1 * var(--bleed))}
+.welcome .slide{--bleed:24px}
+.reel{display:flex;gap:var(--gap);overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-padding-inline:var(--bleed);padding:var(--padt) var(--bleed) 12px;scrollbar-width:none}
+.reel::-webkit-scrollbar{display:none}
+.empty .reel{justify-content:safe center}
+.app .gb{flex:none;width:var(--w);scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;border:0;background:none;padding:0;text-align:center;position:relative}
+.gb .bx{display:block;flex:none;width:var(--w);height:var(--w);background:var(--g);border-radius:14px;padding:10%;box-shadow:0 5px 0 var(--g-deep);rotate:var(--t,0deg);translate:0 var(--y,0px);transition:rotate .25s,translate .25s cubic-bezier(.3,1.4,.5,1),box-shadow .25s}
+.gb .bx .cover{display:block;width:100%;height:100%;object-fit:cover;border:0;border-radius:3px}
+.gb b{font-size:15px;font-weight:800;line-height:1.15;margin-top:10px}
+.gb em{font-style:normal;font-weight:800;font-size:14px;color:var(--teal);margin-top:2px}
+.gb .small{margin-top:2px}
+.app .gb:focus-visible{outline:0}
+.gb:focus-visible .bx{outline:3px solid var(--teal);outline-offset:4px}
+.gb:is(:hover,:focus-visible) .bx{rotate:0deg;translate:0 -6px;box-shadow:0 11px 0 var(--g-deep)}
+
+.dash-grid>.sec.wide{grid-column:1/-1}
+@media (min-width:960px){.narrow:has(.slide){max-width:1100px}}
+
+.s2{--w:136px;--gap:10px;--padt:22px}
+.s2 .gb{scroll-snap-align:center}
+.s2 .gb:nth-child(odd){--t:-6deg;--y:6px}
+.s2 .gb:nth-child(even){--t:5deg;--y:-4px}
+.s2 .bx{border-radius:18px;box-shadow:0 7px 0 var(--g-deep)}
+.s2 .gb:is(:hover,:focus-visible) .bx{translate:0 -10px;box-shadow:0 14px 0 var(--g-deep)}
+.s2 b{font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-weight:400;font-size:20px;line-height:1;letter-spacing:.02em;text-transform:uppercase;margin-top:24px}
+.s2 em{font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-size:15px;line-height:1;letter-spacing:.04em;text-transform:uppercase;background:var(--teal-soft);border-radius:999px;padding:6px 12px 3px;margin-top:8px}
+.s2 .gb:is(:hover,:focus-visible) em{background:var(--fill);color:var(--on-fill)}
+@supports (animation-timeline:view()){
+  .s2 .gb{view-timeline:--box inline}
+  .s2 .bx{animation:pop linear both;animation-timeline:--box}
+  @keyframes pop{0%,100%{scale:.84}50%{scale:1.06}}
+}
+@media (min-width:960px){.s2{--w:136px;--gap:22px}}
+
+
+.slide{min-width:0;--g:var(--teal-soft);--g-deep:var(--soft)}
+.reel{scroll-snap-type:x proximity;padding:32px 24px 20px;scroll-padding-inline:24px}
+.app .gb{color:var(--ink);min-height:44px}
+.s2 em{background:#fff;color:#111}
+.s2 .gb:is(:hover,:focus-visible) em{background:#fff;color:#111}
+.gb:focus-visible .bx{outline:3px solid #111;outline-offset:3px;box-shadow:0 0 0 9px #fff}
+.reel:has(:focus-visible){scroll-snap-type:none}
+.s2 .gb:focus-visible .bx{animation:none}
+@media(prefers-reduced-motion:reduce){
+  .s2 .bx{animation:none;transition:none}
+  .s2 .gb:is(:hover,:focus-visible) .bx{rotate:var(--t);translate:0 var(--y)}
+  .reel{scroll-behavior:auto}
+}
