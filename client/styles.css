@@ -607,7 +607,7 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
 .gb .bx .cover{display:block;width:100%;height:100%;object-fit:cover;border:0;border-radius:3px}
 .app .gb:focus-visible{outline:0}
 .gb:focus-visible .bx{outline:3px solid var(--teal);outline-offset:4px}
-.gb:is(:hover,:focus-visible) .bx{rotate:0deg;translate:0 -10px;box-shadow:0 14px 0 var(--g-deep,var(--soft))}
+button.gb:is(:hover,:focus-visible) .bx{rotate:0deg;translate:0 -10px;box-shadow:0 14px 0 var(--g-deep,var(--soft))}
 
 .dash-grid>.sec.wide{grid-column:1/-1}
 @media (min-width:960px){.narrow:has(.slide){max-width:1100px}}
@@ -630,7 +630,7 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
 .s2 .gb:focus-visible .bx{animation:none}
 @media(prefers-reduced-motion:reduce){
   .s2 .bx{animation:none;transition:none}
-  .s2 .gb:is(:hover,:focus-visible) .bx{rotate:var(--t);translate:0 var(--y)}
+  .s2 button.gb:is(:hover,:focus-visible) .bx{rotate:var(--t);translate:0 var(--y)}
   .reel{scroll-behavior:auto}
 }
 
@@ -644,3 +644,11 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
   .s2 .gb{scroll-snap-align:none}
   .s2 .bx{animation:none;scale:1}
 }
+
+.pickbody{text-align:center;display:grid;justify-items:center;--w:180px;--t:-6deg}
+.pickbody>.gb{margin:28px 0 38px}
+.pickbody .hv-actions{flex-wrap:wrap;justify-content:center;width:100%}
+.pickbody>h2.lg{font-size:30px;line-height:1;margin:0 0 18px}
+.pickbody .app-quiet{white-space:nowrap}
+@media (min-width:640px){.pickbody{--w:220px}}
+@media (max-width:639px){.pickbody .hv-actions>*{flex:1 1 100%}}

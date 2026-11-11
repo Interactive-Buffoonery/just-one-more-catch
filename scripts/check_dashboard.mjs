@@ -45,3 +45,8 @@ for (const count of [0, 1, 2]) {
   assert.equal(dashboard.includes('Welcome, Trainer'), count === 0);
   assert.equal(dashboard.includes('Pick your game'), count === 0);
 }
+
+const confirm = runInNewContext(stripTypeScriptTypes(source.slice(source.indexOf('export const confirmGame'), source.indexOf('const gameChoices'))).replace('export ', '') + '\nconfirmGame', {verOf, esc: x => x, cover: () => '<img alt="">'});
+assert.match(confirm('heartgold'), /Start HeartGold\?/);
+assert.match(confirm('heartgold'), /Yes please!/);
+assert.match(confirm('heartgold'), /No thank you, just browsing!/);

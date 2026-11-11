@@ -32,6 +32,7 @@ import { Boxes, fillBoxSheet, fillMonSheet, saveMon } from "./views/boxes";
 import { Dex, dexGrid, fillSpecies } from "./views/dex";
 import { fillClock, fillCustom, Journey, untick } from "./views/journey";
 import {
+  confirmGame,
   exportLabel,
   fillSignIn,
   fillStartDate,
@@ -72,6 +73,10 @@ function useRun(row: RunRow) {
 }
 
 function fillSheet(s: any) {
+  if (s.kind === "pick") {
+    $("#sheetbody").innerHTML = confirmGame(s.id);
+    return;
+  }
   typeof s === "number"
     ? fillSpecies(s)
     : s.kind === "signin"
@@ -343,10 +348,15 @@ async function onClick(e: MouseEvent) {
     return;
   }
   if (d.newrun) {
+    openSheet({ kind: "pick", id: d.newrun });
+    $("[data-confirmrun]").focus();
+    return;
+  }
+  if (d.confirmrun) {
     flushSave();
     t.disabled = true;
     if ($("#sheet").open) $("#sheet").close();
-    pendingRun = await bridge.createRun(d.newrun);
+    pendingRun = await bridge.createRun(d.confirmrun);
     refresh();
     return;
   }
@@ -716,6 +726,10 @@ export function mount(el: HTMLElement, b: Bridge) {
     if (s?.kind === "signin")
       bridge.unmountSignIn($("#clerk-signin") as HTMLDivElement);
     render();
+    if (s?.kind === "pick") {
+      (root.querySelector(`[data-newrun="${s.id}"]`) as HTMLElement | null)?.focus();
+      return;
+    }
     if (s)
       (
         root.querySelector(
