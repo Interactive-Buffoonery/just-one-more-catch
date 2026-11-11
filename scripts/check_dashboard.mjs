@@ -56,4 +56,5 @@ const choices = runInNewContext(source.slice(source.indexOf('const gameChoices')
 assert.match(choices(), /data-newrun="heartgold"/);
 const app = readFileSync(new URL('../client/app.ts', import.meta.url), 'utf8');
 assert.doesNotMatch(app.slice(app.indexOf('  if (d.newrun) {'), app.indexOf('  if (d.confirmrun) {')), /createRun/);
+assert.match(app, /e\.repeat &&\s*\(e\.key === "Enter" \|\| e\.key === " "\) &&\s*\(e\.target as HTMLElement\)\.closest\("\[data-confirmrun\]"\)\s*\) e\.preventDefault\(\)/);
 console.log('dashboard ok');

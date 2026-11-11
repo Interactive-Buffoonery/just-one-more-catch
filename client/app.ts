@@ -723,6 +723,11 @@ export function mount(el: HTMLElement, b: Bridge) {
     }),
   );
   el.addEventListener("keydown", (e) => {
+    if (
+      e.repeat &&
+      (e.key === "Enter" || e.key === " ") &&
+      (e.target as HTMLElement).closest("[data-confirmrun]")
+    ) e.preventDefault();
     if (e.key !== "Escape") return;
     menus().forEach((m) => {
       m.open = false;
@@ -730,7 +735,10 @@ export function mount(el: HTMLElement, b: Bridge) {
     });
   });
   $("#sheet").addEventListener("click", (e: Event) => {
-    if ((e.target as HTMLElement).id === "sheet") $("#sheet").close();
+    if ((e.target as HTMLElement).id === "sheet") {
+      if (ui.sheet?.kind === "pick" && performance.now() - pickOpenedAt < 350) return;
+      $("#sheet").close();
+    }
   });
   $("#sheet").addEventListener("close", () => {
     const s = ui.sheet;
