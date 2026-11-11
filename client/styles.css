@@ -366,7 +366,7 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
   .slab .cover.box{width:176px;height:162px;box-shadow:8px 8px 0 var(--g-deep)}
   .app .go{margin-top:auto;min-height:58px;font-size:23px}
   .file{padding:28px 32px 24px;gap:22px}
-  .app .run-go{grid-template-columns:64px minmax(0,1fr) 156px 112px;gap:18px;padding:10px}
+  .app .run-go{grid-template-columns:64px minmax(0,1fr) minmax(0,156px) 112px;gap:18px;padding:10px}
   .blk{width:64px;height:64px;border-radius:14px;grid-row:auto}
   .blk .cover{width:48px;height:44px}
   .run .mini{grid-column:auto}
@@ -606,3 +606,6 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
   .dextop .dextools{margin:0;flex:1}
   .dgrid{grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
 }
+
+.run .mini{min-width:0;flex-wrap:wrap}
+.run .mini>span{flex-wrap:wrap}
