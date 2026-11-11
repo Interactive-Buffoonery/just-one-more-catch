@@ -46,6 +46,7 @@ def base_place(loc):
 PLACES = [(p, i) for i, c in enumerate(GAME["chapters"]) for p in c["places"]]
 unmatched = set()
 need_hits = set()
+row_hits = set()
 
 
 def chapter_of(place):
@@ -96,7 +97,15 @@ def evo_text(chain, name):
     return None
 
 
-def rows_for(encounters, version):
+def as_list(v):
+    return [v] if isinstance(v, str) else list(v)
+
+
+def matches(loc, k):
+    return loc == k or loc.startswith(k + " ")
+
+
+def rows_for(encounters, version, n):
     merged = {}
     for a in encounters:
         if not any(v["version"]["name"] == version for v in a["version_details"]):
@@ -104,8 +113,8 @@ def rows_for(encounters, version):
         loc = nice(a["location_area"]["name"])
         if any(re.search(p, loc) for p in GAME["drop"]):
             continue
-        key = next((k for k in GAME["needs"] if loc == k or loc.startswith(k + " ")), None)
-        need = tuple([GAME["needs"][key]] if isinstance(GAME["needs"][key], str) else GAME["needs"][key]) if key else None
+        key = next((k for k in GAME["needs"] if matches(loc, k)), None)
+        area_need = as_list(GAME["needs"][key]) if key else []
         need_hits.add(key)
         place = base_place(loc)
         chap = chapter_of(place)
@@ -117,7 +126,14 @@ def rows_for(encounters, version):
                 if src in GAME.get("drop_methods", []):
                     continue
                 cond = sorted(c["name"] for c in d["condition_values"] if c["name"] not in DEFAULT_COND)
-                k = (place, GAME.get("methods", {}).get(src, src), need, tuple(cond))
+                m = GAME.get("methods", {}).get(src, src)
+                extra = []
+                for i, g in enumerate(GAME.get("row_needs", [])):
+                    if g["n"] == n and matches(loc, g["place"]) and g.get("m", m) == m:
+                        row_hits.add(i)
+                        extra += g["needs"]
+                need = tuple(dict.fromkeys(area_need + extra)) or None
+                k = (place, m, need, tuple(cond))
                 r = merged.setdefault(k, {"place": pretty(place), "chap": chap, "m": k[1], "need": list(need) if need else None, "cond": cond, "lo": 99, "hi": 0, "by": {}})
                 r["lo"] = min(r["lo"], d["min_level"]); r["hi"] = max(r["hi"], d["max_level"]); r["by"][src] = r["by"].get(src, 0) + d["chance"]
     # methods folded into one (Crystal's three Headbutt tree tables) keep the best table's odds
@@ -146,7 +162,7 @@ def species(n, johto):
     name = lambda s: next(x["name"] for x in s["names"] if x["language"]["name"] == "en")
     rows = {}
     for version, v in VERSIONS.items():
-        for r in rows_for(enc, version):
+        for r in rows_for(enc, version, n):
             key = json.dumps(r, sort_keys=True)
             rows[key] = rows.get(key, "") + v
     pre = sp["evolves_from_species"]
@@ -165,14 +181,40 @@ if __name__ == "__main__":
         sys.exit("No chapter for: " + ", ".join(sorted(unmatched)))
     assert sum(1 for p in dex if p["j"]) == len(johto)
     assert not set(GAME["needs"]) - need_hits, f"needs match no area: {set(GAME['needs']) - need_hits}"
-    kit = {v for n in GAME["needs"].values() for v in ([n] if isinstance(n, str) else n)} | {c["kit"] for c in GAME["chapters"] if c.get("kit")}
+    events = GAME.get("events", [])
+    ids = {e["id"] for e in events}
+    assert len(ids) == len(events), "duplicate event id"
+    assert not set(range(len(GAME.get("row_needs", [])))) - row_hits, f"row_needs match no row: {[g for i, g in enumerate(GAME['row_needs']) if i not in row_hits]}"
+    for e in events:
+        assert re.fullmatch(r"[a-z][a-z0-9-]*", e["id"]), f"event id must be a lowercase slug: {e['id']}"
+        assert 0 <= e["chap"] < len(GAME["chapters"]), f"{e['id']}: no chapter {e['chap']}"
+        assert set(e.get("after", [])) <= ids, f"{e['id']}: unknown after {set(e['after']) - ids}"
+    # The app finds an event done by walking to its `by` event and to every event listing it in `after`
+    edges = {e["id"]: [d["id"] for d in events if e["id"] in d.get("after", [])] + [b for b in [e.get("by")] if b in ids] for e in events}
+    def walk(i, path):
+        assert i not in path, f"event loop: {' -> '.join(path + [i])}"
+        for j in edges[i]:
+            walk(j, path + [i])
+    for i in edges:
+        walk(i, [])
+    # Ticking events in order, with every badge and item, must reach every event
+    ticked, by_id = set(), {e["id"]: e for e in events}
+    ready = lambda e: e["id"] not in ticked and set(e.get("after", [])) <= ticked and {n for n in GAME["chapters"][e["chap"]]["needs"] if n in ids} <= ticked
+    while (nxt := [e["id"] for e in events if ready(e)]):
+        ticked |= set(nxt)
+    assert ticked == ids, f"events never asked (their chapter needs them first): {sorted(ids - ticked)}"
+    # Badges are capitalised; anything else that isn't an event is a kit item and needs an icon
+    used = [v for n in GAME["needs"].values() for v in as_list(n)] + [v for g in GAME.get("row_needs", []) for v in g["needs"]] + [v for c in GAME["chapters"] for v in c["needs"] + ([c["kit"]] if c.get("kit") else [])] + [e["by"] for e in events if "by" in e]
+    kit = {v for v in used if v not in ids and not v[0].isupper()}
+    items = {f[:-4] for f in os.listdir(os.path.join(ROOT, "public", "items"))}
+    assert not ids & items, f"event id clashes with an item: {ids & items}"
     missing = [k for k in kit if not os.path.exists(os.path.join(ROOT, "public", "items", k + ".png"))]
     assert not missing, f"needs/kit with no item: {missing}"
     if PACK == "hgss":
         assert len(johto) == 256
         assert next(p for p in dex if p["n"] == 35)["types"] == ["normal"], "Clefairy should be Normal in Gen 4"
         assert any(r["m"] == "gift" and r["place"] == "New Bark Town" for r in next(p for p in dex if p["n"] == 152)["rows"])
-    game = {"chapters": [{**c, "places": [pretty(p) for p in c["places"]]} for c in GAME["chapters"]], "dex": dex}
+    game = {"chapters": [{**c, "places": [pretty(p) for p in c["places"]]} for c in GAME["chapters"]], "events": events, "dex": dex}
     out = os.path.join(ROOT, "client", "data")
     os.makedirs(out, exist_ok=True)
     with open(os.path.join(out, PACK + ".ts"), "w") as f:
