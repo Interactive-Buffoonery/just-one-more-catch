@@ -23,7 +23,7 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
     onUpdate() { return () => {}; }
   }
   let giveUp;
-  const context = createContext({setTimeout:fn=>giveUp=fn,console:{warn(){}},document:{cookie,getElementById:()=>({})},location:{hash:'',pathname:'/',search},history:{replaceState(){}}});
+  const context = createContext({setTimeout:(fn,delay)=>{if(delay===10000)giveUp=fn;},window:{},console:{warn(){}},document:{cookie,getElementById:()=>({addEventListener(){}})},location:{hash:'',pathname:'/',search},history:{replaceState(){}}});
   const modules = new Map();
   function makeModule(name, exports) {
     if (!modules.has(name)) modules.set(name,new SyntheticModule(Object.keys(exports), function(){for (const [k,v] of Object.entries(exports)) this.setExport(k,v);},{context}));

@@ -22,7 +22,7 @@ let runs: Bridge["runs"];
 let stopRuns: (() => void) | undefined;
 let avatar: Bridge["avatar"];
 let stopAvatar: (() => void) | undefined;
-let userId: string | null | undefined;
+let userId: string | null | undefined = expectsSession ? undefined : null;
 
 const bridge = (): Bridge => ({
   auth,
@@ -196,4 +196,20 @@ if (expectsSession) {
   // ponytail: fixed wait before falling back to guest play; a slow sign-in
   // that finishes later still signs the user in.
   setTimeout(() => userId === undefined && onUser(null), 10000);
+}
+
+const preloadClerk = () => {
+  if (!clerkReady) void loadClerk();
+};
+const appRoot = document.getElementById("app")!;
+for (const event of ["pointerover", "focusin", "touchstart"]) {
+  appRoot.addEventListener(event, (e) => {
+    if (e.target instanceof Element && e.target.closest("[data-signinsheet]"))
+      preloadClerk();
+  }, { passive: true });
+}
+if ("requestIdleCallback" in window) {
+  window.requestIdleCallback(preloadClerk);
+} else {
+  setTimeout(preloadClerk, 2000);
 }
