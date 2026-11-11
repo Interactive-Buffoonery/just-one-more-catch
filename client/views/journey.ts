@@ -287,7 +287,7 @@ export function Journey() {
     </summary>
     <h3>${P().region} ${badgesWord()}</h3>
     ${badgeRow(badges)}
-    <div class="chips"><button class="chip" data-badge="Elite Four" data-k="b-e4" aria-pressed="${e4()}">Beat the Elite Four</button></div>
+    <div class="chips"><button class="chip" data-badge="Elite Four" data-k="b-e4" aria-pressed="${e4()}">${needLabel("Elite Four")}</button></div>
     ${e4() && P().postgame ? `<h3>${P().postgame![0]}</h3>${badgeRow(P().postgame![1])}` : ""}
     ${kitGroup("Moves you can use", (k) => !ITEMS(k))}${kitGroup("Items", ITEMS)}
     ${
