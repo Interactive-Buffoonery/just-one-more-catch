@@ -545,10 +545,10 @@ function rowTags(r: Row, place = r.place) {
     t.push(`<span class="tag warn">${st.why}</span>`);
   return `<div class="tags">${t.join("")}</div>`;
 }
-const gotBtn = (p: Species) =>
-  `<button class="got-btn" data-toggle="${p.n}" data-k="t${p.n}" aria-pressed="${R().caught.has(p.n)}" aria-label="${p.name} caught">${R().caught.has(p.n) ? "✓ Caught" : "Caught?"}</button>`;
-const monRow = (p: Species, r: Row | null, place?: string) =>
-  `<div class="row">${mon(p)}<div class="grow"><div class="name">${p.name}</div>${r ? rowTags(r, place) : `<div class="small muted">${howElse(p)}</div>`}</div>${gotBtn(p)}</div>`;
+const gotBtn = (p: Species, evo = false) =>
+  `<button class="got-btn" data-toggle="${p.n}" data-k="t${p.n}" aria-pressed="${R().caught.has(p.n)}" aria-label="${p.name} ${evo ? "caught or evolved" : "caught"}">${R().caught.has(p.n) ? (evo ? "✓ Obtained" : "✓ Caught") : evo ? "Caught/Evolved?" : "Caught?"}</button>`;
+const monRow = (p: Species, r: Row | null, place?: string, evo = false) =>
+  `<div class="row">${mon(p)}<div class="grow"><div class="name">${p.name}</div>${r ? rowTags(r, place) : `<div class="small muted">${howElse(p)}</div>`}</div>${gotBtn(p, evo)}</div>`;
 type Pick = { p: Species; r: Row };
 const pref = (a: Pick, b: Pick) =>
   +isHere(b.r.place) - +isHere(a.r.place) ||
@@ -845,7 +845,7 @@ function Journey() {
   ${curS.html}`
   }
   </div><aside class="colside">
-  ${!hide.has("evolve") && evolve.length ? `<div class="eyebrow">Evolution options · ${evolve.length}</div>${evolve.map((p) => monRow(p, null)).join("")}` : ""}
+  ${!hide.has("evolve") && evolve.length ? `<div class="eyebrow">Evolution options · ${evolve.length}</div>${evolve.map((p) => monRow(p, null, undefined, true)).join("")}` : ""}
   ${
     hide.has("journey")
       ? ""
