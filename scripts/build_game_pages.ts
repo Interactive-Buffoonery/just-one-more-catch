@@ -27,9 +27,9 @@ import { VERSIONS } from "../client/packs.ts";
 
 const esc = (s: unknown) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
 const games = [
-  ["heartgold-soulsilver", "hgss", "Johto and Kanto"],
   ["crystal", "crystal", "Johto and Kanto"],
   ["firered-leafgreen", "frlg", "Kanto and Sevii Islands"],
+  ["heartgold-soulsilver", "hgss", "Johto and Kanto"],
   ["ultra-sun-ultra-moon", "usum", "Alola"],
 ];
 const replace = (text: string, pattern: string | RegExp, value: string | ((...args: any[]) => string)): string => {

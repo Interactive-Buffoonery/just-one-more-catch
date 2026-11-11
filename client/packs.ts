@@ -207,24 +207,6 @@ const USUM: Pack = {
 };
 
 export const VERSIONS: Record<VersionId, Version> = {
-  heartgold: {
-    name: "HeartGold",
-    short: "HG",
-    code: "h",
-    gen: "Gen 4",
-    pack: HGSS,
-    other: "SoulSilver",
-    ring: ["fire", "normal"],
-  },
-  soulsilver: {
-    name: "SoulSilver",
-    short: "SS",
-    code: "s",
-    gen: "Gen 4",
-    pack: HGSS,
-    other: "HeartGold",
-    ring: ["steel", "water"],
-  },
   crystal: {
     name: "Crystal",
     short: "C",
@@ -250,6 +232,24 @@ export const VERSIONS: Record<VersionId, Version> = {
     pack: FRLG,
     other: "FireRed",
     ring: ["grass", "bug"],
+  },
+  heartgold: {
+    name: "HeartGold",
+    short: "HG",
+    code: "h",
+    gen: "Gen 4",
+    pack: HGSS,
+    other: "SoulSilver",
+    ring: ["fire", "normal"],
+  },
+  soulsilver: {
+    name: "SoulSilver",
+    short: "SS",
+    code: "s",
+    gen: "Gen 4",
+    pack: HGSS,
+    other: "HeartGold",
+    ring: ["steel", "water"],
   },
   ultrasun: {
     name: "Ultra Sun",

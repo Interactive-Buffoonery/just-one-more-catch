@@ -1,9 +1,9 @@
 export const VERSION_IDS = [
-  "heartgold",
-  "soulsilver",
   "crystal",
   "firered",
   "leafgreen",
+  "heartgold",
+  "soulsilver",
   "ultrasun",
   "ultramoon",
 ] as const;
