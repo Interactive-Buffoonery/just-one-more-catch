@@ -72,7 +72,7 @@
     {"id": "arceus", "label": "Bring an event Arceus", "q": "Did you bring an event Arceus to the Ruins of Alph?", "chap": 16}
   ],
   "row_needs": [
-    {"place": "Violet City Poke Mart", "n": 175, "m": "gift-egg", "needs": ["Zephyr"]},
+    {"place": "Violet City Poke Mart", "n": 175, "m": "gift-egg", "needs": ["Zephyr"], "show_as": "Violet City Poke Mart"},
     {"place": "Goldenrod City Bills House", "n": 133, "m": "gift", "needs": ["Plain", "bill"]},
     {"place": "Route 36", "n": 185, "m": "squirt-bottle", "needs": ["Plain", "squirt-bottle"]},
     {"place": "Lake Of Rage", "n": 130, "m": "static", "needs": ["surf"]},

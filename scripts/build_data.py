@@ -30,7 +30,7 @@ def pretty(s):
     for a, b in [("Kings Rock", "King's Rock"), ("Dragons Den", "Dragon's Den"), ("Team Rocket Hq", "Team Rocket HQ"),
                  ("Digletts", "Diglett's"), ("Kirks House", "Kirk's House"), ("Bills House", "Bill's House"),
                  ("Ss Anne", "S.S. Anne"), ("Silph Co", "Silph Co."), (" Of ", " of "), ("Pokemon", "Pokémon"),
-                 (" City Entrance", " (city side)"), ("Hauoli", "Hau'oli"), ("Ulaula", "Ula'ula"), ("Poke Pelago", "Poké Pelago"),
+                 (" City Entrance", " (city side)"), ("Hauoli", "Hau'oli"), ("Ulaula", "Ula'ula"), ("Poke Pelago", "Poké Pelago"), ("Poke Mart", "Poké Mart"),
                  ("Team Rockets Castle", "Team Rocket's Castle"), ("Totems Den", "Totem's Den")]:
         s = s.replace(a, b)
     return s
@@ -132,13 +132,15 @@ def rows_for(encounters, version, n):
                 cond = sorted(c["name"] for c in d["condition_values"] if c["name"] not in DEFAULT_COND)
                 m = GAME.get("methods", {}).get(src, src)
                 extra = []
+                row_place = place
                 for i, g in enumerate(GAME.get("row_needs", [])):
                     if g["n"] == n and matches(loc, g["place"]) and g.get("m", m) == m:
                         row_hits.add(i)
                         extra += g["needs"]
+                        row_place = g.get("show_as", row_place)
                 need = tuple(dict.fromkeys(area_need + extra)) or None
-                k = (place, m, need, tuple(cond))
-                r = merged.setdefault(k, {"place": pretty(place), "chap": chap, "m": k[1], "need": list(need) if need else None, "cond": cond, "lo": 99, "hi": 0, "by": {}})
+                k = (row_place, m, need, tuple(cond))
+                r = merged.setdefault(k, {"place": pretty(row_place), "chap": chap, "m": k[1], "need": list(need) if need else None, "cond": cond, "lo": 99, "hi": 0, "by": {}})
                 r["lo"] = min(r["lo"], d["min_level"]); r["hi"] = max(r["hi"], d["max_level"]); r["by"][src] = r["by"].get(src, 0) + d["chance"]
     # methods folded into one (Crystal's three Headbutt tree tables) keep the best table's odds
     for r in merged.values():
