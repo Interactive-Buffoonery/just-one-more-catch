@@ -191,4 +191,9 @@ const loadClerk = () =>
       onUser(null);
     }
   })());
-if (expectsSession) void loadClerk();
+if (expectsSession) {
+  void loadClerk();
+  // ponytail: fixed wait before falling back to guest play; a slow sign-in
+  // that finishes later still signs the user in.
+  setTimeout(() => userId === undefined && onUser(null), 10000);
+}
