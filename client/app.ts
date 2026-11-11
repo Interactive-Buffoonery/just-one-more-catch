@@ -6,6 +6,7 @@ import CSS from "./styles";
 import { MAX_RUN_BYTES, MAX_RUNS, runBytes } from "../shared/limits";
 import { gameNow, type Clock } from "../shared/clock";
 import { summarize, type Summary } from "../shared/summary";
+import { csv } from "../shared/csv";
 
 type Row = {
   place: string;
@@ -1262,10 +1263,23 @@ function Account() {
   ${
     a.isAuthenticated
       ? `<div class="card"><div style="display:flex;gap:12px;align-items:center"><span class="avatar" aria-hidden="true">${esc(initial())}</span><div style="flex:1"><b>${esc(a.displayName || "Trainer")}</b><div class="small muted">${a.email ? `Signed in as ${esc(a.email)}` : "Signed in"}</div></div><button class="chip" data-signout="1">Sign out</button></div>
-  <div class="chips" style="margin-top:12px"><button class="chip" data-download="1">Download my data</button><button class="chip" data-delaccount="1">Delete account</button></div></div>`
-      : `<div class="card"><b>Save your playthroughs to an account</b><p class="muted small" style="margin:4px 0 14px">Right now they live only in this browser. With an account you can open them on any device. ${MOVE_NOTE}</p><button class="app-primary" data-signinsheet="1">Sign in or create an account</button></div>`
+  <div class="chips" style="margin-top:12px">${exportChips()}<button class="chip" data-delaccount="1">Delete account</button></div>${exportError()}</div>`
+      : `<div class="card"><b>Save your playthroughs to an account</b><p class="muted small" style="margin:4px 0 14px">Right now they live only in this browser. With an account you can open them on any device. ${MOVE_NOTE}</p><button class="app-primary" data-signinsheet="1">Sign in or create an account</button><div class="chips" style="margin-top:12px">${exportChips()}</div>${exportError()}</div>`
   }`;
 }
+function exportChips() {
+  const off = ui.export || !bridge.runs?.length ? "disabled" : "";
+  const chip = (kind: string, label: string) =>
+    `<button class="chip" data-download="${kind}" data-k="dl-${kind}" ${off}>${ui.export?.kind === kind ? exportLabel() : label}</button>`;
+  return (
+    chip("json", "Download my data") +
+    chip("csv", "Download caught Pokémon (CSV)")
+  );
+}
+const exportError = () =>
+  ui.exportError
+    ? `<p class="small" role="alert" style="margin:8px 0 0;color:var(--coral)">${ui.exportError}</p>`
+    : "";
 const MOVE_NOTE =
   "Anything already saved in this browser moves over when you sign in.";
 function fillSignIn() {
@@ -1466,36 +1480,146 @@ function toggleCaught(n: number) {
     render();
   }, 5000);
 }
-async function download() {
-  const rows = bridge.runs || [];
-  let states: string[];
-  try {
-    // ponytail: one query per run, all at once; batch them if a thousand at a time strains the socket
-    states = await Promise.all(
-      rows.map((r) =>
-        r.id === run?.id ? dumpRun(R()) : bridge.getState(r.id),
-      ),
+const tick = (ms: number) => new Promise((r) => setTimeout(r, ms));
+const within = <T>(p: Promise<T>, ms: number) =>
+  Promise.race([
+    p,
+    tick(ms).then(() => {
+      throw new Error("Timed out");
+    }),
+  ]);
+// ponytail: all-or-nothing, so a run deleted mid-export fails the whole export; just try again
+async function fetchStates(rows: RunRow[], onStep: (done: number) => void) {
+  const get = bridge.getState,
+    openId = run?.id,
+    open = run && dumpRun(R()),
+    out: string[] = [];
+  const one = (id: string) =>
+    within(get(id), 20000).catch(() =>
+      tick(500).then(() => within(get(id), 20000)),
     );
-  } catch {
-    return showSaveError("Couldn't download your data. Try again.");
-  }
-  const data = {
-    exportedAt: new Date().toISOString(),
-    account: bridge.auth.displayName,
-    runs: rows.map((r, i) => ({
-      id: r.id,
-      game: r.version,
-      startedAt: r.createdAt,
-      ...JSON.parse(states[i] || "{}"),
-    })),
+  let next = 0,
+    done = 0,
+    failed = false;
+  const worker = async () => {
+    while (!failed && next < rows.length) {
+      const i = next++;
+      try {
+        out[i] = rows[i].id === openId ? open! : await one(rows[i].id);
+        onStep(++done);
+      } catch {
+        failed = true;
+      }
+    }
   };
+  await Promise.all(Array.from({ length: 6 }, worker));
+  if (failed) throw new Error("Couldn't fetch every playthrough");
+  return out;
+}
+function saveFile(name: string, type: string, parts: BlobPart[]) {
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(
-    new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }),
-  );
-  a.download = "just-one-more-catch.json";
+  a.href = URL.createObjectURL(new Blob(parts, { type }));
+  a.download = name;
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+// ponytail: the open run's updatedAt is its last save, even though its state is the live one
+const jsonParts = (rows: RunRow[], states: string[]) => [
+  `{"exportedAt":${JSON.stringify(new Date().toISOString())},"account":${JSON.stringify(bridge.auth.displayName ?? null)},"runs":[\n`,
+  ...rows.map(
+    (r, i) =>
+      (i ? ",\n" : "") +
+      JSON.stringify(
+        {
+          id: r.id,
+          game: r.version,
+          startedAt: r.createdAt,
+          updatedAt: r.updatedAt,
+          ...JSON.parse(states[i] || "{}"),
+        },
+        null,
+        2,
+      ),
+  ),
+  "\n]}\n",
+];
+async function caughtCsv(rows: RunRow[], states: string[]) {
+  const lines: unknown[][] = [
+    [
+      "Game",
+      "Started",
+      "Playthrough ID",
+      "National No.",
+      "Regional No.",
+      "Species",
+      "Shiny",
+    ],
+  ];
+  const dexes = new Map<Pack, Map<number, Species>>();
+  for (const [i, r] of rows.entries()) {
+    const v = verOf(r.version);
+    if (!dexes.has(v.pack)) {
+      const d = loaded.get(v.pack) || (await v.pack.load());
+      loaded.set(v.pack, d);
+      dexes.set(v.pack, new Map(d.dex.map((p: Species) => [p.n, p])));
+    }
+    const dex = dexes.get(v.pack)!,
+      s = JSON.parse(states[i] || "{}") || {},
+      list = (a: unknown): any[] => (Array.isArray(a) ? a : []),
+      shiny = new Set(
+        list(s.mons)
+          .filter((m) => m?.shiny)
+          .map((m) => m.n),
+      ),
+      caught = [...new Set(list(s.caught))]
+        .filter((n) => Number.isInteger(n) && n > 0)
+        .sort((a, b) => a - b);
+    for (const n of caught) {
+      const p = dex.get(n);
+      lines.push([
+        v.name,
+        startDay(r),
+        r.id,
+        n,
+        p?.j ?? "",
+        p?.name ?? `#${n}`,
+        shiny.has(n) ? "yes" : "",
+      ]);
+    }
+  }
+  return csv(lines);
+}
+const exportLabel = () =>
+  `Downloading ${ui.export.done} of ${ui.export.total}…`;
+async function download(kind: "json" | "csv") {
+  const rows = bridge.runs || [];
+  if (ui.export || !rows.length) return;
+  ui.export = { kind, done: 0, total: rows.length };
+  ui.exportError = "";
+  render();
+  try {
+    const states = await fetchStates(rows, (done) => {
+      ui.export.done = done;
+      const b = document.querySelector(`[data-download="${kind}"]`);
+      if (b) b.textContent = exportLabel();
+    });
+    if (kind === "json")
+      saveFile(
+        "just-one-more-catch.json",
+        "application/json",
+        jsonParts(rows, states),
+      );
+    else
+      saveFile("just-one-more-catch-caught.csv", "text/csv", [
+        await caughtCsv(rows, states),
+      ]);
+  } catch {
+    ui.exportError =
+      "Couldn't download your data. Check your connection and try again.";
+  } finally {
+    ui.export = null;
+    render();
+  }
 }
 async function onClick(e: MouseEvent) {
   const t = (e.target as HTMLElement).closest(
@@ -1549,7 +1673,7 @@ async function onClick(e: MouseEvent) {
     return;
   }
   if (d.download) {
-    await download();
+    await download(d.download === "csv" ? "csv" : "json");
     return;
   }
   if (d.another) {
