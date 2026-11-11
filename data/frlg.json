@@ -38,10 +38,10 @@
     "Icefall Cave Waterfall": ["surf", "waterfall"],
     "Icefall Cave": "surf",
     "Cerulean Cave": "surf",
-    "Mt. Ember 1F Cave Behind Team Rocket": ["Elite Four", "ruby-search", "surf"],
-    "Mt. Ember B1F": ["Elite Four", "ruby-search", "surf"],
-    "Mt. Ember B2F": ["Elite Four", "ruby-search", "surf"],
-    "Mt. Ember B3F": ["Elite Four", "ruby-search", "surf"],
+    "Mt. Ember 1F Cave Behind Team Rocket": {"needs": ["Elite Four", "ruby-search", "surf", "strength"], "src": "https://bulbapedia.bulbagarden.net/wiki/Mt._Ember", "quote": "In the cave guarded by the two {{tc|Team Rocket Grunt}}s (requires {{m|Strength}})"},
+    "Mt. Ember B1F": {"needs": ["Elite Four", "ruby-search", "surf", "strength"], "src": "https://bulbapedia.bulbagarden.net/wiki/Mt._Ember", "quote": "In the cave guarded by the two {{tc|Team Rocket Grunt}}s (requires {{m|Strength}})"},
+    "Mt. Ember B2F": {"needs": ["Elite Four", "ruby-search", "surf", "strength"], "src": "https://bulbapedia.bulbagarden.net/wiki/Mt._Ember", "quote": "In the cave guarded by the two {{tc|Team Rocket Grunt}}s (requires {{m|Strength}})"},
+    "Mt. Ember B3F": {"needs": ["Elite Four", "ruby-search", "surf", "strength"], "src": "https://bulbapedia.bulbagarden.net/wiki/Mt._Ember", "quote": "In the cave guarded by the two {{tc|Team Rocket Grunt}}s (requires {{m|Strength}})"},
     "Mt. Ember Cave": ["surf", "strength"],
     "Mt. Ember Inside": ["surf", "strength"],
     "Mt. Ember Summit": ["surf", "strength"],
@@ -57,7 +57,9 @@
     "Pattern Bush": "surf",
     "Green Path": "surf",
     "Outcast Island": "surf",
-    "Altering Cave": "surf"
+    "Altering Cave": "surf",
+    "Memorial Pillar": {"needs": "surf", "src": "https://bulbapedia.bulbagarden.net/wiki/Memorial_Pillar", "quote": "The player enters the area while {{m|surf}}ing from the east"},
+    "Tanoby Ruins": {"needs": "surf", "src": "https://bulbapedia.bulbagarden.net/wiki/Tanoby_Ruins", "quote": "The entirety of these ruins is only seven small islets on a calm, blue [[water route|sea]]"}
   },
   "chapters": [
     {"title": "Pallet to Viridian Forest", "needs": [], "places": ["Pallet Town", "Route 1", "Viridian City", "Route 22", "Route 2", "Viridian Forest"]},
