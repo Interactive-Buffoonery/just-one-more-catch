@@ -22,25 +22,6 @@ const METHOD: Record<string, [string, string | null]> = {
   "berry-trees": ["Berry tree", null],
 };
 
-const TIME: Record<string, string> = {
-  "time-morning": "Morning",
-  "time-day": "Day",
-  "time-night": "Night",
-};
-
-const OK_COND: Record<string, string> = {
-  "headbutt-tree-common": "Common tree",
-  "headbutt-tree-rare": "Rare tree",
-  "story-progress-zephyr-badge": "After Zephyr Badge",
-  "story-progress-national-dex": "After the Elite Four",
-  "story-progress-hall-of-fame": "After the Elite Four",
-};
-
-const coinLabel = (c: string) => {
-  const m = c.match(/^coins-(\d+)$/);
-  return m ? `${m[1]} coins` : null;
-};
-
 import { VERSIONS } from "../client/packs.ts";
 
 const esc = (s: unknown) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
@@ -70,6 +51,7 @@ for (const [slug, id, region] of games) {
   const candidates = data.dex.filter((m: any) => m.rows.length);
   const before = candidates.filter((m: any) => Math.min(...m.rows.map((r: any) => r.chap)) === 0).length;
   const owned = new Set<string>();
+  const gated = new Set<string>(data.chapters.flatMap((ch: any) => [...ch.needs, ...(ch.kit ? [ch.kit] : [])]));
   const listed = new Set<number>();
   const groups = data.chapters.map((ch: any, i: number) => {
     for (const k of [...ch.needs, ...(ch.kit ? [ch.kit] : [])]) owned.add(k);
@@ -77,17 +59,17 @@ for (const [slug, id, region] of games) {
       if (seen.has(k)) return false;
       const next = new Set(seen).add(k);
       const event = data.events.find((e: any) => e.id === k);
-      if (event) return owned.has(k) || (!!event.by && has(event.by, next)) || data.events.some((e: any) => e.after?.includes(k) && has(e.id, next));
-      if (/^[A-Z]/.test(k)) return owned.has(k);
-      return owned.has(k) && (!pack.hm[k] || owned.has(pack.hm[k]));
+      // ponytail: an event, badge or kit item no chapter lists has no known unlock point, so it counts as available
+      if (event) return owned.has(k) || !gated.has(k) || (!!event.by && has(event.by, next)) || data.events.some((e: any) => e.after?.includes(k) && has(e.id, next));
+      const open = (x: string) => owned.has(x) || !gated.has(x);
+      return open(k) && (!pack.hm[k] || open(pack.hm[k]));
     };
     return candidates.filter((m: any) => {
       if (listed.has(m.n) || (!m.j && !has("Elite Four"))) return false;
       const catchable = m.rows.some((r: any) => r.chap <= i &&
         [...data.chapters[r.chap].needs, ...(data.chapters[r.chap].kit ? [data.chapters[r.chap].kit] : []), METHOD[r.m]?.[1], ...(r.need || [])].every(k => !k || has(k)) &&
-        r.cond.every((c: string) => (TIME[c] || OK_COND[c] || coinLabel(c) || c.startsWith("weekday-")) &&
-          (c !== "story-progress-zephyr-badge" || has("Zephyr")) &&
-          (!["story-progress-national-dex", "story-progress-hall-of-fame"].includes(c) || has("Elite Four"))));
+        r.cond.every((c: string) => (c !== "story-progress-zephyr-badge" || has("Zephyr")) &&
+          (!(["story-progress-national-dex", "story-progress-hall-of-fame", "other-snorlax-11-beat-league"].includes(c) || c.includes("elite-four")) || has("Elite Four"))));
       if (catchable) listed.add(m.n);
       return catchable;
     });
@@ -107,7 +89,7 @@ for (const [slug, id, region] of games) {
     return `<details class="gch"${i === 0 ? " open" : ""}><summary><span class="gnum">${i + 1}</span><span class="grow"><span class="gt">${esc(ch.title)}</span><span class="gneeds">${(tags.length ? tags.map(label) : ["Start"]).map(t => `<span class="tag plain">${esc(t)}</span>`).join("")}</span></span><span class="gcount">${species.length ? `${species.length}<span class="sr"> new Pokémon</span>` : '<span aria-hidden="true">—</span><span class="sr">No new Pokémon</span>'}</span>${summaryIcon}</summary>\n<div class="gbody">${ch.places.length ? `<p class="gplaces">${esc(ch.places.join(", "))}</p>` : ""}${sprites ? `<ul class="gmons" role="list" aria-label="New Pokémon">${sprites}</ul>` : ''}</div></details>`;
   }).join("");
   let content = template.replace(/HeartGold and SoulSilver/g, esc(title)).replace('Gen 4 · Johto and Kanto', esc(`${versions[0].gen} · ${region}`));
-  content = content.replace(/<div class="gcovers">.*?<\/div>/s, `<div class="gcovers">${versions.map(v => {const src = `/covers/${v.short.toLowerCase()}.jpg`; accessSync(`public${src}`); return `<li><img src="${src}" alt="" width="72" height="72">`;}).join('')}</div>`);
+  content = content.replace(/<div class="gcovers">.*?<\/div>/s, `<div class="gcovers">${versions.map(v => {const src = `/covers/${v.short.toLowerCase()}.jpg`; accessSync(`public${src}`); return `<img src="${src}" alt="" width="72" height="72">`;}).join('')}</div>`);
   const places = data.chapters.reduce((n: number, ch: any) => n + ch.places.length, 0);
   let stat = 0;
   content = content.replace(/<dd>\d+<\/dd>/g, () => `<dd>${[mons.length, data.chapters.length, places][stat++]}</dd>`).replace('Track your HeartGold or SoulSilver run', esc(`Track your ${versions.map(v => v.name).join(' or ')} run`));
