@@ -32,13 +32,13 @@ import { Boxes, fillBoxSheet, fillMonSheet, saveMon } from "./views/boxes";
 import { Dex, dexGrid, fillSpecies } from "./views/dex";
 import { fillClock, fillCustom, Journey, untick } from "./views/journey";
 import {
-  cover,
   exportLabel,
   fillSignIn,
   fillStartDate,
   partner,
   Runs,
   Settings,
+  switcher,
   trainerName,
 } from "./views/runs";
 import { gameNow } from "../shared/clock";
@@ -96,6 +96,17 @@ function openSheet(s: any) {
 }
 
 /* ---- Wiring ---- */
+const TABS = [
+  ["playthroughs", "Dashboard"],
+  ["journey", "Journey"],
+  ["dex", "Dex"],
+  ["boxes", "Boxes"],
+];
+const tabButtons = (icons: boolean) =>
+  TABS.map(
+    ([t, l]) =>
+      `<button data-tab="${t}" ${ui.tab === t ? `aria-current="page"` : ""}>${icons ? TAB_ICONS[t] : ""}<span>${l}</span></button>`,
+  ).join("");
 const VIEWS: Record<string, () => string> = {
   journey: Journey,
   dex: Dex,
@@ -105,14 +116,17 @@ const VIEWS: Record<string, () => string> = {
   contact: Contact,
 };
 function shell() {
-  return `<div class="top">
+  return `<header class="top">
     <button class="logo" data-tab="playthroughs" aria-label="Just One More Catch, your playthroughs"><span class="full">Just One More Catch</span></button>
+    <nav class="toptabs" id="toptabs" aria-label="Sections"></nav>
     <span class="spacer"></span><span id="topright"></span>
-  </div>
+  </header>
   <main id="view"></main>
+  <footer class="ftr"><div id="footalert"></div>
+  <div class="balls" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M2 12h7M15 12h7"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M2 12h7M15 12h7"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M2 12h7M15 12h7"/></svg></div>
   <div class="footer-brand"><button data-tab="about" data-sec="about" aria-label="About Just One More Catch">Just One More Catch</button></div>
   <p class="foot">Unofficial fan project, not affiliated with Nintendo, Creatures, GAME FREAK or The Pokémon Company. Free and non-commercial. Box art, sprites and badges © Nintendo, Creatures and GAME FREAK. Encounter data and sprites sourced from <a href="https://pokeapi.co" target="_blank" rel="noopener">PokeAPI</a>. Thank you!</p>
-  <nav class="footnav" aria-label="About this site"><button data-tab="about" data-sec="about">About</button><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><button data-tab="contact">Contact</button></nav>
+  <nav class="footnav" aria-label="About this site"><button data-tab="about" data-sec="about">About</button><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><button data-tab="contact">Contact</button></nav></footer>
   <div class="dock"><div id="toast"></div><div id="tabs"></div></div>
   <dialog class="sheet" id="sheet" aria-labelledby="sheet-title"><div class="sheetbody" id="sheetbody"></div></dialog>
   <div class="sr" aria-live="polite" id="live"></div>`;
@@ -141,32 +155,24 @@ function render() {
     ? `<p class="muted" style="text-align:center;padding-top:40px">Loading…</p>`
     : needsGame && ui.loadError
       ? `<p class="small" role="alert" style="text-align:center;padding-top:40px;color:var(--coral)">This game didn't load. Check your connection and reload the page.</p>`
-      : (signedIn || ui.tab === "playthroughs"
-          ? ui.saveError
-            ? `<p class="small" role="alert" style="text-align:center;margin:4px 0 16px;color:var(--coral)">${ui.saveError}</p>`
-            : ""
-          : `<p class="muted small" style="text-align:center;margin:4px 0 16px">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your playthroughs and view them on any device.</p>`) +
-        VIEWS[ui.tab]();
+      : (ui.saveError
+          ? `<p class="small" role="alert" style="text-align:center;margin:4px 0 16px;color:var(--coral)">${ui.saveError}</p>`
+          : "") + VIEWS[ui.tab]();
+  const avatar = `<button class="avatar" data-settings="1" data-k="avatar" aria-label="Settings and avatar, ${esc(trainerName())}">${partner("")}</button>`;
   $("#topright").innerHTML =
-    `<span style="display:flex;gap:8px">${run ? `<button class="gamepill" data-tab="playthroughs" aria-label="Current playthrough: ${ver().name}. Switch playthrough">${cover(ver())}</button>` : ""}${
-      a.isLoading
-        ? ""
-        : `${signedIn ? "" : `<button class="hdr-signup" data-signinsheet="1" data-k="signin">Sign up / Sign in</button>`}<button class="avatar" data-settings="1" data-k="avatar" aria-label="Settings and avatar, ${esc(trainerName())}">${partner("")}</button>`
-    }</span>`;
+    switcher(run?.id ?? opening) +
+    (a.isLoading
+      ? ""
+      : signedIn
+        ? avatar
+        : `<span class="acct"><button class="signin" data-signinsheet="1" data-k="signin">Sign in</button>${avatar}</span>`);
+  $("#footalert").innerHTML =
+    a.isLoading || signedIn
+      ? ""
+      : `<div class="falert" role="note">Saved only in this browser<button data-signinsheet="1" data-k="signin-foot">Sign in</button></div>`;
+  $("#toptabs").innerHTML = a.isLoading ? "" : tabButtons(false);
   $("#tabs").innerHTML = !a.isLoading
-    ? `<nav class="tabbar" aria-label="Sections">${[
-        ["playthroughs", "Dashboard"],
-        ["journey", "Journey"],
-        ["dex", "Dex"],
-        ["boxes", "Boxes"],
-      ]
-        .map(
-          ([t, l]) =>
-            `<button data-tab="${t}" ${ui.tab === t ? `aria-current="page"` : ""}>${TAB_ICONS[t]}<span>${l}</span></button>`,
-        )
-        .join(
-          "",
-        )}<button class="tab-settings" data-settings="1" data-k="tab-settings">${SETTINGS_ICON}<span>Settings</span></button></nav>`
+    ? `<nav class="tabbar" aria-label="Sections">${tabButtons(true)}<button class="tab-settings" data-settings="1" data-k="tab-settings">${SETTINGS_ICON}<span>Settings</span></button></nav>`
     : "";
   $("#toast").innerHTML = ui.undo
     ? `<div class="toast">${ui.undo.msg}${ui.undo.n ? `<button data-undo="1">Undo</button>` : ""}</div>`
@@ -304,7 +310,7 @@ async function onClick(e: MouseEvent) {
   }
   if (d.signinsheet) {
     flushSave();
-    openSheet({ kind: "signin" });
+    openSheet({ kind: "signin", k: d.k });
     return;
   }
   if (d.signout) {
@@ -349,7 +355,8 @@ async function onClick(e: MouseEvent) {
     const row = bridge.runs?.find((r) => r.id === d.switch);
     if (row) {
       if (row.id !== run?.id) useRun(row);
-      ui.tab = "journey";
+      if (d.stay) ui.undo = null;
+      else ui.tab = "journey";
       render();
     }
     return;
@@ -683,6 +690,22 @@ export function mount(el: HTMLElement, b: Bridge) {
       scheduleSave();
       render();
     }
+  });
+  const menus = () =>
+    root.querySelectorAll<HTMLDetailsElement>(
+      "details.gsw[open],details.ptmenu[open]",
+    );
+  document.addEventListener("click", (e) =>
+    menus().forEach((m) => {
+      if (!m.contains(e.target as Node)) m.open = false;
+    }),
+  );
+  el.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    menus().forEach((m) => {
+      m.open = false;
+      m.querySelector("summary")?.focus();
+    });
   });
   $("#sheet").addEventListener("click", (e: Event) => {
     if ((e.target as HTMLElement).id === "sheet") $("#sheet").close();

@@ -30,6 +30,8 @@ export type Pack = {
   badges: string[][];
   // what follows a badge name in the UI: "Zephyr Badge", "Normalium Z"
   badgeWord?: string;
+  // what the set is called: "badges" unless the game has none
+  badgesWord?: string;
   postgame?: [string, string[][]];
   kit: string[][];
   // HM kit id -> badge needed to use it outside battle
@@ -191,6 +193,7 @@ const USUM: Pack = {
     ["Groundium", "Hapu"],
   ],
   badgeWord: "Z",
+  badgesWord: "trials",
   kit: [
     ["fishing-rod", "Fishing Rod"],
     ["tauros", "Tauros Charge"],

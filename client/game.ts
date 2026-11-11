@@ -367,6 +367,8 @@ export function has(k: string): boolean {
   const b = P().hm[k];
   return R().kit.has(k) && (!b || R().badges.has(b));
 }
+export const badgesWord = (p = P(), n = 2) =>
+  (p.badgesWord ?? "badges").slice(0, n === 1 ? -1 : undefined);
 export const badgeName = (b: string, p = P()) =>
   `${b} ${p.badgeWord ?? "Badge"}`;
 const needText = (k: string) =>

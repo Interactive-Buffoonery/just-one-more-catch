@@ -1,6 +1,7 @@
 import { $, esc } from "../dom";
 import {
   badgeName,
+  badgesWord,
   bridge,
   byN,
   dumpRun,
@@ -28,8 +29,12 @@ const badgeCount = (version: string, s: Summary) => {
     s.badges.includes(b[0]),
   ).length;
 };
-export const cover = (v: (typeof VERSIONS)[VersionId], cls = "") =>
-  `<img class="cover ${cls}" src="/covers/${v.short.toLowerCase()}.jpg" alt="${v.name} box art" width="46" height="46">`;
+export const cover = (
+  v: (typeof VERSIONS)[VersionId],
+  cls = "",
+  alt = `${v.name} box art`,
+) =>
+  `<img class="cover ${cls}" src="/covers/${v.short.toLowerCase()}.jpg" alt="${alt}" width="46" height="46">`;
 const gameChoices = () =>
   `<div class="newgames">${Object.entries(VERSIONS)
     .map(
@@ -114,7 +119,7 @@ function resumeCard(row: RunRow, r: Summary, at: string) {
     <div class="slab">${cover(v, "box")}<p class="last">Last played ${lastPlayed(at)}</p><button class="go lg" data-switch="${row.id}" aria-label="Continue ${v.name}">Continue</button></div>
     <div class="file">
       <div class="file-head"><div><h2 class="lg">${v.name}</h2><p class="soft">${p.region} · Started ${longDay(startDay(row))}${champTag(r)}</p></div>${ptMenu(row, v)}</div>
-      <div><p class="lead"><b>${badgeCount(row.version, r)}</b> of ${groups.flatMap(([, l]) => l).length} badges</p>
+      <div><p class="lead"><b>${badgeCount(row.version, r)}</b> of ${groups.flatMap(([, l]) => l).length} ${badgesWord(p)}</p>
         <div class="case">${groups
           .map(
             ([label, list]) =>
@@ -144,7 +149,7 @@ function miniCard(row: RunRow, r: Summary, at: string) {
     )
     .join(
       "",
-    )}</span><span class="sr">${badgeCount(row.version, r)} badges,</span><span class="got"><b>${r.caught}</b> of ${p.national}<span class="sr"> caught</span>${meter(r.caught, p.national)}</span></button>${ptMenu(row, v)}</div>`;
+    )}</span><span class="sr">${badgeCount(row.version, r)} ${badgesWord(p)},</span><span class="got"><b>${r.caught}</b> of ${p.national}<span class="sr"> caught</span>${meter(r.caught, p.national)}</span></button>${ptMenu(row, v)}</div>`;
 }
 const trainerCard = (rows: { row: RunRow; r: Summary }[]) =>
   `<aside class="trainer"><div class="tslab"><h2 class="lg">${esc(trainerName())}</h2>${partner("partner")}</div>
@@ -159,15 +164,33 @@ const signInNote = () =>
     ? guestRows().length && !moving
       ? `<p class="notice" role="status">${waitingNote(guestRows().length)}</p>`
       : ""
-    : `<p class="notice">Saved only in this browser. <button class="linkish" data-signinsheet="1">Make an account or sign in</button> to save your playthroughs and access them on any device!</p>`;
+    : "";
+const recentRuns = () =>
+  [...(bridge.runs || [])]
+    .map((row) => ({
+      row,
+      r: row.id === run?.id ? summarize(dumpRun(R())) : row.summary,
+      at: row.updatedAt || row.createdAt,
+    }))
+    .sort((x, y) => y.at.localeCompare(x.at));
+const CHEV = `<span class="gchev" aria-hidden="true"><svg viewBox="0 0 12 8"><path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+export function switcher(id?: string | null) {
+  const cur = bridge.runs?.find((r) => r.id === id);
+  if (!cur) return "";
+  const now = verOf(cur.version);
+  return `<details class="gsw"><summary data-k="gsw" aria-label="${now.name}. Switch playthrough">${cover(now, "", "")}<span class="gname">${now.name}</span>${CHEV}</summary><div class="menu">${recentRuns()
+    .map(({ row, r }) => {
+      const v = verOf(row.version),
+        b = badgeCount(row.version, r),
+        on = row.id === id;
+      return `<button data-switch="${row.id}" data-stay="1" data-k="gsw"${on ? ` aria-current="true"` : ""}>${cover(v, "", "")}<span class="grow">${v.name}<small>${r.caught} caught · ${b} ${badgesWord(v.pack, b)}</small></span>${on ? `<span class="gtick" aria-hidden="true">✓</span>` : ""}</button>`;
+    })
+    .join(
+      "",
+    )}<button class="all" data-tab="playthroughs">All playthroughs</button></div></details>`;
+}
 export function Runs() {
-  const rows = [...(bridge.runs || [])]
-      .map((row) => ({
-        row,
-        r: row.id === run?.id ? summarize(dumpRun(R())) : row.summary,
-        at: row.updatedAt || row.createdAt,
-      }))
-      .sort((x, y) => y.at.localeCompare(x.at)),
+  const rows = recentRuns(),
     [top, ...rest] = rows;
   if (!top)
     return `<div class="dash"><h1 class="lg">Dashboard</h1>
@@ -212,11 +235,9 @@ const exportError = () =>
   ui.exportError
     ? `<p class="small" role="alert" style="margin:8px 0 0;color:var(--coral)">${ui.exportError}</p>`
     : "";
-const MOVE_NOTE =
-  "Anything already saved in this browser moves over when you sign in.";
 export function fillSignIn() {
   $("#sheetbody").innerHTML =
-    `<h2 id="sheet-title">Sign in or create an account</h2><div id="clerk-signin" style="margin-top:16px"></div><p class="muted small" style="margin:12px 0 0">${MOVE_NOTE}</p>`;
+    `<div class="grab" aria-hidden="true"></div><h2 id="sheet-title" class="lg">Sign in</h2><div id="clerk-signin"></div><button class="app-quiet notnow" data-close="1">Not now</button>`;
   const el = $("#clerk-signin") as HTMLDivElement;
   if (!bridge.mountSignIn(el))
     el.innerHTML = `<p class="muted" style="margin:0">Sign-in isn't available right now. You can keep playing as a guest.</p>`;
