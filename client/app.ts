@@ -513,7 +513,7 @@ const esc = (v: unknown) =>
 const ring = (types: string[]) => {
   const a = TYPE[types[0]],
     b = TYPE[types[1] || types[0]];
-  return `background:linear-gradient(135deg,${a} 50%,${b} 50%)`;
+  return `--t1:${a};--t2:${b}`;
 };
 const sprite = (p: Species, cls = "", shiny = false) =>
   `<img class="sprite ${cls}" src="/sprites/${P().art}/${shiny ? "shiny/" : ""}${p.n}.png" alt="${shiny ? "Shiny " : ""}${p.name}" width="80" height="80" loading="lazy">`;
