@@ -4,7 +4,8 @@ import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 
 const store = new Map();
-const cache = {put: async (key, res) => void store.set(key.url ?? key, res)};
+const path = key => new URL(key.url ?? key, 'https://app.example').pathname;
+const cache = {put: async (key, res) => void store.set(path(key), res)};
 const handlers = {};
 let online = true;
 const fetched = [];
@@ -15,13 +16,13 @@ runInNewContext(readFileSync(new URL('../public/sw.js', import.meta.url), 'utf8'
   location: {origin: 'https://app.example'},
   caches: {
     open: async () => cache,
-    match: async key => store.get(key.url ?? key),
+    match: async key => store.get(path(key)),
     keys: async () => [],
   },
   fetch: async req => {
-    fetched.push(req.url);
+    fetched.push(req.url ?? req);
     if (!online) throw new Error('offline');
-    return response('net ' + req.url);
+    return response('net ' + (req.url ?? req));
   },
   self: {addEventListener: (type, fn) => (handlers[type] = fn), skipWaiting() {}, clients: {claim() {}}},
 });
@@ -43,8 +44,17 @@ const before = fetched.length;
 assert.match((await get('/assets/app-abc.js')).body, /^net /, 'a cached file is served again');
 assert.equal(fetched.length, before, 'without another request');
 
+let stored;
+handlers.message({
+  data: ['https://app.example/assets/first-visit.js', 'https://api.example/x', 'https://app.example/privacy/'],
+  waitUntil: p => (stored = p),
+});
+await stored;
+assert.deepEqual([...store.keys()].sort(), ['/', '/assets/app-abc.js', '/assets/first-visit.js'], 'a first visit stores the app page and only its own static files');
+
 online = false;
 assert.match((await get('/?tab=journey', 'navigate')).body, /^net /, 'offline, the app page comes from the cache');
 assert.match((await get('/assets/app-abc.js')).body, /^net /, 'offline, cached files still load');
+assert.match((await get('/assets/first-visit.js')).body, /^net /, 'offline, first-visit files load');
 await assert.rejects(get('/sprites/never-seen.png'), 'offline, uncached files fail as usual');
 console.log('service worker ok: offline app page, cache-first static files, everything else untouched');

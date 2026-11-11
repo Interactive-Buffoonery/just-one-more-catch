@@ -14,6 +14,24 @@ self.addEventListener("activate", (e) =>
       .then(() => self.clients.claim()),
   ),
 );
+// A first visit loads everything before this worker takes over, so the page
+// sends the list of what it loaded and we store those files and the app page.
+self.addEventListener("message", (e) => {
+  if (!Array.isArray(e.data)) return;
+  const mine = e.data
+    .map((u) => new URL(u, location.origin))
+    .filter((u) => u.origin === location.origin && STATIC.test(u.pathname))
+    .map((u) => u.pathname);
+  e.waitUntil(
+    Promise.all(
+      ["/", ...mine].map((path) =>
+        fetch(path)
+          .then((res) => res.status === 200 && put(path, res))
+          .catch(() => {}),
+      ),
+    ),
+  );
+});
 self.addEventListener("fetch", (e) => {
   const req = e.request;
   const url = new URL(req.url);
@@ -31,7 +49,7 @@ self.addEventListener("fetch", (e) => {
     );
   } else if (STATIC.test(url.pathname)) {
     e.respondWith(
-      caches.match(req).then(
+      caches.match(req, { ignoreVary: true }).then(
         (hit) =>
           hit ||
           fetch(req).then((res) => {
