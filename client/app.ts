@@ -209,11 +209,11 @@ const HELD_ITEMS = [
   "Up-Grade",
 ];
 const LOOKS = [
-  ["blissey", "Blissey", "Pink and pale green"],
-  ["venusaur", "Venusaur", "Teal and flower pink"],
-  ["snorlax", "Snorlax", "Cream and deep blue"],
-  ["blossom", "Blossom", "Sakura / Rosé Pine"],
-  ["vampire", "Vampire", "Alucard / Dracula"],
+  ["blissey", "Blissey"],
+  ["venusaur", "Venusaur"],
+  ["snorlax", "Snorlax"],
+  ["blossom", "Blossom"],
+  ["vampire", "Vampire"],
 ];
 const PALETTE: Record<string, { light: string; dark: string }> = {
   blissey: { light: "blissey", dark: "blissey-dark" },
@@ -1295,9 +1295,11 @@ function fillSignIn() {
   if (!bridge.mountSignIn(el))
     el.innerHTML = `<p class="muted" style="margin:0">Sign-in isn't available right now. You can keep playing as a guest.</p>`;
 }
+const lookHalf = (theme: string) =>
+  `<span data-theme="${theme}"><i class="c"><i class="t"></i><i class="m"><i></i></i><i class="b"></i></i></span>`;
 const Appearance = () => `<div class="card" style="margin-top:16px">
     <div class="name">Look</div>
-    <div class="chips" style="margin-top:6px">${LOOKS.map(([k, l, sub]) => `<button class="chip" data-look="${k}" data-k="look-${k}" aria-pressed="${ui.look === k}">${l} <span class="small" style="opacity:.75">${sub}</span></button>`).join("")}</div>
+    <div class="looks" role="group" aria-label="Look">${LOOKS.map(([k, l]) => `<button class="look" data-look="${k}" data-k="look-${k}" aria-pressed="${ui.look === k}"><span class="prev" aria-hidden="true">${lookHalf(PALETTE[k].light)}${lookHalf(PALETTE[k].dark)}</span><span>${l}</span></button>`).join("")}</div>
     <div class="name" style="margin-top:14px">Mode</div>
     <div class="chips" style="margin-top:6px">${[
       ["auto", "Match device"],
