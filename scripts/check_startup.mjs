@@ -85,6 +85,7 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
     assert.deepEqual(mounted, [open], 'click during load mounts once');
     bridge.unmountSignIn(open);
     mounted.length = 0;
+    return;
   }
   if (user) {
     const el={isConnected:true,textContent:''};
