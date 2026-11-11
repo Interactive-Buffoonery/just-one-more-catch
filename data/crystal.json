@@ -20,8 +20,8 @@
   },
   "needs": {"Union Cave B2F": "surf", "Slowpoke Well B1F": "surf", "Whirl Islands": "whirlpool", "Mt. Mortar Upper Cave": "waterfall", "Dragons Den": ["surf", "whirlpool"]},
   "chapters": [
-    {"title": "New Bark to Violet", "needs": [], "places": ["New Bark Town", "Route 29", "Cherrygrove City", "Route 30", "Route 31", "Route 46", "Dark Cave Violet City Entrance", "Violet City", "Sprout Tower"]},
-    {"title": "Ruins of Alph to Azalea", "needs": ["Zephyr"], "places": ["Route 32", "Ruins Of Alph", "Union Cave", "Route 33", "Slowpoke Well", "Azalea Town"]},
+    {"title": "New Bark to Violet", "needs": [], "places": ["New Bark Town", "Route 29", "Cherrygrove City", "Route 30", "Route 31", "Route 46", "Dark Cave Violet City Entrance", "Violet City", "Sprout Tower", "Ruins Of Alph"]},
+    {"title": "Route 32 to Azalea", "needs": ["Zephyr"], "places": ["Route 32", "Union Cave", "Route 33", "Slowpoke Well", "Azalea Town"]},
     {"title": "Ilex Forest to National Park", "needs": ["Hive"], "places": ["Ilex Forest", "Route 34", "Goldenrod City Game Corner", "Goldenrod City North Gate", "Goldenrod City", "Route 35", "National Park"]},
     {"title": "Ecruteak and Olivine", "needs": ["Plain"], "places": ["Route 36", "Route 37", "Ecruteak City", "Burned Tower", "Roaming Johto", "Route 38", "Route 39", "Olivine City"]},
     {"title": "Cianwood and Whirl Islands", "needs": ["Fog"], "kit": "surf", "places": ["Sea Route 40", "Sea Route 41", "Cianwood City", "Whirl Islands"]},

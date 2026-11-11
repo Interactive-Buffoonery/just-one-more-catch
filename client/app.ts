@@ -538,6 +538,8 @@ function rowTags(r: Row, place = r.place) {
     t.push(`<span class="tag plain">${r.c}%</span>`);
   r.cond.forEach((c) => {
     if (TIME[c]) t.push(`<span class="tag time">${TIME[c]}</span>`);
+    else if (c.startsWith("weekday-"))
+      t.push(`<span class="tag time">${cap(c.slice(8))}s</span>`);
     else if (OK_COND[c] || coinLabel(c))
       t.push(`<span class="tag plain">${OK_COND[c] || coinLabel(c)}</span>`);
   });
@@ -675,10 +677,15 @@ function placeBlock(pl: string, s: Spot) {
       : s.later.length
         ? "Nothing to catch yet"
         : "";
-  return `<div class="place"><div class="placehead"><span>${pl}</span><span class="count">${count}</span></div>${s.now
-    .sort((a, b) => rank(a.r) - rank(b.r) || b.r.c - a.r.c)
+  const sorted = s.now.sort((a, b) => b.r.c - a.r.c),
+    ready = sorted.filter((x) => rank(x.r) === 0),
+    other = sorted.filter((x) => rank(x.r) === 1),
+    otherTime = R().showLater
+      ? other.map((x) => monRow(x.p, x.r, pl)).join("")
+      : laterBox(`t:${pl}`, `Other times · ${other.length}`, other, pl);
+  return `<div class="place"><div class="placehead"><span>${pl}</span><span class="count">${count}</span></div>${ready
     .map((x) => monRow(x.p, x.r, pl))
-    .join("")}${later}${once}</div>`;
+    .join("")}${otherTime}${later}${once}</div>`;
 }
 // Places in a chapter, in the chapter's own order, then any extra places its rows use.
 function chapterSpots(all: Record<string, Spot>, i: number) {
@@ -2097,9 +2104,18 @@ export function mount(el: HTMLElement, b: Bridge) {
         ) || (root.querySelector("[data-filter][aria-pressed=true]") as any)
       )?.focus();
   });
+  const timeKey = () => (run ? `${nowTime()} ${gameNow(R().clock).day}` : "");
+  let shownTime = timeKey();
+  const refreshTime = () => {
+    if (!run || ui.tab !== "journey" || $("#sheet").open || timeKey() === shownTime)
+      return;
+    shownTime = timeKey();
+    render();
+  };
+  setInterval(refreshTime, 60000);
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "hidden") flushSave();
-    else if (run && ui.tab === "journey" && !$("#sheet").open) render();
+    else refreshTime();
   });
   syncRuns();
   render();
