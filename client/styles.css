@@ -387,13 +387,12 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .sheetbody h3{font-size:16px;font-weight:800;margin:0 0 10px}
 .sgrid{display:grid;gap:22px}
 .sgrid>div{display:contents}
-.s-id{order:1}.s-pick{order:2}.s-look{order:3}.s-mode{order:4}.s-data{order:5}
+.s-id{order:1}.s-pick{order:2}.s-look{order:3}.s-mode{order:4}.s-data{order:5}.s-acct{order:6}
 @media (min-width:900px){.sgrid{grid-template-columns:320px minmax(0,1fr);gap:0 32px;align-items:start}.sgrid>div{display:grid;gap:22px}}
 .tslab.id{min-height:0;border-radius:16px;padding:18px 20px}
 .tslab.id h2{font-size:34px}
 .tslab.id p{margin:2px 0 0;max-width:calc(100% - 100px);overflow-wrap:anywhere;font-weight:600}
 .tslab.id .partner{width:128px;height:128px;bottom:-22px}
-.app .out{position:relative;z-index:1;margin-top:14px;min-height:44px;max-width:calc(100% - 96px);padding:4px 14px;border-radius:10px;border:2px solid var(--on-pink);background:none;color:var(--on-pink);font-weight:800;font-size:14px;text-align:left}
 .sechead{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .sechead span{color:var(--soft);font-size:14px}
 .sechead span b{color:var(--ink)}
@@ -407,7 +406,8 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .seg{display:grid;grid-template-columns:auto 1fr 1fr;gap:2px;padding:4px;border-radius:14px;background:var(--bg)}
 .app .seg button{min-height:44px;padding:0 8px;border:0;border-radius:10px;background:none;color:var(--soft);font-weight:800;font-size:14px}
 .app .seg button[aria-pressed=true]{background:var(--fill);color:var(--on-fill)}
-.sfoot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:22px}
+.sfoot{display:flex;justify-content:flex-end;align-items:center;gap:12px;margin-top:22px}
+.s-acct details{margin-top:6px}.s-acct summary{display:inline-flex;align-items:center;gap:6px;min-height:44px;color:var(--soft);font-weight:700;font-size:14px;cursor:pointer;list-style:none}.s-acct summary::-webkit-details-marker{display:none}.s-acct summary::after{content:"";width:7px;height:7px;border:solid currentColor;border-width:0 2px 2px 0;transform:rotate(45deg) translateY(-2px)}.s-acct details[open] summary::after{transform:rotate(-135deg) translateY(-2px)}
 .app .danger{min-height:44px;padding:0;border:0;background:none;color:var(--coral);font-weight:800;font-size:15px}
 .ask{margin-top:12px;border-color:var(--gold)}
 .ask-k{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-ink)}
