@@ -254,15 +254,8 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .app .welcome{padding:24px}
 .welcome h2{font-size:28px;margin-bottom:20px}
 .welcome p{margin:16px 0 0}
-.games{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
-.app .game-tile{text-align:left;padding:0;overflow:hidden;border:1px solid var(--line);border-radius:16px;background:var(--bg);transition:transform .15s,border-color .15s}
-.app .game-tile:hover{transform:translateY(-3px);border-color:var(--teal)}
-.game-tile .cover{width:100%;height:140px;border:0;border-radius:0}
-.game-tile>span{display:block;padding:12px 14px}
-.game-tile b{display:block;font-size:17px}
 .notice{margin:24px 0 0;padding:12px 16px;border-radius:14px;background:var(--teal-soft);font-size:14px}
 .empty{text-align:center;padding:12px 0 8px}.empty h2{font-size:28px;margin-bottom:16px}.empty .muted{margin:16px 0 0}
-@media (prefers-reduced-motion:reduce){.app .game-tile{transition:none}.app .game-tile:hover{transform:none}}
 .app button.logo{border:0;background:none;padding:0;color:inherit;text-align:left}
 .ptmenu{position:relative}.ptmenu>summary{list-style:none;display:grid;place-items:center;width:44px;height:44px;border-radius:12px;cursor:pointer;font-weight:800;color:var(--soft)}.ptmenu>summary::-webkit-details-marker{display:none}.ptmenu[open]>summary{background:var(--teal-soft)}
 .ptmenu .menu{position:absolute;right:0;top:calc(100% + 4px);z-index:5;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;box-shadow:0 8px 24px rgba(0,0,0,.15)}
@@ -329,7 +322,7 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .tslab h2{position:relative;z-index:1;font-size:36px;line-height:1;margin:0;max-width:calc(100% - clamp(72px,calc(75cqw - 144px),96px));white-space:nowrap;overflow-wrap:break-word}
 .tslab .partner{position:absolute;right:0;bottom:-28px;width:clamp(120px,calc(75cqw - 96px),144px);height:auto;image-rendering:pixelated}
 .record{list-style:none;margin:0;padding:20px 24px 0;display:grid;gap:12px;font-size:16px}
-.record li{display:grid;grid-template-columns:58px 1fr;gap:12px;align-items:baseline;color:var(--soft)}
+.record li{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:12px;align-items:baseline;color:var(--soft)}
 .record b{font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-weight:400;font-size:30px;line-height:1;color:var(--ink);text-align:right}
 .record .champ b{color:var(--gold-ink)}
 .sec>h2{font-size:21px;line-height:1.1;margin:0 0 10px}
@@ -351,12 +344,6 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .got{color:var(--soft);font-size:15px;white-space:nowrap;grid-column:3;grid-row:1;text-align:right}
 .got b{font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-weight:400;font-size:22px;color:var(--ink);margin-right:5px;position:relative;top:1px}
 .got .meter{display:none;height:6px;margin-top:5px}
-.newgames{display:grid;gap:2px;margin:0 -10px}
-.app .ng{display:grid;grid-template-columns:44px 1fr auto;gap:14px;align-items:center;width:100%;min-height:56px;text-align:left;padding:6px 10px;border:0;border-radius:14px;background:none}
-.app .ng:hover{background:var(--surface)}
-.ng .cover{width:44px;height:44px;border:0}
-.ng b{font-size:17px;font-weight:800}
-.ng em{font-style:normal;font-weight:800;font-size:15px;color:var(--teal)}
 .app .avatar{width:44px;height:44px;border-radius:50%;background:var(--pink);border:0;padding:0;overflow:hidden;position:relative;flex:none}
 .avatar img{position:absolute;width:76px;height:76px;left:-16px;top:-20px;image-rendering:pixelated}
 @media (min-width:480px){.caserow{gap:10px}.caserow em{font-size:14px;margin-left:8px}.party img{width:52px;height:52px}}
@@ -366,7 +353,7 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
   .slab .cover.box{width:176px;height:162px;box-shadow:8px 8px 0 var(--g-deep)}
   .app .go{margin-top:auto;min-height:58px;font-size:23px}
   .file{padding:28px 32px 24px;gap:22px}
-  .app .run-go{grid-template-columns:64px minmax(0,1fr) 156px 112px;gap:18px;padding:10px}
+  .app .run-go{grid-template-columns:64px minmax(0,1fr) minmax(0,156px) 112px;gap:18px;padding:10px}
   .blk{width:64px;height:64px;border-radius:14px;grid-row:auto}
   .blk .cover{width:48px;height:44px}
   .run .mini{grid-column:auto}
@@ -605,4 +592,44 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
   .dextop .filters{margin:0;width:460px;flex:none}
   .dextop .dextools{margin:0;flex:1}
   .dgrid{grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+}
+
+.run .mini{min-width:0;flex-wrap:wrap}
+.run .mini>span{flex-wrap:wrap}
+
+.slide{min-width:0;--bleed:16px;container:slide/inline-size;position:relative;margin:0 calc(-1 * var(--bleed))}
+.welcome .slide{--bleed:24px}
+.reel{display:flex;gap:var(--gap);overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scroll-padding-inline:24px;padding:32px 24px 20px;scrollbar-width:none}
+.reel::-webkit-scrollbar{display:none}
+.empty .reel{justify-content:safe center}
+.app .gb{scroll-margin-bottom:calc(88px + env(safe-area-inset-bottom));flex:none;width:var(--w);scroll-snap-align:center;color:var(--ink);min-height:44px;display:flex;flex-direction:column;align-items:center;border:0;background:none;padding:0;text-align:center;position:relative}
+.gb .bx{display:block;flex:none;width:var(--w);height:var(--w);background:var(--g,var(--teal-soft));border-radius:18px;padding:10%;box-shadow:0 7px 0 var(--g-deep,var(--soft));rotate:var(--t,0deg);translate:0 var(--y,0px);transition:rotate .25s,translate .25s cubic-bezier(.3,1.4,.5,1),box-shadow .25s}
+.gb .bx .cover{display:block;width:100%;height:100%;object-fit:cover;border:0;border-radius:3px}
+.app .gb:focus-visible{outline:0}
+.gb:focus-visible .bx{outline:3px solid var(--teal);outline-offset:4px}
+.gb:is(:hover,:focus-visible) .bx{rotate:0deg;translate:0 -10px;box-shadow:0 14px 0 var(--g-deep,var(--soft))}
+
+.dash-grid>.sec.wide{grid-column:1/-1}
+@media (min-width:960px){.narrow:has(.slide){max-width:1100px}}
+
+.s2{--w:136px;--gap:10px}
+.s2 .gb:nth-child(odd){--t:-6deg;--y:6px}
+.s2 .gb:nth-child(even){--t:5deg;--y:-4px}
+.s2 b{font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-weight:400;font-size:20px;line-height:1;letter-spacing:.02em;text-transform:uppercase;margin-top:24px}
+.s2 em{font-style:normal;font-weight:800;color:var(--teal);font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-size:15px;line-height:1;letter-spacing:.04em;text-transform:uppercase;background:var(--teal-soft);border-radius:999px;padding:6px 12px 3px;margin-top:8px}
+.s2 .gb:is(:hover,:focus-visible) em{background:var(--fill);color:var(--on-fill)}
+@supports (animation-timeline:view()){
+  .s2 .gb{view-timeline:--box inline}
+  .s2 .bx{animation:pop linear both;animation-timeline:--box}
+  @keyframes pop{0%,100%{scale:.84}50%{scale:1.06}}
+}
+@media (min-width:960px){.s2{--w:136px;--gap:22px}}
+
+
+.reel:has(:focus-visible){scroll-snap-type:none}
+.s2 .gb:focus-visible .bx{animation:none}
+@media(prefers-reduced-motion:reduce){
+  .s2 .bx{animation:none;transition:none}
+  .s2 .gb:is(:hover,:focus-visible) .bx{rotate:var(--t);translate:0 var(--y)}
+  .reel{scroll-behavior:auto}
 }

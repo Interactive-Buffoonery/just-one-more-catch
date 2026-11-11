@@ -35,15 +35,13 @@ export const cover = (
   alt = `${v.name} box art`,
 ) =>
   `<img class="cover ${cls}" src="/covers/${v.short.toLowerCase()}.jpg" alt="${alt}" width="46" height="46">`;
-const gameChoices = () =>
-  `<div class="newgames">${Object.entries(VERSIONS)
-    .map(
-      ([id, v]) =>
-        `<button class="ng" data-newrun="${id}">${cover(v, "sm")}<b>${v.name}</b><em>Start</em></button>`,
-    )
-    .join("")}</div>`;
+const gameChoices = (heading = "new-game-heading", regions = false) =>
+  `<div class="slide s2"><div class="reel" role="group" aria-labelledby="${heading}">${Object.entries(VERSIONS)
+    .map(([id, v]) =>
+      `<button class="gb" data-newrun="${id}" data-game="${id}"><span class="bx">${cover(v, "", "")}</span><b>${esc(v.name)}</b>${regions ? `<span class="small muted">${esc(v.pack.region)}</span>` : "<em>Start</em>"}</button>`)
+    .join("")}</div></div>`;
 const pickGame = () =>
-  `<section class="empty"><h2>Pick a game</h2>${gameChoices()}<p class="muted small">No account needed.</p></section>`;
+  `<section class="empty"><h2 id="new-game-heading">Pick a game</h2>${gameChoices()}</section>`;
 const longDay = (day: string) => {
   const [y, m, d] = day.split("-").map(Number);
   return new Date(y, m - 1, d).toLocaleDateString(undefined, {
@@ -156,7 +154,10 @@ const trainerCard = (rows: { row: RunRow; r: Summary }[]) =>
   <ul class="record">
     <li><b>${rows.length}</b> playthrough${rows.length === 1 ? "" : "s"}</li>
     <li class="champ"><b>${rows.filter((x) => champion(x.r)).length}</b> finished as Champion</li>
-    <li><b>${rows.reduce((n, x) => n + badgeCount(x.row.version, x.r), 0)}</b> badges earned</li>
+    ${["badges", "trials"].map((label) => {
+      const count = rows.reduce((n, x) => n + (badgesWord(verOf(x.row.version).pack) === label ? badgeCount(x.row.version, x.r) : 0), 0);
+      return count ? `<li><b>${count}</b> ${badgesWord({ badgesWord: label } as Pack, count)}</li>` : "";
+    }).join("")}
     <li><b>${rows.reduce((n, x) => n + x.r.caught, 0)}</b> Pokémon caught</li>
   </ul></aside>`;
 const signInNote = () =>
@@ -194,18 +195,11 @@ export function Runs() {
     [top, ...rest] = rows;
   if (!top)
     return `<div class="dash"><h1 class="lg">Dashboard</h1>
-  <section class="card welcome"><h2>Start your first playthrough</h2><div class="games">${Object.entries(
-    VERSIONS,
-  )
-    .map(
-      ([id, v]) =>
-        `<button class="game-tile" data-newrun="${id}">${cover(v)}<span><b>${v.name}</b><span class="small muted">${v.pack.region}</span></span></button>`,
-    )
-    .join("")}</div></section>${signInNote()}</div>`;
+  <section class="card welcome"><h2 id="new-game-heading">Start your first playthrough</h2>${gameChoices("new-game-heading", true)}</section>${signInNote()}</div>`;
   return `<div class="dash"><h1 class="lg">Dashboard</h1>
   <div class="dash-grid">${resumeCard(top.row, top.r, top.at)}${trainerCard(rows)}
   ${rest.length ? `<section class="sec"><h2 class="lg">Other playthroughs</h2><div class="runs">${rest.map((x) => miniCard(x.row, x.r, x.at)).join("")}</div></section>` : ""}
-  <section class="sec"><h2 class="lg">Start another playthrough</h2>${rows.length < MAX_RUNS ? gameChoices() : `<p class="muted">You have ${MAX_RUNS} playthroughs. Delete one to start another.</p>`}</section></div>
+  <section class="sec wide"><h2 class="lg" id="new-game-heading">Start another playthrough</h2>${rows.length < MAX_RUNS ? gameChoices() : `<p class="muted">You have ${MAX_RUNS} playthroughs. Delete one to start another.</p>`}</section></div>
   ${signInNote()}</div>`;
 }
 function Account() {

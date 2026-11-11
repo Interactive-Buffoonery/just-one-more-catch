@@ -758,3 +758,9 @@ export function update(b: Bridge) {
     $("#sheet").close();
   if (!$("#sheet").open) render();
 }
+
+document.addEventListener("focusin", (event) => {
+  const box = (event.target as HTMLElement).closest(".gb");
+  if (box?.matches(":focus-visible"))
+    box.scrollIntoView({ block: "nearest", inline: "center", behavior: "instant" });
+});
