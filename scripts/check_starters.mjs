@@ -15,9 +15,12 @@ const status = runInNewContext(stripTypeScriptTypes(source.slice(start, end).rep
 assert.equal(status(rows[0]).s, 'now');
 run.caught.add(1);
 assert.equal(status(rows[0]).why, 'Your starter');
+assert.equal(status(rows[0]).kind, 'starter');
 assert.equal(status(rows[1]).why, 'Trade only');
+assert.equal(status(rows[1]).kind, 'trade');
 assert.equal(status(rows[2]).why, 'Trade only');
 assert.equal(status(rows[0]).s, 'special');
 run.caught.add(2);
 assert.equal(status(rows[1]).why, 'Your starter');
+assert.equal(status(rows[1]).kind, 'starter');
 console.log('starter tags ok');

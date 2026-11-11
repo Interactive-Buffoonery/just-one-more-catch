@@ -411,7 +411,7 @@ export const currentChap = () => {
         0,
       );
 };
-export function rowStatus(r: Row): { s: string; why?: string; need?: string } {
+export function rowStatus(r: Row): { s: string; why?: string; need?: string; kind?: "starter" | "trade" } {
   const run = R();
   const missing = [
     ...chapterNeeds(r.chap),
@@ -438,13 +438,16 @@ export function rowStatus(r: Row): { s: string; why?: string; need?: string } {
     r.m === "gift" &&
     r.place === P().start &&
     P().starters.some((n) => run.caught.has(n))
-  )
+  ) {
+    const caught = DEX.some((p) => p.rows.includes(r) && run.caught.has(p.n));
     return {
       s: "special",
-      why: DEX.some((p) => p.rows.includes(r) && run.caught.has(p.n))
+      kind: caught ? "starter" : "trade",
+      why: caught
         ? "Your starter"
         : "Trade only",
     };
+  }
   const days = r.cond
     .filter((c) => c.startsWith("weekday-"))
     .map((c) => c.slice(8));

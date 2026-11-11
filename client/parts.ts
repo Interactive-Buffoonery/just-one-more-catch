@@ -26,6 +26,12 @@ import {
 } from "./game";
 import { Row, Species } from "./types";
 
+// Tabler Icons outline paths (MIT)
+const STARTER_ICONS = {
+  trade: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M21 17l-18 0" /><path d="M6 10l-3 -3l3 -3" /><path d="M3 7l18 0" /><path d="M18 20l3 -3l-3 -3" /></svg>`,
+  starter: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /></svg>`,
+};
+
 const ring = (types: string[]) => {
   const a = TYPE[types[0]],
     b = TYPE[types[1] || types[0]];
@@ -73,7 +79,7 @@ export function tagBits(r: Row, place = r.place, chance = "") {
       true,
     );
   else if (st.s !== "now" && st.s !== "wrongtime")
-    add(`<span class="tag warn">${st.why}</span>`, true);
+    add(`<span class="tag ${st.kind ? `icon${st.kind === "trade" ? " muted" : ""}` : "warn"}">${st.kind ? STARTER_ICONS[st.kind] : ""}${st.why}</span>`, true);
   return t;
 }
 const tagRow = (t: [string, boolean][]) =>

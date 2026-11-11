@@ -125,6 +125,8 @@ h2{font-size:20px;margin:0;letter-spacing:-.01em;font-weight:800} h3{font-size:1
 .tag{font-size:12px;border-radius:6px;padding:2px 7px;background:var(--teal-soft);color:var(--teal);font-weight:700;white-space:nowrap}
 .tag.time{background:var(--gold-soft);color:var(--gold-ink)}
 .tag.plain{background:transparent;border:1px solid var(--line);color:var(--soft)}
+.tag.muted{background:color-mix(in srgb, var(--soft) 16%, var(--surface));color:var(--ink)}
+.tag.icon{display:inline-flex;align-items:center;gap:4px}
 .tag.warn{background:var(--coral-soft);color:var(--coral)}
 .tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}
 .row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:var(--surface);border:1px solid var(--line);margin-bottom:6px}
