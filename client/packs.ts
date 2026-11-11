@@ -28,6 +28,8 @@ export type Pack = {
   start: string;
   starters: number[];
   badges: string[][];
+  // what follows a badge name in the UI: "Zephyr Badge", "Normalium Z"
+  badgeWord?: string;
   postgame?: [string, string[][]];
   kit: string[][];
   // HM kit id -> badge needed to use it outside battle
@@ -165,6 +167,42 @@ const FRLG: Pack = {
   boxes: [14, 30],
 };
 
+const USUM: Pack = {
+  load: () => import("./data/usum").then((m) => m.default),
+  art: "usum",
+  region: "Alola",
+  regional: 403,
+  national: 807,
+  start: "Route 1",
+  starters: [722, 725, 728],
+  // trial and grand trial Z-Crystals, in island challenge order
+  badges: [
+    ["Normalium", "Ilima"],
+    ["Fightinium", "Hala"],
+    ["Waterium", "Lana"],
+    ["Firium", "Kiawe"],
+    ["Grassium", "Mallow"],
+    ["Rockium", "Olivia"],
+    ["Electrium", "Sophocles"],
+    ["Ghostium", "Acerola"],
+    ["Darkinium", "Nanu"],
+    ["Dragonium", "Vast Poni Canyon"],
+    ["Fairium", "Mina"],
+    ["Groundium", "Hapu"],
+  ],
+  badgeWord: "Z",
+  kit: [
+    ["fishing-rod", "Fishing Rod"],
+    ["tauros", "Tauros Charge"],
+    ["surf", "Lapras Paddle"],
+    ["mudsdale", "Mudsdale Gallop"],
+    ["machamp", "Machamp Shove"],
+    ["island-scan", "Island Scan"],
+  ],
+  hm: {},
+  boxes: [32, 30],
+};
+
 export const VERSIONS: Record<VersionId, Version> = {
   heartgold: {
     name: "HeartGold",
@@ -209,5 +247,23 @@ export const VERSIONS: Record<VersionId, Version> = {
     pack: FRLG,
     other: "FireRed",
     ring: ["grass", "bug"],
+  },
+  ultrasun: {
+    name: "Ultra Sun",
+    short: "US",
+    code: "u",
+    gen: "Gen 7",
+    pack: USUM,
+    other: "Ultra Moon",
+    ring: ["fire", "psychic"],
+  },
+  ultramoon: {
+    name: "Ultra Moon",
+    short: "UM",
+    code: "m",
+    gen: "Gen 7",
+    pack: USUM,
+    other: "Ultra Sun",
+    ring: ["ghost", "dragon"],
   },
 };

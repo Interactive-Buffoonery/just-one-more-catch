@@ -116,7 +116,7 @@ const METHOD: Record<string, [string, string | null]> = {
   "bubbling-spots": ["Bubbling fishing spot", "fishing-rod"],
   "sos-from-bubbling-spot": ["SOS at a bubbling spot", "fishing-rod"],
   sos: ["SOS call", null],
-  "island-scan": ["Island Scan", null],
+  "island-scan": ["Island Scan", "island-scan"],
   "berry-trees": ["Berry tree", null],
 };
 const ONE_TIME = new Set([
@@ -447,15 +447,16 @@ function has(k: string): boolean {
   const b = P().hm[k];
   return R().kit.has(k) && (!b || R().badges.has(b));
 }
+const badgeName = (b: string, p = P()) => `${b} ${p.badgeWord ?? "Badge"}`;
 const needText = (k: string) =>
   EVENTS[k]
     ? EVENTS[k].label
     : k === "Elite Four"
       ? "After the Elite Four"
       : isBadge(k)
-        ? `Opens with ${k} Badge`
+        ? `Opens with ${badgeName(k)}`
         : R().kit.has(k)
-          ? `Needs ${P().hm[k]} Badge to use ${kitName(k)}`
+          ? `Needs ${badgeName(P().hm[k])} to use ${kitName(k)}`
           : `Needs ${kitName(k)}`;
 const chapterNeeds = (i: number) => [
   ...CHAPTERS[i].needs,
@@ -800,7 +801,7 @@ const kitGroup = (title: string, keep: (id: string) => boolean) => {
     : "";
 };
 const badgeRow = (list: string[][]) =>
-  `<div style="display:flex;flex-wrap:wrap;margin:6px -6px">${list.map((b) => `<button class="badge" data-badge="${b[0]}" data-k="b-${b[0]}" aria-pressed="${R().badges.has(b[0])}" aria-label="${b[0]} Badge from ${b[1]}" title="${b[0]} Badge · ${b[1]}"><img src="/badges/${b[0].toLowerCase()}.png" alt="${b[0]} Badge" width="32" height="32"></button>`).join("")}</div>`;
+  `<div style="display:flex;flex-wrap:wrap;margin:6px -6px">${list.map((b) => `<button class="badge" data-badge="${b[0]}" data-k="b-${b[0]}" aria-pressed="${R().badges.has(b[0])}" aria-label="${badgeName(b[0])} from ${b[1]}" title="${badgeName(b[0])} · ${b[1]}"><img src="/badges/${b[0].toLowerCase()}.png" alt="${badgeName(b[0])}" width="32" height="32"></button>`).join("")}</div>`;
 
 /* ---- Journey (home) ---- */
 const why = (h: Pick) =>
@@ -966,7 +967,7 @@ function beat(id: string) {
       : e.by === "Elite Four" && has(e.by)
         ? "You beat the Elite Four"
         : e.by && isBadge(e.by) && has(e.by)
-          ? `You have the ${e.by} Badge`
+          ? `You have the ${badgeName(e.by)}`
           : e.by && EVENTS[e.by] && has(e.by)
             ? `Shown by: ${EVENTS[e.by].label}`
             : "A later step shows it's done";
@@ -1420,8 +1421,8 @@ function resumeCard(row: RunRow, r: Summary, at: string) {
               `<div class="caserow">${list
                 .map((b) =>
                   has.has(b[0])
-                    ? `<span class="slot">${badgeImg(b[0], 34, `${b[0]} Badge`)}</span>`
-                    : `<span class="slot${b === next ? " next" : ""}"><i role="img" aria-label="${b[0]} Badge, not yet"></i></span>`,
+                    ? `<span class="slot">${badgeImg(b[0], 34, badgeName(b[0], p))}</span>`
+                    : `<span class="slot${b === next ? " next" : ""}"><i role="img" aria-label="${badgeName(b[0], p)}, not yet"></i></span>`,
                 )
                 .join("")}<em>${label}</em></div>`,
           )
