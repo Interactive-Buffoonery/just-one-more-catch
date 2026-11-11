@@ -728,6 +728,29 @@ function heroCard(h: Pick) {
 }
 const NOT_HERE =
   /Gym|Game Corner|North Gate|Roaming|House|Pokémon Center|Department Store|Prize Corner|Museum|Silph|Magnet Train|Dock|Embedded|Sinjoh|Celadon Mansion|Cinnabar Lab|Dojo/;
+// ponytail: Tabler Icons outline paths (MIT), inlined like the settings gear
+const tabIcon = (d: string) =>
+  `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d
+    .split("|")
+    .map((p) => `<path d="${p}"/>`)
+    .join("")}</svg>`;
+const SETTINGS_ICON = tabIcon(
+  "M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z|M9 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0",
+);
+const TAB_ICONS: Record<string, string> = {
+  playthroughs: tabIcon(
+    "M5 12l-2 0l9 -9l9 9l-2 0|M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7|M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6",
+  ),
+  journey: tabIcon(
+    "M12 18.5l-3 -1.5l-6 3v-13l6 -3l6 3l6 -3v7.5|M9 4v13|M15 7v5.5|M21.121 20.121a3 3 0 1 0 -4.242 0c.418 .419 1.125 1.045 2.121 1.879c1.051 -.89 1.759 -1.516 2.121 -1.879z|M19 18v.01",
+  ),
+  dex: tabIcon(
+    "M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0|M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0|M3 12h6|M15 12h6",
+  ),
+  boxes: tabIcon(
+    "M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5|M12 12l8 -4.5|M12 12l0 9|M12 12l-8 -4.5",
+  ),
+};
 const CLOCK_ICON = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`;
 function fillClock(mode: string) {
   const c = R().clock,
@@ -1280,7 +1303,8 @@ function About() {
     <p>This is a free fan project, and not affiliated with Nintendo, Creatures, GAME FREAK or The Pokémon Company.</p>
     </div><h3>Thanks</h3>
     <ul><li>Encounter data, sprites and badges come from <a href="https://pokeapi.co" target="_blank" rel="noopener">PokeAPI</a>, a free and open Pokémon database built by volunteers.</li>
-    <li>Colour themes are inspired by <a href="https://rosepinetheme.com" target="_blank" rel="noopener">Rosé Pine</a> and <a href="https://draculatheme.com" target="_blank" rel="noopener">Dracula</a>.</li></ul>
+    <li>Colour themes are inspired by <a href="https://rosepinetheme.com" target="_blank" rel="noopener">Rosé Pine</a> and <a href="https://draculatheme.com" target="_blank" rel="noopener">Dracula</a>.</li>
+    <li>Icons are from <a href="https://tabler.io/icons" target="_blank" rel="noopener">Tabler Icons</a>, free under the MIT licence.</li></ul>
     <p>Spotted a mistake? ${contactLink("Let us know")}.</p>
   </section>
   </div>`;
@@ -1310,7 +1334,7 @@ const VIEWS: Record<string, () => string> = {
 };
 function shell() {
   return `<div class="top">
-    <button class="logo" data-tab="playthroughs" aria-label="Just One More Catch, your playthroughs"><svg class="mark" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M3 12h6M15 12h6"/></svg><span class="full">Just One More Catch</span></button>
+    <button class="logo" data-tab="playthroughs" aria-label="Just One More Catch, your playthroughs"><span class="full">Just One More Catch</span></button>
     <span class="spacer"></span><span id="topright"></span>
   </div>
   <main id="view"></main>
@@ -1352,12 +1376,12 @@ function render() {
           : `<p class="muted small" style="text-align:center;margin:4px 0 16px">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your playthroughs and view them on any device.</p>`) +
         VIEWS[ui.tab]();
   $("#topright").innerHTML =
-    `<span style="display:flex;gap:8px"><button class="pill icon" data-settings="1" data-k="settings" aria-label="Settings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><circle cx="12" cy="12" r="3"/></svg></button>${run ? `<button class="gamepill" data-tab="playthroughs" aria-label="Current playthrough: ${ver().name}. Switch playthrough">${cover(ver())}</button>` : ""}${
+    `<span style="display:flex;gap:8px"><button class="pill icon hdr-settings" data-settings="1" data-k="settings" aria-label="Settings">${SETTINGS_ICON}</button>${run ? `<button class="gamepill" data-tab="playthroughs" aria-label="Current playthrough: ${ver().name}. Switch playthrough">${cover(ver())}</button>` : ""}${
       signedIn
         ? `<button class="avatar" data-settings="1" aria-label="Account: ${esc(a.displayName || "you")}">${esc(initial())}</button>`
         : a.isLoading
           ? ""
-          : `<button class="pill" data-signinsheet="1" data-k="signin">Sign in / Sign up</button>`
+          : `<button class="hdr-signup" data-signinsheet="1" data-k="signin">Sign up / Sign in</button>`
     }</span>`;
   $("#tabs").innerHTML = !a.isLoading
     ? `<nav class="tabbar" aria-label="Sections">${[
@@ -1368,9 +1392,11 @@ function render() {
       ]
         .map(
           ([t, l]) =>
-            `<button data-tab="${t}" ${ui.tab === t ? `aria-current="page"` : ""}>${l}</button>`,
+            `<button data-tab="${t}" ${ui.tab === t ? `aria-current="page"` : ""}>${TAB_ICONS[t]}<span>${l}</span></button>`,
         )
-        .join("")}</nav>`
+        .join(
+          "",
+        )}<button class="tab-settings" data-settings="1">${SETTINGS_ICON}<span>Settings</span></button></nav>`
     : "";
   $("#toast").innerHTML = ui.undo
     ? `<div class="toast">${ui.undo.msg}${ui.undo.n ? `<button data-undo="1">Undo</button>` : ""}</div>`
