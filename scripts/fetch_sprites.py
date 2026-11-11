@@ -86,7 +86,7 @@ def centre(path):
             out = Image.new("RGBA", (w, h))
             out.paste(im.convert("RGBA").crop(box), to)
             out.save(path, optimize=True)
-        alpha = out.convert("RGBA").getchannel("A")
+        alpha = Image.open(path).convert("RGBA").getchannel("A")
     px = alpha.load()
     # Farthest opaque pixel corner from the canvas centre, squared, in half pixels
     far = max(max(abs(2 * x - w), abs(2 * x + 2 - w)) ** 2 + max(abs(2 * y - h), abs(2 * y + 2 - h)) ** 2
@@ -125,6 +125,7 @@ if __name__ == "__main__":
                 for shiny in ("", "shiny/"):
                     url = data["sprites"]["front_shiny" if shiny else "front_default"]
                     assert url, f"No sprite for {pack} {shiny}{slug}"
+                    url = f"{BASE}{ART[pack]}{shiny}{url.rsplit('/', 1)[-1]}"
                     jobs.append((url, os.path.join(ROOT, "public", "sprites", pack, "forms", shiny, slug + ".png")))
     with ThreadPoolExecutor(4) as ex:  # ponytail: 4 workers, same fair-use pace as fetch_pokeapi.py
         list(ex.map(fetch, jobs))

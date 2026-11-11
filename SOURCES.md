@@ -79,6 +79,12 @@ species' default types and artwork. Form lists do not add encounters or gates.
 
 Excluded throughout: distributions, gender-only differences, battle-only
 transformations, Totem sizes, and Furfrou trims (revert in storage). USUM
-transfer-only form families (Unown, Deerling, Vivillon, Pumpkaboo, Burmy)
+transfer-only form families (Unown, Deerling, Pumpkaboo, Burmy)
 are excluded. A form changing through an ordinary in-game item counts;
 cosmetic colour variants count when obtainable in that pack.
+
+- Vivillon: Scatterbug is obtainable through USUM Island Scan, so its 18
+  regional patterns count (ordinary trading covers other console regions).
+  Fancy and Poké Ball patterns are distributions and excluded:
+  https://www.serebii.net/ultrasunultramoon/islandscan.shtml
+  https://bulbapedia.bulbagarden.net/wiki/Vivillon_(Pok%C3%A9mon)
