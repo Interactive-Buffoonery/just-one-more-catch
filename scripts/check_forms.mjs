@@ -7,7 +7,14 @@ const read = (p) => readFileSync(p, "utf8");
 const data = (pack) => JSON.parse(read(`client/data/${pack}.ts`).split("export default ")[1].replace(/;\s*$/, ""));
 const catalogs = {};
 for (const pack of ["crystal", "frlg", "hgss", "usum"]) {
-  const source = JSON.parse(read(`data/${pack}.json`)).obtainable_forms;
+  const packData = JSON.parse(read(`data/${pack}.json`));
+  const source = packData.obtainable_forms;
+  const traded = packData.traded_forms || {};
+  for (const [n, ids] of Object.entries(traded)) {
+    assert(ids.every((id) => source[n]?.includes(id)));
+    assert(!ids.includes(source[n][0]));
+    assert.equal(new Set(ids).size, ids.length);
+  }
   const dex = data(pack).dex;
   catalogs[pack] = dex;
   for (const p of dex) {
@@ -18,6 +25,7 @@ for (const pack of ["crystal", "frlg", "hgss", "usum"]) {
     assert.deepEqual(p.forms.map((f) => f.id), ids);
     assert.equal(new Set(ids).size, ids.length);
     for (const f of p.forms) {
+      assert.equal(f.trade === true, (traded[n] || []).includes(f.id));
       assert(f.name && /^[a-z0-9-]+$/.test(f.id));
       assert(!/mega|totem|meteor|cosplay|cap$|zen|primal|(?:^|-)ash(?:-|$)|eternal|complete/.test(f.id), f.id);
       for (const shiny of ["", "shiny/"]) assert(existsSync(`public/sprites/${pack}/forms/${shiny}${f.id}.png`));
@@ -29,7 +37,7 @@ assert.equal(catalogs.crystal.find((p) => p.n === 201).forms.length, 26);
 assert.equal(catalogs.hgss.find((p) => p.n === 201).forms.length, 28);
 assert.equal(catalogs.frlg.find((p) => p.n === 201).forms.length, 28);
 assert.equal(catalogs.hgss.find((p) => p.n === 19).forms, undefined);
-assert.deepEqual(catalogs.usum.find((p) => p.n === 19).forms.map((f) => f.id), ["rattata-alola"]);
+assert.deepEqual(catalogs.usum.find((p) => p.n === 19).forms.map((f) => f.id), ["rattata-alola", "rattata"]);
 assert.equal(catalogs.usum.find((p) => p.n === 774).forms.length, 7);
 assert.equal(catalogs.usum.find((p) => p.n === 745).forms.length, 2);
 
@@ -37,7 +45,7 @@ const source = read("client/game.ts");
 const defaults = { nick: "", lvl: "", g: "", shiny: false, item: "", note: "" };
 const stateCode = source.slice(source.indexOf("function loadRun("), source.indexOf("export let bridge:"));
 let current;
-const api = runInNewContext(stripTypeScriptTypes(stateCode.replaceAll("export ", "")) + "\n({ loadRun, dumpRun, collectedForms, hasGenders, collectedGenders, GENDERS })", {
+const api = runInNewContext(stripTypeScriptTypes(stateCode.replaceAll("export ", "")) + "\n({ loadRun, dumpRun, collectedForms, visibleForms, hasGenders, collectedGenders, GENDERS })", {
   verOf: () => ({ pack: { start: "Start", boxes: [2] } }),
   MON_DEFAULTS: defaults,
   compactMon: (m) => Object.fromEntries(Object.entries(m).filter(([k, v]) => defaults[k] !== v)),
@@ -76,7 +84,7 @@ const spriteCode = stripTypeScriptTypes(parts.slice(parts.indexOf('const ring ='
 const context = {
   $, esc, ui, byN, R: () => current, run: true, P: () => ({ art: 'hgss', boxes: [2, 30] }),
   PARTY_SIZE: 6, HELD_ITEMS: [], FIT: {}, TYPE: { psychic: 'pink', normal: 'grey' },
-  collectedForms: api.collectedForms, collectedGenders: api.collectedGenders, hasGenders: api.hasGenders, GENDERS: api.GENDERS, num: (p) => p.n, pad: (n) => String(n).padStart(3, '0'),
+  collectedForms: api.collectedForms, visibleForms: api.visibleForms, collectedGenders: api.collectedGenders, hasGenders: api.hasGenders, GENDERS: api.GENDERS, num: (p) => p.n, pad: (n) => String(n).padStart(3, '0'),
   tagBits: () => [], isHere: () => false, rowStatus: () => ({ s: 'now' }), howElse: () => '', cap: (s) => s,
 };
 const views = runInNewContext(spriteCode + '\n' + moduleCode('client/views/boxes.ts') + '\n' + moduleCode('client/views/dex.ts') + '\n({ fillMonSheet, saveMon, monLine, fillSpecies, tile })', context);
@@ -110,7 +118,7 @@ assert(elements['#sheetbody'].innerHTML.includes('Forms · 1 / 28'));
 const app = read('client/app.ts');
 const formClick = app.slice(app.indexOf('  if (d.form && d.species)'), app.indexOf('  if (d.savemon)'));
 const toggle = runInNewContext('(function(d, r) { ' + formClick + ' })', {
-  byN, scheduleSave() {}, render() {}, fillSpecies() {},
+  byN, visibleForms: api.visibleForms, scheduleSave() {}, render() {}, fillSpecies() {},
 });
 current = api.loadRun(row, '{}');
 toggle({ form: 'unown-b', species: '201' }, current);
@@ -160,7 +168,7 @@ assert(!elements['#sheetbody'].innerHTML.includes('Genders ·'));
 assert(!views.tile(byN[25], 'caught').includes('class="gx"'));
 assert(views.monLine(current.mons[0]).includes('♂'));
 
-current = api.loadRun(row, JSON.stringify({ trackGenders: true, mons: [{ id: 1, n: 422, box: 1, form: 'shellos-east', g: 'f' }] }));
+current = api.loadRun(row, JSON.stringify({ trackTraded: true, trackGenders: true, mons: [{ id: 1, n: 422, box: 1, form: 'shellos-east', g: 'f' }] }));
 current.caught.add(422);
 views.fillSpecies(422);
 html = elements['#sheetbody'].innerHTML;
@@ -241,3 +249,88 @@ assert.equal(switched.trackForms, false);
 assert.equal(switched.trackGenders, true);
 assert(switched.forms.has('unown-b'));
 assert(switched.genders[25].has('f'));
+
+
+// Traded forms filter presentation without changing stored collections.
+current = api.loadRun(row, '{}');
+assert.equal(current.trackTraded, false);
+assert.equal(api.loadRun(row, '{"trackTraded":"true"}').trackTraded, false);
+const shellos = byN[422];
+assert.deepEqual([...api.visibleForms(shellos)].map((f) => f.id), ['shellos-west']);
+current.forms.add('shellos-east');
+current.mons.push({ id: 1, n: 422, box: 1, form: 'shellos-east' });
+current.caught.add(422);
+assert.equal(api.collectedForms(shellos).size, 0);
+views.fillSpecies(422);
+assert(!elements['#sheetbody'].innerHTML.includes('Forms ·'));
+assert(!elements['#sheetbody'].innerHTML.includes('data-form="shellos-east"'));
+assert(!views.tile(shellos, 'caught').includes('<i>'));
+assert(views.monLine(current.mons[0]).includes('/forms/shellos-east.png'));
+assert(views.monLine(current.mons[0]).includes('East Sea'));
+views.fillMonSheet({ n: 422 });
+assert(!elements['#sheetbody'].innerHTML.includes('id="f-form"'));
+views.fillMonSheet({ id: 1 });
+assert.match(elements['#sheetbody'].innerHTML, /value="shellos-east" selected/);
+assert.equal((elements['#sheetbody'].innerHTML.match(/<option value="shellos-/g) || []).length, 2);
+views.fillMonSheet({ n: 479 });
+assert(!elements['#sheetbody'].innerHTML.includes('id="f-form"'));
+toggle({ form: 'rotom-heat', species: '479' }, current);
+assert(!current.forms.has('rotom-heat'));
+custom();
+assert.match(elements['#sheetbody'].innerHTML, /role="switch" aria-checked="false" data-dexoption="trackTraded"/);
+assert.match(elements['#sheetbody'].innerHTML, /<b>Traded forms<\/b><\/span>/);
+toggleOption({ dexoption: 'trackTraded' }, current);
+assert.equal(current.trackTraded, true);
+assert.equal(api.collectedForms(shellos).size, 1);
+views.fillSpecies(422);
+assert(elements['#sheetbody'].innerHTML.includes('Forms · 1 / 2'));
+assert(views.tile(shellos, 'caught').includes('<i>1/2</i>'));
+toggle({ form: 'rotom-heat', species: '479' }, current);
+assert(current.forms.has('rotom-heat'));
+const tradedRoundtrip = api.loadRun(row, api.dumpRun(current));
+assert.equal(tradedRoundtrip.trackTraded, true);
+assert(tradedRoundtrip.forms.has('shellos-east'));
+current.trackTraded = false;
+const hiddenRoundtrip = api.loadRun(row, api.dumpRun(current));
+assert.equal(hiddenRoundtrip.trackTraded, false);
+assert(hiddenRoundtrip.forms.has('shellos-east'));
+assert.equal(hiddenRoundtrip.mons[0].form, 'shellos-east');
+current.trackForms = false;
+custom();
+assert(!elements['#sheetbody'].innerHTML.includes('data-dexoption="trackTraded"'));
+assert.equal(api.loadRun({ ...row, id: 'another' }, '{}').trackTraded, false);
+for (const n of [201, 386, 412, 413, 585, 586, 710, 711]) {
+  const p = catalogs.usum.find((p) => p.n === n);
+  assert(p.forms.length > 1);
+  assert(!p.forms[0].trade);
+  assert(p.forms.slice(1).every((f) => f.trade));
+}
+for (const n of [26, 103, 105, 422, 423, 479, 774]) {
+  assert(catalogs.usum.find((p) => p.n === n).forms.every((f) => !f.trade));
+}
+assert(!catalogs.usum.find((p) => p.n === 676).forms);
+console.log('traded catalogs, filtering, stored forms and run options ok');
+
+current = api.loadRun(row, '{}');
+byN[669] = catalogs.usum.find((p) => p.n === 669);
+current.forms = new Set(['flabebe-yellow', 'flabebe-red']);
+views.fillSpecies(669);
+assert(elements['#sheetbody'].innerHTML.includes('Forms · 1 / 3'));
+assert(!elements['#sheetbody'].innerHTML.includes('data-form="flabebe-red"'));
+assert(views.tile(byN[669], 'caught').includes('<i>1/3</i>'));
+views.fillMonSheet({ n: 669 });
+assert.equal((elements['#sheetbody'].innerHTML.match(/<option value="flabebe-/g) || []).length, 3);
+current.mons.push({ id: 1, n: 669, box: 1, form: 'flabebe-red' });
+views.fillMonSheet({ id: 1 });
+assert.equal((elements['#sheetbody'].innerHTML.match(/<option value="flabebe-/g) || []).length, 4);
+assert.match(elements['#sheetbody'].innerHTML, /value="flabebe-red" selected/);
+assert(!elements['#sheetbody'].innerHTML.includes('value="flabebe-blue"'));
+ui.sheet = { id: 1 };
+elements['#f-form'] = { value: 'flabebe-red' };
+views.saveMon();
+assert.equal(current.mons[0].form, 'flabebe-red');
+current.trackTraded = true;
+views.fillSpecies(669);
+assert(elements['#sheetbody'].innerHTML.includes('Forms · 2 / 5'));
+assert(views.tile(byN[669], 'caught').includes('<i>2/5</i>'));
+console.log('mixed local/traded lists and editing retained forms ok');
