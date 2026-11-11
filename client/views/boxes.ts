@@ -16,9 +16,9 @@ const allBoxes = (): Mon["box"][] => [
 const GENDER: Record<string, string> = { m: "♂", f: "♀" };
 export function monLine(m: Mon, showBox?: boolean) {
   const p = byN[m.n];
-  return `<button class="row monrow" data-editmon="${m.id}" data-k="m${m.id}" aria-label="${esc(m.nick || p.name)}${m.nick ? `, ${p.name}` : ""}${m.shiny ? ", shiny" : ""}, ${esc(boxLabel(m.box))}. Edit">${mon(p, m.shiny)}<span class="grow">
+  return `<button class="row monrow" data-editmon="${m.id}" data-k="m${m.id}" aria-label="${esc(m.nick || p.name)}${m.nick ? `, ${p.name}` : ""}${m.shiny ? ", shiny" : ""}, ${esc(boxLabel(m.box))}. Edit">${mon(p, m.shiny, m.form || p.forms?.[0]?.id)}<span class="grow">
     <span class="name">${m.nick ? `${esc(m.nick)} <span class="muted small">${p.name}</span>` : p.name}${m.shiny ? ` <span class="shiny" title="Shiny">✦</span>` : ""}</span>
-    <span class="tags">${showBox ? `<span class="tag">${esc(boxLabel(m.box))}</span>` : ""}${m.lvl ? `<span class="tag plain">Lv ${m.lvl}</span>` : ""}${m.g ? `<span class="tag plain">${GENDER[m.g]}</span>` : ""}${m.item ? `<span class="tag time">${esc(m.item)}</span>` : ""}${m.note ? `<span class="small muted">${esc(m.note)}</span>` : ""}</span></span></button>`;
+    <span class="tags">${showBox ? `<span class="tag">${esc(boxLabel(m.box))}</span>` : ""}${p.forms && p.forms.length > 1 ? `<span class="tag plain">${esc((p.forms.find((f) => f.id === m.form) || p.forms[0]).name)}</span>` : ""}${m.lvl ? `<span class="tag plain">Lv ${m.lvl}</span>` : ""}${m.g ? `<span class="tag plain">${GENDER[m.g]}</span>` : ""}${m.item ? `<span class="tag time">${esc(m.item)}</span>` : ""}${m.note ? `<span class="small muted">${esc(m.note)}</span>` : ""}</span></span></button>`;
 }
 export function Boxes() {
   if (!run) return NoRun();
@@ -56,13 +56,14 @@ export function fillMonSheet(s: any) {
       ? `Where did you put ${p.name}?`
       : `Add another ${p.name}`;
   $("#sheetbody").innerHTML =
-    `<div style="display:flex;gap:12px;align-items:center">${mon(p, !!m?.shiny)}<div><h2 id="sheet-title">${title}</h2></div></div>
+    `<div style="display:flex;gap:12px;align-items:center">${mon(p, !!m?.shiny, m?.form || p.forms?.[0]?.id)}<div><h2 id="sheet-title">${title}</h2></div></div>
     <label class="field"><span>Box</span><select id="f-box">${allBoxes()
       .map(
         (b) =>
           `<option value="${b}" ${b === cur ? "selected" : ""} ${full(b) && b !== cur ? "disabled" : ""}>${esc(boxLabel(b))} (${inBox(b).length}/${boxCap(b)})</option>`,
       )
       .join("")}</select></label>
+    ${p.forms && p.forms.length > 1 ? `<label class="field"><span>Form</span><select id="f-form">${p.forms.map((f) => `<option value="${f.id}" ${f.id === (m?.form || p.forms![0].id) ? "selected" : ""}>${esc(f.name)}</option>`).join("")}</select></label>` : ""}
     <details class="more" ${m ? "open" : ""}><summary>More details <span class="muted small">nickname, level, held item</span></summary><div class="fgrid">
       <label class="field"><span>Nickname</span><input id="f-nick" maxlength="10" autocomplete="off" value="${esc(m?.nick || "")}"></label>
       <label class="field"><span>Level</span><input id="f-lvl" type="number" min="1" max="100" inputmode="numeric" value="${m?.lvl || ""}"></label>
@@ -99,6 +100,7 @@ export function saveMon() {
     : "";
   const data = {
     box,
+    form: v("f-form")?.value || byN[s.id ? R().mons.find((m) => m.id === s.id)!.n : s.n].forms?.[0]?.id,
     lvl,
     nick: v("f-nick").value.trim().slice(0, 10),
     g: v("f-g").value,
