@@ -38,7 +38,7 @@ export const cover = (
 const gameChoices = (heading = "new-game-heading", regions = false) =>
   `<div class="slide s2"><div class="reel" role="group" aria-labelledby="${heading}">${Object.entries(VERSIONS)
     .map(([id, v]) =>
-      `<button class="gb" data-newrun="${id}" data-game="${id}" aria-label="${esc(v.name)} Start"><span class="bx">${cover(v, "", "")}</span><b>${esc(v.name)}</b>${regions ? `<span class="small muted">${esc(v.pack.region)}</span>` : "<em>Start</em>"}</button>`)
+      `<button class="gb" data-newrun="${id}" data-game="${id}"><span class="bx">${cover(v, "", "")}</span><b>${esc(v.name)}</b>${regions ? `<span class="small muted">${esc(v.pack.region)}</span>` : "<em>Start</em>"}</button>`)
     .join("")}</div></div>`;
 const pickGame = () =>
   `<section class="empty"><h2 id="new-game-heading">Pick a game</h2>${gameChoices()}</section>`;
@@ -156,7 +156,7 @@ const trainerCard = (rows: { row: RunRow; r: Summary }[]) =>
     <li class="champ"><b>${rows.filter((x) => champion(x.r)).length}</b> finished as Champion</li>
     ${["badges", "trials"].map((label) => {
       const count = rows.reduce((n, x) => n + (badgesWord(verOf(x.row.version).pack) === label ? badgeCount(x.row.version, x.r) : 0), 0);
-      return count ? `<li><b>${count}</b> ${label}</li>` : "";
+      return count ? `<li><b>${count}</b> ${badgesWord({ badgesWord: label } as Pack, count)}</li>` : "";
     }).join("")}
     <li><b>${rows.reduce((n, x) => n + x.r.caught, 0)}</b> Pokémon caught</li>
   </ul></aside>`;
