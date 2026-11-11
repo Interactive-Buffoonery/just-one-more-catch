@@ -30,3 +30,10 @@ from PokeAPI and needs no source.
 - https://bulbapedia.bulbagarden.net/wiki/Appendix:FireRed_and_LeafGreen_walkthrough
 - https://strategywiki.org/wiki/Pok%C3%A9mon_FireRed_and_LeafGreen
 - No guide PDF yet.
+
+## Ultra Sun and Ultra Moon
+
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ultra_Sun_and_Ultra_Moon
+- https://bulbapedia.bulbagarden.net/wiki/Alola (Alolan forms)
+- https://strategywiki.org/wiki/Pok%C3%A9mon_Ultra_Sun_and_Ultra_Moon
+- The Official Alola Region Strategy Guide (2017): `Pokèmon Ultra Sun & Pokèmon Ultra Moon The Official Alola Region Strategy Guide fix.pdf`
