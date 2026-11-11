@@ -162,11 +162,19 @@ def varieties(sp):
     return [v["pokemon"]["url"].rstrip("/").split("/")[-1] for v in sp["varieties"]]
 
 
+def short_form(label, n):
+    if label == "Normal" and n in (26, 103, 105):
+        return "Kanto"
+    label = re.sub(r"^Type: |^Alolan Form$|\s(Style|Core|Pattern|Flower|Cloak|Forme?|Rotom|Kyurem)$", lambda m: "Alolan" if m.group(0) == "Alolan Form" else "", label)
+    return label
+
+
 def form_list(n):
     forms = []
     for slug in GAME["obtainable_forms"][str(n)]:
         f = cached("pokemon_form_" + slug.replace("-", "_"))
         label = next((x["name"] for x in f["form_names"] if x["language"]["name"] == "en"), f["form_name"].replace("-", " ").title() or "Normal")
+        label = short_form(label, n)
         if n == 201:
             label = {"exclamation": "!", "question": "?"}.get(f["form_name"], f["form_name"].upper())
         forms.append({"id": slug, "name": label})
