@@ -602,7 +602,7 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
 .reel{display:flex;gap:var(--gap);overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scroll-padding-inline:24px;padding:32px 24px 20px;scrollbar-width:none}
 .reel::-webkit-scrollbar{display:none}
 .empty .reel{justify-content:safe center}
-.app .gb{flex:none;width:var(--w);scroll-snap-align:center;color:var(--ink);min-height:44px;display:flex;flex-direction:column;align-items:center;border:0;background:none;padding:0;text-align:center;position:relative}
+.app .gb{scroll-margin-bottom:calc(88px + env(safe-area-inset-bottom));flex:none;width:var(--w);scroll-snap-align:center;color:var(--ink);min-height:44px;display:flex;flex-direction:column;align-items:center;border:0;background:none;padding:0;text-align:center;position:relative}
 .gb .bx{display:block;flex:none;width:var(--w);height:var(--w);background:var(--g,var(--teal-soft));border-radius:18px;padding:10%;box-shadow:0 7px 0 var(--g-deep,var(--soft));rotate:var(--t,0deg);translate:0 var(--y,0px);transition:rotate .25s,translate .25s cubic-bezier(.3,1.4,.5,1),box-shadow .25s}
 .gb .bx .cover{display:block;width:100%;height:100%;object-fit:cover;border:0;border-radius:3px}
 .app .gb:focus-visible{outline:0}
