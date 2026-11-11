@@ -48,18 +48,20 @@ import { MAX_RUN_BYTES, runBytes } from "../shared/limits";
 let creating = false;
 let pickOpenedAt = 0;
 let opening: string | null = null;
+let openSeq = 0;
 function useRun(row: RunRow, start = false, customize = false) {
   const v = verOf(row.version);
   closeRun();
   ui.q = "";
   opening = row.id;
+  const me = ++openSeq;
   Promise.all([
     loaded.get(v.pack) || v.pack.load(),
     bridge.getState(row.id),
   ]).then(
     ([d, state]) => {
       loaded.set(v.pack, d);
-      if (opening !== row.id) return;
+      if (me !== openSeq) return;
       opening = null;
       const latest = bridge.runs?.find((r) => r.id === row.id);
       if (latest) openRun(latest, d, state);
@@ -70,7 +72,7 @@ function useRun(row: RunRow, start = false, customize = false) {
       }
     },
     () => {
-      if (opening !== row.id) return;
+      if (me !== openSeq) return;
       opening = null;
       ui.loadError = !!bridge.runs?.some((r) => r.id === row.id);
       render();
