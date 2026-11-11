@@ -1009,8 +1009,7 @@ function Journey() {
   ${
     hide.has("chapter")
       ? ""
-      : `<div class="eyebrow">${CHAPTERS[cur].title} · ${curS.left} to find${curS.later ? ` · ${curS.later} later` : ""}</div>
-  ${curS.left || curS.later ? "" : `<p class="muted">You've caught everything in this chapter.</p>`}
+      : `${curS.left || curS.later ? "" : `<p class="muted">You've caught everything in this chapter.</p>`}
   ${curS.html}`
   }
   </div><aside class="colside">
@@ -1029,7 +1028,8 @@ function Journey() {
       const open = unlocked(i),
         g = open ? null : chapterGroups(i),
         cs = open ? chapterSpots(all, i) : null,
-        n = g ? uniq(g) : cs!.left;
+        n = g ? uniq(g) : cs!.left,
+        done = open && !n;
       const label = !c.places.length
         ? ""
         : g
@@ -1041,7 +1041,7 @@ function Journey() {
               .filter(Boolean)
               .join(" · ")
           : "all caught";
-      return `<details class="chap" data-chap="${i}" ${ui.open.has(String(i)) ? "open" : ""}><summary><span class="node ${open ? "done" : ""}" aria-hidden="true">${open ? "✓" : i + 1}</span><span style="flex:1">${c.title}<span class="sr">${open ? ", reached" : ", not reached yet"}</span></span><span class="muted small">${label}</span></summary>
+      return `<details class="chap" data-chap="${i}" ${ui.open.has(String(i)) ? "open" : ""}><summary><span class="node ${done ? "done" : open ? "wip" : ""}" aria-hidden="true">${done ? "✓" : i + 1}</span><span style="flex:1">${c.title}<span class="sr">${done ? ", everything caught" : open ? ", in progress" : ", not reached yet"}</span></span><span class="muted small">${label}</span></summary>
         ${beats(i)}${
           g
             ? Object.entries(g)
