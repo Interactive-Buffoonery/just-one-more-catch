@@ -189,6 +189,8 @@ type Run = {
   clock: Clock;
   hidden: Set<string>;
   showLater: boolean;
+  view: "journey" | "dex" | "dexonly";
+  startView: "journey" | "dex";
 };
 const MON_DEFAULTS = {
   nick: "",
@@ -229,6 +231,8 @@ function loadRun(row: RunRow, state: string): Run {
     clock: s.clock || { mode: "device" },
     hidden: new Set(s.hidden || []),
     showLater: !!s.showLater,
+    view: s.view === "dex" || s.view === "dexonly" ? s.view : "journey",
+    startView: s.startView === "dex" || s.view === "dex" ? "dex" : "journey",
   };
 }
 export const dumpRun = (r: Run) =>
@@ -249,6 +253,8 @@ export const dumpRun = (r: Run) =>
     clock: r.clock,
     hidden: [...r.hidden],
     showLater: r.showLater,
+    view: r.view,
+    startView: r.startView,
   });
 
 export let bridge: Bridge;
