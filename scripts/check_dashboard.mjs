@@ -8,7 +8,7 @@ const ids = [...packs.slice(packs.indexOf('export const VERSIONS')).matchAll(/^ 
 assert.ok(ids.length);
 for (const games of [ids, ['example'], [...ids, ...Array.from({length: 20}, (_, i) => 'example' + i)]]) {
   const VERSIONS = Object.fromEntries(games.map(id => [id, {name: id, pack: {region: 'Example'}}]));
-  const render = runInNewContext(source.slice(source.indexOf('const gameChoices'), source.indexOf('const pickGame')) + '\ngameChoices', {VERSIONS, esc: x => x, cover: () => '<img alt="">'});
+  const render = runInNewContext(source.slice(source.indexOf('const gameChoices'), source.indexOf('const pickGame')) + '\ngameChoices', {CONSOLES: [{name: 'Example', games}], VERSIONS, esc: x => x, cover: () => '<img alt="">'});
   assert.equal((render().match(/<button /g) || []).length, games.length);
 }
 const realPacks = runInNewContext(stripTypeScriptTypes(packs).replace(/^import .*$/gm, "").replace(/export /g, "") + "\nVERSIONS");
@@ -31,7 +31,7 @@ for (const row of rows) {
   assert.match(singular, /<b>1<\/b> playthrough<\/li>/);
   assert.match(singular, /<b>1<\/b> (badge|trial)<\/li>/);
 }
-assert.doesNotMatch(source.slice(source.indexOf('const gameChoices'), source.indexOf('const pickGame')), /aria-label=/);
+
 
 for (const count of [0, 1, 2]) {
   const render = runInNewContext(stripTypeScriptTypes(source.slice(source.indexOf('export function Runs()'), source.indexOf('function Account()'))).replace('export ', '') + '\nRuns', {
@@ -52,9 +52,11 @@ assert.match(confirm('heartgold'), /No thank you, just browsing!/);
 
 assert.match(confirm('heartgold'), /data-confirmrun="heartgold"/);
 assert.match(confirm('heartgold'), /data-close=/);
-const choices = runInNewContext(source.slice(source.indexOf('const gameChoices'), source.indexOf('const pickGame')) + '\ngameChoices', {VERSIONS: realPacks, esc: x => x, cover: () => '<img alt="">'});
+const choices = runInNewContext(source.slice(source.indexOf('const gameChoices'), source.indexOf('const pickGame')) + '\ngameChoices', {CONSOLES: runInNewContext(stripTypeScriptTypes(packs).replace(/^import .*$/gm, '').replace(/export /g, '') + '\nCONSOLES'), VERSIONS: realPacks, esc: x => x, cover: () => '<img alt="">'});
 assert.match(choices(), /data-newrun="heartgold"/);
 const app = readFileSync(new URL('../client/app.ts', import.meta.url), 'utf8');
 assert.doesNotMatch(app.slice(app.indexOf('  if (d.newrun) {'), app.indexOf('  if (d.confirmrun) {')), /createRun/);
 assert.match(app, /e\.repeat &&\s*\(e\.key === "Enter" \|\| e\.key === " "\) &&\s*\(e\.target as HTMLElement\)\.closest\("\[data-confirmrun\]"\)\s*\) e\.preventDefault\(\)/);
 console.log('dashboard ok');
+
+for (const card of choices().matchAll(/<div class="gb soon"[^>]*>.*?<\/div>/g)) assert.doesNotMatch(card[0], /data-newrun|<button/);

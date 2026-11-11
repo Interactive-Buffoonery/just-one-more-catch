@@ -15,7 +15,7 @@ import {
   ymd,
 } from "../game";
 import { guestRows, moving, waitingNote } from "../guest";
-import { Pack, VERSIONS } from "../packs";
+import { CONSOLES, Pack, VERSIONS } from "../packs";
 import { RunRow } from "../types";
 import { AVATARS, isAvatar } from "../../shared/avatars";
 import { MAX_RUNS } from "../../shared/limits";
@@ -41,10 +41,14 @@ export const confirmGame = (id: string, customize = false) => {
   return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">Start ${esc(v.name)}?</h2><div class="hv-actions"><button class="app-primary" data-confirmrun="${esc(id)}">Yes please!</button><button class="app-quiet" data-close="1">No thank you, just browsing!</button></div></div>`;
 };
 const gameChoices = (heading = "new-game-heading", regions = false) =>
-  `<div class="slide s2"><div class="reel" role="group" aria-labelledby="${heading}">${Object.entries(VERSIONS)
-    .map(([id, v]) =>
-      `<button class="gb" data-newrun="${id}" data-game="${id}"><span class="bx">${cover(v, "", "")}</span><b>${esc(v.name)}</b>${regions ? `<span class="small muted">${esc(v.pack.region)}</span>` : "<em>Start</em>"}</button>`)
-    .join("")}</div></div>`;
+  CONSOLES.map((console, index) =>
+    `<h3 class="console" id="${heading}-${index}">${esc(console.name)}</h3><div class="slide s2"><div class="reel" role="group" aria-labelledby="${heading}-${index}">${console.games.map((game) => {
+      if (typeof game !== "string") return `<div class="gb soon" role="group" style="--c:${game.color}" aria-label="${esc(game.name)}, Coming soon"><span class="bx"><img class="cover" src="/covers/${game.short.toLowerCase()}.jpg" alt="" width="160" height="160"></span><b>${esc(game.name)}</b><span class="small muted">Coming soon</span></div>`;
+      const v = VERSIONS[game];
+      return `<button class="gb" data-newrun="${game}" data-game="${game}"><span class="bx">${cover(v, "", "")}</span><b>${esc(v.name)}</b>${regions ? `<span class="small muted">${esc(v.pack.region)}</span>` : "<em>Start</em>"}</button>`;
+    }).join("")}</div></div>`
+  ).join("");
+
 const pickGame = () =>
   `<section class="empty"><h2 id="new-game-heading">Pick a game</h2>${gameChoices()}</section>`;
 const longDay = (day: string) => {
