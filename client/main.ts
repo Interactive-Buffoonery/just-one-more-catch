@@ -9,7 +9,15 @@ let clerk: Clerk | undefined;
 const pendingSignIns = new WeakSet<HTMLDivElement>();
 const convex = new ConvexClient(import.meta.env.VITE_CONVEX_URL);
 
-let auth: Bridge["auth"] = { isLoading: false, isAuthenticated: false };
+const expectsSession =
+  /(?:^|;\s*)__client_uat(?:_[^=]*)?=(?!0(?:;|$))[^;]/.test(document.cookie) ||
+  /sso-callback|__clerk_|__dev_session/.test(
+    location.pathname + location.search + location.hash,
+  );
+let auth: Bridge["auth"] = {
+  isLoading: expectsSession,
+  isAuthenticated: false,
+};
 let runs: Bridge["runs"];
 let stopRuns: (() => void) | undefined;
 let avatar: Bridge["avatar"];
@@ -183,12 +191,4 @@ const loadClerk = () =>
       onUser(null);
     }
   })());
-const hasClerkSession =
-  /(?:^|;\s*)__client_uat(?:_[^=]*)?=(?!0(?:;|$))[^;]/.test(document.cookie);
-if (
-  hasClerkSession ||
-  /sso-callback|__clerk_|__dev_session/.test(
-    location.pathname + location.search + location.hash,
-  )
-)
-  void loadClerk();
+if (expectsSession) void loadClerk();

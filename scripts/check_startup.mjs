@@ -41,7 +41,10 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
   await main.evaluate();
   const bridge=bridges[0];
   assert.equal(imports.length>0,signal,signal?`${cookie||search} must load Clerk at startup`:`${cookie||'a guest'} must not download Clerk at startup`);
-  if (signal) return;
+  if (signal) {
+    assert.equal(bridge.auth.isLoading,true,'a returning session must show loading, not the guest view');
+    return;
+  }
   if (user) {
     const el={isConnected:true,textContent:''};
     bridge.mountSignIn(el);
