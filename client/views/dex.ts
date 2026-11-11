@@ -124,6 +124,7 @@ function spot(place: string, rows: Row[]) {
 export function fillSpecies(n: number) {
   const p = byN[n],
     caught = R().caught.has(n),
+    forms = collectedForms(p),
     groups: Record<string, Row[]> = {
       now: [],
       wrongtime: [],
@@ -151,7 +152,7 @@ export function fillSpecies(n: number) {
       <div class="band">${sprite(p, "hv-sprite")}<div class="k">#${pad(num(p))}</div><h2 class="lg" id="sheet-title">${p.name}</h2>${p.types.map((t) => `<span class="type" style="--tc:${TYPE[t]}">${cap(t)}</span>`).join(" ")}</div>
       <div class="hv-actions"><button type="button" class="app-primary grow" data-toggle="${n}" data-k="t${n}" aria-pressed="${caught}" aria-label="${p.name} caught">${caught ? "✓ Caught" : "Caught it"}</button></div>
     </section>
-    ${p.forms && p.forms.length > 1 ? `<h3>Forms · ${collectedForms(p).size} / ${p.forms.length}</h3><div class="forms">${p.forms.map((f) => `<button type="button" class="form" data-form="${f.id}" data-species="${n}" data-k="form-${f.id}" aria-pressed="${collectedForms(p).has(f.id)}" aria-label="${esc(p.name + " " + f.name)}" ${mine.some((m) => (m.form || p.forms![0].id) === f.id) ? "disabled" : ""}>${sprite(p, "", false, f.id)}<span>${esc(f.name)}</span></button>`).join("")}</div>` : ""}
+    ${p.forms && p.forms.length > 1 ? `<h3>Forms · ${forms.size} / ${p.forms.length}</h3><div class="forms">${p.forms.map((f) => `<button type="button" class="form" data-form="${f.id}" data-species="${n}" data-k="form-${f.id}" aria-pressed="${forms.has(f.id)}" aria-label="${esc(p.name + " " + f.name)}" ${mine.some((m) => (m.form || p.forms![0].id) === f.id) ? "disabled" : ""}>${sprite(p, "", false, f.id)}<span>${esc(f.name)}</span></button>`).join("")}</div>` : ""}
     ${caught ? `<h3>Yours${mine.length ? ` · ${mine.length}` : ""}</h3><div class="card">${mine.map((m) => monLine(m, true)).join("")}<div class="yours">${mine.length ? "" : `<span class="muted small">Not in your party or boxes</span>`}<button type="button" class="quietbtn" data-addmon="${n}" data-k="add${n}">Add ${mine.length ? "another" : "one"}</button></div></div>` : ""}
     ${R().view !== "dexonly" ? `${sect("Catchable now", groups.now)}${sect("Other times of day", groups.wrongtime)}${sect("Special conditions", groups.special)}${sect("Later", groups.later)}
     ${other ? `<h3>Other ways</h3><div class="card"><p class="spot">${other}</p></div>` : ""}

@@ -619,3 +619,4 @@ button.gb:is(:hover,:focus-visible) .bx{rotate:0deg;translate:0 -10px;box-shadow
 .form span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
 .app .form[aria-pressed=true]{background:var(--teal-soft);border-color:var(--teal);color:var(--ink)}
 .app .form[aria-pressed=false] .sprite{opacity:.45;filter:grayscale(.5)}
+:is([data-theme=dracula],[data-theme=rosepine],[data-theme$=-dark]) .form[aria-pressed=false] .sprite{opacity:.6}
