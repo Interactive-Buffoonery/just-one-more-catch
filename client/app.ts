@@ -29,7 +29,7 @@ import { SETTINGS_ICON, TAB_ICONS } from "./parts";
 import { Bridge, RunRow } from "./types";
 import { About, Contact } from "./views/about";
 import { Boxes, fillBoxSheet, fillMonSheet, saveMon } from "./views/boxes";
-import { Dex, fillSpecies } from "./views/dex";
+import { Dex, dexGrid, fillSpecies } from "./views/dex";
 import { fillClock, fillCustom, Journey, untick } from "./views/journey";
 import {
   cover,
@@ -48,6 +48,7 @@ let opening: string | null = null;
 function useRun(row: RunRow) {
   const v = verOf(row.version);
   closeRun();
+  ui.q = "";
   opening = row.id;
   Promise.all([
     loaded.get(v.pack) || v.pack.load(),
@@ -654,6 +655,12 @@ export function mount(el: HTMLElement, b: Bridge) {
     },
     true,
   );
+  el.addEventListener("input", (e) => {
+    const t = e.target as HTMLInputElement;
+    if (t.id !== "dexq") return;
+    ui.q = t.value;
+    $("#dexgrid").innerHTML = dexGrid();
+  });
   el.addEventListener("change", (e) => {
     const t = e.target as HTMLInputElement;
     if (t.name === "avatar") {

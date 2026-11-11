@@ -265,6 +265,7 @@ export const ui: any = {
   tab: "journey",
   boxFilter: "all",
   filter: "now",
+  q: "",
   bulk: false,
   undo: null,
   sheet: null,

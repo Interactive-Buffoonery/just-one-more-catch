@@ -42,7 +42,7 @@ export const lvl = (r: Row) =>
       ? `Lv ${r.lo}`
       : `Lv ${r.lo} to ${r.hi}`;
 // Each tag, and whether a row shows it beside the name (time of day and what blocks it).
-function tagBits(r: Row, place = r.place, chance = "") {
+export function tagBits(r: Row, place = r.place, chance = "") {
   const st = rowStatus(r),
     t: [string, boolean][] = [];
   const add = (html: string, side = false) => t.push([html, side]);
