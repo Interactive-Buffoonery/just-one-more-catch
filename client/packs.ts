@@ -9,6 +9,14 @@ export type GameData = {
     kit?: string;
     places: string[];
   }[];
+  events: {
+    id: string;
+    label: string;
+    q: string;
+    chap: number;
+    after?: string[];
+    by?: string;
+  }[];
   dex: any[];
 };
 export type Pack = {
@@ -22,6 +30,8 @@ export type Pack = {
   badges: string[][];
   postgame?: [string, string[][]];
   kit: string[][];
+  // HM kit id -> badge needed to use it outside battle
+  hm: Record<string, string>;
   safari?: string[];
   nightFrom?: number;
   boxes: [count: number, size: number];
@@ -61,6 +71,7 @@ const JOHTO_KIT = [
   ["headbutt", "Headbutt"],
   ["rock-smash", "Rock Smash"],
   ["surf", "Surf"],
+  ["strength", "Strength"],
   ["good-rod", "Good Rod"],
   ["whirlpool", "Whirlpool"],
   ["waterfall", "Waterfall"],
@@ -78,6 +89,13 @@ const HGSS: Pack = {
   badges: JOHTO_BADGES,
   postgame: ["Kanto badges", kantoBadges("Janine", "Blue")],
   kit: JOHTO_KIT,
+  hm: {
+    "rock-smash": "Zephyr",
+    surf: "Fog",
+    strength: "Plain",
+    whirlpool: "Glacier",
+    waterfall: "Rising",
+  },
   safari: [
     "Plains",
     "Meadow",
@@ -107,6 +125,12 @@ const CRYSTAL: Pack = {
   badges: JOHTO_BADGES,
   postgame: ["Kanto badges", kantoBadges("Janine", "Blue")],
   kit: JOHTO_KIT,
+  hm: {
+    surf: "Fog",
+    strength: "Plain",
+    whirlpool: "Glacier",
+    waterfall: "Rising",
+  },
   nightFrom: 18,
   boxes: [14, 20],
 };
@@ -124,10 +148,17 @@ const FRLG: Pack = {
     ["old-rod", "Old Rod"],
     ["good-rod", "Good Rod"],
     ["surf", "Surf"],
+    ["strength", "Strength"],
     ["rock-smash", "Rock Smash"],
     ["super-rod", "Super Rod"],
     ["waterfall", "Waterfall"],
   ],
+  hm: {
+    surf: "Soul",
+    strength: "Rainbow",
+    "rock-smash": "Marsh",
+    waterfall: "Volcano",
+  },
   boxes: [14, 30],
 };
 
