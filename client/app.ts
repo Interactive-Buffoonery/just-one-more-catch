@@ -160,9 +160,9 @@ function render() {
   $("#view").innerHTML = loading
     ? `<p class="muted" style="text-align:center;padding-top:40px">Loading…</p>`
     : needsGame && ui.loadError
-      ? `<p class="small" role="alert" style="text-align:center;padding-top:40px;color:var(--coral)">This game didn't load. Check your connection and reload the page.</p>`
+      ? `<p id="contact-error" class="small" role="alert" style="text-align:center;padding-top:40px;color:var(--coral)">This game didn't load. Check your connection and reload the page.</p>`
       : (ui.saveError
-          ? `<p class="small" role="alert" style="text-align:center;margin:4px 0 16px;color:var(--coral)">${ui.saveError}</p>`
+          ? `<p id="contact-error" class="small" role="alert" style="text-align:center;margin:4px 0 16px;color:var(--coral)">${ui.saveError}</p>`
           : "") + VIEWS[ui.tab]();
   const avatar = `<button class="avatar" data-settings="1" data-k="avatar" aria-label="Settings and avatar, ${esc(trainerName())}">${partner("")}</button>`;
   $("#topright").innerHTML =
@@ -332,7 +332,9 @@ async function onClick(e: MouseEvent) {
   }
   if (d.another) {
     ui.sent = false;
+    ui.sendError = "";
     render();
+    document.getElementById("c-msg")?.focus();
     return;
   }
   if (d.delaccount) {
@@ -578,13 +580,18 @@ async function onSubmit(e: SubmitEvent) {
   } catch {
     ui.sendError = "That didn't send. Please try again.";
   }
-  if (ui.sent) render();
+  if (ui.sent) {
+    render();
+    document.getElementById("contact-thanks")?.focus();
+  }
   else {
+    document.getElementById("c-msg")?.setAttribute("aria-invalid", "true");
+    document.getElementById("c-msg")?.setAttribute("aria-describedby", "contact-error");
     btn.disabled = false;
     form.querySelector(".small")?.remove();
     btn.insertAdjacentHTML(
       "afterend",
-      `<p class="small" role="alert" style="color:var(--coral)">${ui.sendError}</p>`,
+      `<p id="contact-error" class="small" role="alert" style="color:var(--coral)">${ui.sendError}</p>`,
     );
   }
 }
