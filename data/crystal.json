@@ -19,6 +19,10 @@
     "Bell Tower Roof": "Bell Tower"
   },
   "needs": {
+    "Power Plant": {"needs": "surf", "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Power_Plant", "quote": "{{m|Surf}}ing{{sup/1}}{{sup/2}}{{sup/3|FRLG}}{{sup/4|HGSS}} or [[Secret Technique|Sea Skimming]]{{sup/7|PE}} from {{rt|10|Kanto}} is required to reach it."},
+    "Sea Route 20": {"needs": "surf", "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Route_20", "quote": "is a [[water route]] located in southern [[Kanto]]"},
+    "Sea Route 21": {"needs": "surf", "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Route_21", "quote": "is a [[water route]] located in southwestern [[Kanto]]"},
+    "Cinnabar Island": {"needs": "surf", "src": "https://bulbapedia.bulbagarden.net/wiki/Cinnabar_Island", "quote": "Cinnabar is a small island, connected to the mainland by two water routes."},
     "Union Cave B2F": "surf",
     "Slowpoke Well B1F": ["surf", "strength"],
     "Whirl Islands": ["surf", "whirlpool"],
@@ -64,6 +68,8 @@
     {"id": "expn-card", "label": "Get the EXPN Card", "q": "Did the Lavender radio manager give you the EXPN Card?", "chap": 8}
   ],
   "row_needs": [
+    {"place": "Route 10", "n": 125, "m": "walk", "needs": ["surf"], "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Route_10", "quote": "have moved into a new grassy patch located nearby"},
+    {"place": "Route 10", "n": 100, "m": "walk", "needs": ["surf"], "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Route_10", "quote": "have moved into a new grassy patch located nearby"},
     {"place": "Violet City", "n": 175, "m": "gift-egg", "needs": ["Zephyr"]},
     {"place": "Goldenrod City Bills House", "n": 133, "m": "gift", "needs": ["Plain", "squirt-bottle", "bill"]},
     {"place": "Route 36", "n": 185, "m": "squirt-bottle", "needs": ["Plain", "squirt-bottle"]},

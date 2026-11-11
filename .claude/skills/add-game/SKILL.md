@@ -30,6 +30,11 @@ A **need** is one of: a badge name from `client/packs.ts` (`"Zephyr"`,
 `"strength"`), or an event id from the pack's `events`. Chapter `needs`, area
 `needs` and `row_needs` all take any mix of these, and every need must be met.
 
+Record the source next to a new gate. An area need can be
+`{"needs": ["surf"], "src": "<Bulbapedia URL>", "quote": "<words from the page>"}`
+instead of a plain list, and a `row_needs` entry can carry the same `src` and
+`quote` keys. The build ignores them; they're there for the next reviewer.
+
 The app applies the HM rule itself: a kit id listed in the pack's `hm` only
 counts once the player has that badge too. Don't add the badge next to every
 HM need. This only covers kit ids in `hm`: an HM modelled as an event (FRLG's
@@ -111,8 +116,10 @@ is hand-written, so it needs a source.
 
 Sources, in order: Bulbapedia (`Appendix:<Game>_walkthrough` and location
 pages), then Serebii to break ties. Make sure a location page that covers
-several games is describing the one you're working on. Bulbapedia blocks
-automated fetches; read it through `https://web.archive.org/web/2026/<url>`.
+several games is describing the one you're working on.
+
+Bulbapedia blocks scripted fetches. To read its pages, use the `audit-access`
+skill's cache (`scripts/access_audit.py`).
 
 ## Steps
 
@@ -138,12 +145,8 @@ automated fetches; read it through `https://web.archive.org/web/2026/<url>`.
    check those by hand: a typo locks content for good.
 4. Add sprites: an `ART` entry in `scripts/fetch_sprites.py` (plus `ITEMS` for
    a new kit icon and `BADGES` for a new region), then run it.
-5. Verify with a second pass that doesn't trust the first. Send one read-only
-   agent per game to check every chapter and area gate against Bulbapedia.
-   It reports only mistakes, each with a URL and a quote. Have a different
-   model double-check what it flags, then fix the confirmed ones. Where the
-   two disagree and no source settles it, leave it as-is and list it as
-   unverified. Stop when a pass confirms no new mistakes.
+5. Verify with a second pass that doesn't trust the first: run the
+   `audit-access` skill for the pack.
 6. When changing an existing pack, rebuild and compare the old and new
    `client/data/<pack>.ts` row by row (save the old file first). Only the rows
    you meant to move should change chapter or needs.

@@ -13,6 +13,7 @@
     "Roaming Johto": "Roaming Johto"
   },
   "needs": {
+    "Power Plant": {"needs": "surf", "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Power_Plant", "quote": "{{m|Surf}}ing{{sup/1}}{{sup/2}}{{sup/3|FRLG}}{{sup/4|HGSS}} or [[Secret Technique|Sea Skimming]]{{sup/7|PE}} from {{rt|10|Kanto}} is required to reach it."},
     "Union Cave B2F": "surf",
     "Slowpoke Well B1F": ["surf", "strength"],
     "Whirl Islands": ["surf", "whirlpool"],
@@ -81,8 +82,10 @@
     {"place": "Roaming Johto", "n": 380, "m": "roaming-grass", "needs": ["Elite Four", "steven"]},
     {"place": "Roaming Johto", "n": 381, "m": "roaming-grass", "needs": ["Elite Four", "steven"]},
     {"place": "Route 11", "n": 143, "m": "pokeflute", "needs": ["expn-card"]},
-    {"place": "Route 12", "n": 143, "m": "pokeflute", "needs": ["expn-card"]},
-    {"place": "Route 25", "n": 245, "m": "static", "needs": ["suicune"]},
+    {"place": "Route 12", "n": 143, "m": "pokeflute", "needs": ["expn-card", "snorlax"], "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Route_12", "quote": "appears here after entering the [[Hall of Fame]] if it was defeated or run from on {{rt|11|Kanto}}"},
+    {"place": "Mt. Silver 2F", "n": 208, "m": "walk", "needs": ["surf", "waterfall"], "src": "https://bulbapedia.bulbagarden.net/wiki/Mt._Silver_Cave", "quote": "Southern chamber, in the cave just north of the entrance to the main chamber (requires {{m|Surf}} and {{m|Waterfall}})"},
+    {"place": "Route 10", "n": 145, "m": "static", "needs": ["Boulder", "Cascade", "Thunder", "Rainbow", "Soul", "Marsh", "Volcano", "Earth"], "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Route_10", "quote": "A {{p|Zapdos}} appears here after obtaining 16 [[Badge]]s."},
+    {"place": "Route 25", "n": 245, "m": "static", "needs": ["suicune", "Cascade"], "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Route_25", "quote": "and after [[Misty|Misty's]] [[Badge]] has been obtained"},
     {"place": "Embedded Tower", "n": 382, "m": "static", "needs": ["tower-orb", "surf"]},
     {"place": "Embedded Tower", "n": 383, "m": "static", "needs": ["tower-orb", "surf"]},
     {"place": "Embedded Tower", "n": 384, "m": "static", "needs": ["jade-orb", "surf"]},
