@@ -16,6 +16,7 @@ let userId: string | null | undefined;
 const bridge = (): Bridge => ({
   auth,
   runs: auth.isAuthenticated ? runs : [],
+  getState: (id) => convex.query(api.runs.get, { id }),
   mountSignIn: (el) => {
     if (!clerk?.loaded) {
       pendingSignIns.add(el);

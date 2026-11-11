@@ -6,10 +6,23 @@ export default defineSchema({
   runs: defineTable({
     owner: v.string(),
     version: v.string(),
-    state: v.string(),
+    // ponytail: legacy inline state; runs:backfill moves it to `states`, then drop this field and make summary required
+    state: v.optional(v.string()),
+    summary: v.optional(
+      v.object({
+        badges: v.array(v.string()),
+        caught: v.number(),
+        party: v.array(v.object({ n: v.number(), shiny: v.boolean(), nick: v.string() })),
+      }),
+    ),
     updatedAt: v.optional(v.number()),
     startedAt: v.optional(v.number()),
   }).index("by_owner", ["owner"]),
+  // Full playthrough state, kept apart so listing runs reads only the small run documents
+  states: defineTable({
+    run: v.id("runs"),
+    state: v.string(),
+  }).index("by_run", ["run"]),
   messages: defineTable({
     sender: v.string(),
     email: v.string(),
