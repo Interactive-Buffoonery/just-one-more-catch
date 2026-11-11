@@ -123,6 +123,7 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .gamelist button{display:flex;justify-content:space-between;gap:8px;width:100%;min-height:48px;align-items:center;border:0;border-top:1px solid var(--line);background:transparent;padding:0 4px;text-align:left}
 .gamelist button:first-child{border-top:0}
 .gen{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;font-weight:500;color:var(--soft);border:1px solid var(--line);border-radius:2px;padding:1px 6px;margin-left:6px;vertical-align:1px}
+#clerk-signin .cl-lastAuthenticationStrategyBadge{display:none}
 #clerk-signin .cl-cardBox{overflow:visible}
 #clerk-signin .cl-socialButtons{justify-items:center}
 #clerk-signin .cl-socialButtonsBlockButton{width:auto;min-height:44px;padding:0 16px;border-radius:999px;box-shadow:0 0 0 1px var(--line);font-weight:700}
