@@ -1,59 +1,6 @@
+@import url("/tokens.css");
 @font-face{font-family:"Luckiest Guy";src:url("/fonts/luckiest-guy/LuckiestGuy-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
 
-:root,[data-theme=sakura]{
-  --bg:#fff5f7; --surface:#ffffff; --ink:#3d2a33; --soft:#86606d; --line:#f6d9e1;
-  --teal:#a8285a; --teal-soft:#fde4ec; --coral:#a8323e; --coral-soft:#fbe4e6; --gold:#e8a33d; --gold-ink:#8a5a10; --gold-soft:#fdf0d8;
-  --pink:#ff9cbb; --on-pink:#3d2a33;
-  --fill:var(--teal); --on-fill:var(--bg); --meter:var(--teal);
-}
-[data-theme=dracula]{
-  --bg:#282a36; --surface:#343746; --ink:#f8f8f2; --soft:#bfc4dc; --line:#44475a;
-  --teal:#bd93f9; --teal-soft:#34324d; --coral:#ff7a7a; --coral-soft:#4a2e36; --gold:#f1fa8c; --gold-ink:#f1fa8c; --gold-soft:#3f4130;
-  --pink:#ff79c6; --on-pink:#282a36;
-  --fill:var(--teal); --on-fill:var(--bg); --meter:var(--teal);
-}
-[data-theme=rosepine]{
-  --bg:#191724; --surface:#1f1d2e; --ink:#e0def4; --soft:#908caa; --line:#403d52;
-  --teal:#ebbcba; --teal-soft:#3a2a35; --coral:#eb6f92; --coral-soft:#3d2230; --gold:#f6c177; --gold-ink:#f6c177; --gold-soft:#3b3022;
-  --pink:#eb6f92; --on-pink:#191724;
-  --fill:var(--teal); --on-fill:var(--bg); --meter:var(--teal);
-}
-[data-theme=alucard]{
-  --bg:#fffbeb; --surface:#ffffff; --ink:#1f1f1f; --soft:#635d97; --line:#cfcfde;
-  --teal:#644ac9; --teal-soft:#e9e4fb; --coral:#b0301f; --coral-soft:#fbe4e0; --gold:#e0b020; --gold-ink:#6e5a0c; --gold-soft:#f6efcf;
-  --pink:#a3144d; --on-pink:#ffffff;
-  --fill:var(--teal); --on-fill:var(--bg); --meter:var(--teal);
-}
-[data-theme=blissey]{
-  --bg:#f2f7ee; --surface:#ffffff; --ink:#3e2130; --soft:#6f5766; --line:#d3e0e1;
-  --teal:#9c2a58; --teal-soft:#fac0cc; --coral:#b3261e; --coral-soft:#fbe5e2; --gold:#f0c96f; --gold-ink:#7a5912; --gold-soft:#fbf1d8;
-  --fill:#f1aec6; --on-fill:#4a1930; --meter:#b03a63; --pink:var(--fill); --on-pink:var(--on-fill);
-}
-[data-theme=blissey-dark]{
-  --bg:#25181f; --surface:#30212a; --ink:#e8f3e2; --soft:#aec0c3; --line:#4b3742;
-  --teal:#f1aec6; --teal-soft:#4b2d3b; --coral:#ff9078; --coral-soft:#4a2a25; --gold:#efcb7a; --gold-ink:#efcb7a; --gold-soft:#40351f;
-  --fill:#f1aec6; --on-fill:#3a1325; --meter:#f1aec6; --pink:var(--fill); --on-pink:var(--on-fill);
-}
-[data-theme=venusaur]{
-  --bg:#faf6ec; --surface:#ffffff; --ink:#143b38; --soft:#52695b; --line:#e6dfce;
-  --teal:#256b67; --teal-soft:#ddeeec; --coral:#b52d44; --coral-soft:#fbe3e6; --gold:#eac787; --gold-ink:#6e5215; --gold-soft:#f7ecd0;
-  --fill:#2c7975; --on-fill:#ffffff; --meter:#c94a5e; --pink:var(--fill); --on-pink:var(--on-fill);
-}
-[data-theme=venusaur-dark]{
-  --bg:#121c19; --surface:#1a2723; --ink:#f1ecdd; --soft:#a9baa9; --line:#2f413a;
-  --teal:#7bb7b7; --teal-soft:#20403d; --coral:#f2909b; --coral-soft:#48262c; --gold:#eac787; --gold-ink:#eac787; --gold-soft:#3c3320;
-  --fill:#7bb7b7; --on-fill:#0c2422; --meter:#e86e7f; --pink:var(--fill); --on-pink:var(--on-fill);
-}
-[data-theme=snorlax]{
-  --bg:#f1e5d8; --surface:#fbf6ef; --ink:#17313c; --soft:#68594e; --line:#cec2b8;
-  --teal:#22627b; --teal-soft:#d5e3e6; --coral:#a63a2b; --coral-soft:#f4dad2; --gold:#d9a853; --gold-ink:#6b4c10; --gold-soft:#f4e2be;
-  --fill:#29738f; --on-fill:#fbf6ef; --meter:#22627b; --pink:var(--fill); --on-pink:var(--on-fill);
-}
-[data-theme=snorlax-dark]{
-  --bg:#10212a; --surface:#182e38; --ink:#f1e5d8; --soft:#b8ada3; --line:#2c4854;
-  --teal:#8bb9ca; --teal-soft:#20404d; --coral:#f0907c; --coral-soft:#4a2a24; --gold:#e3b872; --gold-ink:#e3b872; --gold-soft:#3c3423;
-  --fill:#f1e5d8; --on-fill:#17313c; --meter:#8bb9ca; --pink:var(--fill); --on-pink:var(--on-fill);
-}
 .app{
   --r:14px;
   color:var(--ink); padding:16px 16px 12px;
@@ -171,10 +118,7 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .app .footnav button{border:0;background:transparent;color:var(--soft);font-size:13px;font-weight:700;min-height:44px;padding:0 10px;text-decoration:underline;text-underline-offset:2px}
 .doc section{scroll-margin-top:16px}
 .doc h2{margin-top:28px} .doc section:first-of-type h2{margin-top:0}
-.doc h3{margin-top:18px}
 .doc p,.doc li{line-height:1.55} .doc p{margin:8px 0} .doc ul{margin:8px 0;padding-left:20px}
-.app .linkish{border:0;background:none;padding:0;font:inherit;color:inherit;text-decoration:underline;text-underline-offset:2px;position:relative}
-.app .linkish::after{content:"";position:absolute;inset:-13px 0}
 .todo{background:var(--gold-soft);color:var(--gold-ink);border-radius:6px;padding:1px 6px;font-weight:700}
 .gamelist button{display:flex;justify-content:space-between;gap:8px;width:100%;min-height:48px;align-items:center;border:0;border-top:1px solid var(--line);background:transparent;padding:0 4px;text-align:left}
 .gamelist button:first-child{border-top:0}
@@ -234,11 +178,7 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .app .footnav a{display:inline-flex;align-items:center;color:var(--soft);font-size:13px;font-weight:700;min-height:44px;padding:0 10px;text-decoration:underline;text-underline-offset:2px}
 .footnav{flex-wrap:wrap}
 
-.about-intro{text-align:center;margin:24px auto 28px;max-width:600px}
-.doc .about-wordmark{font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-size:clamp(36px,6vw,56px);font-weight:400;line-height:1.02;letter-spacing:.01em;color:var(--teal);margin:0 0 28px}
-.about-wordmark span{display:block}
 .footer-brand{display:flex;justify-content:center;margin-top:2px}
-.app .footer-brand button{display:block;padding:0 8px;min-height:44px;border:0;background:transparent;color:var(--soft);font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-size:18px;font-weight:400;line-height:1.2;cursor:pointer}
 .footer-brand+.foot{margin-top:4px}
 
 .logo .full{font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-weight:400;letter-spacing:.01em;line-height:1.1}
@@ -651,3 +591,5 @@ button.gb:is(:hover,:focus-visible) .bx{rotate:0deg;translate:0 -10px;box-shadow
 .pickbody>h2.lg{font-size:30px;line-height:1;margin:0 0 18px}
 @media (min-width:640px){.pickbody{--w:220px}}
 @media (max-width:639px){.pickbody .hv-actions>*{flex:1 1 100%}}
+
+.app .footer-brand a{display:inline-flex;align-items:center;min-height:44px;color:var(--soft);font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-size:18px;text-decoration:none}

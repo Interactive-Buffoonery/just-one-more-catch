@@ -36,6 +36,8 @@ const get = async (path, mode = 'no-cors', method = 'GET') => {
 
 assert.equal(await get('https://api.example/x'), undefined, 'other origins are left alone');
 assert.equal(await get('/sprites/a.png', 'no-cors', 'POST'), undefined, 'only GET is handled');
+assert.equal(await get('/about/', 'navigate'), undefined, 'About goes straight to the network');
+assert.equal(await get('/terms/', 'navigate'), undefined, 'Terms goes straight to the network');
 assert.equal(await get('/privacy/', 'navigate'), undefined, 'legal pages go straight to the network');
 
 assert.match((await get('/?tab=dex', 'navigate')).body, /^net /, 'the app page comes from the network when online');
