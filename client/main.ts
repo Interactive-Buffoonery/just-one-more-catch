@@ -26,8 +26,9 @@ const bridge = (): Bridge => ({
     if (!clerk?.loaded) {
       pendingSignIns.add(el);
       el.textContent = "Sign-in is loading. You can keep playing as a guest.";
-      void authReady.then(() => {
-        if (!pendingSignIns.delete(el) || !el.isConnected) return;
+      void loadClerk().then(() => {
+        if (!pendingSignIns.delete(el) || !el.isConnected || clerk?.user)
+          return;
         if (clerk?.loaded) bridge().mountSignIn(el);
         else
           el.textContent =
@@ -162,21 +163,32 @@ if (import.meta.env.PROD && "serviceWorker" in navigator) {
     })
     .catch(() => {});
 }
-const authReady = (async () => {
-  try {
-    const [{ Clerk }, { ui }] = await Promise.all([
-      import("@clerk/clerk-js"),
-      import("@clerk/ui"),
-    ]);
-    clerk = new Clerk(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
-    await clerk.load({ ui });
-    if (/sso-callback/.test(location.pathname + location.hash))
-      await clerk.handleRedirectCallback({}, async () =>
-        history.replaceState(null, "", location.pathname + location.search),
-      );
-    clerk.addListener(({ user }) => onUser(user));
-  } catch (err) {
-    console.warn("Sign-in is unavailable; playing as a guest", err);
-    onUser(null);
-  }
-})();
+let clerkReady: Promise<void> | undefined;
+const loadClerk = () =>
+  (clerkReady ??= (async () => {
+    try {
+      const [{ Clerk }, { ui }] = await Promise.all([
+        import("@clerk/clerk-js"),
+        import("@clerk/ui"),
+      ]);
+      clerk = new Clerk(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
+      await clerk.load({ ui });
+      if (/sso-callback/.test(location.pathname + location.hash))
+        await clerk.handleRedirectCallback({}, async () =>
+          history.replaceState(null, "", location.pathname + location.search),
+        );
+      clerk.addListener(({ user }) => onUser(user));
+    } catch (err) {
+      console.warn("Sign-in is unavailable; playing as a guest", err);
+      onUser(null);
+    }
+  })());
+const hasClerkSession =
+  /(?:^|;\s*)__client_uat(?:_[^=]*)?=(?!0(?:;|$))[^;]/.test(document.cookie);
+if (
+  hasClerkSession ||
+  /sso-callback|__clerk_|__dev_session/.test(
+    location.pathname + location.search + location.hash,
+  )
+)
+  void loadClerk();
