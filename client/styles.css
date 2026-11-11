@@ -118,10 +118,7 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .app .footnav button{border:0;background:transparent;color:var(--soft);font-size:13px;font-weight:700;min-height:44px;padding:0 10px;text-decoration:underline;text-underline-offset:2px}
 .doc section{scroll-margin-top:16px}
 .doc h2{margin-top:28px} .doc section:first-of-type h2{margin-top:0}
-.doc h3{margin-top:18px}
 .doc p,.doc li{line-height:1.55} .doc p{margin:8px 0} .doc ul{margin:8px 0;padding-left:20px}
-.app .linkish{border:0;background:none;padding:0;font:inherit;color:inherit;text-decoration:underline;text-underline-offset:2px;position:relative}
-.app .linkish::after{content:"";position:absolute;inset:-13px 0}
 .todo{background:var(--gold-soft);color:var(--gold-ink);border-radius:6px;padding:1px 6px;font-weight:700}
 .gamelist button{display:flex;justify-content:space-between;gap:8px;width:100%;min-height:48px;align-items:center;border:0;border-top:1px solid var(--line);background:transparent;padding:0 4px;text-align:left}
 .gamelist button:first-child{border-top:0}
@@ -181,11 +178,7 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .app .footnav a{display:inline-flex;align-items:center;color:var(--soft);font-size:13px;font-weight:700;min-height:44px;padding:0 10px;text-decoration:underline;text-underline-offset:2px}
 .footnav{flex-wrap:wrap}
 
-.about-intro{text-align:center;margin:24px auto 28px;max-width:600px}
-.doc .about-wordmark{font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-size:clamp(36px,6vw,56px);font-weight:400;line-height:1.02;letter-spacing:.01em;color:var(--teal);margin:0 0 28px}
-.about-wordmark span{display:block}
 .footer-brand{display:flex;justify-content:center;margin-top:2px}
-.app .footer-brand button{display:block;padding:0 8px;min-height:44px;border:0;background:transparent;color:var(--soft);font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-size:18px;font-weight:400;line-height:1.2;cursor:pointer}
 .footer-brand+.foot{margin-top:4px}
 
 .logo .full{font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-weight:400;letter-spacing:.01em;line-height:1.1}
