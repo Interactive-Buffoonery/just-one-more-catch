@@ -19,6 +19,8 @@
     "Bell Tower Roof": "Bell Tower"
   },
   "needs": {
+    "Ice Path B3F": {"needs": "strength", "src": "https://bulbapedia.bulbagarden.net/wiki/Ice_Path", "quote": "a {{m|Strength}} puzzle involving pushing [[Movable boulder|boulders]] into holes in order to progress", "guide": "Nintendo Power Pokemon Crystal guide, p58: \"With the boulders in place, you can reach the ladder to B3.\""},
+    "Sea Route 19": {"needs": "surf", "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Route_19", "quote": "The [[route]] will be cleared as soon as the player has visited the route for the first time via Route 20", "guide": "Nintendo Power Pokemon Crystal guide, p73: \"There's also some construction going on that will keep you from Cinnabar Island for a short time.\""},
     "Power Plant": {"needs": "surf", "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Power_Plant", "quote": "{{m|Surf}}ing{{sup/1}}{{sup/2}}{{sup/3|FRLG}}{{sup/4|HGSS}} or [[Secret Technique|Sea Skimming]]{{sup/7|PE}} from {{rt|10|Kanto}} is required to reach it."},
     "Sea Route 20": {"needs": "surf", "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Route_20", "quote": "is a [[water route]] located in southern [[Kanto]]"},
     "Sea Route 21": {"needs": "surf", "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Route_21", "quote": "is a [[water route]] located in southwestern [[Kanto]]"},
@@ -62,7 +64,7 @@
     {"id": "clear-bell", "label": "Get the Clear Bell", "q": "Did the Radio Tower director give you the Clear Bell?", "chap": 6},
     {"id": "clair", "label": "Beat Clair", "q": "Did you beat Clair at the Blackthorn Gym?", "chap": 6, "by": "Rising"},
     {"id": "dragonbreath", "label": "Get TM24 from Clair", "q": "Did Clair give you TM24 DragonBreath?", "chap": 6, "after": ["clair"]},
-    {"id": "rainbow-wing", "label": "Get the Rainbow Wing", "q": "Did the sage at the Tin Tower give you the Rainbow Wing?", "chap": 8, "after": ["beasts", "clear-bell"]},
+    {"id": "rainbow-wing", "label": "Get the Rainbow Wing", "q": "Did you catch all three beasts and get the Rainbow Wing?", "chap": 8, "after": ["beasts", "clear-bell"]},
     {"id": "silver-wing", "label": "Get the Silver Wing", "q": "Did the old man in Pewter give you the Silver Wing?", "chap": 8},
     {"id": "gs-ball-ready", "label": "Get the GS Ball back from Kurt", "q": "Did Kurt give the GS Ball back to you?", "chap": 8},
     {"id": "expn-card", "label": "Get the EXPN Card", "q": "Did the Lavender radio manager give you the EXPN Card?", "chap": 8}

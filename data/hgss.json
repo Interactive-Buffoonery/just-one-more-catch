@@ -13,6 +13,7 @@
     "Roaming Johto": "Roaming Johto"
   },
   "needs": {
+    "Ice Path B3F": {"needs": "strength", "src": "https://bulbapedia.bulbagarden.net/wiki/Ice_Path", "quote": "a {{m|Strength}} puzzle involving pushing [[Movable boulder|boulders]] into holes in order to progress", "guide": "Prima HeartGold and SoulSilver Johto guide, p155: \"Drop three stones from B1F 1, then jump down yourself.\" then \"Grab all the items on the floor before you take the stairs to B3F.\""},
     "Power Plant": {"needs": "surf", "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Power_Plant", "quote": "{{m|Surf}}ing{{sup/1}}{{sup/2}}{{sup/3|FRLG}}{{sup/4|HGSS}} or [[Secret Technique|Sea Skimming]]{{sup/7|PE}} from {{rt|10|Kanto}} is required to reach it."},
     "Union Cave B2F": "surf",
     "Slowpoke Well B1F": ["surf", "strength"],
@@ -22,7 +23,7 @@
     "Seafoam Islands": "surf",
     "Cerulean Cave": "surf",
     "Sinjoh Ruins": "arceus",
-    "Sea Route 19": "surf",
+    "Sea Route 19": {"needs": ["surf", "Volcano"], "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Route_19", "quote": "as well as having earned the {{badge|Volcano}} in Generation IV"},
     "Olivine City Gym": "medicine"
   },
   "chapters": [
