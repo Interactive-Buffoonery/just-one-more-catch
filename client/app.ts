@@ -96,6 +96,7 @@ const TYPE: Record<string, string> = {
 };
 let CHAPTERS: GameData["chapters"] = [];
 let EVENTS: Record<string, GameData["events"][number]> = {};
+let LATER: Record<string, GameData["events"][number][]> = {};
 const METHOD: Record<string, [string, string | null]> = {
   walk: ["Walking", null],
   "old-rod": ["Old Rod", "old-rod"],
@@ -382,6 +383,9 @@ function openRun(row: RunRow, data: GameData, state: string) {
   run = loadRun(row, state);
   CHAPTERS = data.chapters;
   EVENTS = Object.fromEntries(data.events.map((e) => [e.id, e]));
+  LATER = Object.fromEntries(
+    data.events.map((e) => [e.id, data.events.filter((x) => x.after?.includes(e.id))]),
+  );
   placeCache = {};
   DEX = data.dex.map((p) => ({
     ...p,
@@ -417,8 +421,7 @@ const nowTime = () => (R().timeAuto ? gameTime() : R().time);
 const isHere = (pl: string) => pl === R().here || pl.startsWith(R().here + " ");
 const kitName = (k: string) => (P().kit.find((x) => x[0] === k) as string[])[1];
 const isBadge = (k: string) => /^[A-Z]/.test(k);
-const laterEvents = (id: string) =>
-  Object.values(EVENTS).filter((e) => e.after?.includes(id));
+const laterEvents = (id: string) => LATER[id] || [];
 // Done because its `by` proves it, directly or through a later event: unticking can't undo it.
 const forced = (id: string): boolean =>
   (!!EVENTS[id].by && has(EVENTS[id].by as string)) ||
@@ -457,7 +460,7 @@ const currentChap = () => {
   const h = chapterOf(R().here);
   return unlocked(h)
     ? h
-    : CHAPTERS.reduce((c, _, i) => (unlocked(i) ? i : c), 0);
+    : CHAPTERS.reduce((c, ch, i) => (unlocked(i) && ch.places.length ? i : c), 0);
 };
 function rowStatus(r: Row): { s: string; why?: string; need?: string } {
   const run = R();
@@ -547,6 +550,11 @@ const speciesStatus = (p: Species) => {
 /* ---- Rendering helpers ---- */
 let root: HTMLElement;
 const $ = (s: string) => root.querySelector(s) as any;
+// Cleared first so the same message is read again when repeated.
+const announce = (msg: string) => {
+  $("#live").textContent = "";
+  requestAnimationFrame(() => ($("#live").textContent = msg));
+};
 const esc = (v: unknown) =>
   String(v).replace(
     /[&<>"]/g,
@@ -593,7 +601,7 @@ function rowTags(r: Row, place = r.place) {
     inJourney(EVENTS[st.need].chap)
   )
     t.push(
-      `<button class="tag goto" data-goevent="${st.need}" aria-label="${st.why}. Show it in Your journey">${st.why}</button>`,
+      `<button class="tag goto" data-goevent="${st.need}" aria-label="${st.why}. Show it in Your journey">${st.why}<span aria-hidden="true"> ›</span></button>`,
     );
   else if (st.s !== "now" && st.s !== "wrongtime")
     t.push(`<span class="tag warn">${st.why}</span>`);
@@ -845,7 +853,7 @@ const SECTIONS = [
   [
     "story",
     "Story check",
-    "Disabling this hides the question about where you are in the story",
+    "Disabling this hides the question about where you are in the story. It stays while Your journey is hidden, so you can still mark story steps",
   ],
   ["journey", "Your journey", "Disabling this hides the Your journey section"],
   ["dex", "Dex progress", "Disabling this hides the Dex progress section"],
@@ -925,8 +933,10 @@ function beat(id: string) {
         ? "You beat the Elite Four"
         : e.by && isBadge(e.by) && has(e.by)
           ? `You have the ${e.by} Badge`
-          : "A later step shows it's done";
-  return `<button class="beat" id="ev-${id}" data-event="${id}" data-k="ev-${id}" aria-pressed="${done}" ${lock ? `aria-disabled="true"` : ""}><span class="bx" aria-hidden="true"></span><span class="bt">${e.label}${why ? `<small>${why}</small>` : ""}</span>${done && !R().events.has(id) ? `<span class="auto">auto</span>` : ""}</button>`;
+          : e.by && EVENTS[e.by] && has(e.by)
+            ? `Shown by: ${EVENTS[e.by].label}`
+            : "A later step shows it's done";
+  return `<button class="beat" id="ev-${id}" data-event="${id}" data-k="ev-${id}" aria-pressed="${done}" ${lock ? `aria-disabled="true"` : ""}><span class="bx" aria-hidden="true"></span><span class="bt">${e.label}${why ? `<small>${why}</small>` : ""}</span>${done && !R().events.has(id) ? `<span class="auto" aria-hidden="true">auto</span><span class="sr">, marked done for you</span>` : ""}</button>`;
 }
 const beats = (i: number) => {
   const list = Object.values(EVENTS).filter((e) => e.chap === i);
@@ -966,7 +976,7 @@ function Journey() {
   return `<div class="cols"><div class="colmain">
   <div class="chips">
     <label class="sr" for="here">Where you are in the game</label>
-    <select class="pill" id="here" data-k="here">${herePlaces.map((p) => `<option ${p === r.here ? "selected" : ""} value="${p}">Near ${p}${placeLabel(p, all[p]) && ` · ${placeLabel(p, all[p])}`}</option>`).join("")}</select>
+    <select class="pill" id="here" data-k="here">${herePlaces.includes(r.here) ? "" : `<option selected disabled>Near ${r.here}</option>`}${herePlaces.map((p) => `<option ${p === r.here ? "selected" : ""} value="${p}">Near ${p}${placeLabel(p, all[p]) && ` · ${placeLabel(p, all[p])}`}</option>`).join("")}</select>
     ${P().nightFrom ? `<button class="pill clockpill" data-clock="1" data-k="clock" aria-label="Game clock: ${cap(nowTime())}, ${cap(DAYS[gameNow(r.clock).day])}. Change">${CLOCK_ICON}<b>${cap(nowTime())}</b> · ${cap(DAYS[gameNow(r.clock).day]).slice(0, 3)}</button>` : ""}
     ${
       P().nightFrom
@@ -978,7 +988,7 @@ function Journey() {
     }
     <button class="pill" data-custom="1" data-k="custom">Customize</button>
   </div>
-  ${hide.has("story") ? "" : storyCheck()}
+  ${hide.has("story") && !hide.has("journey") ? "" : storyCheck()}
   ${hide.has("next") ? "" : hero ? heroCard(hero) : now.length ? `<section class="hero"><h2>You've skipped every suggestion</h2><p style="margin:6px 0 12px">${now.length} Pokémon are still catchable right now.</p><button class="btn" data-unskip="1" data-k="unskip2">Show them again</button></section>` : `<section class="hero"><h2>Nothing left to catch right now</h2><p style="margin:6px 0 0">Try another time of day, or move ahead in the story.</p></section>`}
   ${!hide.has("next") && r.skip.size ? `<div style="text-align:right;margin-top:8px"><button class="chip" data-unskip="1" data-k="unskip">Show ${r.skip.size} skipped</button></div>` : ""}
   ${!hide.has("near") && atHere.length ? `<div class="eyebrow">Also near ${r.here}</div>${atHere.map((x) => monRow(x.p, x.r)).join("")}` : ""}
@@ -2033,8 +2043,8 @@ async function onClick(e: MouseEvent) {
     eventDone(d.event) ? untick(d.event) : r.events.add(d.event);
   } else if (d.yes || d.snooze || d.unsnooze) {
     // A double tap would otherwise answer the next question unread.
-    if (Date.now() - (ui.askedAt || 0) < 600) return;
-    ui.askedAt = Date.now();
+    if (performance.now() - (ui.askedAt || 0) < 600) return;
+    ui.askedAt = performance.now();
     const e = EVENTS[d.yes || d.snooze || ""];
     if (d.yes) r.events.add(d.yes);
     else if (d.snooze) ui.snooze.add(d.snooze);
@@ -2045,7 +2055,7 @@ async function onClick(e: MouseEvent) {
       root.querySelector('[data-k="ask-now"]') ||
       root.querySelector("#here")
     ) as HTMLElement | null)?.focus();
-    if (e) $("#live").textContent = d.yes ? `${e.label}: done` : `${e.label}: asking later`;
+    announce(e ? (d.yes ? `${e.label}: done` : `${e.label}: asking later`) : "Asking again");
     if (d.yes) scheduleSave();
     return;
   } else if (d.goevent) {
@@ -2056,6 +2066,7 @@ async function onClick(e: MouseEvent) {
     const b = root.querySelector("#ev-" + d.goevent) as HTMLElement | null;
     b?.scrollIntoView({ block: "center" });
     b?.focus({ preventScroll: true });
+    announce(`Showing ${EVENTS[d.goevent].label} in Your journey`);
     return;
   } else if (d.badge) {
     r.badges.has(d.badge) ? r.badges.delete(d.badge) : r.badges.add(d.badge);

@@ -186,7 +186,7 @@ if __name__ == "__main__":
     assert len(ids) == len(events), "duplicate event id"
     assert not set(range(len(GAME.get("row_needs", [])))) - row_hits, f"row_needs match no row: {[g for i, g in enumerate(GAME['row_needs']) if i not in row_hits]}"
     for e in events:
-        assert e["id"] == e["id"].lower(), f"event id must be lowercase: {e['id']}"
+        assert re.fullmatch(r"[a-z][a-z0-9-]*", e["id"]), f"event id must be a lowercase slug: {e['id']}"
         assert 0 <= e["chap"] < len(GAME["chapters"]), f"{e['id']}: no chapter {e['chap']}"
         assert set(e.get("after", [])) <= ids, f"{e['id']}: unknown after {set(e['after']) - ids}"
     # The app finds an event done by walking to its `by` event and to every event listing it in `after`
