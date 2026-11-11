@@ -113,13 +113,13 @@ const profileOf = (ctx: QueryCtx, who: string) =>
   ctx.db
     .query("profiles")
     .withIndex("by_owner", (q) => q.eq("owner", who))
-    .unique();
+    .take(2);
 
 export const avatar = query({
   args: {},
   handler: async (ctx) => {
     const me = await ctx.auth.getUserIdentity();
-    return (me && (await profileOf(ctx, me.tokenIdentifier))?.avatar) ?? null;
+    return (me && (await profileOf(ctx, me.tokenIdentifier))[0]?.avatar) ?? null;
   },
 });
 
@@ -128,9 +128,10 @@ export const setAvatar = mutation({
   handler: async (ctx, { avatar }) => {
     if (!isAvatar(avatar)) throw new Error("Unknown avatar");
     const who = await owner(ctx);
-    const old = await profileOf(ctx, who);
-    if (old) await ctx.db.patch(old._id, { avatar });
+    const [first, ...extras] = await profileOf(ctx, who);
+    if (first) await ctx.db.patch(first._id, { avatar });
     else await ctx.db.insert("profiles", { owner: who, avatar });
+    for (const p of extras) await ctx.db.delete(p._id);
   },
 });
 
@@ -153,8 +154,7 @@ export const deleteAccount = mutation({
   handler: async (ctx) => {
     const who = await owner(ctx);
     await purgeRuns(ctx, who);
-    const profile = await profileOf(ctx, who);
-    if (profile) await ctx.db.delete(profile._id);
+    for (const p of await profileOf(ctx, who)) await ctx.db.delete(p._id);
     const sent = await ctx.db
       .query("messages")
       .withIndex("by_sender", (q) => q.eq("sender", who))
