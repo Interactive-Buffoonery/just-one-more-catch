@@ -270,3 +270,44 @@ export const VERSIONS: Record<VersionId, Version> = {
     ring: ["ghost", "dragon"],
   },
 };
+
+export const CONSOLES: { name: string; games: (VersionId | { name: string; short: string; color: string })[] }[] = [
+  { name: "Game Boy", games: [
+    { name: "Red", short: "R", color: "#d8403a" },
+    { name: "Blue", short: "B", color: "#3a67c9" },
+    { name: "Yellow", short: "Y", color: "#d4a136" },
+  ] },
+  { name: "Game Boy Color", games: [
+    { name: "Gold", short: "G", color: "#d8403a" },
+    { name: "Silver", short: "SI", color: "#3a67c9" },
+    "crystal",
+  ] },
+  { name: "Game Boy Advance", games: [
+    { name: "Ruby", short: "RU", color: "#d8403a" },
+    { name: "Sapphire", short: "SA", color: "#3a67c9" },
+    "firered",
+    "leafgreen",
+    { name: "Emerald", short: "E", color: "#3a67c9" },
+  ] },
+  { name: "Nintendo DS", games: [
+    { name: "Diamond", short: "D", color: "#d8403a" },
+    { name: "Pearl", short: "P", color: "#3a67c9" },
+    { name: "Platinum", short: "PT", color: "#d4a136" },
+    "heartgold",
+    "soulsilver",
+    { name: "Black", short: "BL", color: "#d4a136" },
+    { name: "White", short: "W", color: "#d8403a" },
+    { name: "Black 2", short: "B2", color: "#3a67c9" },
+    { name: "White 2", short: "W2", color: "#d4a136" },
+  ] },
+  { name: "Nintendo 3DS", games: [
+    { name: "X", short: "X", color: "#d8403a" },
+    { name: "Y", short: "YY", color: "#3a67c9" },
+    { name: "Omega Ruby", short: "OR", color: "#d4a136" },
+    { name: "Alpha Sapphire", short: "AS", color: "#d8403a" },
+    { name: "Sun", short: "SU", color: "#3a67c9" },
+    { name: "Moon", short: "MO", color: "#d4a136" },
+    "ultrasun",
+    "ultramoon",
+  ] },
+];
