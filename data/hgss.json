@@ -55,7 +55,7 @@
     {"id": "dragon-pulse", "label": "Get TM59 from Clair", "q": "Did Clair give you TM59 Dragon Pulse?", "chap": 9, "after": ["clair"]},
     {"id": "rainbow-wing", "label": "Get the Rainbow Wing", "q": "Do you have the Rainbow Wing?", "chap": 8},
     {"id": "silver-wing", "label": "Get the Silver Wing", "q": "Do you have the Silver Wing?", "chap": 8},
-    {"id": "mascot", "label": "Meet Ho-Oh or Lugia", "q": "Have you battled Ho-Oh (HeartGold) or Lugia (SoulSilver) in the story?", "chap": 11, "by": "Elite Four"},
+    {"id": "mascot", "label": "Meet Ho-Oh or Lugia", "q": "Have you battled Ho-Oh (HeartGold) or Lugia (SoulSilver) in the story?", "chap": 11, "by": "Elite Four", "after": ["clair"]},
     {"id": "power-plant", "label": "Return the Machine Part", "q": "Did you return the Machine Part to the Power Plant?", "chap": 13},
     {"id": "expn-card", "label": "Get the EXPN Card", "q": "Did the Lavender radio manager give you the EXPN Card?", "chap": 13, "after": ["power-plant"]},
     {"id": "snorlax", "label": "Wake the Snorlax", "q": "Did you wake the Snorlax outside Diglett's Cave?", "chap": 13, "after": ["expn-card"]},
