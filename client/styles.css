@@ -164,7 +164,8 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .doc h2{margin-top:28px} .doc section:first-of-type h2{margin-top:0}
 .doc h3{margin-top:18px}
 .doc p,.doc li{line-height:1.55} .doc p{margin:8px 0} .doc ul{margin:8px 0;padding-left:20px}
-.app .linkish{border:0;background:none;padding:0;font:inherit;color:inherit;text-decoration:underline;text-underline-offset:2px}
+.app .linkish{border:0;background:none;padding:0;font:inherit;color:inherit;text-decoration:underline;text-underline-offset:2px;position:relative}
+.app .linkish::after{content:"";position:absolute;inset:-13px 0}
 .todo{background:var(--gold-soft);color:var(--gold-ink);border-radius:6px;padding:1px 6px;font-weight:700}
 .gamelist button{display:flex;justify-content:space-between;gap:8px;width:100%;min-height:48px;align-items:center;border:0;border-top:1px solid var(--line);background:transparent;padding:0 4px;text-align:left}
 .gamelist button:first-child{border-top:0}
@@ -411,7 +412,7 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .ask h2{margin-top:4px}
 .ask-actions{display:flex;gap:8px;margin-top:12px}
 .ask-snz{margin-top:12px;border-style:dashed}
-.app .tag.goto{display:inline-flex;align-items:center;min-height:24px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid var(--gold-ink);font:inherit;font-size:12px;font-weight:700;border-radius:6px;padding:2px 7px;cursor:pointer}
+.app .tag.goto{display:inline-flex;align-items:center;min-height:32px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid var(--gold-ink);font:inherit;font-size:12px;font-weight:700;border-radius:6px;padding:4px 10px;cursor:pointer}
 .beats{display:grid;margin:0 0 6px}
 .app .beat{display:flex;align-items:center;gap:10px;min-height:44px;width:100%;padding:4px 0;background:none;border:0;color:var(--ink);text-align:left;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
 .app .beat[aria-disabled=true]{cursor:default}
