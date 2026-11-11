@@ -596,7 +596,6 @@ button.gb:is(:hover,:focus-visible) .bx{rotate:0deg;translate:0 -10px;box-shadow
 .app .footer-brand a{display:inline-flex;align-items:center;min-height:44px;color:var(--soft);font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-size:18px;text-decoration:none}
 
 /* mirrors public/legal.css card; keep in sync */
-.contact-card .field input,.contact-card .field textarea{border-color:var(--soft)}
 .contact-card.lb{max-width:640px;margin:0 auto;display:grid;gap:26px}
 .contact-card .lcard{background:var(--surface);border-radius:22px;overflow:hidden;container-type:inline-size}
 .contact-card .lslab{background:var(--pink);color:var(--on-pink);min-height:112px;padding:22px 24px;position:relative;overflow:hidden}
@@ -607,3 +606,4 @@ button.gb:is(:hover,:focus-visible) .bx{rotate:0deg;translate:0 -10px;box-shadow
 .contact-card .lg{font-family:"Luckiest Guy",system-ui,sans-serif;font-weight:400}
 .contact-card .contact-form{display:grid;gap:14px}
 .contact-card .contact-send{justify-self:start}
+.contact-card .field input,.contact-card .field textarea{border-color:var(--soft)}

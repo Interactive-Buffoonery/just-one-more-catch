@@ -160,9 +160,9 @@ function render() {
   $("#view").innerHTML = loading
     ? `<p class="muted" style="text-align:center;padding-top:40px">Loading…</p>`
     : needsGame && ui.loadError
-      ? `<p id="contact-error" class="small" role="alert" style="text-align:center;padding-top:40px;color:var(--coral)">This game didn't load. Check your connection and reload the page.</p>`
+      ? `<p class="small" role="alert" style="text-align:center;padding-top:40px;color:var(--coral)">This game didn't load. Check your connection and reload the page.</p>`
       : (ui.saveError
-          ? `<p id="contact-error" class="small" role="alert" style="text-align:center;margin:4px 0 16px;color:var(--coral)">${ui.saveError}</p>`
+          ? `<p class="small" role="alert" style="text-align:center;margin:4px 0 16px;color:var(--coral)">${ui.saveError}</p>`
           : "") + VIEWS[ui.tab]();
   const avatar = `<button class="avatar" data-settings="1" data-k="avatar" aria-label="Settings and avatar, ${esc(trainerName())}">${partner("")}</button>`;
   $("#topright").innerHTML =
