@@ -761,5 +761,6 @@ export function update(b: Bridge) {
 
 document.addEventListener("focusin", (event) => {
   const box = (event.target as HTMLElement).closest(".gb");
-  box?.scrollIntoView({ block: "nearest", inline: "center", behavior: "instant" });
+  if (box?.matches(":focus-visible"))
+    box.scrollIntoView({ block: "nearest", inline: "center", behavior: "instant" });
 });
