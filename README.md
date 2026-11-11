@@ -20,10 +20,20 @@ Live at https://justonemorecatch.app
 
 ## Where things live
 
-- `client/app.ts`: the whole UI, rendered as strings with event delegation.
+- `client/app.ts`: wiring. Renders the current view, handles every click
+  (event delegation on `data-*` attributes), saves, and syncs with the bridge.
 - `client/main.ts`: the only file that talks to Clerk or Convex. It hands the
-  UI a `Bridge` object.
-- `client/styles.ts`: all CSS, including the Clerk sign-in styling.
+  UI a `Bridge` object (`client/types.ts`).
+- `client/game.ts`: the open playthrough and the rules about what can be
+  caught where and when. No DOM.
+- `client/views/`: one file per screen, each returning an HTML string.
+  `client/parts.ts` holds the pieces they share.
+- `client/guest.ts`: guest playthroughs in localStorage and their move to an
+  account. `client/export.ts`: the JSON and CSV downloads.
+- `client/styles.css`: all CSS, including the Clerk sign-in styling.
+- `public/sw.js` and `public/manifest.webmanifest`: the installable app. The
+  service worker keeps the app page and static files for offline use; rename
+  its `CACHE` to clear what browsers have stored.
 - `convex/`: back-end functions, schema and `auth.config.ts`.
 - `shared/`: TypeScript used by both sides.
 - `client/packs.ts`: one pack per game (badges, items, dex sizes, boxes),
