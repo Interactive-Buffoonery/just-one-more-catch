@@ -601,7 +601,7 @@ button.gb:is(:hover,:focus-visible) .bx{rotate:0deg;translate:0 -10px;box-shadow
 .contact-card .lslab h1{position:relative;z-index:1;font-size:36px;line-height:1;margin:0}
 .contact-card .lslab .partner{position:absolute;right:0;bottom:-28px;width:clamp(120px,calc(75cqw - 96px),144px);height:auto;image-rendering:pixelated}
 .contact-card .lbody{padding:18px 24px 22px}
-.contact-card .lbody p{margin:0 0 10px;line-height:1.55}.lbody p:last-child{margin-bottom:0}
+.contact-card .lbody p{margin:0 0 10px;line-height:1.55}.contact-card .lbody p:last-child{margin-bottom:0}
 .contact-card .lg{font-family:"Luckiest Guy",system-ui,sans-serif;font-weight:400}
 .contact-card .contact-form{display:grid;gap:14px}
 .contact-card .contact-send{justify-self:start}

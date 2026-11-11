@@ -187,6 +187,7 @@ const loadClerk = () =>
         );
       clerk.addListener(({ user }) => onUser(user));
     } catch (err) {
+      clerkReady = undefined;
       console.warn("Sign-in is unavailable; playing as a guest", err);
       onUser(null);
     }
