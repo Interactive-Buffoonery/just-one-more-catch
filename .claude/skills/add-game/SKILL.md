@@ -154,4 +154,4 @@ skill's cache (`scripts/access_audit.py`).
 6. When changing an existing pack, rebuild and compare the old and new
    `client/data/<pack>.ts` row by row (save the old file first). Only the rows
    you meant to move should change chapter or needs.
-7. `npx tsc --noEmit -p .` and `npm run build`.
+7. `pnpm exec tsc --noEmit -p .` and `pnpm build`.
