@@ -209,10 +209,16 @@ const HELD_ITEMS = [
   "Up-Grade",
 ];
 const LOOKS = [
+  ["blissey", "Blissey", "Pink and pale green"],
+  ["venusaur", "Venusaur", "Teal and flower pink"],
+  ["snorlax", "Snorlax", "Cream and deep blue"],
   ["blossom", "Blossom", "Sakura / Rosé Pine"],
   ["vampire", "Vampire", "Alucard / Dracula"],
 ];
 const PALETTE: Record<string, { light: string; dark: string }> = {
+  blissey: { light: "blissey", dark: "blissey-dark" },
+  venusaur: { light: "venusaur", dark: "venusaur-dark" },
+  snorlax: { light: "snorlax", dark: "snorlax-dark" },
   blossom: { light: "sakura", dark: "rosepine" },
   vampire: { light: "alucard", dark: "dracula" },
 };
@@ -1317,7 +1323,7 @@ function About() {
     <p>This is a free fan project, and not affiliated with Nintendo, Creatures, GAME FREAK or The Pokémon Company.</p>
     </div><h3>Thanks</h3>
     <ul><li>Encounter data, sprites and badges come from <a href="https://pokeapi.co" target="_blank" rel="noopener">PokeAPI</a>, a free and open Pokémon database built by volunteers.</li>
-    <li>Colour themes are inspired by <a href="https://rosepinetheme.com" target="_blank" rel="noopener">Rosé Pine</a> and <a href="https://draculatheme.com" target="_blank" rel="noopener">Dracula</a>.</li>
+    <li>Colour themes are inspired by <a href="https://rosepinetheme.com" target="_blank" rel="noopener">Rosé Pine</a>, <a href="https://draculatheme.com" target="_blank" rel="noopener">Dracula</a> and Pokémon palettes from <a href="https://www.schemecolor.com" target="_blank" rel="noopener">SchemeColor</a>.</li>
     <li>Icons are from <a href="https://tabler.io/icons" target="_blank" rel="noopener">Tabler Icons</a>, free under the MIT licence.</li></ul>
     <p>Spotted a mistake? ${contactLink("Let us know")}.</p>
   </section>
