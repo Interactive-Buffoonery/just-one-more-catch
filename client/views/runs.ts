@@ -195,7 +195,8 @@ export function Runs() {
     [top, ...rest] = rows;
   if (!top)
     return `<div class="dash"><h1 class="lg">Dashboard</h1>
-  <section class="card welcome"><h2 id="new-game-heading">Start your first playthrough</h2>${gameChoices("new-game-heading", true)}</section>${signInNote()}</div>`;
+  <section class="trainer hello"><div class="tslab"><h2 class="lg">Welcome, Trainer</h2>${partner("partner")}</div></section>
+  <section class="card welcome"><h2 id="new-game-heading">Pick your game</h2>${gameChoices("new-game-heading", true)}</section>${signInNote()}</div>`;
   return `<div class="dash"><h1 class="lg">Dashboard</h1>
   <div class="dash-grid">${resumeCard(top.row, top.r, top.at)}${trainerCard(rows)}
   ${rest.length ? `<section class="sec"><h2 class="lg">Other playthroughs</h2><div class="runs">${rest.map((x) => miniCard(x.row, x.r, x.at)).join("")}</div></section>` : ""}

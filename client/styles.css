@@ -633,3 +633,8 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
   .s2 .gb:is(:hover,:focus-visible) .bx{rotate:var(--t);translate:0 var(--y)}
   .reel{scroll-behavior:auto}
 }
+
+.hello{padding-bottom:0;margin-bottom:24px}
+.hello .tslab{display:flex;align-items:center}
+.hello .tslab h2{white-space:normal}
+@media (min-width:960px){.hello .tslab h2{font-size:52px}}
