@@ -1021,14 +1021,14 @@ function Journey() {
   <div class="card" style="padding:4px 16px">
     ${CHAPTERS.map((c, i) => {
       if (!inJourney(i)) return "";
-      if (i === cur)
-        return `<div class="chap-now"><span class="node cur" aria-hidden="true">${i + 1}</span><span style="flex:1">${c.title}<span class="sr">, you are here</span></span><span class="muted small">Now</span></div>${beats(i)}`;
       const open = unlocked(i),
         g = open ? null : chapterGroups(i),
         cs = open ? chapterSpots(all, i) : null,
         n = g ? uniq(g) : cs!.left,
         done = open && !n && !cs!.later;
-      const label = !c.places.length
+      const label = [
+        i === cur && "Now",
+        !c.places.length
         ? ""
         : g
         ? n
@@ -1038,8 +1038,11 @@ function Journey() {
           ? [n && `${n} still out there`, cs!.later && `${cs!.later} later`]
               .filter(Boolean)
               .join(" · ")
-          : "all caught";
-      return `<details class="chap" data-chap="${i}" ${ui.open.has(String(i)) ? "open" : ""}><summary><span class="node ${done ? "done" : open ? "wip" : ""}" aria-hidden="true">${done ? "✓" : i + 1}</span><span style="flex:1">${c.title}<span class="sr">${done ? ", everything caught" : open ? ", in progress" : ", not reached yet"}</span></span><span class="muted small">${label}</span></summary>
+          : "all caught",
+      ]
+        .filter(Boolean)
+        .join(" · ");
+      return `<details class="chap" data-chap="${i}" ${ui.open.has(String(i)) ? "open" : ""}><summary><span class="node ${done ? "done" : open ? "wip" : ""}" aria-hidden="true">${done ? "✓" : i + 1}</span><span style="flex:1">${c.title}<span class="sr">${i === cur ? ", you are here" : ""}${done ? ", everything caught" : open ? ", in progress" : ", not reached yet"}</span></span><span class="muted small">${label}</span></summary>
         ${beats(i)}${
           g
             ? Object.entries(g)
