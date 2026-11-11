@@ -1,3 +1,4 @@
+import FIT from "./data/sprite-fit";
 import { esc } from "./dom";
 import {
   badgeName,
@@ -33,7 +34,7 @@ const ring = (types: string[]) => {
 export const sprite = (p: Species, cls = "", shiny = false) =>
   `<img class="sprite ${cls}" src="/sprites/${P().art}/${shiny ? "shiny/" : ""}${p.n}.png" alt="${shiny ? "Shiny " : ""}${p.name}" width="80" height="80" loading="lazy">`;
 export const mon = (p: Species, shiny = false) =>
-  `<span class="mon ${R().caught.has(p.n) ? "got" : ""}" style="${ring(p.types)}" aria-hidden="true"><b>${sprite(p, "", shiny)}</b></span>`;
+  `<span class="mon ${R().caught.has(p.n) ? "got" : ""}" style="${ring(p.types)}${FIT[P().art]?.[p.n] ? `;--z:${FIT[P().art][p.n]}%` : ""}" aria-hidden="true"><b>${sprite(p, "", shiny)}</b></span>`;
 export const lvl = (r: Row) =>
   r.m === "npc-trade"
     ? ""
