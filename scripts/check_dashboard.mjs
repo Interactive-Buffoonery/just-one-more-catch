@@ -32,7 +32,6 @@ for (const row of rows) {
   assert.match(singular, /<b>1<\/b> (badge|trial)<\/li>/);
 }
 assert.doesNotMatch(source.slice(source.indexOf('const gameChoices'), source.indexOf('const pickGame')), /aria-label=/);
-console.log('dashboard ok');
 
 for (const count of [0, 1, 2]) {
   const render = runInNewContext(stripTypeScriptTypes(source.slice(source.indexOf('export function Runs()'), source.indexOf('function Account()'))).replace('export ', '') + '\nRuns', {
@@ -50,3 +49,11 @@ const confirm = runInNewContext(stripTypeScriptTypes(source.slice(source.indexOf
 assert.match(confirm('heartgold'), /Start HeartGold\?/);
 assert.match(confirm('heartgold'), /Yes please!/);
 assert.match(confirm('heartgold'), /No thank you, just browsing!/);
+
+assert.match(confirm('heartgold'), /data-confirmrun="heartgold"/);
+assert.match(confirm('heartgold'), /data-close=/);
+const choices = runInNewContext(source.slice(source.indexOf('const gameChoices'), source.indexOf('const pickGame')) + '\ngameChoices', {VERSIONS: realPacks, esc: x => x, cover: () => '<img alt="">'});
+assert.match(choices(), /data-newrun="heartgold"/);
+const app = readFileSync(new URL('../client/app.ts', import.meta.url), 'utf8');
+assert.doesNotMatch(app.slice(app.indexOf('  if (d.newrun) {'), app.indexOf('  if (d.confirmrun) {')), /createRun/);
+console.log('dashboard ok');
