@@ -97,9 +97,9 @@ export function Dex() {
           `<button type="button" data-filter="${k}" data-k="f-${k}" aria-pressed="${ui.filter === k}"><b>${all.filter((x) => f(x.s)).length}</b>${l}</button>`,
       ).join("")}</div>
       <div class="dextools">
-        <button class="quietbtn" data-custom="1" data-k="custom">${SLIDERS_ICON}Customize</button>
         <label class="search"><span class="sr">Search the dex</span>${SEARCH_ICON}<input id="dexq" data-k="dexq" type="search" placeholder="Name or number" autocomplete="off" value="${esc(ui.q || "")}"></label>
         <button type="button" class="quietbtn" data-bulk="1" data-k="bulk" aria-pressed="${ui.bulk}">${ui.bulk ? "Done marking" : "Mark many"}</button>
+        <button class="quietbtn" data-custom="1" data-k="custom">${SLIDERS_ICON}Customize</button>
       </div>
     </div>
   </section>
