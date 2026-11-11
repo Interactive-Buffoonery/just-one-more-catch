@@ -18,9 +18,9 @@ BASE = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/"
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 UA = {"User-Agent": "just-one-more-catch-data-build"}
 ART = {
-    "hgss": "pokemon/versions/generation-iv/heartgold-soulsilver/",
     "crystal": "pokemon/versions/generation-ii/crystal/transparent/",
     "frlg": "pokemon/versions/generation-iii/firered-leafgreen/",
+    "hgss": "pokemon/versions/generation-iv/heartgold-soulsilver/",
     "usum": "pokemon/",
 }
 # PokeAPI numbers badges 1-8 for Kanto and 9-16 for Johto, in gym order

@@ -116,3 +116,8 @@ include those baselines, rather than asserting the species is locally caught.
   not discrete pokemon-form entries and remain outside this catalog.
   Mothim cloak origins and Scatterbug/Spewpa regional origins have identical
   appearance and mechanics; their PokeAPI entries are not separate targets.
+
+## Box art
+
+- FireRed North American box art, resized to a 160 × 160 JPEG:
+  https://raw.githubusercontent.com/libretro-thumbnails/Nintendo_-_Game_Boy_Advance/master/Named_Boxarts/Pokemon%20-%20FireRed%20Version%20(USA%2C%20Europe).png
