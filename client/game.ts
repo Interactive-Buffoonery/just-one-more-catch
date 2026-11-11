@@ -1,3 +1,4 @@
+import { badgeName as sharedBadgeName, needLabel as sharedNeedLabel } from "./need-labels.ts";
 import { GameData, Pack, VERSIONS } from "./packs";
 import { Bridge, Mon, Row, RunRow, Species } from "./types";
 import { Clock, gameNow } from "../shared/clock";
@@ -370,7 +371,7 @@ export function has(k: string): boolean {
 export const badgesWord = (p = P(), n = 2) =>
   (p.badgesWord ?? "badges").slice(0, n === 1 ? -1 : undefined);
 export const badgeName = (b: string, p = P()) =>
-  `${b} ${p.badgeWord ?? "Badge"}`;
+  sharedBadgeName(b, p);
 const needText = (k: string) =>
   EVENTS[k]
     ? EVENTS[k].label
@@ -382,16 +383,7 @@ const needText = (k: string) =>
           ? `Needs ${badgeName(P().hm[k])} to use ${kitName(k)}`
           : `Needs ${kitName(k)}`;
 // Short name for what a chapter waits on.
-export const needLabel = (k: string) =>
-  EVENTS[k]
-    ? EVENTS[k].label
-    : k === "Elite Four"
-      ? "Beat the Elite Four"
-      : isBadge(k)
-        ? badgeName(k)
-        : R().kit.has(k)
-          ? badgeName(P().hm[k])
-          : kitName(k);
+export const needLabel = (k: string) => sharedNeedLabel(k, P(), EVENTS, R().kit);
 export const chapterNeeds = (i: number) => [
   ...CHAPTERS[i].needs,
   ...(CHAPTERS[i].kit ? [CHAPTERS[i].kit as string] : []),

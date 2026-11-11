@@ -1,3 +1,4 @@
+import { needLabel } from "../client/need-labels.ts";
 import { readFileSync, writeFileSync, mkdirSync, accessSync } from "node:fs";
 const METHOD: Record<string, [string, string | null]> = {
   walk: ["Walking", null],
@@ -77,7 +78,8 @@ for (const [slug, id, region] of games) {
   const mons = groups.flat();
   if (mons.length !== listed.size) throw new Error(`Invalid chapters: ${id}`);
   console.log(`${id}: chapter 1 ${before} -> ${groups[0].length}; total ${candidates.length} -> ${mons.length}`);
-  const label = (need: string) => data.events.find((e: any) => e.id === need)?.label ?? (need === "Elite Four" ? "Beat the Elite Four" : pack.kit.find(k => k[0] === need)?.[1] ?? (/^[A-Z]/.test(need) ? `${need} ${pack.badgeWord ?? "Badge"}` : (() => { throw new Error(`Unknown need: ${need}`); })()));
+  const events = Object.fromEntries(data.events.map((e: any) => [e.id, e]));
+  const label = (need: string) => needLabel(need, pack, events);
   const chapters = data.chapters.map((ch: any, i: number) => {
     const species = groups[i];
     const tags = [...ch.needs, ...(ch.kit ? [ch.kit] : [])];
