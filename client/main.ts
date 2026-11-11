@@ -147,6 +147,8 @@ function onUser(user: Clerk["user"]) {
 }
 
 mount(document.getElementById("app")!, bridge());
+if (import.meta.env.PROD && "serviceWorker" in navigator)
+  void navigator.serviceWorker.register("/sw.js").catch(() => {});
 const authReady = (async () => {
   try {
     const [{ Clerk }, { ui }] = await Promise.all([
