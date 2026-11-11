@@ -209,10 +209,16 @@ const HELD_ITEMS = [
   "Up-Grade",
 ];
 const LOOKS = [
-  ["blossom", "Blossom", "Sakura / Rosé Pine"],
-  ["vampire", "Vampire", "Alucard / Dracula"],
+  ["blissey", "Blissey"],
+  ["venusaur", "Venusaur"],
+  ["snorlax", "Snorlax"],
+  ["blossom", "Blossom"],
+  ["vampire", "Vampire"],
 ];
 const PALETTE: Record<string, { light: string; dark: string }> = {
+  blissey: { light: "blissey", dark: "blissey-dark" },
+  venusaur: { light: "venusaur", dark: "venusaur-dark" },
+  snorlax: { light: "snorlax", dark: "snorlax-dark" },
   blossom: { light: "sakura", dark: "rosepine" },
   vampire: { light: "alucard", dark: "dracula" },
 };
@@ -513,7 +519,7 @@ const esc = (v: unknown) =>
 const ring = (types: string[]) => {
   const a = TYPE[types[0]],
     b = TYPE[types[1] || types[0]];
-  return `background:linear-gradient(135deg,${a} 50%,${b} 50%)`;
+  return `--t1:${a};--t2:${b}`;
 };
 const sprite = (p: Species, cls = "", shiny = false) =>
   `<img class="sprite ${cls}" src="/sprites/${P().art}/${shiny ? "shiny/" : ""}${p.n}.png" alt="${shiny ? "Shiny " : ""}${p.name}" width="80" height="80" loading="lazy">`;
@@ -1317,9 +1323,11 @@ function fillSignIn() {
   if (!bridge.mountSignIn(el))
     el.innerHTML = `<p class="muted" style="margin:0">Sign-in isn't available right now. You can keep playing as a guest.</p>`;
 }
+const lookHalf = (theme: string) =>
+  `<span data-theme="${theme}"><i class="c"><i class="t"></i><i class="m"><i></i></i><i class="b"></i></i></span>`;
 const Appearance = () => `<div class="card" style="margin-top:16px">
     <div class="name">Look</div>
-    <div class="chips" style="margin-top:6px">${LOOKS.map(([k, l, sub]) => `<button class="chip" data-look="${k}" data-k="look-${k}" aria-pressed="${ui.look === k}">${l} <span class="small" style="opacity:.75">${sub}</span></button>`).join("")}</div>
+    <div class="looks" role="group" aria-label="Look">${LOOKS.map(([k, l]) => `<button class="look" data-look="${k}" data-k="look-${k}" aria-pressed="${ui.look === k}"><span class="prev" aria-hidden="true">${lookHalf(PALETTE[k].light)}${lookHalf(PALETTE[k].dark)}</span><span>${l}</span></button>`).join("")}</div>
     <div class="name" style="margin-top:14px">Mode</div>
     <div class="chips" style="margin-top:6px">${[
       ["auto", "Match device"],
@@ -1345,7 +1353,7 @@ function About() {
     <p>This is a free fan project, and not affiliated with Nintendo, Creatures, GAME FREAK or The Pokémon Company.</p>
     </div><h3>Thanks</h3>
     <ul><li>Encounter data, sprites and badges come from <a href="https://pokeapi.co" target="_blank" rel="noopener">PokeAPI</a>, a free and open Pokémon database built by volunteers.</li>
-    <li>Colour themes are inspired by <a href="https://rosepinetheme.com" target="_blank" rel="noopener">Rosé Pine</a> and <a href="https://draculatheme.com" target="_blank" rel="noopener">Dracula</a>.</li>
+    <li>Colour themes are inspired by <a href="https://rosepinetheme.com" target="_blank" rel="noopener">Rosé Pine</a>, <a href="https://draculatheme.com" target="_blank" rel="noopener">Dracula</a> and Pokémon palettes from <a href="https://www.schemecolor.com" target="_blank" rel="noopener">SchemeColor</a>.</li>
     <li>Icons are from <a href="https://tabler.io/icons" target="_blank" rel="noopener">Tabler Icons</a>, free under the MIT licence.</li></ul>
     <p>Spotted a mistake? ${contactLink("Let us know")}.</p>
   </section>
