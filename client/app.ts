@@ -48,6 +48,7 @@ let opening: string | null = null;
 function useRun(row: RunRow) {
   const v = verOf(row.version);
   closeRun();
+  ui.q = "";
   opening = row.id;
   Promise.all([
     loaded.get(v.pack) || v.pack.load(),
