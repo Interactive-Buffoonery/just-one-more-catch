@@ -1022,9 +1022,7 @@ function Journey() {
     ${CHAPTERS.map((c, i) => {
       if (!inJourney(i)) return "";
       if (i === cur)
-        return beats(i)
-          ? `<div class="chap-now"><span class="node cur" aria-hidden="true">${i + 1}</span><span style="flex:1">${c.title}<span class="sr">, you are here</span></span><span class="muted small">Now</span></div>${beats(i)}`
-          : "";
+        return `<div class="chap-now"><span class="node cur" aria-hidden="true">${i + 1}</span><span style="flex:1">${c.title}<span class="sr">, you are here</span></span><span class="muted small">Now</span></div>${beats(i)}`;
       const open = unlocked(i),
         g = open ? null : chapterGroups(i),
         cs = open ? chapterSpots(all, i) : null,
