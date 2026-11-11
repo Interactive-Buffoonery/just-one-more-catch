@@ -1,3 +1,4 @@
+import { imageUrl } from "../image-url.ts";
 import { $, esc } from "../dom";
 import {
   badgeName,
@@ -34,7 +35,7 @@ export const cover = (
   cls = "",
   alt = `${v.name} box art`,
 ) =>
-  `<img class="cover ${cls}" src="/covers/${v.short.toLowerCase()}.jpg?v=2" alt="${alt}" width="46" height="46">`;
+  `<img class="cover ${cls}" src="${imageUrl(`/covers/${v.short.toLowerCase()}.jpg`)}" alt="${alt}" width="46" height="46">`;
 export const confirmGame = (id: string, customize = false) => {
   const v = verOf(id);
   if (customize) return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">Customize your ${esc(v.name)} playthrough?</h2><div class="hv-actions"><button class="app-primary" data-custom="1">Customize</button><button class="app-quiet" data-close="1">Not now</button></div><p class="small muted">You can update your playthrough at any time using Customize on the Journey or Dex tab.</p></div>`;
@@ -43,7 +44,7 @@ export const confirmGame = (id: string, customize = false) => {
 const gameChoices = (heading = "new-game-heading", regions = false) =>
   CONSOLES.map((console, index) =>
     `<h3 class="console" id="${heading}-${index}">${esc(console.name)}</h3><div class="slide s2"><div class="reel" role="group" aria-labelledby="${heading}-${index}">${console.games.map((game) => {
-      if (typeof game !== "string") return `<div class="gb soon" role="group" style="--c:${game.color}" aria-label="${esc(game.name)}, Coming soon"><span class="bx"><img class="cover" src="/covers/${game.short.toLowerCase()}.jpg" alt="" width="160" height="160"></span><b>${esc(game.name)}</b><span class="small muted">Coming soon</span></div>`;
+      if (typeof game !== "string") return `<div class="gb soon" role="group" style="--c:${game.color}" aria-label="${esc(game.name)}, Coming soon"><span class="bx"><img class="cover" src="${imageUrl(`/covers/${game.short.toLowerCase()}.jpg`)}" alt="" width="160" height="160"></span><b>${esc(game.name)}</b><span class="small muted">Coming soon</span></div>`;
       const v = VERSIONS[game];
       return `<button class="gb" data-newrun="${game}" data-game="${game}"><span class="bx">${cover(v, "", "")}</span><b>${esc(v.name)}</b>${regions ? `<span class="small muted">${esc(v.pack.region)}</span>` : "<em>Start</em>"}</button>`;
     }).join("")}</div></div>`
@@ -107,14 +108,14 @@ const badgeGroups = (p: Pack): [string, string[][]][] => [
     : []),
 ];
 const badgeImg = (b: string, size: number, alt = "") =>
-  `<img src="/badges/${b.toLowerCase()}.png" alt="${alt}" width="${size}" height="${size}">`;
+  `<img src="${imageUrl(`/badges/${b.toLowerCase()}.png`)}" alt="${alt}" width="${size}" height="${size}">`;
 const champTag = (r: Summary) =>
   champion(r) ? ` · <span class="champ-tag">Champion</span>` : "";
 const avatarN = (): number =>
   ui.avatar ?? (isAvatar(bridge.avatar) ? bridge.avatar : 25);
 const avatarName = () => AVATARS.find(([n]) => n === avatarN())?.[1] ?? "";
 export const partner = (cls: string) =>
-  `<img class="${cls}" src="/sprites/hgss/${avatarN()}.png" alt="" width="80" height="80">`;
+  `<img class="${cls}" src="${imageUrl(`/sprites/hgss/${avatarN()}.png`)}" alt="" width="80" height="80">`;
 export const trainerName = () => bridge.auth.displayName || "Trainer";
 function resumeCard(row: RunRow, r: Summary, at: string) {
   const v = verOf(row.version),
@@ -140,7 +141,7 @@ function resumeCard(row: RunRow, r: Summary, at: string) {
           )
           .join("")}</div></div>
       <div><p class="lead"><b>${r.caught}</b> of ${p.national} caught</p>${meter(r.caught, p.national)}</div>
-      ${r.party.length ? `<div class="party">${r.party.map((m) => `<img src="/sprites/${p.art}/${m.shiny ? "shiny/" : ""}${m.n}.png" alt="${esc(m.nick || byN[m.n]?.name || "")}" width="52" height="52">`).join("")}</div>` : ""}
+      ${r.party.length ? `<div class="party">${r.party.map((m) => `<img src="${imageUrl(`/sprites/${p.art}/${m.shiny ? "shiny/" : ""}${m.n}.png`)}" alt="${esc(m.nick || byN[m.n]?.name || "")}" width="52" height="52">`).join("")}</div>` : ""}
     </div></article>`;
 }
 function miniCard(row: RunRow, r: Summary, at: string) {
@@ -265,7 +266,7 @@ const AvatarPicker = () =>
   `<section class="s-pick"><div class="sechead"><h3 id="avatar-h">Avatar</h3><span><b>${avatarName()}</b> · No. ${avatarN()}</span></div>
   <div class="pcbox" role="radiogroup" aria-labelledby="avatar-h">${AVATARS.map(
     ([n, name]) =>
-      `<label title="${name}"><input type="radio" name="avatar" value="${n}" data-k="avatar-${n}" aria-label="${name}" ${n === avatarN() ? "checked" : ""}${bridge.auth.isLoading ? " disabled" : ""}><img src="/sprites/hgss/${n}.png" alt="" width="80" height="80"></label>`,
+      `<label title="${name}"><input type="radio" name="avatar" value="${n}" data-k="avatar-${n}" aria-label="${name}" ${n === avatarN() ? "checked" : ""}${bridge.auth.isLoading ? " disabled" : ""}><img src="${imageUrl(`/sprites/hgss/${n}.png`)}" alt="" width="80" height="80"></label>`,
   ).join("")}</div></section>`;
 export const Settings = () =>
   `<h2 id="sheet-title" class="lg">Settings</h2>

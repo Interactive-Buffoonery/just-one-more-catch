@@ -1,5 +1,9 @@
+import { imageVersions } from "./image-versions.ts";
+import { versionImage } from "../shared/image-url.ts";
+const versionsByFolder = imageVersions();
+const imageUrl = (path: string) => versionImage(path, versionsByFolder);
 import { needLabel } from "../client/need-labels.ts";
-import { readFileSync, writeFileSync, mkdirSync, accessSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, accessSync, readdirSync } from "node:fs";
 const METHOD: Record<string, [string, string | null]> = {
   walk: ["Walking", null],
   "old-rod": ["Old Rod", "old-rod"],
@@ -86,12 +90,12 @@ for (const [slug, id, region] of games) {
     const sprites = species.map((m: any) => {
       const src = `/sprites/${pack.art}/${m.n}.png`;
       accessSync(`public${src}`);
-      return `<li><img src="${src}" alt="${esc(m.name)}" title="${esc(m.name)}" width="48" height="48" loading="lazy"></li>`;
+      return `<li><img src="${imageUrl(src)}" alt="${esc(m.name)}" title="${esc(m.name)}" width="48" height="48" loading="lazy"></li>`;
     }).join("");
     return `<details class="gch"${i === 0 ? " open" : ""}><summary><span class="gnum">${i + 1}</span><span class="grow"><span class="gt">${esc(ch.title)}</span><span class="gneeds">${(tags.length ? tags.map(label) : ["Start"]).map(t => `<span class="tag plain">${esc(t)}</span>`).join("")}</span></span><span class="gcount">${species.length ? `${species.length}<span class="sr"> new Pokémon</span>` : '<span aria-hidden="true">—</span><span class="sr">No new Pokémon</span>'}</span>${summaryIcon}</summary>\n<div class="gbody">${ch.places.length ? `<p class="gplaces">${esc(ch.places.join(", "))}</p>` : ""}${sprites ? `<ul class="gmons" role="list" aria-label="New Pokémon">${sprites}</ul>` : ''}</div></details>`;
   }).join("");
   let content = template.replace(/HeartGold and SoulSilver/g, esc(title)).replace('Gen 4 · Johto and Kanto', esc(`${versions[0].gen} · ${region}`));
-  content = content.replace(/<div class="gcovers">.*?<\/div>/s, `<div class="gcovers">${versions.map(v => {const src = `/covers/${v.short.toLowerCase()}.jpg`; accessSync(`public${src}`); return `<img src="${src}?v=2" alt="" width="72" height="72">`;}).join('')}</div>`);
+  content = content.replace(/<div class="gcovers">.*?<\/div>/s, `<div class="gcovers">${versions.map(v => {const src = `/covers/${v.short.toLowerCase()}.jpg`; accessSync(`public${src}`); return `<img src="${imageUrl(src)}" alt="" width="72" height="72">`;}).join('')}</div>`);
   const places = data.chapters.reduce((n: number, ch: any) => n + ch.places.length, 0);
   let stat = 0;
   content = content.replace(/<dd>\d+<\/dd>/g, () => `<dd>${[mons.length, data.chapters.length, places][stat++]}</dd>`).replace('Track your HeartGold or SoulSilver run', esc(`Track your ${versions.map(v => v.name).join(' or ')} run`));
@@ -107,4 +111,10 @@ for (const [slug, id, region] of games) {
     if (!written.includes(expected)) throw new Error(`Missing output: ${expected}`);
   }
   console.log(`${slug}: ${mons.length} Pokémon, ${data.chapters.length} chapters, ${places} places; ${region}`);
+}
+
+// Public policy and fallback pages are copied unchanged by Vite.
+for (const file of readdirSync("dist", { recursive: true }).filter(file => file.endsWith(".html"))) {
+  const path = `dist/${file}`;
+  writeFileSync(path, readFileSync(path, "utf8").replace(/src="(\/(?:covers|sprites|badges|items)\/[^"?]+)"/g, (_, src) => `src="${imageUrl(src)}"`));
 }
