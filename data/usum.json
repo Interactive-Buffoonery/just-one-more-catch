@@ -194,65 +194,296 @@
     "669": [
       "flabebe-yellow",
       "flabebe-orange",
-      "flabebe-white"
+      "flabebe-white",
+      "flabebe-red",
+      "flabebe-blue"
     ],
     "670": [
       "floette-yellow",
       "floette-orange",
-      "floette-white"
+      "floette-white",
+      "floette-red",
+      "floette-blue"
     ],
     "671": [
       "florges-yellow",
       "florges-orange",
-      "florges-white"
+      "florges-white",
+      "florges-red",
+      "florges-blue"
     ],
     "19": [
-      "rattata-alola"
+      "rattata-alola",
+      "rattata"
     ],
     "20": [
-      "raticate-alola"
+      "raticate-alola",
+      "raticate"
     ],
     "27": [
-      "sandshrew-alola"
+      "sandshrew-alola",
+      "sandshrew"
     ],
     "28": [
-      "sandslash-alola"
+      "sandslash-alola",
+      "sandslash"
     ],
     "37": [
-      "vulpix-alola"
+      "vulpix-alola",
+      "vulpix"
     ],
     "38": [
-      "ninetales-alola"
+      "ninetales-alola",
+      "ninetales"
     ],
     "50": [
-      "diglett-alola"
+      "diglett-alola",
+      "diglett"
     ],
     "51": [
-      "dugtrio-alola"
+      "dugtrio-alola",
+      "dugtrio"
     ],
     "52": [
-      "meowth-alola"
+      "meowth-alola",
+      "meowth"
     ],
     "53": [
-      "persian-alola"
+      "persian-alola",
+      "persian"
     ],
     "74": [
-      "geodude-alola"
+      "geodude-alola",
+      "geodude"
     ],
     "75": [
-      "graveler-alola"
+      "graveler-alola",
+      "graveler"
     ],
     "76": [
-      "golem-alola"
+      "golem-alola",
+      "golem"
     ],
     "88": [
-      "grimer-alola"
+      "grimer-alola",
+      "grimer"
     ],
     "89": [
-      "muk-alola"
+      "muk-alola",
+      "muk"
     ],
     "666": [
       "vivillon-meadow",
+      "vivillon-icy-snow",
+      "vivillon-polar",
+      "vivillon-tundra",
+      "vivillon-continental",
+      "vivillon-garden",
+      "vivillon-elegant",
+      "vivillon-modern",
+      "vivillon-marine",
+      "vivillon-archipelago",
+      "vivillon-high-plains",
+      "vivillon-sandstorm",
+      "vivillon-river",
+      "vivillon-monsoon",
+      "vivillon-savanna",
+      "vivillon-sun",
+      "vivillon-ocean",
+      "vivillon-jungle"
+    ],
+    "201": [
+      "unown-a",
+      "unown-b",
+      "unown-c",
+      "unown-d",
+      "unown-e",
+      "unown-f",
+      "unown-g",
+      "unown-h",
+      "unown-i",
+      "unown-j",
+      "unown-k",
+      "unown-l",
+      "unown-m",
+      "unown-n",
+      "unown-o",
+      "unown-p",
+      "unown-q",
+      "unown-r",
+      "unown-s",
+      "unown-t",
+      "unown-u",
+      "unown-v",
+      "unown-w",
+      "unown-x",
+      "unown-y",
+      "unown-z",
+      "unown-exclamation",
+      "unown-question"
+    ],
+    "386": [
+      "deoxys-normal",
+      "deoxys-attack",
+      "deoxys-defense",
+      "deoxys-speed"
+    ],
+    "412": [
+      "burmy-plant",
+      "burmy-sandy",
+      "burmy-trash"
+    ],
+    "413": [
+      "wormadam-plant",
+      "wormadam-sandy",
+      "wormadam-trash"
+    ],
+    "585": [
+      "deerling-spring",
+      "deerling-summer",
+      "deerling-autumn",
+      "deerling-winter"
+    ],
+    "586": [
+      "sawsbuck-spring",
+      "sawsbuck-summer",
+      "sawsbuck-autumn",
+      "sawsbuck-winter"
+    ],
+    "710": [
+      "pumpkaboo-average",
+      "pumpkaboo-small",
+      "pumpkaboo-large",
+      "pumpkaboo-super"
+    ],
+    "711": [
+      "gourgeist-average",
+      "gourgeist-small",
+      "gourgeist-large",
+      "gourgeist-super"
+    ]
+  },
+  "traded_forms": {
+    "201": [
+      "unown-b",
+      "unown-c",
+      "unown-d",
+      "unown-e",
+      "unown-f",
+      "unown-g",
+      "unown-h",
+      "unown-i",
+      "unown-j",
+      "unown-k",
+      "unown-l",
+      "unown-m",
+      "unown-n",
+      "unown-o",
+      "unown-p",
+      "unown-q",
+      "unown-r",
+      "unown-s",
+      "unown-t",
+      "unown-u",
+      "unown-v",
+      "unown-w",
+      "unown-x",
+      "unown-y",
+      "unown-z",
+      "unown-exclamation",
+      "unown-question"
+    ],
+    "386": [
+      "deoxys-attack",
+      "deoxys-defense",
+      "deoxys-speed"
+    ],
+    "412": [
+      "burmy-sandy",
+      "burmy-trash"
+    ],
+    "413": [
+      "wormadam-sandy",
+      "wormadam-trash"
+    ],
+    "585": [
+      "deerling-summer",
+      "deerling-autumn",
+      "deerling-winter"
+    ],
+    "586": [
+      "sawsbuck-summer",
+      "sawsbuck-autumn",
+      "sawsbuck-winter"
+    ],
+    "710": [
+      "pumpkaboo-small",
+      "pumpkaboo-large",
+      "pumpkaboo-super"
+    ],
+    "711": [
+      "gourgeist-small",
+      "gourgeist-large",
+      "gourgeist-super"
+    ],
+    "19": [
+      "rattata"
+    ],
+    "20": [
+      "raticate"
+    ],
+    "27": [
+      "sandshrew"
+    ],
+    "28": [
+      "sandslash"
+    ],
+    "37": [
+      "vulpix"
+    ],
+    "38": [
+      "ninetales"
+    ],
+    "50": [
+      "diglett"
+    ],
+    "51": [
+      "dugtrio"
+    ],
+    "52": [
+      "meowth"
+    ],
+    "53": [
+      "persian"
+    ],
+    "74": [
+      "geodude"
+    ],
+    "75": [
+      "graveler"
+    ],
+    "76": [
+      "golem"
+    ],
+    "88": [
+      "grimer"
+    ],
+    "89": [
+      "muk"
+    ],
+    "669": [
+      "flabebe-red",
+      "flabebe-blue"
+    ],
+    "670": [
+      "floette-red",
+      "floette-blue"
+    ],
+    "671": [
+      "florges-red",
+      "florges-blue"
+    ],
+    "666": [
       "vivillon-icy-snow",
       "vivillon-polar",
       "vivillon-tundra",

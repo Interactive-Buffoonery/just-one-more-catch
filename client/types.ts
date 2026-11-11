@@ -20,7 +20,7 @@ export type Species = {
   from: string | null;
   evo: string | null;
   baby: boolean;
-  forms?: { id: string; name: string }[];
+  forms?: { id: string; name: string; trade?: true }[];
   rows: Row[];
   all: Row[];
 };

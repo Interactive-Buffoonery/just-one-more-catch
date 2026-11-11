@@ -171,13 +171,17 @@ def short_form(label, n):
 
 def form_list(n):
     forms = []
-    for slug in GAME["obtainable_forms"][str(n)]:
+    ids = GAME["obtainable_forms"][str(n)]
+    traded = GAME.get("traded_forms", {}).get(str(n), [])
+    assert set(traded) <= set(ids), f"Unknown traded form for {n}"
+    assert ids[0] not in traded, f"Default form cannot be traded: {n}"
+    for slug in ids:
         f = cached("pokemon_form_" + slug.replace("-", "_"))
         label = next((x["name"] for x in f["form_names"] if x["language"]["name"] == "en"), f["form_name"].replace("-", " ").title() or "Normal")
         label = short_form(label, n)
         if n == 201:
             label = {"exclamation": "!", "question": "?"}.get(f["form_name"], f["form_name"].upper())
-        forms.append({"id": slug, "name": label})
+        forms.append({"id": slug, "name": label, **({"trade": True} if slug in traded else {})})
     return forms
 
 

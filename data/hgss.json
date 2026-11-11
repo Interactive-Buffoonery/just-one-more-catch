@@ -192,5 +192,28 @@
       "rotom-fan",
       "rotom-mow"
     ]
+  },
+  "traded_forms": {
+    "412": [
+      "burmy-sandy",
+      "burmy-trash"
+    ],
+    "413": [
+      "wormadam-sandy",
+      "wormadam-trash"
+    ],
+    "422": [
+      "shellos-east"
+    ],
+    "423": [
+      "gastrodon-east"
+    ],
+    "479": [
+      "rotom-heat",
+      "rotom-wash",
+      "rotom-frost",
+      "rotom-fan",
+      "rotom-mow"
+    ]
   }
 }
