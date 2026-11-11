@@ -1,6 +1,6 @@
 {
   "name": "just-one-more-catch",
   "compatibility_date": "2026-11-10",
-  "assets": { "directory": "./dist" },
+  "assets": { "directory": "./dist", "not_found_handling": "404-page" },
   "routes": [{ "pattern": "justonemorecatch.app", "custom_domain": true }]
 }
