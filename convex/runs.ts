@@ -32,7 +32,7 @@ async function putState(ctx: MutationCtx, run: Doc<"runs">, state: string, field
   const old = await stateOf(ctx, run._id);
   if (old) await ctx.db.patch(old._id, { state });
   else await ctx.db.insert("states", { run: run._id, state });
-  await ctx.db.patch(run._id, { ...fields, summary: summarize(state), state: undefined });
+  await ctx.db.patch(run._id, { ...fields, summary: summarize(state) });
 }
 
 async function dropRun(ctx: MutationCtx, run: Id<"runs">) {
@@ -56,7 +56,7 @@ export const list = query({
     return (await ownedBy(ctx, me.tokenIdentifier)).map((r) => ({
       id: r._id as string,
       version: r.version,
-      summary: r.state !== undefined || !r.summary ? summarize(r.state ?? "{}") : r.summary,
+      summary: r.summary,
       createdAt: new Date(r.startedAt ?? r._creationTime).toISOString(),
       updatedAt: new Date(r.updatedAt ?? r._creationTime).toISOString(),
     }));
@@ -67,8 +67,7 @@ export const get = query({
   args: { id: v.string() },
   handler: async (ctx, { id }) => {
     const run = await mine(ctx, id);
-    // Inline state is only ever the newest copy: putState clears it
-    return run.state ?? (await stateOf(ctx, run._id))?.state ?? "{}";
+    return (await stateOf(ctx, run._id))?.state ?? "{}";
   },
 });
 
@@ -121,16 +120,6 @@ async function purgeRuns(ctx: MutationCtx, who: string) {
 export const purge = internalMutation({
   args: { owner: v.string() },
   handler: (ctx, { owner }) => purgeRuns(ctx, owner),
-});
-
-// One-time move of inline states into `states`: npx convex run runs:backfill (add --prod for production)
-export const backfill = internalMutation({
-  args: { cursor: v.optional(v.union(v.string(), v.null())) },
-  handler: async (ctx, { cursor }) => {
-    const page = await ctx.db.query("runs").paginate({ numItems: BATCH, cursor: cursor ?? null });
-    for (const r of page.page) if (r.state !== undefined) await putState(ctx, r, r.state);
-    if (!page.isDone) await ctx.scheduler.runAfter(0, internal.runs.backfill, { cursor: page.continueCursor });
-  },
 });
 
 export const deleteAccount = mutation({
