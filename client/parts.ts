@@ -232,11 +232,11 @@ export function placeCard(pl: string, s: Spot) {
     later = s.later.length && `${s.later.length} later`,
     open = fold(key, here),
     title = `<span class="title">${pl}${here ? `<span class="here-tag">You are here</span>` : ""}</span>`;
-  if (!s.now.length && s.got)
+  if (!s.now.length && !s.later.length && s.got)
     return `<details class="pl donepl${here ? " here" : ""}" ${open}><summary><span class="head"><span class="tick" aria-hidden="true">✓</span>${title}<span class="count">${[`All ${s.got} caught`, later].filter(Boolean).join(" · ")}${CHEV}</span></span></summary>${body}</details>`;
-  if (!s.now.length)
+  if (!s.now.length && !s.got)
     return `<details class="pl quietpl${here ? " here" : ""}" ${open}><summary><span class="head">${title}<span class="count">${[later && "Nothing yet", later, s.once.length && `${s.once.length} one-time`].filter(Boolean).join(" · ")}${CHEV}</span></span></summary>${body}</details>`;
-  const total = s.got + s.now.length,
+  const total = s.got + s.now.length + s.later.length,
     extra = [
       other.length && `+${other.length} ${at || "other times"}`,
       later,

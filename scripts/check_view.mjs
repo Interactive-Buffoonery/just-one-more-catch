@@ -22,3 +22,12 @@ for (const view of ["journey", "dex", "dexonly"]) {
   assert.equal(fromUrl(), view === "dexonly" ? "dex" : "journey");
 }
 console.log("playthrough view ok");
+
+const parts = readFileSync(new URL("../client/parts.ts", import.meta.url), "utf8");
+const placeCard = runInNewContext(stripTypeScriptTypes(parts.slice(parts.indexOf("export function placeCard("), parts.indexOf("// Places in a chapter"))).replace("export ", "") + "\nplaceCard", {
+  isHere: () => false, fold: () => "", R: () => ({}),
+  monRow: () => "", subFold: () => "", strip: () => "", CHEV: "",
+});
+const card = placeCard("Route 29", {now: [], later: [{}, {}, {}], got: 4, caught: [], once: []});
+assert(!card.includes("donepl") && !card.includes("quietpl"));
+assert(card.includes("mini-meter") && card.includes("<b>4</b> / 7") && card.includes("3 later"));
