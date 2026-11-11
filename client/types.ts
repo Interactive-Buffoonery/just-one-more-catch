@@ -14,6 +14,7 @@ export type Row = {
 export type Species = {
   n: number;
   j: number | null;
+  genderRate: number;
   name: string;
   types: string[];
   from: string | null;

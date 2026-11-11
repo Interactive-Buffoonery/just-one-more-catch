@@ -196,7 +196,7 @@ def species(n, johto):
             rows[key] = rows.get(key, "") + v
     pre = sp["evolves_from_species"]
     return {
-        "n": n, "j": johto.get(n), "name": name(sp), "types": gen4_types(p),
+        "n": n, "genderRate": sp["gender_rate"], "j": johto.get(n), "name": name(sp), "types": gen4_types(p),
         **({"forms": form_list(n)} if str(n) in GAME.get("obtainable_forms", {}) else {}),
         "from": name(cached(f"pokemon_species_{pre['url'].rstrip('/').split('/')[-1]}")) if pre else None,
         "evo": evo_text(chain, sp["name"]), "baby": sp["is_baby"],
