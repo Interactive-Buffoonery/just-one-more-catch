@@ -71,7 +71,7 @@ const why = (h: Catchable) =>
         : "Easiest one to catch here"
       : h.r.chap === currentChap()
         ? "Best odds in this chapter"
-        : `Best odds in ${CHAPTERS[h.r.chap].title}`;
+        : `Best odds in ${CHAPTERS[h.r.chap].title} chapter`;
 function heroCard(h: Catchable) {
   const a = TYPE[h.p.types[0]],
     b = TYPE[h.p.types[1] || h.p.types[0]];
@@ -214,7 +214,7 @@ function beat(id: string) {
 const beats = (i: number) => {
   const list = Object.values(EVENTS).filter((e) => e.chap === i);
   return list.length
-    ? `<div class="beats" role="group" aria-label="Story steps, ${CHAPTERS[i].title}">${list.map((e) => beat(e.id)).join("")}</div>`
+    ? `<div class="beats" role="group" aria-label="Story steps, ${CHAPTERS[i].title} chapter">${list.map((e) => beat(e.id)).join("")}</div>`
     : "";
 };
 // Unticking an event also unticks the ticked events that depend on it.
