@@ -35,6 +35,7 @@
     "Viapos Chamber": "Tanoby Ruins"
   },
   "needs": {
+    "Route 17": {"needs": "bicycle", "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Route_17", "quote": "only people with [[Bicycle]]s or Motorcycles are permitted to travel on the road"},
     "Icefall Cave Waterfall": ["surf", "waterfall"],
     "Icefall Cave": "surf",
     "Cerulean Cave": "surf",

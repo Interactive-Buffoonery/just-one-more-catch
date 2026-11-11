@@ -77,13 +77,15 @@ something the app models (a badge, a kit id, or an event in the pack's
   `python3 scripts/build_data.py <pack>`, and diff it. Only the rows you meant
   to gate should change.
 
-Don't merge these. List them for Sarah instead:
+Don't merge these. List them for Sarah, and add any still open to `OPEN_QUESTIONS.md`:
 - Flags that need something unmodeled (Johto-pack Cut, Flash, Rock Climb,
   Bicycle, Safari layout unlocks, Primo codes, "all three beasts caught").
   Adding a new event or kit item is a product decision.
 - Flags where the two passes disagree, or either one said unclear. These go
   on a tester checklist with what to look for in the game.
 - Chapter moves. Check them against the walkthrough by hand.
+
+To check a flag against a scanned strategy guide, use the `read-guide` skill.
 
 The URL for a page is `https://bulbapedia.bulbagarden.net/wiki/<Title>` with
 spaces as underscores.

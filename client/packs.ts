@@ -76,6 +76,7 @@ const JOHTO_KIT = [
   ["whirlpool", "Whirlpool"],
   ["waterfall", "Waterfall"],
   ["super-rod", "Super Rod"],
+  ["bicycle", "Bicycle"],
 ];
 
 const HGSS: Pack = {
@@ -124,12 +125,13 @@ const CRYSTAL: Pack = {
   starters: [152, 155, 158],
   badges: JOHTO_BADGES,
   postgame: ["Kanto badges", kantoBadges("Janine", "Blue")],
-  kit: JOHTO_KIT,
+  kit: [...JOHTO_KIT, ["rock-climb", "Rock Climb"]],
   hm: {
     surf: "Fog",
     strength: "Plain",
     whirlpool: "Glacier",
     waterfall: "Rising",
+    "rock-climb": "Earth",
   },
   nightFrom: 18,
   boxes: [14, 20],
@@ -152,6 +154,7 @@ const FRLG: Pack = {
     ["rock-smash", "Rock Smash"],
     ["super-rod", "Super Rod"],
     ["waterfall", "Waterfall"],
+    ["bicycle", "Bicycle"],
   ],
   hm: {
     surf: "Soul",

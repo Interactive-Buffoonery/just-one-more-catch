@@ -18,7 +18,7 @@ Falkner through Route 36. Do not repeat that.
 | Chapters: titles, `places`, `needs`, `kit` (HM or item) | `data/<pack>.json` | Bulbapedia walkthrough and location pages |
 | Area gates: top-level `needs` (area prefix to needs) | `data/<pack>.json` | Bulbapedia location pages (which floors or parts need Surf, Strength, Whirlpool, Waterfall, Rock Smash, Flash, and so on) |
 | Story events: `events` | `data/<pack>.json` | Bulbapedia walkthrough, item and character pages |
-| Per-Pokémon gates: `row_needs` | `data/<pack>.json` | Bulbapedia and Serebii gift, legendary and location pages |
+| Per-Pokémon gates: `row_needs` | `data/<pack>.json` | Bulbapedia gift, legendary and location pages (tiebreakers in `SOURCES.md`) |
 | `hm`: badge that lets each HM be used outside battle | `client/packs.ts` | Bulbapedia `Badge` page for that game |
 | `rename`, `drop`, `drop_methods`, `methods` | `data/<pack>.json` | PokeAPI area names, checked against the game |
 | Badges and leaders, HM items, `start`, `starters`, `safari`, `nightFrom`, dex sizes, box counts | `client/packs.ts` | Bulbapedia game, gym and mechanic pages (time of day, PC boxes) |
@@ -115,8 +115,11 @@ is hand-written, so it needs a source.
   (`METHOD` in `client/app.ts`). Area `needs` only cover getting to a place.
 
 Sources, in order: Bulbapedia (`Appendix:<Game>_walkthrough` and location
-pages), then Serebii to break ties. Make sure a location page that covers
+pages), then StrategyWiki, the official guides and Serebii to break ties.
+`SOURCES.md` lists the pages and guide files for each game; add new ones there. Make sure a location page that covers
 several games is describing the one you're working on.
+
+For a second source from a scanned strategy guide, use the `read-guide` skill.
 
 Bulbapedia blocks scripted fetches. To read its pages, use the `audit-access`
 skill's cache (`scripts/access_audit.py`).
