@@ -609,8 +609,12 @@ function rowTags(r: Row, place = r.place) {
 }
 const gotBtn = (p: Species, evo = false) =>
   `<button class="got-btn" data-toggle="${p.n}" data-k="t${p.n}" aria-pressed="${R().caught.has(p.n)}" aria-label="${p.name} ${evo ? "caught or evolved" : "caught"}">${R().caught.has(p.n) ? (evo ? "✓ Obtained" : "✓ Caught") : evo ? "Caught/Evolved?" : "Caught?"}</button>`;
+// ponytail: the only guaranteed shiny in the packs so far; move it into pack data when a second one appears
+const redGyarados = (p: Species, r: Row | null) =>
+  p.n === 130 && r?.m === "static" && r.place === "Lake of Rage";
+const RED_NOTE = "The red Gyarados, always shiny";
 const monRow = (p: Species, r: Row | null, place?: string, evo = false) =>
-  `<div class="row">${mon(p)}<div class="grow"><div class="name">${p.name}</div>${r ? rowTags(r, place) : `<div class="small muted">${howElse(p)}</div>`}</div>${gotBtn(p, evo)}</div>`;
+  `<div class="row">${mon(p, redGyarados(p, r))}<div class="grow"><div class="name">${p.name}${redGyarados(p, r) ? ` <span class="shiny small">✦ ${RED_NOTE}</span>` : ""}</div>${r ? rowTags(r, place) : `<div class="small muted">${howElse(p)}</div>`}</div>${gotBtn(p, evo)}</div>`;
 type Pick = { p: Species; r: Row };
 const pref = (a: Pick, b: Pick) =>
   +isHere(b.r.place) - +isHere(a.r.place) ||
@@ -679,9 +683,10 @@ function spots() {
       .map((r) => ({ r, k: rank(r) }))
       .sort((a, b) => a.k - b.k || b.r.c - a.r.c)
       .forEach(({ r, k }) => {
-        const pl = placeOf(r.place);
-        if (seen.has(pl)) return;
-        seen.add(pl);
+        const pl = placeOf(r.place),
+          slot = redGyarados(p, r) ? `${pl}*` : pl;
+        if (seen.has(slot)) return;
+        seen.add(slot);
         const s = (out[pl] ||= {
           chap: r.chap,
           got: 0,
@@ -775,7 +780,9 @@ const badgeRow = (list: string[][]) =>
 
 /* ---- Journey (home) ---- */
 const why = (h: Pick) =>
-  isHere(h.r.place)
+  redGyarados(h.p, h.r)
+    ? RED_NOTE
+    : isHere(h.r.place)
     ? ONE_TIME.has(h.r.m)
       ? ""
       : "Easiest one to catch here"
@@ -787,7 +794,7 @@ function heroCard(h: Pick) {
     b = TYPE[h.p.types[1] || h.p.types[0]],
     st = rowStatus(h.r);
   return `<section class="hv-field" aria-labelledby="hero-name">
-      <div class="hv-band" style="--t1:${a};--t2:${b}"><span class="hv-no" aria-hidden="true">#${pad(num(h.p))}</span>${sprite(h.p, "hv-sprite")}
+      <div class="hv-band" style="--t1:${a};--t2:${b}"><span class="hv-no" aria-hidden="true">#${pad(num(h.p))}</span>${sprite(h.p, "hv-sprite", redGyarados(h.p, h.r))}
         <h2 id="hero-name">${h.p.name}</h2><div>${h.p.types.map((t) => `<span class="hv-type" style="--tc:${TYPE[t]}">${cap(t)}</span>`).join("")}</div>${why(h) && `<div class="hv-why">${why(h)}</div>`}</div>
       <dl class="hv-facts"><div><dt>Where</dt><dd>${h.r.place}</dd></div><div><dt>How</dt><dd>${METHOD[h.r.m]?.[0] || h.r.m}</dd></div><div><dt>Level</dt><dd>${lvl(h.r) || "?"}</dd></div><div><dt>Chance</dt><dd>${h.r.c ? h.r.c + "%" : "?"}</dd></div></dl>
       ${h.r.cond.some((c) => TIME[c]) || st.s !== "now" ? rowTags(h.r) : ""}
