@@ -1,6 +1,6 @@
 // ponytail: one runtime cache and no precache list. Old hashed bundles and
 // replaced images stay cached until CACHE is renamed; rename it to purge.
-const CACHE = "jomc-v1";
+const CACHE = "jomc-v2";
 const STATIC = /^\/(assets|sprites|badges|items|covers|fonts|icons)\//;
 
 const put = (key, res) => caches.open(CACHE).then((c) => c.put(key, res)).catch(() => {});
