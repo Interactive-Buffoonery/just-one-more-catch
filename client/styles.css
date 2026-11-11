@@ -460,16 +460,19 @@ details[open]>summary>.chev,details[open]>summary .head .chev{transform:rotate(1
 .pl .count b{color:var(--ink)}
 .mini-meter{width:44px;height:6px;border-radius:99px;background:var(--line);overflow:hidden}
 .mini-meter i{display:block;height:100%;background:var(--meter)}
-.strip{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.strip{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .st{position:relative;width:34px;height:34px;display:grid;place-items:center}
-.app .st .sprite{width:44px;height:44px;max-width:none;margin:-5px}
+.app .st .sprite{width:40px;height:40px;max-width:none;margin:-3px}
 .st.caught .sprite{opacity:.35;filter:grayscale(.6)}
+/* ponytail: dark themes are matched by name; give themes a shared marker if more arrive */
+:is([data-theme=dracula],[data-theme=rosepine],[data-theme$=-dark]) .st.caught .sprite{opacity:.6}
+:is([data-theme=dracula],[data-theme=rosepine],[data-theme$=-dark]) .kitbadges img:not(.on){opacity:.5}
 .st.caught::after{content:"\2713";position:absolute;right:0;bottom:0;width:14px;height:14px;border-radius:50%;background:var(--teal);color:var(--surface);font-size:9px;font-weight:900;display:grid;place-items:center;line-height:1}
 .strip em{font-style:normal;font-size:12.5px;color:var(--soft);font-weight:700;margin-left:4px}
 .pl[open]>summary .strip{display:none}
 .pl .body{padding:0 14px 12px}
 .caught-here{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px 0;border-top:1px solid var(--line);font-size:13px;color:var(--soft);font-weight:700}
-.caught-here .st{width:28px;height:28px}.app .caught-here .st .sprite{width:36px;height:36px;margin:-4px}
+.caught-here .st{width:28px;height:28px}.app .caught-here .st .sprite{width:34px;height:34px;margin:-3px}
 .body>.row:first-child,.body>.caught-here:first-child,.body>.fold:first-child{border-top:0}
 details.fold{border-top:1px solid var(--line)}
 details.fold>summary{display:flex;align-items:center;gap:8px;min-height:44px;font-weight:800;font-size:14px}
@@ -485,7 +488,7 @@ details.fold .row:first-of-type{border-top:0}
 .pl.here.quietpl,.pl.here.donepl{box-shadow:inset 0 0 0 2px var(--teal)}
 .tick{width:22px;height:22px;border-radius:50%;background:var(--teal);color:var(--surface);display:grid;place-items:center;font-size:12px;font-weight:900;flex:none}
 .evo .strip{margin-top:4px}
-.evo .st{width:30px;height:30px}.app .evo .st .sprite{width:38px;height:38px;margin:-4px}
+.evo .st{width:30px;height:30px}.app .evo .st .sprite{width:36px;height:36px;margin:-3px}
 .evo[open] .strip{display:none}
 .evorows{margin-top:6px}
 .jny .chaps{padding:4px 16px}

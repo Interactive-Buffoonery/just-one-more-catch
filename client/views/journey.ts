@@ -250,6 +250,7 @@ export function Journey() {
       : "";
   }).join("");
   const badges = P().badges,
+    badgesOn = badges.filter((b) => r.badges.has(b[0])).length,
     kitOn = P().kit.filter((k) => r.kit.has(k[0])).length;
   return `<div class="jny"><div class="colmain">
   <section class="s-where" aria-labelledby="where-h">
@@ -280,7 +281,7 @@ export function Journey() {
   <details class="card kit s-kit" ${fold("kit", wide)}>
     <summary class="sumrow">
       <span class="kitbadges" aria-hidden="true">${badges.map((b) => `<img class="${r.badges.has(b[0]) ? "on" : ""}" src="${badgeIcon(b[0])}" alt="" width="19" height="19">`).join("")}</span>
-      <span class="grow small"><span class="sr">Badges and items: ${badges.filter((b) => r.badges.has(b[0])).length} of ${badges.length} badges, </span><b>${kitOn} of ${P().kit.length}</b><br>moves and items</span>
+      <span class="grow small"><span class="sr">Badges and items: </span><b>${badgesOn} of ${badges.length}</b><br>badges<span class="sr">, ${kitOn} of ${P().kit.length} moves and items</span></span>
       ${CHEV}
     </summary>
     <h3>${P().region} badges</h3>
