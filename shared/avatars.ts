@@ -1,0 +1,28 @@
+// Partner Pokémon a trainer can pick for their avatar, in picker order
+export const AVATARS: [n: number, name: string][] = [
+  [1, "Bulbasaur"],
+  [4, "Charmander"],
+  [7, "Squirtle"],
+  [25, "Pikachu"],
+  [152, "Chikorita"],
+  [155, "Cyndaquil"],
+  [158, "Totodile"],
+  [252, "Treecko"],
+  [255, "Torchic"],
+  [258, "Mudkip"],
+  [387, "Turtwig"],
+  [390, "Chimchar"],
+  [393, "Piplup"],
+  [94, "Gengar"],
+  [133, "Eevee"],
+  [143, "Snorlax"],
+  [149, "Dragonite"],
+  [175, "Togepi"],
+  [196, "Espeon"],
+  [197, "Umbreon"],
+  [448, "Lucario"],
+  [151, "Mew"],
+  [249, "Lugia"],
+  [250, "Ho-Oh"],
+];
+export const isAvatar = (n: unknown) => AVATARS.some(([a]) => a === n);

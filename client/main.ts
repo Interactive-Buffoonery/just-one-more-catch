@@ -11,11 +11,15 @@ const convex = new ConvexClient(import.meta.env.VITE_CONVEX_URL);
 let auth: Bridge["auth"] = { isLoading: false, isAuthenticated: false };
 let runs: Bridge["runs"];
 let stopRuns: (() => void) | undefined;
+let avatar: Bridge["avatar"];
+let stopAvatar: (() => void) | undefined;
 let userId: string | null | undefined;
 
 const bridge = (): Bridge => ({
   auth,
   runs: auth.isAuthenticated ? runs : [],
+  avatar: auth.isAuthenticated ? avatar : null,
+  setAvatar: (n) => convex.mutation(api.runs.setAvatar, { avatar: n }),
   getState: (id) => convex.query(api.runs.get, { id }),
   mountSignIn: (el) => {
     if (!clerk?.loaded) {
@@ -97,6 +101,8 @@ function onUser(user: Clerk["user"]) {
   userId = id;
   stopRuns?.();
   stopRuns = runs = undefined;
+  stopAvatar?.();
+  stopAvatar = avatar = undefined;
   auth = { isLoading: !!user, isAuthenticated: false };
   convex.setAuth(
     async ({ forceRefreshToken }) => {
@@ -123,6 +129,13 @@ function onUser(user: Clerk["user"]) {
       stopRuns = ok
         ? convex.onUpdate(api.runs.list, {}, (rows) => {
             runs = rows;
+            render();
+          })
+        : undefined;
+      stopAvatar?.();
+      stopAvatar = ok
+        ? convex.onUpdate(api.runs.avatar, {}, (n) => {
+            avatar = n;
             render();
           })
         : undefined;

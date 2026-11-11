@@ -7,6 +7,7 @@ import { MAX_RUN_BYTES, MAX_RUNS, runBytes } from "../shared/limits";
 import { gameNow, type Clock } from "../shared/clock";
 import { summarize, type Summary } from "../shared/summary";
 import { csv } from "../shared/csv";
+import { AVATARS, isAvatar } from "../shared/avatars";
 
 type Row = {
   place: string;
@@ -56,6 +57,8 @@ export type Bridge = {
     email?: string;
   };
   runs: RunRow[] | undefined;
+  avatar: number | null | undefined;
+  setAvatar(n: number): Promise<unknown>;
   getState(id: string): Promise<string>;
   mountSignIn(el: HTMLDivElement): boolean;
   unmountSignIn(el: HTMLDivElement): void;
@@ -333,6 +336,11 @@ const store = {
   set: (k: string, v: string) => {
     try {
       localStorage.setItem(k, v);
+    } catch {}
+  },
+  del: (k: string) => {
+    try {
+      localStorage.removeItem(k);
     } catch {}
   },
 };
@@ -1026,23 +1034,21 @@ function fillSheet(s: any) {
     ? fillSpecies(s)
     : s.kind === "signin"
       ? fillSignIn()
-      : s.kind === "newrun"
-        ? fillNewRun()
-        : s.kind === "started"
+      : s.kind === "started"
           ? fillStartDate(s.id)
           : s.kind === "custom"
             ? fillCustom()
             : s.kind === "clock"
               ? fillClock(s.mode)
               : s.kind === "settings"
-                ? ($("#sheetbody").innerHTML =
-                    `<h2 id="sheet-title">Settings</h2>${Account()}${Appearance()}<div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="chip" data-close="1">Done</button></div>`)
+                ? ($("#sheetbody").innerHTML = Settings())
                 : s.kind === "box"
                   ? fillBoxSheet(s.b)
                   : fillMonSheet(s);
 }
 function openSheet(s: any) {
   ui.sheet = s;
+  $("#sheet").classList.toggle("wide", s.kind === "settings");
   fillSheet(s);
   if (!$("#sheet").open) $("#sheet").showModal();
 }
@@ -1171,19 +1177,14 @@ const badgeCount = (version: string, s: Summary) => {
 const cover = (v: (typeof VERSIONS)[VersionId], cls = "") =>
   `<img class="cover ${cls}" src="/covers/${v.short.toLowerCase()}.jpg" alt="${v.name} box art" width="46" height="46">`;
 const gameChoices = () =>
-  `<div class="game-options">${Object.entries(VERSIONS)
+  `<div class="newgames">${Object.entries(VERSIONS)
     .map(
       ([id, v]) =>
-        `<button class="game-choice" data-newrun="${id}">${cover(v, "sm")}${v.name}</button>`,
+        `<button class="ng" data-newrun="${id}">${cover(v, "sm")}<b>${v.name}</b><em>Start</em></button>`,
     )
     .join("")}</div>`;
 const pickGame = () =>
-  `<section class="empty"><h2>Pick a game</h2>${gameChoices()}<p class="muted small">No account needed. More games coming soon.</p></section>`;
-function fillNewRun() {
-  const full = (bridge.runs?.length || 0) >= MAX_RUNS;
-  $("#sheetbody").innerHTML =
-    `<h2 id="sheet-title">New playthrough</h2>${full ? `<p class="muted">You have ${MAX_RUNS} playthroughs. Delete one to start another.</p>` : gameChoices()}<div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="chip" data-close="1">Cancel</button></div>`;
-}
+  `<section class="empty"><h2>Pick a game</h2>${gameChoices()}<p class="muted small">No account needed.</p></section>`;
 const ymd = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 const startDay = (row: RunRow) => ymd(new Date(row.createdAt));
@@ -1227,29 +1228,70 @@ const lastPlayed = (iso: string) => {
 };
 const champion = (s: Summary) => s.badges.includes("Elite Four");
 const ptMenu = (row: RunRow, v: (typeof VERSIONS)[VersionId]) =>
-  `<details class="ptmenu"><summary aria-label="More options for ${v.name}">…</summary><div class="menu"><button data-startsheet="${row.id}">Change start date</button><button data-delrun="${row.id}">Delete playthrough</button></div></details>`;
+  `<details class="ptmenu"><summary aria-label="More options for ${v.name}">···</summary><div class="menu"><button data-startsheet="${row.id}">Change start date</button><button data-delrun="${row.id}">Delete playthrough</button></div></details>`;
 const meter = (n: number, of: number) =>
   `<span class="meter" aria-hidden="true"><i style="width:${(n / of) * 100}%"></i></span>`;
-function resumeCard(row: RunRow, r: Summary) {
+const badgeGroups = (p: Pack): [string, string[][]][] => [
+  [p.region, p.badges],
+  ...(p.postgame
+    ? [[p.postgame[0].replace(/ badges$/, ""), p.postgame[1]] as [string, string[][]]]
+    : []),
+];
+const badgeImg = (b: string, size: number, alt = "") =>
+  `<img src="/badges/${b.toLowerCase()}.png" alt="${alt}" width="${size}" height="${size}">`;
+const champTag = (r: Summary) =>
+  champion(r) ? ` · <span class="champ-tag">Champion</span>` : "";
+const avatarN = (): number => ui.avatar ?? bridge.avatar ?? 25;
+const avatarName = () => AVATARS.find(([n]) => n === avatarN())?.[1] ?? "";
+const partner = (cls: string) =>
+  `<img class="${cls}" src="/sprites/hgss/${avatarN()}.png" alt="" width="80" height="80">`;
+const trainerName = () => bridge.auth.displayName || "Trainer";
+function resumeCard(row: RunRow, r: Summary, at: string) {
   const v = verOf(row.version),
     p = v.pack,
-    all = [...p.badges, ...(p.postgame?.[1] || [])],
     has = new Set(r.badges),
-    party = r.party;
-  return `<article class="card dash-hero">${cover(v)}
-    <div><div class="hero-title"><h2>${v.name}</h2>${ptMenu(row, v)}</div>
-    <div class="tags"><span class="tag plain">${p.region}</span><span class="tag plain">Started ${new Date(row.createdAt).toLocaleDateString()}</span>${champion(r) ? `<span class="tag time">Champion</span>` : ""}<span class="tag time">${badgeCount(row.version, r)} / ${all.length} badges</span></div></div>
-    <div class="hero-full">
-      <div class="hero-badges">${all.map((b) => `<img class="${has.has(b[0]) ? "" : "off"}" src="/badges/${b[0].toLowerCase()}.png" alt="${b[0]} Badge${has.has(b[0]) ? "" : " (not yet)"}" width="24" height="24">`).join("")}</div>
-      <div><div class="split small"><span class="muted">Caught</span><span><b>${r.caught}</b> <span class="muted">/ ${p.national}</span></span></div>${meter(r.caught, p.national)}</div>
-      <div class="split"><div class="party">${party.map((m) => `<img src="/sprites/${p.art}/${m.shiny ? "shiny/" : ""}${m.n}.png" alt="${esc(m.nick || byN[m.n]?.name || "")}" width="56" height="56">`).join("")}</div><button class="app-primary" data-switch="${row.id}" aria-label="Continue ${v.name}">Continue <span aria-hidden="true">→</span></button></div>
+    groups = badgeGroups(p),
+    next = groups.flatMap(([, list]) => list).find((b) => !has.has(b[0]));
+  return `<article class="save" data-game="${row.version}">
+    <div class="slab">${cover(v, "box")}<p class="last">Last played ${lastPlayed(at)}</p><button class="go lg" data-switch="${row.id}" aria-label="Continue ${v.name}">Continue</button></div>
+    <div class="file">
+      <div class="file-head"><div><h2 class="lg">${v.name}</h2><p class="soft">${p.region} · Started ${longDay(startDay(row))}${champTag(r)}</p></div>${ptMenu(row, v)}</div>
+      <div><p class="lead"><b>${badgeCount(row.version, r)}</b> of ${groups.flatMap(([, l]) => l).length} badges${next ? `<span class="next">Next up: <strong>${next[1]}</strong><span class="wide">, ${next[0]} Badge</span></span>` : ""}</p>
+        <div class="case">${groups
+          .map(
+            ([label, list]) =>
+              `<div class="caserow">${list
+                .map((b) =>
+                  has.has(b[0])
+                    ? `<span class="slot">${badgeImg(b[0], 34, `${b[0]} Badge`)}</span>`
+                    : `<span class="slot${b === next ? " next" : ""}"><i role="img" aria-label="${b[0]} Badge, not yet"></i></span>`,
+                )
+                .join("")}<em>${label}</em></div>`,
+          )
+          .join("")}</div></div>
+      <div><p class="lead"><b>${r.caught}</b> of ${p.national} caught</p>${meter(r.caught, p.national)}</div>
+      ${r.party.length ? `<div class="party">${r.party.map((m) => `<img src="/sprites/${p.art}/${m.shiny ? "shiny/" : ""}${m.n}.png" alt="${esc(m.nick || byN[m.n]?.name || "")}" width="52" height="52">`).join("")}</div>` : ""}
     </div></article>`;
 }
 function miniCard(row: RunRow, r: Summary, at: string) {
   const v = verOf(row.version),
-    p = v.pack;
-  return `<article class="card mini"><button class="mini-go" data-switch="${row.id}" aria-label="Continue ${v.name}">${cover(v)}<span class="grow"><span class="split"><b class="mini-name">${v.name}</b>${champion(r) ? `<span class="tag time">Champion</span>` : `<span class="small muted">${lastPlayed(at)}</span>`}</span><span class="small muted">${badgeCount(row.version, r)} badges · ${r.caught} / ${p.national} caught</span>${meter(r.caught, p.national)}</span></button>${ptMenu(row, v)}</article>`;
+    p = v.pack,
+    has = new Set(r.badges);
+  return `<div class="run" data-game="${row.version}"><button class="run-go" data-switch="${row.id}"><span class="blk">${cover(v)}</span><span class="who"><b class="lg">${v.name}</b><span class="meta">${p.region} · ${lastPlayed(at).replace(/^on /, "")}${champTag(r)}</span></span><span class="mini" aria-hidden="true">${badgeGroups(p)
+    .map(
+      ([, list]) =>
+        `<span>${list.map((b) => `<span>${has.has(b[0]) ? badgeImg(b[0], 16) : "<i></i>"}</span>`).join("")}</span>`,
+    )
+    .join("")}</span><span class="sr">${badgeCount(row.version, r)} badges,</span><span class="got"><b>${r.caught}</b>of ${p.national}<span class="sr"> caught</span>${meter(r.caught, p.national)}</span></button>${ptMenu(row, v)}</div>`;
 }
+const trainerCard = (rows: { row: RunRow; r: Summary }[]) =>
+  `<aside class="trainer"><div class="tslab"><h2 class="lg">${esc(trainerName())}</h2>${partner("partner")}</div>
+  <ul class="record">
+    <li><b>${rows.length}</b> playthrough${rows.length === 1 ? "" : "s"}</li>
+    <li class="champ"><b>${rows.filter((x) => champion(x.r)).length}</b> finished as Champion</li>
+    <li><b>${rows.reduce((n, x) => n + badgeCount(x.row.version, x.r), 0)}</b> badges earned</li>
+    <li><b>${rows.reduce((n, x) => n + x.r.caught, 0)}</b> Pokémon caught</li>
+  </ul></aside>`;
 const signInNote = () =>
   bridge.auth.isAuthenticated
     ? guestRows().length && !moving
@@ -1266,7 +1308,7 @@ function Runs() {
       .sort((x, y) => y.at.localeCompare(x.at)),
     [top, ...rest] = rows;
   if (!top)
-    return `<div class="dash"><div class="dash-head"><h1>Dashboard</h1></div>
+    return `<div class="dash"><h1 class="lg">Dashboard</h1>
   <section class="card welcome"><h2>Start your first playthrough</h2><div class="games">${Object.entries(
     VERSIONS,
   )
@@ -1274,32 +1316,20 @@ function Runs() {
       ([id, v]) =>
         `<button class="game-tile" data-newrun="${id}">${cover(v)}<span><b>${v.name}</b><span class="small muted">${v.pack.region}</span></span></button>`,
     )
-    .join(
-      "",
-    )}</div><p class="small muted">More games coming soon.</p></section>${signInNote()}</div>`;
-  const stat = (n: number, label: string, cls = "") =>
-    `<div class="card stat ${cls}"><b>${n}</b><span class="small muted">${label}</span></div>`;
-  return `<div class="dash"><div class="dash-head"><div><h1>Dashboard</h1><p class="muted">${rows.length} playthrough${rows.length > 1 ? "s" : ""} · last played ${lastPlayed(top.at)}</p></div><button class="app-primary" data-newsheet="1">+ New playthrough</button></div>
-  <div class="hub">${resumeCard(top.row, top.r)}<div class="stats">${stat(rows.length, "Playthroughs")}${stat(rows.filter((x) => champion(x.r)).length, "Champion", "gold")}${stat(
-    rows.reduce((n, x) => n + badgeCount(x.row.version, x.r), 0),
-    "Badges earned",
-  )}${stat(
-    rows.reduce((n, x) => n + x.r.caught, 0),
-    "Total caught",
-  )}</div></div>
-  ${rest.length ? `<h2 class="eyebrow">Other playthroughs</h2><div class="minis">${rest.map((x) => miniCard(x.row, x.r, x.at)).join("")}</div>` : ""}
-  ${rows.length < MAX_RUNS ? `<h2 class="eyebrow">Start another</h2><div class="newrow">${gameChoices()}</div>` : ""}
+    .join("")}</div></section>${signInNote()}</div>`;
+  return `<div class="dash"><h1 class="lg">Dashboard</h1>
+  <div class="dash-grid">${resumeCard(top.row, top.r, top.at)}${trainerCard(rows)}
+  ${rest.length ? `<section class="sec"><h2 class="lg">Other playthroughs</h2><div class="runs">${rest.map((x) => miniCard(x.row, x.r, x.at)).join("")}</div></section>` : ""}
+  ${rows.length < MAX_RUNS ? `<section class="sec"><h2 class="lg">Start another playthrough</h2>${gameChoices()}</section>` : ""}</div>
   ${signInNote()}</div>`;
 }
 function Account() {
   const a = bridge.auth;
-  return `<div class="eyebrow">Account</div>
-  ${
+  return `<section class="s-id"><div class="tslab id"><h2 class="lg">${esc(trainerName())}</h2>${
     a.isAuthenticated
-      ? `<div class="card"><div style="display:flex;gap:12px;align-items:center"><span class="avatar" aria-hidden="true">${esc(initial())}</span><div style="flex:1"><b>${esc(a.displayName || "Trainer")}</b><div class="small muted">${a.email ? `Signed in as ${esc(a.email)}` : "Signed in"}</div></div><button class="chip" data-signout="1">Sign out</button></div>
-  <div class="chips" style="margin-top:12px">${exportChips()}<button class="chip" data-delaccount="1">Delete account</button></div>${exportError()}</div>`
-      : `<div class="card"><b>Save your playthroughs to an account</b><p class="muted small" style="margin:4px 0 14px">Right now they live only in this browser. With an account you can open them on any device. ${MOVE_NOTE}</p><button class="app-primary" data-signinsheet="1">Sign in or create an account</button><div class="chips" style="margin-top:12px">${exportChips()}</div>${exportError()}</div>`
-  }`;
+      ? `<p>${esc(a.email || "Signed in")}</p><button class="out" data-signout="1">Sign out</button>`
+      : `<p>Saved only in this browser</p><button class="out" data-signinsheet="1">Sign in or create an account</button>`
+  }${partner("partner")}</div></section>`;
 }
 function exportChips() {
   const off = ui.export || !bridge.runs?.length ? "disabled" : "";
@@ -1325,23 +1355,30 @@ function fillSignIn() {
 }
 const lookHalf = (theme: string) =>
   `<span data-theme="${theme}"><i class="c"><i class="t"></i><i class="m"><i></i></i><i class="b"></i></i></span>`;
-const Appearance = () => `<div class="card" style="margin-top:16px">
-    <div class="name">Look</div>
-    <div class="looks" role="group" aria-label="Look">${LOOKS.map(([k, l]) => `<button class="look" data-look="${k}" data-k="look-${k}" aria-pressed="${ui.look === k}"><span class="prev" aria-hidden="true">${lookHalf(PALETTE[k].light)}${lookHalf(PALETTE[k].dark)}</span><span>${l}</span></button>`).join("")}</div>
-    <div class="name" style="margin-top:14px">Mode</div>
-    <div class="chips" style="margin-top:6px">${[
+const Appearance = () => `<section class="s-look"><h3>Look</h3>
+    <div class="looks" role="group" aria-label="Look">${LOOKS.map(([k, l]) => `<button class="look" data-look="${k}" data-k="look-${k}" aria-pressed="${ui.look === k}"><span class="prev" aria-hidden="true">${lookHalf(PALETTE[k].light)}${lookHalf(PALETTE[k].dark)}</span><span>${l}</span></button>`).join("")}</div></section>
+    <section class="s-mode"><h3>Mode</h3>
+    <div class="seg" role="group" aria-label="Mode">${[
       ["auto", "Match device"],
       ["light", "Light"],
       ["dark", "Dark"],
     ]
       .map(
         ([k, l]) =>
-          `<button class="chip" data-mode="${k}" data-k="mode-${k}" aria-pressed="${ui.mode === k}">${l}</button>`,
+          `<button data-mode="${k}" data-k="mode-${k}" aria-pressed="${ui.mode === k}">${l}</button>`,
       )
-      .join("")}</div>
-  </div>`;
-const initial = () =>
-  (bridge.auth.displayName || "T").trim()[0]?.toUpperCase() || "T";
+      .join("")}</div></section>`;
+const AvatarPicker = () =>
+  `<section class="s-pick"><div class="sechead"><h3 id="avatar-h">Avatar</h3><span><b>${avatarName()}</b> · No. ${avatarN()}</span></div>
+  <div class="pcbox" role="radiogroup" aria-labelledby="avatar-h">${AVATARS.map(
+    ([n, name]) =>
+      `<label title="${name}"><input type="radio" name="avatar" value="${n}" data-k="avatar-${n}" aria-label="${name}" ${n === avatarN() ? "checked" : ""}><img src="/sprites/hgss/${n}.png" alt="" width="80" height="80"></label>`,
+  ).join("")}</div></section>`;
+const Settings = () =>
+  `<h2 id="sheet-title" class="lg">Settings</h2>
+  <div class="sgrid"><div>${Account()}${Appearance()}</div>
+  <div>${AvatarPicker()}<section class="s-data"><h3>Your data</h3><div class="chips">${exportChips()}</div>${exportError()}</section></div></div>
+  <div class="sfoot">${bridge.auth.isAuthenticated ? `<button class="danger" data-delaccount="1">Delete account</button>` : "<span></span>"}<button class="app-primary" data-close="1">Done</button></div>`;
 
 /* ---- About, Contact ---- */
 const contactLink = (text: string) =>
@@ -1426,12 +1463,10 @@ function render() {
           : `<p class="muted small" style="text-align:center;margin:4px 0 16px">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your playthroughs and view them on any device.</p>`) +
         VIEWS[ui.tab]();
   $("#topright").innerHTML =
-    `<span style="display:flex;gap:8px"><button class="pill icon hdr-settings" data-settings="1" data-k="settings" aria-label="Settings">${SETTINGS_ICON}</button>${run ? `<button class="gamepill" data-tab="playthroughs" aria-label="Current playthrough: ${ver().name}. Switch playthrough">${cover(ver())}</button>` : ""}${
-      signedIn
-        ? `<button class="avatar" data-settings="1" aria-label="Account: ${esc(a.displayName || "you")}">${esc(initial())}</button>`
-        : a.isLoading
-          ? ""
-          : `<button class="hdr-signup" data-signinsheet="1" data-k="signin">Sign up / Sign in</button>`
+    `<span style="display:flex;gap:8px">${run ? `<button class="gamepill" data-tab="playthroughs" aria-label="Current playthrough: ${ver().name}. Switch playthrough">${cover(ver())}</button>` : ""}${
+      a.isLoading
+        ? ""
+        : `${signedIn ? "" : `<button class="hdr-signup" data-signinsheet="1" data-k="signin">Sign up / Sign in</button>`}<button class="avatar" data-settings="1" data-k="avatar" aria-label="Settings, ${esc(trainerName())}">${partner("")}</button>`
     }</span>`;
   $("#tabs").innerHTML = !a.isLoading
     ? `<nav class="tabbar" aria-label="Sections">${[
@@ -1688,10 +1723,6 @@ async function onClick(e: MouseEvent) {
     $("#sheet").close();
     return;
   }
-  if (d.newsheet) {
-    openSheet({ kind: "newrun" });
-    return;
-  }
   if (d.settings) {
     openSheet({ kind: "settings" });
     return;
@@ -1940,11 +1971,22 @@ const setGuestRows = (rows: GuestRow[]) => {
   guestMem = JSON.stringify(rows);
   store.set(GUEST, guestMem);
 };
+const AVATAR = "jomc.avatar";
+const guestAvatar = () => {
+  const n = Number(store.get(AVATAR));
+  return isAvatar(n) ? n : null;
+};
 const refresh = () => queueMicrotask(() => update(raw));
 function withGuest(b: Bridge): Bridge {
   if (b.auth.isLoading || b.auth.isAuthenticated) return b;
   return {
     ...b,
+    get avatar() {
+      return guestAvatar();
+    },
+    async setAvatar(n) {
+      store.set(AVATAR, String(n));
+    },
     get runs() {
       return guestRows().map((g) => ({ ...g, summary: summarize(g.state) }));
     },
@@ -1982,6 +2024,16 @@ function withGuest(b: Bridge): Bridge {
       refresh();
     },
   };
+}
+let movingAvatar = false;
+function moveGuestAvatar() {
+  const n = guestAvatar();
+  if (movingAvatar || n === null || raw.avatar === undefined) return;
+  movingAvatar = true;
+  raw
+    .setAvatar(n)
+    .then(() => store.del(AVATAR), () => {})
+    .finally(() => (movingAvatar = false));
 }
 // ponytail: runs one at a time; retries on the next update after a failure
 let moving = false,
@@ -2036,7 +2088,10 @@ let pendingRun: string | null = null;
 function syncRuns() {
   const rows = bridge.runs;
   if (bridge.auth.isLoading || !rows) return;
-  if (bridge.auth.isAuthenticated) void moveGuestRuns();
+  if (bridge.auth.isAuthenticated) {
+    void moveGuestRuns();
+    moveGuestAvatar();
+  }
   if (run && !rows.some((r) => r.id === run!.id)) run = null;
   const want = pendingRun && rows.find((r) => r.id === pendingRun);
   if (want) {
@@ -2090,6 +2145,20 @@ export function mount(el: HTMLElement, b: Bridge) {
     true,
   );
   el.addEventListener("change", (e) => {
+    const t = e.target as HTMLInputElement;
+    if (t.name === "avatar") {
+      const n = Number(t.value);
+      ui.avatar = n;
+      render();
+      bridge
+        .setAvatar(n)
+        .catch(() => flash("Couldn't save your avatar. Try again."))
+        .finally(() => {
+          ui.avatar = undefined;
+          render();
+        });
+      return;
+    }
     if ((e.target as HTMLElement).id === "here" && run) {
       run.here = (e.target as HTMLSelectElement).value;
       scheduleSave();
