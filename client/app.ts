@@ -1178,7 +1178,24 @@ function fillStartDate(id: string) {
   const row = bridge.runs?.find((x) => x.id === id);
   if (!row) return;
   $("#sheetbody").innerHTML =
-    `<h2 id="sheet-title">Start date</h2><label class="field"><span>${verOf(row.version).name} started on</span><input id="started" type="date" value="${startDay(row)}" max="${ymd(new Date())}" required></label><div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button class="chip" data-close="1">Cancel</button><button class="app-primary" data-savestart="${row.id}">Save</button></div>`;
+    `<h2 id="sheet-title">Start date</h2>
+    <p class="start-date-label" id="start-date-label">This ${verOf(row.version).name} playthrough started on</p>
+    <input id="started" type="hidden" value="${startDay(row)}">
+    <calendar-date class="start-calendar" value="${startDay(row)}" max="${ymd(new Date())}" aria-labelledby="start-date-label">
+      <calendar-month></calendar-month>
+    </calendar-date>
+    <p class="small muted start-date-selected" id="start-date-selected" aria-live="polite">${new Date(row.createdAt).toLocaleDateString(undefined, { dateStyle: "long" })}</p>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button class="chip" data-close="1">Cancel</button><button class="app-primary" data-savestart="${row.id}">Save</button></div>`;
+  const calendar = $(".start-calendar") as HTMLElement & { value: string };
+  calendar.addEventListener("change", () => {
+    const day = calendar.value;
+    ($("#started") as HTMLInputElement).value = day;
+    const [y, m, d] = day.split("-").map(Number);
+    $("#start-date-selected").textContent = new Date(y, m - 1, d).toLocaleDateString(
+      undefined,
+      { dateStyle: "long" },
+    );
+  });
 }
 const lastPlayed = (iso: string) => {
   const day = (d: Date) => new Date(d).setHours(0, 0, 0, 0),
