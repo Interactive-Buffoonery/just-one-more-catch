@@ -1241,7 +1241,8 @@ const badgeImg = (b: string, size: number, alt = "") =>
   `<img src="/badges/${b.toLowerCase()}.png" alt="${alt}" width="${size}" height="${size}">`;
 const champTag = (r: Summary) =>
   champion(r) ? ` · <span class="champ-tag">Champion</span>` : "";
-const avatarN = (): number => ui.avatar ?? bridge.avatar ?? 25;
+const avatarN = (): number =>
+  ui.avatar ?? (isAvatar(bridge.avatar) ? bridge.avatar : 25);
 const avatarName = () => AVATARS.find(([n]) => n === avatarN())?.[1] ?? "";
 const partner = (cls: string) =>
   `<img class="${cls}" src="/sprites/hgss/${avatarN()}.png" alt="" width="80" height="80">`;
@@ -1282,7 +1283,7 @@ function miniCard(row: RunRow, r: Summary, at: string) {
       ([, list]) =>
         `<span>${list.map((b) => `<span>${has.has(b[0]) ? badgeImg(b[0], 16) : "<i></i>"}</span>`).join("")}</span>`,
     )
-    .join("")}</span><span class="sr">${badgeCount(row.version, r)} badges,</span><span class="got"><b>${r.caught}</b>of ${p.national}<span class="sr"> caught</span>${meter(r.caught, p.national)}</span></button>${ptMenu(row, v)}</div>`;
+    .join("")}</span><span class="sr">${badgeCount(row.version, r)} badges,</span><span class="got"><b>${r.caught}</b> of ${p.national}<span class="sr"> caught</span>${meter(r.caught, p.national)}</span></button>${ptMenu(row, v)}</div>`;
 }
 const trainerCard = (rows: { row: RunRow; r: Summary }[]) =>
   `<aside class="trainer"><div class="tslab"><h2 class="lg">${esc(trainerName())}</h2>${partner("partner")}</div>
@@ -1320,7 +1321,7 @@ function Runs() {
   return `<div class="dash"><h1 class="lg">Dashboard</h1>
   <div class="dash-grid">${resumeCard(top.row, top.r, top.at)}${trainerCard(rows)}
   ${rest.length ? `<section class="sec"><h2 class="lg">Other playthroughs</h2><div class="runs">${rest.map((x) => miniCard(x.row, x.r, x.at)).join("")}</div></section>` : ""}
-  ${rows.length < MAX_RUNS ? `<section class="sec"><h2 class="lg">Start another playthrough</h2>${gameChoices()}</section>` : ""}</div>
+  <section class="sec"><h2 class="lg">Start another playthrough</h2>${rows.length < MAX_RUNS ? gameChoices() : `<p class="muted">You have ${MAX_RUNS} playthroughs. Delete one to start another.</p>`}</section></div>
   ${signInNote()}</div>`;
 }
 function Account() {
@@ -1372,7 +1373,7 @@ const AvatarPicker = () =>
   `<section class="s-pick"><div class="sechead"><h3 id="avatar-h">Avatar</h3><span><b>${avatarName()}</b> · No. ${avatarN()}</span></div>
   <div class="pcbox" role="radiogroup" aria-labelledby="avatar-h">${AVATARS.map(
     ([n, name]) =>
-      `<label title="${name}"><input type="radio" name="avatar" value="${n}" data-k="avatar-${n}" aria-label="${name}" ${n === avatarN() ? "checked" : ""}><img src="/sprites/hgss/${n}.png" alt="" width="80" height="80"></label>`,
+      `<label title="${name}"><input type="radio" name="avatar" value="${n}" data-k="avatar-${n}" aria-label="${name}" ${n === avatarN() ? "checked" : ""}${bridge.auth.isLoading ? " disabled" : ""}><img src="/sprites/hgss/${n}.png" alt="" width="80" height="80"></label>`,
   ).join("")}</div></section>`;
 const Settings = () =>
   `<h2 id="sheet-title" class="lg">Settings</h2>
@@ -1466,7 +1467,7 @@ function render() {
     `<span style="display:flex;gap:8px">${run ? `<button class="gamepill" data-tab="playthroughs" aria-label="Current playthrough: ${ver().name}. Switch playthrough">${cover(ver())}</button>` : ""}${
       a.isLoading
         ? ""
-        : `${signedIn ? "" : `<button class="hdr-signup" data-signinsheet="1" data-k="signin">Sign up / Sign in</button>`}<button class="avatar" data-settings="1" data-k="avatar" aria-label="Settings, ${esc(trainerName())}">${partner("")}</button>`
+        : `${signedIn ? "" : `<button class="hdr-signup" data-signinsheet="1" data-k="signin">Sign up / Sign in</button>`}<button class="avatar" data-settings="1" data-k="avatar" aria-label="Settings and avatar, ${esc(trainerName())}">${partner("")}</button>`
     }</span>`;
   $("#tabs").innerHTML = !a.isLoading
     ? `<nav class="tabbar" aria-label="Sections">${[
@@ -1481,7 +1482,7 @@ function render() {
         )
         .join(
           "",
-        )}<button class="tab-settings" data-settings="1">${SETTINGS_ICON}<span>Settings</span></button></nav>`
+        )}<button class="tab-settings" data-settings="1" data-k="tab-settings">${SETTINGS_ICON}<span>Settings</span></button></nav>`
     : "";
   $("#toast").innerHTML = ui.undo
     ? `<div class="toast">${ui.undo.msg}${ui.undo.n ? `<button data-undo="1">Undo</button>` : ""}</div>`
@@ -1724,7 +1725,7 @@ async function onClick(e: MouseEvent) {
     return;
   }
   if (d.settings) {
-    openSheet({ kind: "settings" });
+    openSheet({ kind: "settings", k: d.k });
     return;
   }
   if (d.signinsheet) {
@@ -2029,6 +2030,7 @@ let movingAvatar = false;
 function moveGuestAvatar() {
   const n = guestAvatar();
   if (movingAvatar || n === null || raw.avatar === undefined) return;
+  if (raw.avatar !== null) return store.del(AVATAR);
   movingAvatar = true;
   raw
     .setAvatar(n)
@@ -2086,6 +2088,7 @@ const waitingNote = (left: number) =>
 
 let pendingRun: string | null = null;
 function syncRuns() {
+  if (bridge.avatar === ui.avatar) ui.avatar = undefined;
   const rows = bridge.runs;
   if (bridge.auth.isLoading || !rows) return;
   if (bridge.auth.isAuthenticated) {
@@ -2150,13 +2153,15 @@ export function mount(el: HTMLElement, b: Bridge) {
       const n = Number(t.value);
       ui.avatar = n;
       render();
-      bridge
-        .setAvatar(n)
-        .catch(() => flash("Couldn't save your avatar. Try again."))
-        .finally(() => {
-          ui.avatar = undefined;
-          render();
-        });
+      bridge.setAvatar(n).then(
+        () => {
+          if (bridge.avatar === n && ui.avatar === n) ui.avatar = undefined;
+        },
+        () => {
+          if (ui.avatar === n) ui.avatar = undefined;
+          flash("Couldn't save your avatar. Try again.");
+        },
+      );
       return;
     }
     if ((e.target as HTMLElement).id === "here" && run) {
