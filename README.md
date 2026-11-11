@@ -1,7 +1,7 @@
 # Just One More Catch
 
-Track your Pokémon playthroughs and see where to catch what you're missing at
-your point in the story. HeartGold and SoulSilver for now.
+What can I catch right now? A tracker for retro Pokémon playthroughs, from Game
+Boy to 3DS.
 
 Live at https://justonemorecatch.app
 
