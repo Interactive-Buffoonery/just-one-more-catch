@@ -119,7 +119,6 @@ const VIEWS: Record<string, () => string> = {
   dex: Dex,
   boxes: Boxes,
   playthroughs: Runs,
-  about: () => { location.replace("/about/"); return ""; },
   contact: Contact,
 };
 function shell() {
@@ -644,6 +643,11 @@ function syncRuns() {
 }
 
 export function mount(el: HTMLElement, b: Bridge) {
+  if (new URLSearchParams(location.search).get("tab") === "about") {
+    location.replace("/about/");
+    return;
+  }
+  const settings = new URLSearchParams(location.search).get("tab") === "settings";
   setRoot(el);
   ui.tab = tabFromUrl();
   addEventListener("popstate", () => {
@@ -665,6 +669,7 @@ export function mount(el: HTMLElement, b: Bridge) {
     : "auto";
   applyTheme();
   darkMQ.addEventListener("change", applyTheme);
+  if (settings) openSheet({ kind: "settings" });
   el.addEventListener("click", onClick);
   el.addEventListener("submit", onSubmit as any);
   el.addEventListener(
