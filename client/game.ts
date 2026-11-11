@@ -21,6 +21,7 @@ export const TYPE: Record<string, string> = {
   dragon: "#5a49cf",
   dark: "#5d4c40",
   steel: "#7f97a8",
+  fairy: "#de80c0",
 };
 export let CHAPTERS: GameData["chapters"] = [];
 export let EVENTS: Record<string, GameData["events"][number]> = {};
