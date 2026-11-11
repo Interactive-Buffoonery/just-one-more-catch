@@ -5,6 +5,7 @@ import { v } from "convex/values";
 import { MAX_RUN_BYTES, MAX_RUNS, runBytes } from "../shared/limits";
 import { summarize } from "../shared/summary";
 import { VERSION_IDS } from "../shared/versions";
+import { isAvatar } from "../shared/avatars";
 
 const EMAILS_PER_HOUR = 20;
 // Each run can carry up to MAX_RUN_BYTES, so batches stay well under the 16 MiB per-call read limit
@@ -108,6 +109,31 @@ export const remove = mutation({
   },
 });
 
+const profileOf = (ctx: QueryCtx, who: string) =>
+  ctx.db
+    .query("profiles")
+    .withIndex("by_owner", (q) => q.eq("owner", who))
+    .unique();
+
+export const avatar = query({
+  args: {},
+  handler: async (ctx) => {
+    const me = await ctx.auth.getUserIdentity();
+    return (me && (await profileOf(ctx, me.tokenIdentifier))?.avatar) ?? null;
+  },
+});
+
+export const setAvatar = mutation({
+  args: { avatar: v.number() },
+  handler: async (ctx, { avatar }) => {
+    if (!isAvatar(avatar)) throw new Error("Unknown avatar");
+    const who = await owner(ctx);
+    const old = await profileOf(ctx, who);
+    if (old) await ctx.db.patch(old._id, { avatar });
+    else await ctx.db.insert("profiles", { owner: who, avatar });
+  },
+});
+
 async function purgeRuns(ctx: MutationCtx, who: string) {
   const runs = await ctx.db
     .query("runs")
@@ -127,6 +153,8 @@ export const deleteAccount = mutation({
   handler: async (ctx) => {
     const who = await owner(ctx);
     await purgeRuns(ctx, who);
+    const profile = await profileOf(ctx, who);
+    if (profile) await ctx.db.delete(profile._id);
     const sent = await ctx.db
       .query("messages")
       .withIndex("by_sender", (q) => q.eq("sender", who))

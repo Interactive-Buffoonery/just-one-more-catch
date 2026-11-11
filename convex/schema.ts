@@ -19,6 +19,10 @@ export default defineSchema({
     run: v.id("runs"),
     state: v.string(),
   }).index("by_run", ["run"]),
+  profiles: defineTable({
+    owner: v.string(),
+    avatar: v.number(),
+  }).index("by_owner", ["owner"]),
   messages: defineTable({
     sender: v.string(),
     email: v.string(),
