@@ -7,6 +7,7 @@ import {
   bridge,
   byN,
   hasGenders,
+  visibleForms,
   closeRun,
   dumpRun,
   eventDone,
@@ -488,7 +489,7 @@ async function onClick(e: MouseEvent) {
   }
   if (d.form && d.species) {
     const p = byN[+d.species];
-    if (!r.trackForms || !p?.forms?.some((f) => f.id === d.form)) return;
+    if (!r.trackForms || (!p || !visibleForms(p).some((f) => f.id === d.form))) return;
     r.forms.has(d.form) ? r.forms.delete(d.form) : r.forms.add(d.form);
     r.caught.add(p.n);
     scheduleSave();
@@ -542,7 +543,7 @@ async function onClick(e: MouseEvent) {
     r.view = r.view === "dexonly" ? r.startView : "dexonly";
   } else if (d.startview) {
     r.view = r.startView = d.startview === "dex" ? "dex" : "journey";
-  } else if (d.dexoption === "trackForms" || d.dexoption === "trackGenders") {
+  } else if (d.dexoption === "trackForms" || d.dexoption === "trackGenders" || d.dexoption === "trackTraded") {
     r[d.dexoption] = !r[d.dexoption];
   } else if (d.showlater) r.showLater = !r.showLater;
   else if (d.event) {

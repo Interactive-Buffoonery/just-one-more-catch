@@ -3,6 +3,7 @@ import {
   byN,
   cap,
   collectedForms,
+  visibleForms,
   collectedGenders,
   GENDERS,
   hasGenders,
@@ -51,9 +52,10 @@ const SEARCH_ICON = `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11"
 const withStatus = () => dexList().map((p) => ({ p, s: speciesStatus(p) }));
 const tile = (p: Species, s: string) => {
   if (R().view === "dexonly") s = s === "caught" ? "caught" : "missing";
-  const genders = collectedGenders(p);
+  const genders = collectedGenders(p),
+    available = visibleForms(p);
   const short = ["missing", "all"].includes(ui.filter) && SHORT[s];
-  return `<button type="button" class="dt${s === "now" ? " n" : ""}${s === "now" || s === "caught" ? "" : " dim"}" data-${ui.bulk ? "toggle" : "open"}="${p.n}" data-k="d${p.n}" ${ui.bulk ? `aria-pressed="${s === "caught"}"` : ""} aria-label="${p.name}, number ${num(p)}, ${STATUS_TEXT[s]}">${mon(p)}<span class="nm">${p.name}</span><span class="no">#${pad(num(p))}${R().trackGenders && hasGenders(p) ? `<span class="gx" aria-label="${genders.size} of 2 genders">${GENDERS.map(([g, symbol, label]) => `<b class="${genders.has(g) ? "on" : ""}" aria-label="${label}${genders.has(g) ? " collected" : " missing"}">${symbol}</b>`).join("")}</span>` : ""}${R().trackForms && p.forms && p.forms.length > 1 ? `<i>${collectedForms(p).size}/${p.forms.length}</i>` : short ? `<i>${short}</i>` : ""}</span></button>`;
+  return `<button type="button" class="dt${s === "now" ? " n" : ""}${s === "now" || s === "caught" ? "" : " dim"}" data-${ui.bulk ? "toggle" : "open"}="${p.n}" data-k="d${p.n}" ${ui.bulk ? `aria-pressed="${s === "caught"}"` : ""} aria-label="${p.name}, number ${num(p)}, ${STATUS_TEXT[s]}">${mon(p)}<span class="nm">${p.name}</span><span class="no">#${pad(num(p))}${R().trackGenders && hasGenders(p) ? `<span class="gx" aria-label="${genders.size} of 2 genders">${GENDERS.map(([g, symbol, label]) => `<b class="${genders.has(g) ? "on" : ""}" aria-label="${label}${genders.has(g) ? " collected" : " missing"}">${symbol}</b>`).join("")}</span>` : ""}${R().trackForms && available.length > 1 ? `<i>${collectedForms(p).size}/${available.length}</i>` : short ? `<i>${short}</i>` : ""}</span></button>`;
 };
 const section = (title: string, list: { p: Species; s: string }[]) =>
   list.length
@@ -129,6 +131,7 @@ export function fillSpecies(n: number) {
   const p = byN[n],
     caught = R().caught.has(n),
     forms = collectedForms(p),
+    available = visibleForms(p),
     genders = collectedGenders(p),
     groups: Record<string, Row[]> = {
       now: [],
@@ -157,7 +160,7 @@ export function fillSpecies(n: number) {
       <div class="band">${sprite(p, "hv-sprite")}<div class="k">#${pad(num(p))}</div><h2 class="lg" id="sheet-title">${p.name}</h2>${p.types.map((t) => `<span class="type" style="--tc:${TYPE[t]}">${cap(t)}</span>`).join(" ")}</div>
       <div class="hv-actions"><button type="button" class="app-primary grow" data-toggle="${n}" data-k="t${n}" aria-pressed="${caught}" aria-label="${p.name} caught">${caught ? "✓ Caught" : "Caught it"}</button></div>
     </section>
-    ${R().trackForms && p.forms && p.forms.length > 1 ? `<h3>Forms · ${forms.size} / ${p.forms.length}</h3><div class="forms">${p.forms.map((f) => `<button type="button" class="form" data-form="${f.id}" data-species="${n}" data-k="form-${f.id}" aria-pressed="${forms.has(f.id)}" aria-label="${esc(p.name + " " + f.name)}" ${mine.some((m) => (m.form || p.forms![0].id) === f.id) ? "disabled" : ""}>${sprite(p, "", false, f.id)}<span>${esc(f.name)}</span></button>`).join("")}</div>` : ""}
+    ${R().trackForms && available.length > 1 ? `<h3>Forms · ${forms.size} / ${available.length}</h3><div class="forms">${available.map((f) => `<button type="button" class="form" data-form="${f.id}" data-species="${n}" data-k="form-${f.id}" aria-pressed="${forms.has(f.id)}" aria-label="${esc(p.name + " " + f.name)}" ${mine.some((m) => (m.form || p.forms![0].id) === f.id) ? "disabled" : ""}>${sprite(p, "", false, f.id)}<span>${esc(f.name)}</span></button>`).join("")}</div>` : ""}
     ${R().trackGenders && hasGenders(p) ? `<h3>Genders · ${genders.size} / 2</h3><div class="forms genders">${GENDERS.map(([g, symbol, label]) => `<button type="button" class="form" data-gender="${g}" data-species="${n}" data-k="gender-${n}-${g}" aria-pressed="${genders.has(g)}" aria-label="${esc(p.name + " " + label)}" ${mine.some((m) => m.g === g) ? "disabled" : ""}><span class="gsym" aria-hidden="true">${symbol}</span><span>${label}</span></button>`).join("")}</div>` : ""}
     ${caught ? `<h3>Yours${mine.length ? ` · ${mine.length}` : ""}</h3><div class="card">${mine.map((m) => monLine(m, true)).join("")}<div class="yours">${mine.length ? "" : `<span class="muted small">Not in your party or boxes</span>`}<button type="button" class="quietbtn" data-addmon="${n}" data-k="add${n}">Add ${mine.length ? "another" : "one"}</button></div></div>` : ""}
     ${R().view !== "dexonly" ? `${sect("Catchable now", groups.now)}${sect("Other times of day", groups.wrongtime)}${sect("Special conditions", groups.special)}${sect("Later", groups.later)}

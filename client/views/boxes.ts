@@ -1,5 +1,5 @@
 import { $, esc } from "../dom";
-import { byN, hasGenders, HELD_ITEMS, P, PARTY_SIZE, R, run, ui } from "../game";
+import { byN, hasGenders, visibleForms, HELD_ITEMS, P, PARTY_SIZE, R, run, ui } from "../game";
 import { mon } from "../parts";
 import { Mon } from "../types";
 import { NoRun } from "./runs";
@@ -46,7 +46,9 @@ export function Boxes() {
 }
 export function fillMonSheet(s: any) {
   const m = s.id ? R().mons.find((x) => x.id === s.id) : null,
-    p = byN[m ? m.n : s.n];
+    p = byN[m ? m.n : s.n],
+    available = visibleForms(p),
+    forms = (p.forms || []).filter((f) => available.includes(f) || f.id === m?.form);
   const cur = m ? m.box : R().lastBox,
     full = (b: Mon["box"]) =>
       inBox(b).filter((x) => x !== m).length >= boxCap(b);
@@ -63,7 +65,7 @@ export function fillMonSheet(s: any) {
           `<option value="${b}" ${b === cur ? "selected" : ""} ${full(b) && b !== cur ? "disabled" : ""}>${esc(boxLabel(b))} (${inBox(b).length}/${boxCap(b)})</option>`,
       )
       .join("")}</select></label>
-    ${R().trackForms && p.forms && p.forms.length > 1 ? `<label class="field"><span>Form</span><select id="f-form">${p.forms.map((f) => `<option value="${f.id}" ${f.id === (m?.form || p.forms![0].id) ? "selected" : ""}>${esc(f.name)}</option>`).join("")}</select></label>` : ""}
+    ${R().trackForms && forms.length > 1 ? `<label class="field"><span>Form</span><select id="f-form">${forms.map((f) => `<option value="${f.id}" ${f.id === (m?.form || p.forms![0].id) ? "selected" : ""}>${esc(f.name)}</option>`).join("")}</select></label>` : ""}
     <details class="more" ${m ? "open" : ""}><summary>More details <span class="muted small">nickname, level, held item</span></summary><div class="fgrid">
       <label class="field"><span>Nickname</span><input id="f-nick" maxlength="10" autocomplete="off" value="${esc(m?.nick || "")}"></label>
       <label class="field"><span>Level</span><input id="f-lvl" type="number" min="1" max="100" inputmode="numeric" value="${m?.lvl || ""}"></label>
@@ -88,7 +90,7 @@ export function updateMonSprite() {
   const s = ui.sheet,
     m = s.id ? R().mons.find((m) => m.id === s.id) : null,
     p = byN[m ? m.n : s.n];
-  $("#sheetbody .mon").outerHTML = mon(p, $("#f-shiny").checked, $("#f-form")?.value || p.forms?.[0]?.id);
+  $("#sheetbody .mon").outerHTML = mon(p, $("#f-shiny").checked, $("#f-form")?.value || m?.form || p.forms?.[0]?.id);
 }
 
 export function fillBoxSheet(b: number) {

@@ -180,6 +180,7 @@ type Run = {
   caught: Set<number>;
   forms: Set<string>;
   trackForms: boolean;
+  trackTraded: boolean;
   trackGenders: boolean;
   genders: Record<number, Set<string>>;
   skip: Set<number>;
@@ -224,6 +225,7 @@ function loadRun(row: RunRow, state: string): Run {
     caught: new Set(s.caught || []),
     forms: new Set((Array.isArray(s.forms) ? s.forms : []).filter((f: unknown) => typeof f === "string")),
     trackForms: s.trackForms !== false,
+    trackTraded: s.trackTraded === true,
     trackGenders: s.trackGenders === true,
     genders: Object.fromEntries(
       Object.entries(s.genders || {}).filter(([n, gs]) => /^\d+$/.test(n) && Array.isArray(gs)).map(([n, gs]) =>
@@ -256,6 +258,7 @@ export const dumpRun = (r: Run) =>
     caught: [...r.caught],
     forms: [...r.forms],
     trackForms: r.trackForms,
+    trackTraded: r.trackTraded,
     trackGenders: r.trackGenders,
     genders: Object.fromEntries(Object.entries(r.genders).map(([n, gs]) => [n, [...gs]])),
     skip: [...r.skip],
@@ -273,9 +276,11 @@ export const dumpRun = (r: Run) =>
     startView: r.startView,
   });
 
+export const visibleForms = (p: Species) => (p.forms || []).filter((f) => R().trackTraded || !f.trade);
+
 export function collectedForms(p: Species) {
   const r = R();
-  return new Set((p.forms || []).filter((f) =>
+  return new Set(visibleForms(p).filter((f) =>
     r.forms.has(f.id) || r.mons.some((m) => m.n === p.n && (m.form || p.forms?.[0]?.id) === f.id),
   ).map((f) => f.id));
 }
