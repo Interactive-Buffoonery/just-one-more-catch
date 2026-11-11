@@ -515,3 +515,64 @@ details.fold .row:first-of-type{border-top:0}
   .jny .colmain,.jny .colside{display:flex;flex-direction:column;gap:16px;min-width:0}
   .where-row h1{font-size:54px}
 }
+
+/* Dex */
+.dexhead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.dexhead h1{min-width:0;font-size:44px;line-height:.95;padding-top:6px;overflow-wrap:anywhere}
+.dexcount{text-align:right;white-space:nowrap;font-weight:700;color:var(--soft);font-size:14px;padding-bottom:4px}
+.dexcount b{font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-weight:400;font-size:32px;line-height:1;color:var(--ink);margin-right:2px}
+.dexhead+.bar{margin-top:10px}
+.filters{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:var(--surface);border-radius:16px;padding:4px;margin-top:14px}
+.app .filters button{border:0;background:transparent;border-radius:12px;min-height:52px;padding:6px 2px;display:grid;gap:1px;justify-items:center;align-content:center;font-size:12.5px;font-weight:700;color:var(--soft);line-height:1.15}
+.filters button b{font-size:17px;font-weight:800;color:var(--ink)}
+.app .filters button[aria-pressed=true]{background:var(--teal-soft);color:var(--teal)}
+.filters button[aria-pressed=true] b{color:var(--teal)}
+.dextools{display:flex;gap:8px;margin-top:10px}
+.search{flex:1;min-width:0;position:relative}
+.search svg{position:absolute;left:12px;top:13px;width:18px;height:18px;color:var(--soft);pointer-events:none}
+.app .search input{width:100%;min-height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:16px;padding:0 12px 0 38px}
+.search input::placeholder{color:var(--soft)}
+.app .quietbtn[aria-pressed=true]{background:var(--fill);border-color:var(--fill);color:var(--on-fill)}
+.dexsec{margin-top:18px}
+.dexsec .sec-h{margin:0 0 8px}
+.dexsec .sec-h h2{font-size:20px}
+.dexsec .sec-h h2 small{font:800 13px ui-rounded,"SF Pro Rounded",system-ui,sans-serif;color:var(--soft);letter-spacing:0;margin-left:6px;vertical-align:3px;text-transform:none}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px}
+.app .dt{position:relative;border:0;background:var(--surface);border-radius:14px;padding:10px 2px 8px;min-height:104px;display:grid;justify-items:center;align-content:start;gap:3px;text-align:center;min-width:0}
+.dt .mon{width:50px;height:50px;grid-column:auto;grid-row:auto}
+.dt .nm{font-weight:800;font-size:12.5px;line-height:1.15;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px;margin-top:3px}
+.dt .no{font-size:11.5px;color:var(--soft);line-height:1.2}
+.dt .no i{font-style:normal;font-weight:700;display:block}
+.dt.n .no i{color:var(--teal)}
+.app .dt.dim{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
+.dt.dim .mon{opacity:.45;filter:grayscale(.5)}
+:is([data-theme=dracula],[data-theme=rosepine],[data-theme$=-dark]) .dt.dim .mon{opacity:.6}
+.dt.dim .nm{color:var(--soft)}
+.app .bulk .dt{box-shadow:inset 0 0 0 1px var(--line)}
+.app .bulk .dt[aria-pressed=true]{box-shadow:inset 0 0 0 2px var(--teal)}
+.dexnone{padding:24px 0;text-align:center}
+dialog.sheet:has(.dexsheet){background:var(--bg)}
+.sheetbody:has(.dexsheet){padding:10px 16px 20px}
+.grab{width:40px;height:4px;border-radius:9px;background:var(--line);margin:0 auto 12px}
+.dexsheet .band{min-height:120px}
+.app .dexsheet .app-primary[aria-pressed=true]{background:var(--teal-soft);color:var(--teal)}
+.dexsheet h3{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);margin:16px 0 6px}
+.dexsheet .card{border:0;border-radius:18px;padding:2px 16px}
+.dexsheet .row{padding:8px 0;border:0;border-top:1px solid var(--line);border-radius:0;background:none;margin:0}
+.dexsheet .row:first-child{border-top:0}
+.spot{margin:0;padding:10px 0;border-top:1px solid var(--line)}
+.spot:first-child{border-top:0}
+.spot .pn{font-weight:800}
+.spot .tags+.tags{margin-top:5px}
+.yours{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0}
+.yours .quietbtn{margin-left:auto}
+.row+.yours{padding-top:2px}
+.app .dexsheet .done{width:100%;margin-top:16px}
+@media (min-width:640px){.grab{display:none}.sheetbody:has(.dexsheet){padding-top:16px}}
+@media (min-width:960px){
+  .dexhead h1{font-size:54px}
+  .dextop{display:flex;gap:16px;align-items:center;margin-top:16px}
+  .dextop .filters{margin:0;width:460px;flex:none}
+  .dextop .dextools{margin:0;flex:1}
+  .dgrid{grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+}
