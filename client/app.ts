@@ -1463,7 +1463,7 @@ function render() {
           : `<p class="muted small" style="text-align:center;margin:4px 0 16px">Currently saved only in this browser. <button class="linkish" data-signinsheet="1">Sign in</button> to save your playthroughs and view them on any device.</p>`) +
         VIEWS[ui.tab]();
   $("#topright").innerHTML =
-    `<span style="display:flex;gap:8px"><button class="pill icon hdr-settings" data-settings="1" data-k="settings" aria-label="Settings">${SETTINGS_ICON}</button>${run ? `<button class="gamepill" data-tab="playthroughs" aria-label="Current playthrough: ${ver().name}. Switch playthrough">${cover(ver())}</button>` : ""}${
+    `<span style="display:flex;gap:8px">${run ? `<button class="gamepill" data-tab="playthroughs" aria-label="Current playthrough: ${ver().name}. Switch playthrough">${cover(ver())}</button>` : ""}${
       a.isLoading
         ? ""
         : `${signedIn ? "" : `<button class="hdr-signup" data-signinsheet="1" data-k="signin">Sign up / Sign in</button>`}<button class="avatar" data-settings="1" data-k="avatar" aria-label="Settings, ${esc(trainerName())}">${partner("")}</button>`
