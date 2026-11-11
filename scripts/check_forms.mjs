@@ -10,6 +10,9 @@ for (const pack of ["crystal", "frlg", "hgss", "usum"]) {
   const source = JSON.parse(read(`data/${pack}.json`)).obtainable_forms;
   const dex = data(pack).dex;
   catalogs[pack] = dex;
+  for (const p of dex) {
+    assert(Number.isInteger(p.genderRate) && p.genderRate >= -1 && p.genderRate <= 8);
+  }
   for (const [n, ids] of Object.entries(source)) {
     const p = dex.find((p) => p.n === +n);
     assert.deepEqual(p.forms.map((f) => f.id), ids);
@@ -34,7 +37,7 @@ const source = read("client/game.ts");
 const defaults = { nick: "", lvl: "", g: "", shiny: false, item: "", note: "" };
 const stateCode = source.slice(source.indexOf("function loadRun("), source.indexOf("export let bridge:"));
 let current;
-const api = runInNewContext(stripTypeScriptTypes(stateCode.replaceAll("export ", "")) + "\n({ loadRun, dumpRun, collectedForms })", {
+const api = runInNewContext(stripTypeScriptTypes(stateCode.replaceAll("export ", "")) + "\n({ loadRun, dumpRun, collectedForms, hasGenders, collectedGenders, GENDERS })", {
   verOf: () => ({ pack: { start: "Start", boxes: [2] } }),
   MON_DEFAULTS: defaults,
   compactMon: (m) => Object.fromEntries(Object.entries(m).filter(([k, v]) => defaults[k] !== v)),
@@ -73,7 +76,7 @@ const spriteCode = stripTypeScriptTypes(parts.slice(parts.indexOf('const ring ='
 const context = {
   $, esc, ui, byN, R: () => current, run: true, P: () => ({ art: 'hgss', boxes: [2, 30] }),
   PARTY_SIZE: 6, HELD_ITEMS: [], FIT: {}, TYPE: { psychic: 'pink', normal: 'grey' },
-  collectedForms: api.collectedForms, num: (p) => p.n, pad: (n) => String(n).padStart(3, '0'),
+  collectedForms: api.collectedForms, collectedGenders: api.collectedGenders, hasGenders: api.hasGenders, GENDERS: api.GENDERS, num: (p) => p.n, pad: (n) => String(n).padStart(3, '0'),
   tagBits: () => [], isHere: () => false, rowStatus: () => ({ s: 'now' }), howElse: () => '', cap: (s) => s,
 };
 const views = runInNewContext(spriteCode + '\n' + moduleCode('client/views/boxes.ts') + '\n' + moduleCode('client/views/dex.ts') + '\n({ fillMonSheet, saveMon, monLine, fillSpecies, tile })', context);
@@ -120,3 +123,121 @@ toggle({ form: 'rattata-alola', species: '201' }, current);
 assert.equal(current.forms.size, 0);
 assert.equal(api.loadRun({ ...row, id: 'other' }, '{}').forms.size, 0);
 console.log('form sheets, stored sprites and toggles ok');
+
+// Per-playthrough options default safely and preserve independent collections.
+current = api.loadRun(row, '{}');
+assert.equal(current.trackForms, true);
+assert.equal(current.trackGenders, false);
+assert.equal(Object.keys(current.genders).length, 0);
+current = api.loadRun(row, JSON.stringify({ trackForms: false, trackGenders: true, forms: ['unown-b'], genders: { 25: ['m', 'm', 'unknown', null], 422: ['f'] } }));
+const options = api.loadRun(row, api.dumpRun(current));
+assert.equal(options.trackForms, false);
+assert.equal(options.trackGenders, true);
+assert.deepEqual([...options.genders[25]], ['m']);
+assert.deepEqual([...options.genders[422]], ['f']);
+assert(options.forms.has('unown-b'));
+for (const [n, expected] of [[25, true], [81, false], [128, false], [113, false], [201, false], [422, true]]) {
+  assert.equal(api.hasGenders(byN[n]), expected, byN[n].name);
+}
+current = api.loadRun(row, JSON.stringify({ trackGenders: true, genders: { 25: ['f'] }, mons: [{ id: 1, n: 25, box: 1, g: 'm' }] }));
+assert.deepEqual([...api.collectedGenders(byN[25])].sort(), ['f', 'm']);
+assert.equal(api.collectedForms(byN[25]).size, 0);
+views.fillSpecies(25);
+html = elements['#sheetbody'].innerHTML;
+assert(html.includes('Genders · 2 / 2'));
+assert.match(html, /data-gender="m"[^>]*aria-pressed="true"[^>]*disabled/);
+assert.match(html, /data-gender="f"[^>]*aria-pressed="true"[^>]*>/);
+assert(!/data-gender="f"[^>]*disabled/.test(html));
+assert(views.tile(byN[25], 'caught').includes('<b class="on"'));
+for (const n of [81, 128, 113, 201]) {
+  views.fillSpecies(n);
+  assert(!elements['#sheetbody'].innerHTML.includes('Genders ·'), byN[n].name);
+  assert(!views.tile(byN[n], 'caught').includes('class="gx"'), byN[n].name);
+}
+current.trackGenders = false;
+views.fillSpecies(25);
+assert(!elements['#sheetbody'].innerHTML.includes('Genders ·'));
+assert(!views.tile(byN[25], 'caught').includes('class="gx"'));
+assert(views.monLine(current.mons[0]).includes('♂'));
+
+current = api.loadRun(row, JSON.stringify({ trackGenders: true, mons: [{ id: 1, n: 422, box: 1, form: 'shellos-east', g: 'f' }] }));
+current.caught.add(422);
+views.fillSpecies(422);
+html = elements['#sheetbody'].innerHTML;
+assert(html.indexOf('Forms · 1 / 2') < html.indexOf('Genders · 1 / 2'));
+assert(html.indexOf('Genders · 1 / 2') < html.indexOf('Yours'));
+current.trackForms = false;
+views.fillSpecies(422);
+assert(!elements['#sheetbody'].innerHTML.includes('Forms ·'));
+assert(elements['#sheetbody'].innerHTML.includes('Genders · 1 / 2'));
+const hiddenFormRow = views.monLine(current.mons[0]);
+assert(hiddenFormRow.includes('/sprites/hgss/422.png'));
+assert(!hiddenFormRow.includes('East Sea'));
+assert(hiddenFormRow.includes('♀'));
+assert(!views.tile(byN[422], 'caught').includes('<i>1/2</i>'));
+views.fillMonSheet({ id: 1 });
+assert(!elements['#sheetbody'].innerHTML.includes('id="f-form"'));
+ui.sheet = { id: 1 };
+delete elements['#f-form'];
+elements['#f-g'].value = 'f';
+views.saveMon();
+assert.equal(current.mons[0].form, 'shellos-east');
+assert.equal(api.collectedForms(byN[422]).size, 1);
+assert.equal(api.collectedGenders(byN[422]).size, 1);
+current.trackForms = true;
+assert(views.monLine(current.mons[0]).includes('/forms/shellos-east.png'));
+
+const genderClick = app.slice(app.indexOf('  if (d.gender && d.species)'), app.indexOf('  if (d.form && d.species)'));
+const toggleGender = runInNewContext('(function(d, r) { ' + genderClick + ' })', {
+  byN, hasGenders: api.hasGenders, scheduleSave() {}, render() {}, fillSpecies() {},
+});
+current = api.loadRun(row, '{"trackGenders":true}');
+toggleGender({ gender: 'm', species: '25' }, current);
+assert(current.genders[25].has('m'));
+assert(current.caught.has(25));
+assert.equal(current.forms.size, 0);
+toggleGender({ gender: 'm', species: '25' }, current);
+assert.equal(current.genders[25].size, 0);
+current.mons.push({ n: 25, g: 'm' });
+toggleGender({ gender: 'm', species: '25' }, current);
+assert.equal(current.genders[25].size, 0);
+for (const n of [81, 128, 113, 201]) toggleGender({ gender: 'f', species: String(n) }, current);
+assert.equal(Object.keys(current.genders).length, 1);
+current.trackGenders = false;
+toggleGender({ gender: 'f', species: '25' }, current);
+assert.equal(current.genders[25].size, 0);
+assert.equal(Object.keys(api.loadRun({ ...row, id: 'other' }, '{}').genders).length, 0);
+
+const journey = read('client/views/journey.ts');
+const custom = runInNewContext(stripTypeScriptTypes(journey.slice(journey.indexOf('const SECTIONS ='), journey.indexOf('/* ---- Story events:')).replaceAll('export ', '')) + '\nfillCustom', {
+  $, R: () => current, ver: () => ({ name: 'HeartGold' }), badgesWord: () => 'badges',
+});
+current = api.loadRun(row, '{}');
+custom();
+html = elements['#sheetbody'].innerHTML;
+assert(html.indexOf('Journey sections') < html.indexOf('<p class="eyebrow">Dex</p>'));
+assert.match(html, /role="switch" aria-checked="true" data-dexoption="trackForms"/);
+assert.match(html, /role="switch" aria-checked="false" data-dexoption="trackGenders"/);
+assert.match(html, /<b>Forms<\/b><\/span>/);
+assert.match(html, /<b>Genders<\/b><\/span>/);
+current.view = 'dexonly';
+custom();
+assert(elements['#sheetbody'].innerHTML.includes('data-dexoption="trackForms"'));
+assert(elements['#sheetbody'].innerHTML.includes('data-dexoption="trackGenders"'));
+console.log('Forms/Genders options, eligibility, tiles and preserved data ok');
+const optionClick = app.slice(app.indexOf('  } else if (d.dexoption'), app.indexOf('  } else if (d.showlater')).replace(/^  } else /, '') + '\n}';
+const toggleOption = runInNewContext('(function(d, r) { ' + optionClick + ' })');
+current.forms.add('unown-b');
+current.genders[25] = new Set(['f']);
+const collections = () => JSON.stringify({ forms: [...current.forms], genders: [...current.genders[25]] });
+const beforeOptions = collections();
+toggleOption({ dexoption: 'trackForms' }, current);
+toggleOption({ dexoption: 'trackGenders' }, current);
+assert.equal(current.trackForms, false);
+assert.equal(current.trackGenders, true);
+assert.equal(collections(), beforeOptions);
+const switched = api.loadRun(row, api.dumpRun(current));
+assert.equal(switched.trackForms, false);
+assert.equal(switched.trackGenders, true);
+assert(switched.forms.has('unown-b'));
+assert(switched.genders[25].has('f'));
