@@ -172,45 +172,52 @@ if (import.meta.env.PROD && "serviceWorker" in navigator) {
     .catch(() => {});
 }
 let clerkReady: Promise<void> | undefined;
+const downloadClerk = () => Promise.all([
+  import("@clerk/clerk-js"),
+  import("@clerk/ui"),
+]);
 const loadClerk = () =>
   (clerkReady ??= (async () => {
     try {
-      const [{ Clerk }, { ui }] = await Promise.all([
-        import("@clerk/clerk-js"),
-        import("@clerk/ui"),
-      ]);
-      clerk = new Clerk(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
-      await clerk.load({ ui });
-      if (/sso-callback/.test(location.pathname + location.hash))
-        await clerk.handleRedirectCallback({}, async () =>
-          history.replaceState(null, "", location.pathname + location.search),
-        );
-      clerk.addListener(({ user }) => onUser(user));
+      const [{ Clerk }, { ui }] = await downloadClerk();
+      const c = new Clerk(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
+      await c.load({ ui });
+      clerk = c;
     } catch (err) {
       clerkReady = undefined;
       console.warn("Sign-in is unavailable; playing as a guest", err);
       onUser(null);
+      return;
     }
+    try {
+      if (/sso-callback/.test(location.pathname + location.hash))
+        await clerk!.handleRedirectCallback({}, async () =>
+          history.replaceState(null, "", location.pathname + location.search),
+        );
+    } catch (err) {
+      console.warn("Sign-in redirect failed", err);
+    }
+    clerk!.addListener(({ user }) => onUser(user));
   })());
 if (expectsSession) {
   void loadClerk();
-  // ponytail: fixed wait before falling back to guest play; a slow sign-in
-  // that finishes later still signs the user in.
   setTimeout(() => userId === undefined && onUser(null), 10000);
 }
 
-const preloadClerk = () => {
-  if (!clerkReady) void loadClerk();
-};
+let preloadTried = false;
 const appRoot = document.getElementById("app")!;
 for (const event of ["pointerover", "focusin", "touchstart"]) {
   appRoot.addEventListener(event, (e) => {
-    if (e.target instanceof Element && e.target.closest("[data-signinsheet]"))
-      preloadClerk();
+    if (preloadTried) return;
+    if (e.target instanceof Element && e.target.closest("[data-signinsheet]")) {
+      preloadTried = true;
+      void loadClerk();
+    }
   }, { passive: true });
 }
+const preloadDownload = () => { void downloadClerk().catch(() => {}); };
 if ("requestIdleCallback" in window) {
-  window.requestIdleCallback(preloadClerk);
+  window.requestIdleCallback(preloadDownload, { timeout: 5000 });
 } else {
-  setTimeout(preloadClerk, 2000);
+  setTimeout(preloadDownload, 4000);
 }
