@@ -16,7 +16,7 @@ from urllib.parse import unquote
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 POKEAPI = os.path.join(ROOT, ".cache", "pokeapi")
 WIKI = os.path.join(ROOT, ".cache", "bulbapedia")
-PACKS = ["crystal", "hgss", "frlg"]
+PACKS = ["crystal", "hgss", "frlg", "usum"]
 
 
 def nice(slug):
@@ -51,10 +51,11 @@ def areas(pack):
 
 def candidates(area, pack):
     """Bulbapedia titles to try for an area, most specific first."""
-    a = area.replace(" Of ", " of ").replace("Pokemon", "Pokémon")
+    a = area.replace(" Of ", " of ").replace(" The ", " the ").replace("Pokemon", "Pokémon")
     for x, y in [("Ss Anne", "S.S. Anne"), ("Dragons Den", "Dragon's Den"), ("Digletts", "Diglett's"),
                  ("Team Rocket Hq", "Team Rocket HQ"), ("Silph Co", "Silph Co."), ("Kirks House", "Kirk's House"),
-                 ("Bills House", "Bill's House"), ("Groundon", "Groudon")]:
+                 ("Bills House", "Bill's House"), ("Groundon", "Groudon"), ("Hauoli", "Hau'oli"), ("Ulaula", "Ula'ula"),
+                 ("Kalae", "Kala'e"), ("Team Rockets Castle", "Team Rocket's Castle"), ("Trainers School", "Trainers' School")]:
         a = a.replace(x, y)
     route = re.match(r"(?:Sea )?Route (\d+)", a)
     if route:
