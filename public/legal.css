@@ -29,6 +29,8 @@ li + li { margin-top: 8px; }
 .updated { margin-top: 28px; font-size: 13px; color: var(--soft); }
 footer { margin-top: 28px; text-align: center; color: var(--soft); }
 footer a { color: inherit; text-underline-offset: 2px; }
+.balls { display: flex; justify-content: center; gap: 10px; color: var(--accent); }
+.balls svg { width: 16px; height: 16px; fill: var(--surface); stroke: currentColor; stroke-width: 2.4; }
 .footer-brand { margin: 0; }
 .footer-brand a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 8px; font-family: "Luckiest Guy", ui-rounded, system-ui, sans-serif; font-size: 18px; text-decoration: none; }
 .foot { margin: 12px 0 0; font-size: 12px; line-height: 1.4; }

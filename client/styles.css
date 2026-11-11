@@ -69,11 +69,34 @@ html,body{margin:0;background:var(--bg)}
 .app button,.app select{font:inherit;color:inherit;cursor:pointer}
 .app :focus-visible{outline:3px solid var(--teal);outline-offset:2px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.top{display:flex;align-items:center;gap:8px;margin-bottom:14px}
-.logo{display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:-.01em;font-size:17px}
-@media (max-width:440px){.logo .full{font-size:16px;line-height:1.05}}
+.top{display:flex;align-items:center;gap:8px;margin-bottom:14px;position:relative}
+.logo{display:flex;align-items:center;gap:8px;min-width:0;font-size:19px}
+.top:has(.acct) .logo{font-size:17px}
 .spacer{flex:1}
-.app .hdr-signup{border:2px solid var(--teal);background:transparent;color:var(--teal);border-radius:12px;min-height:44px;padding:0 14px;font-size:13px;font-weight:800;white-space:nowrap}
+#topright{display:flex;align-items:center;gap:8px;flex:none}
+.toptabs{display:none}
+.acct{display:flex;align-items:center;background:var(--surface);border-radius:999px}
+.app .acct .signin{border:0;background:none;min-height:44px;padding:0 8px 0 14px;font-weight:800;font-size:14px;color:var(--teal);white-space:nowrap;border-radius:999px}
+.gsw>summary{list-style:none;display:flex;align-items:center;gap:8px;min-height:44px;border-radius:12px;cursor:pointer;position:relative;font-weight:800;font-size:14px}
+.gsw>summary::-webkit-details-marker{display:none}
+.gsw .cover{width:44px;height:44px;border-radius:10px;border:0}
+.gsw .gname{display:none}
+.gchev{display:grid;place-items:center;position:absolute;right:-4px;bottom:-2px;width:18px;height:18px;border-radius:50%;background:var(--surface);box-shadow:0 0 0 1px var(--line)}
+.gchev svg{width:9px;height:6px}
+.gsw .menu{position:absolute;top:calc(100% + 6px);right:0;width:250px;max-width:100%;max-height:min(70vh,480px);overflow:auto;background:var(--surface);border-radius:18px;padding:6px;z-index:6;box-shadow:0 8px 28px rgba(0,0,0,.18),0 0 0 1px var(--line)}
+.app .gsw .menu button{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;min-height:56px;padding:6px 10px 6px 6px;border-radius:12px;text-align:left;font-weight:800;font-size:15px}
+.app .gsw .menu button:hover,.gsw .menu button[aria-current]{background:var(--teal-soft)}
+.gsw .menu .grow{flex:1;min-width:0}
+.gsw .menu small{display:block;font-size:12.5px;font-weight:700;color:var(--soft)}
+.gtick{color:var(--teal);font-size:16px}
+.app .gsw .menu .all{min-height:44px;justify-content:center;color:var(--soft);font-size:14px;border-top:1px solid var(--line);border-radius:0 0 12px 12px;margin-top:4px}
+.app .notnow{width:100%;margin-top:14px}
+.ftr{margin-top:36px;display:grid;justify-items:center;text-align:center}
+.loading .ftr{display:none}
+.falert{display:flex;align-items:center;gap:8px;background:var(--surface);border-radius:999px;padding:0 6px 0 16px;font-size:13px;font-weight:700;color:var(--soft);margin-bottom:18px}
+.app .falert button{border:0;background:none;min-height:44px;padding:0 10px;font-weight:800;font-size:13px;color:var(--teal);border-radius:999px}
+.balls{display:flex;gap:10px;color:var(--teal)}
+.balls svg{width:16px;height:16px;fill:var(--surface);stroke:currentColor;stroke-width:2.4}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
 .muted{color:var(--soft)} .small{font-size:13px}
 h2{font-size:20px;margin:0;letter-spacing:-.01em;font-weight:800} h3{font-size:15px;margin:0;font-weight:800}
@@ -140,8 +163,7 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .tabbar button[aria-current=page] svg{background:var(--teal-soft);color:var(--teal)}
 .toast{background:var(--ink);color:var(--bg);border-radius:14px;padding:6px 6px 6px 16px;display:flex;gap:12px;align-items:center;font-weight:700;z-index:4;white-space:nowrap}
 .toast button{border:0;background:var(--bg);color:var(--ink);border-radius:10px;min-height:44px;padding:0 14px;font-weight:800}
-.foot{font-size:12px;color:var(--soft);margin-top:24px;text-align:center}
-.loading .foot,.loading .footnav,.loading .footer-brand{display:none}
+.foot{font-size:12px;color:var(--soft);max-width:560px}
 .foot a,.doc a{color:inherit;text-decoration:underline;text-underline-offset:2px}
 .footnav{display:flex;justify-content:center;gap:4px;margin-top:6px}
 .app .footnav button{border:0;background:transparent;color:var(--soft);font-size:13px;font-weight:700;min-height:44px;padding:0 10px;text-decoration:underline;text-underline-offset:2px}
@@ -169,12 +191,19 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 @media (max-width:440px){#clerk-signin .cl-form{grid-template-columns:minmax(0,1fr);gap:12px}#clerk-signin .cl-form>div:has(.cl-formButtonPrimary){padding-top:0;align-items:flex-end}#clerk-signin .cl-formButtonPrimary{width:auto}}
 .gamelist button[disabled]{cursor:default;color:var(--soft)}
 @media (min-width:960px){
-  .dock{position:absolute;top:24px;bottom:auto;left:50%;right:auto;transform:translateX(-50%);width:auto;margin:0}
-  .tabbar{box-shadow:none;display:flex;gap:4px;background:transparent;border:0;padding:0}
-  .tabbar button{min-height:40px;padding:0 14px;border-radius:10px;font-size:15px}
-  .tabbar svg,.tabbar .tab-settings{display:none}
-  .tabbar button[aria-current=page]{background:var(--teal-soft);color:var(--ink)}
-  .top{margin-bottom:28px}
+  .dock{bottom:24px}
+  #tabs{display:none}
+  .top{margin-bottom:28px;gap:12px}
+  .logo,.top:has(.acct) .logo{font-size:26px}
+  .toptabs{display:flex;gap:4px;margin-left:20px}
+  .app .toptabs button{border:0;background:transparent;min-height:44px;padding:0 14px;border-radius:10px;font-weight:700;font-size:15px;color:var(--soft)}
+  .app .toptabs button[aria-current=page]{background:var(--teal-soft);color:var(--ink)}
+  .gsw{position:relative}
+  .gsw>summary{background:var(--surface);padding:4px 14px 4px 4px}
+  .gsw>summary .cover{width:36px;height:36px;border-radius:8px}
+  .gsw .gname{display:inline}
+  .gsw .gchev{position:static;background:none;box-shadow:none;width:12px;margin-left:-2px}
+  .gsw .menu{max-width:none}
 }
 
 /* Next-catch card */
@@ -206,9 +235,9 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .about-intro{text-align:center;margin:24px auto 28px;max-width:600px}
 .doc .about-wordmark{font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-size:clamp(36px,6vw,56px);font-weight:400;line-height:1.02;letter-spacing:.01em;color:var(--teal);margin:0 0 28px}
 .about-wordmark span{display:block}
-.footer-brand{display:flex;justify-content:center;margin-top:28px}
+.footer-brand{display:flex;justify-content:center;margin-top:2px}
 .app .footer-brand button{display:block;padding:0 8px;min-height:44px;border:0;background:transparent;color:var(--soft);font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-size:18px;font-weight:400;line-height:1.2;cursor:pointer}
-.footer-brand+.foot{margin-top:12px}
+.footer-brand+.foot{margin-top:4px}
 
 .logo .full{font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-weight:400;letter-spacing:.01em;line-height:1.1}
 
@@ -233,7 +262,6 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .empty{text-align:center;padding:12px 0 8px}.empty h2{font-size:28px;margin-bottom:16px}.empty .muted{margin:16px 0 0}
 @media (prefers-reduced-motion:reduce){.app .game-tile{transition:none}.app .game-tile:hover{transform:none}}
 .app button.logo{border:0;background:none;padding:0;color:inherit;text-align:left}
-.app .gamepill{border:0;background:none;padding:0;display:grid;place-items:center;min-width:44px;min-height:44px}.gamepill .cover{width:44px;height:44px;border-radius:10px}
 .ptmenu{position:relative}.ptmenu>summary{list-style:none;display:grid;place-items:center;width:44px;height:44px;border-radius:12px;cursor:pointer;font-weight:800;color:var(--soft)}.ptmenu>summary::-webkit-details-marker{display:none}.ptmenu[open]>summary{background:var(--teal-soft)}
 .ptmenu .menu{position:absolute;right:0;top:calc(100% + 4px);z-index:5;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;box-shadow:0 8px 24px rgba(0,0,0,.15)}
 .ptmenu .menu{display:grid}.app .ptmenu .menu button{border:0;background:none;white-space:nowrap;min-height:44px;padding:0 14px;border-radius:9px;font-weight:700;text-align:left}.app .ptmenu .menu button:hover{background:var(--teal-soft)}.app .ptmenu .menu [data-delrun]{color:var(--coral)}.app .ptmenu .menu [data-delrun]:hover{background:var(--coral-soft)}
