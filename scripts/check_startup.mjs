@@ -13,12 +13,13 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
     loaded = false;
     async load() { await loaded; this.loaded = true; }
     user = user;
+    session = user && {getToken: async () => 'token'};
     addListener(fn) { fn({user}); }
     mountSignIn(el) { mounted.push(el); }
     unmountSignIn() {}
   }
   class ConvexClient {
-    setAuth(token, onAuth) { onAuth(!!user); }
+    setAuth(token, onAuth) { Promise.resolve(token({})).then(t => onAuth(!!t)); }
     onUpdate() { return () => {}; }
   }
   let giveUp;
@@ -47,6 +48,8 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
     giveUp();
     assert.equal(bridges.at(-1).auth.isLoading,false,'a stalled sign-in must fall back to guest play');
     if (user) {
+      await new Promise(setImmediate);
+      assert.equal(bridges.at(-1).auth.isAuthenticated,false,'the fallback must be guest play, not signed in');
       release();
       await new Promise(setImmediate);
       assert.equal(bridges.at(-1).auth.isAuthenticated,true,'a slow sign-in must still finish after the fallback');
