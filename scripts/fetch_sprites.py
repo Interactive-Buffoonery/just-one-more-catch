@@ -22,6 +22,13 @@ ITEMS = {"old-rod": "old-rod", "good-rod": "good-rod", "super-rod": "super-rod",
          "rock-smash": "tm-fighting", "surf": "tm-water", "whirlpool": "tm-water", "waterfall": "tm-water", "strength": "tm-normal", "rock-climb": "tm-normal", "bicycle": "bicycle"}
 
 
+def form(n, game):
+    """The sprite id for species n: the pack's form from "forms" (Alolan Rattata is 10091), else n."""
+    load = lambda name: json.load(open(os.path.join(ROOT, ".cache", "pokeapi", name + ".json")))
+    ids = [v["pokemon"]["url"].rstrip("/").split("/")[-1] for v in load(f"pokemon_species_{n}")["varieties"]]
+    return next((i for i in ids if load(f"pokemon_{i}")["name"] in game.get("forms", [])), n)
+
+
 def fetch(job):
     url, path = job
     if os.path.exists(path):
@@ -45,9 +52,9 @@ if __name__ == "__main__":
     jobs = [(f"{BASE}badges/{i + 1}.png", os.path.join(ROOT, "public", "badges", f"{b.lower()}.png")) for i, b in enumerate(BADGES)]
     jobs += [(f"{BASE}items/{src}.png", os.path.join(ROOT, "public", "items", f"{key}.png")) for key, src in ITEMS.items()]
     for pack, path in ART.items():
-        count = json.load(open(os.path.join(ROOT, "data", pack + ".json")))["species"]
+        game = json.load(open(os.path.join(ROOT, "data", pack + ".json")))
         for shiny in ("", "shiny/"):
-            jobs += [(f"{BASE}{path}{shiny}{n}.png", os.path.join(ROOT, "public", "sprites", pack, shiny, f"{n}.png")) for n in range(1, count + 1)]
+            jobs += [(f"{BASE}{path}{shiny}{form(n, game)}.png", os.path.join(ROOT, "public", "sprites", pack, shiny, f"{n}.png")) for n in range(1, game["species"] + 1)]
     with ThreadPoolExecutor(4) as ex:  # ponytail: 4 workers, same fair-use pace as fetch_pokeapi.py
         list(ex.map(fetch, jobs))
     print(len(jobs), "sprites in public/")

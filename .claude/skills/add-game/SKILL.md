@@ -21,6 +21,7 @@ Falkner through Route 36. Do not repeat that.
 | Per-Pokémon gates: `row_needs` | `data/<pack>.json` | Bulbapedia gift, legendary and location pages (tiebreakers in `SOURCES.md`) |
 | `hm`: badge that lets each HM be used outside battle | `client/packs.ts` | Bulbapedia `Badge` page for that game |
 | `rename`, `drop`, `drop_methods`, `methods` | `data/<pack>.json` | PokeAPI area names, checked against the game |
+| `forms`: the form a species takes in this game (`"rattata-alola"`), for its types and sprite. Every form's encounters count either way. | `data/<pack>.json` | PokeAPI form names, checked against Bulbapedia |
 | Badges and leaders, HM items, `start`, `starters`, `safari`, `nightFrom`, dex sizes, box counts | `client/packs.ts` | Bulbapedia game, gym and mechanic pages (time of day, PC boxes) |
 
 ## Data format

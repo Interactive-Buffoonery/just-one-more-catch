@@ -1,4 +1,4 @@
-"""Fetch HeartGold/SoulSilver data from PokeAPI into .cache/pokeapi.
+"""Fetch every pack's species data from PokeAPI into .cache/pokeapi.
 
 Run by hand when the data needs a refresh. Every response is cached on disk,
 so reruns only fetch what's missing. The site never calls PokeAPI.
@@ -35,14 +35,15 @@ def get(url):
 
 def species(n):
     sp = get(f"{API}pokemon-species/{n}")
-    get(f"{API}pokemon/{n}")
-    get(f"{API}pokemon/{n}/encounters")
+    for v in sp["varieties"]:  # alternate forms (Alolan Rattata) have their own encounters and types
+        get(v["pokemon"]["url"])
+        get(v["pokemon"]["url"] + "encounters")
     get(sp["evolution_chain"]["url"])
 
 
 if __name__ == "__main__":
-    for dex in (2, 3, 7):  # Kanto, original Johto, HGSS Johto
+    for dex in (2, 3, 7, 21):  # Kanto, original Johto, HGSS Johto, USUM Alola
         get(f"{API}pokedex/{dex}")
     with ThreadPoolExecutor(4) as ex:  # ponytail: 4 workers keeps us well inside PokeAPI fair use
-        list(ex.map(species, range(1, 494)))
+        list(ex.map(species, range(1, 808)))
     print("cached", len(os.listdir(CACHE)), "responses")

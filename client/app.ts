@@ -112,6 +112,12 @@ const METHOD: Record<string, [string, string | null]> = {
   "roaming-grass": ["Roaming", null],
   "squirt-bottle": ["SquirtBottle", null],
   pokeflute: ["Poké Flute", null],
+  fishing: ["Fishing", "fishing-rod"],
+  "bubbling-spots": ["Bubbling fishing spot", "fishing-rod"],
+  "sos-from-bubbling-spot": ["SOS at a bubbling spot", "fishing-rod"],
+  sos: ["SOS call", null],
+  "island-scan": ["Island Scan", null],
+  "berry-trees": ["Berry tree", null],
 };
 const ONE_TIME = new Set([
   "gift",
@@ -140,6 +146,7 @@ const OK_COND: Record<string, string> = {
   "headbutt-tree-rare": "Rare tree",
   "story-progress-zephyr-badge": "After Zephyr Badge",
   "story-progress-national-dex": "After the Elite Four",
+  "story-progress-hall-of-fame": "After the Elite Four",
 };
 const STORY: Record<string, string> = {
   "story-progress-beat-red": "After beating Red",
@@ -161,6 +168,8 @@ const STORY: Record<string, string> = {
   "story-progress-beat-elite-four-round-two": "After the Elite Four rematch",
   "item-old-amber": "Bring the Old Amber",
   "first-party-pokemon-high-friendship": "Lead Pokémon has high friendship",
+  "story-progress-beat-olivias-trial": "After Olivia's grand trial",
+  "other-scan-qr-code": "Scan its QR code",
 };
 const cap = (s: string) => s[0].toUpperCase() + s.slice(1);
 function specialLabel(c: string) {
@@ -175,6 +184,8 @@ function specialLabel(c: string) {
       cap(c.slice(6)).replace(/-(m|f)$/, (_, g) => (g === "m" ? " ♂" : " ♀"))
     );
   if (c.startsWith("starter-")) return "If you chose " + cap(c.slice(8));
+  m = c.match(/^other-(\w+)-(\w+)-in-party$/);
+  if (m) return `${cap(m[1])} and ${cap(m[2])} in your party`;
   return cap(c.replace(/-/g, " "));
 }
 const coinLabel = (c: string) => {
@@ -477,6 +488,7 @@ function rowStatus(r: Row): { s: string; why?: string; need?: string } {
     return { s: "later", why: "Opens with Zephyr Badge" };
   if (
     (r.cond.includes("story-progress-national-dex") ||
+      r.cond.includes("story-progress-hall-of-fame") ||
       r.cond.includes("other-snorlax-11-beat-league")) &&
     !e4()
   )
