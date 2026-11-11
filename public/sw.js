@@ -37,6 +37,7 @@ self.addEventListener("fetch", (e) => {
   const url = new URL(req.url);
   if (req.method !== "GET" || url.origin !== location.origin) return;
   if (req.mode === "navigate") {
+    // Static pages including /about/, /privacy/ and /terms/ use the network.
     // The app page: network first so a deploy shows up at once, cached copy when offline.
     if (url.pathname !== "/") return;
     e.respondWith(
