@@ -649,6 +649,5 @@ button.gb:is(:hover,:focus-visible) .bx{rotate:0deg;translate:0 -10px;box-shadow
 .pickbody>.gb{margin:28px 0 38px}
 .pickbody .hv-actions{flex-wrap:wrap;justify-content:center;width:100%}
 .pickbody>h2.lg{font-size:30px;line-height:1;margin:0 0 18px}
-.pickbody .app-quiet{white-space:nowrap}
 @media (min-width:640px){.pickbody{--w:220px}}
 @media (max-width:639px){.pickbody .hv-actions>*{flex:1 1 100%}}
