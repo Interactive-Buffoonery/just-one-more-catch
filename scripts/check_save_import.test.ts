@@ -43,6 +43,23 @@ describe("guest caught-list imports", () => {
     expect(track).toHaveBeenCalledWith("guest_run_created", "heartgold");
   });
 
+  it("persists the selected start date and rejects changing it during retry", async () => {
+    const { guest, guestRows, storage } = await setup();
+    const startedAt = new Date(2010, 2, 14).getTime();
+    const id = await guest.importRun("heartgold", [25], importId, startedAt);
+    expect(guestRows()[0].createdAt).toBe(new Date(startedAt).toISOString());
+    expect(await guest.importRun("heartgold", [25], importId, startedAt)).toBe(id);
+    await expect(guest.importRun("heartgold", [25], importId, startedAt + 864e5)).rejects.toThrow("Import ID already used");
+    await expect(guest.importRun("heartgold", [25], importId)).rejects.toThrow("Import ID already used");
+    expect(storage.setItem).toHaveBeenCalledTimes(1);
+  });
+
+  it.each([NaN, Infinity, -1, 1.5, Date.now() + 3 * 864e5])("rejects invalid start dates before writing storage: %s", async startedAt => {
+    const { guest, storage } = await setup();
+    await expect(guest.importRun("heartgold", [25], importId, startedAt)).rejects.toThrow("Pick a past date");
+    expect(storage.setItem).not.toHaveBeenCalled();
+  });
+
   it("rejects failed storage without creating a phantom in-memory run", async () => {
     const { storage, guest, guestRows, refresh, track } = await setup();
     storage.setItem.mockImplementation(() => { throw new Error("Quota exceeded"); });

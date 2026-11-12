@@ -22,6 +22,11 @@ export function validateImportId(importId: string): void {
     throw new Error("Invalid import ID");
 }
 
+export function validateImportStart(startedAt: number | undefined): void {
+  if (startedAt !== undefined && (!Number.isSafeInteger(startedAt) || startedAt < 0 || startedAt > Date.now() + 864e5))
+    throw new Error("Pick a past date");
+}
+
 export function importCaughtState(version: string, caught: readonly number[]): string {
   if (!(VERSION_IDS as readonly string[]).includes(version)) throw new Error("Unknown game");
   const limit = IMPORT_SPECIES_LIMITS[version as VersionId];

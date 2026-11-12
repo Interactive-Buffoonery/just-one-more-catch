@@ -339,6 +339,10 @@ async function onClick(e: MouseEvent) {
     return;
   }
   if (d.tab) {
+    if (d.tab === "import") {
+      ui.sheet = null;
+      $("#sheet").close();
+    }
     ui.tab = d.tab;
     ui.undo = null;
     render();
@@ -695,6 +699,7 @@ function syncRuns() {
       pendingImport = false;
       if (IMPORT_PATH.test(location.pathname)) history.replaceState(null, "", "/?tab=dex");
       ui.tab = "dex";
+      ui.filter = "caught";
       useRun(want);
     } else useRun(want, true, true);
     return;
