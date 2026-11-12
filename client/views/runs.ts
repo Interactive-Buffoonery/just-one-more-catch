@@ -149,7 +149,7 @@ function miniCard(row: RunRow, r: Summary, at: string) {
   const v = verOf(row.version),
     p = v.pack,
     has = new Set(r.badges);
-  return `<div class="run" data-game="${row.version}"><button class="run-go" data-switch="${row.id}"><span class="blk">${cover(v)}</span><span class="run-body"><span class="who"><b class="lg">${v.name}${v.platform ? ` <span class="tag plain">${v.platform}</span>` : ""}</b><span class="meta">${p.region} · ${lastPlayed(at).replace(/^on /, "")}${champTag(r)}</span></span><span class="mini" aria-hidden="true">${badgeGroups(
+  return `<div class="run" data-game="${row.version}"><button class="run-go" data-switch="${row.id}"><span class="blk">${cover(v)}</span><span class="run-body"><span class="who"><b class="lg">${v.name}${v.platform ? ` <span class="tag plain">${v.platform}</span>` : ""}</b><span class="meta">${p.region} · Last played ${lastPlayed(at)}${champTag(r)}</span></span><span class="mini" aria-hidden="true">${badgeGroups(
     p,
   )
     .map(
