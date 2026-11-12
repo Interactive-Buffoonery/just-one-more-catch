@@ -3,12 +3,16 @@ import {readFileSync} from 'node:fs';
 import {stripTypeScriptTypes} from 'node:module';
 import {createContext, runInNewContext, SourceTextModule, SyntheticModule} from 'node:vm';
 const source = readFileSync(new URL('../client/main.ts', import.meta.url), 'utf8');
-async function run({failImport = false, cookie = '', search = '', user = null, signal = false} = {}) {
+async function run({failImport = false, cookie = '', search = '', user = null, signal = false, pathname = '/', contactStalled = false} = {}) {
   let release;
   const loaded = new Promise(r => release = r);
   const mounted = [];
   const bridges = [];
   const imports = [];
+  const contacts = [];
+  const redirects = [];
+  const mutations = [];
+  let authenticated = false;
   let constructed = 0;
   let loads = 0;
   class Element { closest() { return true; } }
@@ -25,11 +29,12 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
     unmountSignIn() {}
   }
   class ConvexClient {
-    setAuth(token, onAuth) { Promise.resolve(token({})).then(t => onAuth(!!t)); }
+    setAuth(token, onAuth) { Promise.resolve(token({})).then(t => { authenticated = !!t; onAuth?.(!!t); }); }
+    mutation(api, input) { mutations.push({input, authenticated}); return Promise.resolve({ok:true}); }
     onUpdate() { return () => {}; }
   }
   let giveUp;
-  const context = createContext({setTimeout:(fn,delay)=>{if(delay===10000)giveUp=fn;else if(delay===4000)idle=fn;},window:{},Element,console:{warn(){}},document:{cookie,getElementById:()=>({addEventListener(event, fn){listeners[event]=fn;}})},location:{hash:'',pathname:'/',search},history:{replaceState(){}}});
+  const context = createContext({clearTimeout(){},setTimeout:(fn,delay)=>{if(delay===10000)giveUp=fn;else if(delay===4000)idle=fn;},window:{},URLSearchParams,Element,console:{warn(){}},document:{cookie,getElementById:()=>({addEventListener(event, fn){listeners[event]=fn;}})},location:{hash:'',pathname,search,replace:url=>redirects.push(url)},history:{replaceState(){}}});
   const modules = new Map();
   function makeModule(name, exports) {
     if (!modules.has(name)) modules.set(name,new SyntheticModule(Object.keys(exports), function(){for (const [k,v] of Object.entries(exports)) this.setExport(k,v);},{context}));
@@ -39,6 +44,11 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
     context,
     initializeImportMeta(meta) {meta.env={VITE_CONVEX_URL:'https://example.convex.cloud',VITE_CLERK_PUBLISHABLE_KEY:'example'};},
     async importModuleDynamically(name) {
+      if (name === './app' || name === './contact') {
+        const exports = name === './app' ? {mount:(el,b)=>bridges.push(b),update:b=>bridges.push(b)} : {mountContact:send=>contacts.push(send)};
+        const m=makeModule(name,exports);
+        await m.link(()=>{}); await m.evaluate(); return m;
+      }
       imports.push(name);
       if (failImport) throw new Error('simulated blocked auth bundle');
       const m=makeModule(name,name==='@clerk/clerk-js'?{Clerk}:{ui:{}});
@@ -47,6 +57,37 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
   });
   await main.link(name=>makeModule(name,name==='convex/browser'?{ConvexClient}:name.endsWith('/api')?{api:{runs:{}}}:name==='./app'?{mount:(el,b)=>bridges.push(b),update:b=>bridges.push(b)}:{}));
   await main.evaluate();
+  await new Promise(setImmediate);
+  if (pathname === '/contact/') {
+    assert.equal(contacts.length,1,'the dedicated page must bind its form');
+    assert.equal(bridges.length,0,'Contact must not mount the tracker');
+    assert.equal(imports.length,0,'Contact must defer Clerk until a signed-in sender submits');
+    assert.equal(idle,undefined,'Contact must not schedule auth preloading');
+    if (!contactStalled) release();
+    const sent = contacts[0]({message:'Hello',email:'',website:''});
+    if (contactStalled) {
+      await new Promise(setImmediate);
+      giveUp();
+      await assert.rejects(sent,/timed out/);
+      assert.equal(mutations.length,0,'a stalled session must never send anonymously');
+    } else if (failImport && cookie) {
+      await assert.rejects(sent,/blocked auth/);
+      assert.equal(mutations.length,0,'a failed session must retain the message instead of sending anonymously');
+    } else {
+      await sent;
+      assert.equal(mutations.length,1);
+      assert.equal(mutations[0].authenticated,!!user,'signed-in messages must retain account ownership');
+      assert.equal(imports.length,cookie?2:0,'guest messages must not need Clerk');
+      assert.equal(mutations[0].input.message,'Hello');
+    }
+    return;
+  }
+  if (search === '?tab=contact') {
+    assert.deepEqual(redirects,['/contact/']);
+    assert.equal(bridges.length,0);
+    assert.equal(imports.length,0);
+    return;
+  }
   const bridge=bridges[0];
   assert.equal(imports.length>0,signal,signal?`${cookie||search} must load Clerk at startup`:`${cookie||'a guest'} must defer Clerk until idle or intent`);
   if (signal) {
@@ -117,6 +158,12 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
     assert.equal(bridges.at(-1).auth.isAuthenticated,false);
   }
 }
+await run({pathname:'/contact/'});
+await run({pathname:'/contact/',cookie:'__client_uat=1731300000'});
+await run({pathname:'/contact/',cookie:'__client_uat=1731300000',user:{id:'user_1'}});
+await run({pathname:'/contact/',cookie:'__client_uat=1731300000',failImport:true});
+await run({pathname:'/contact/',cookie:'__client_uat=1731300000',contactStalled:true});
+await run({search:'?tab=contact'});
 await run();
 await run({failImport:true});
 await run({user:{id:'user_1'}});

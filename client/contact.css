@@ -1,0 +1,25 @@
+.contact-page .lslab{min-height:144px;padding-top:34px}
+.contact-page .lslab h1{font-size:42px}
+.contact-page .lslab .partner{width:176px;bottom:-24px;right:10px}
+.contact-page .lbody{padding:28px}
+.contact-page .contact-intro{font-size:18px;line-height:1.5;margin-bottom:28px;max-width:410px}
+#contact-form{display:grid;gap:10px}
+#contact-form[hidden],#contact-success[hidden]{display:none}
+.contact-field{font-weight:750;font-size:15px}
+.contact-field span{font-weight:400;color:var(--soft)}
+#contact-form input,#contact-form textarea{width:100%;min-width:0;border:1px solid var(--soft);border-radius:12px;background:var(--bg);color:var(--ink);padding:12px 14px;font:inherit;line-height:1.5}
+#contact-form textarea{resize:vertical;min-height:164px;margin-bottom:12px}
+#contact-form input{min-height:48px}
+.contact-page button{min-height:48px;padding:12px 20px;border:0;border-radius:12px;font:inherit;font-weight:750;cursor:pointer}
+#contact-send{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:14px;justify-self:start;background:var(--pink);color:var(--on-pink)}
+#contact-send span{font-size:22px;line-height:1}
+.contact-page button:disabled{opacity:.65;cursor:wait}
+.contact-page :is(input,textarea,button):focus-visible{outline:3px solid var(--teal);outline-offset:3px}
+.contact-page .contact-trap{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+#contact-status{margin-top:16px;font-size:14px}
+#contact-status:empty{display:none}
+#contact-success{padding:12px 0}
+#contact-thanks{font-size:30px;font-weight:400;margin:0 0 12px}
+#contact-another{margin-top:12px;background:var(--teal-soft);color:var(--teal)}
+@media(max-width:480px){.contact-page .lbody{padding:22px}.contact-page .lslab{padding-left:22px}.contact-page .lslab .partner{width:144px;right:0}.contact-page .contact-intro{font-size:17px;margin-bottom:24px}#contact-send{justify-self:stretch}}
+@media(max-width:360px){.app .tabbar a{font-size:11px}}

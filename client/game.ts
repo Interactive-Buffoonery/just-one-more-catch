@@ -319,8 +319,6 @@ export const ui: any = {
   mode: "auto",
   saved: "",
   saving: false,
-  sent: false,
-  sendError: "",
   snooze: new Set<string>(),
 };
 export const store = {

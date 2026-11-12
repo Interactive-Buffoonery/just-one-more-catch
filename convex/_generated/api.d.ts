@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as contactSpam from "../contactSpam.js";
 import type * as email from "../email.js";
 import type * as events from "../events.js";
 import type * as runs from "../runs.js";
@@ -20,6 +21,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  contactSpam: typeof contactSpam;
   email: typeof email;
   events: typeof events;
   runs: typeof runs;
@@ -52,4 +54,6 @@ export declare const internal: FilterApi<
   FunctionReference<any, "internal">
 >;
 
-export declare const components: {};
+export declare const components: {
+  rateLimiter: import("@convex-dev/rate-limiter/_generated/component.js").ComponentApi<"rateLimiter">;
+};

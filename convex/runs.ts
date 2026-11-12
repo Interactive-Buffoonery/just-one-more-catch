@@ -7,7 +7,7 @@ import { summarize } from "../shared/summary";
 import { VERSION_IDS } from "../shared/versions";
 import { isAvatar } from "../shared/avatars";
 
-const EMAILS_PER_HOUR = 20;
+import { sendContact } from "./contactSpam";
 // Each run can carry up to MAX_RUN_BYTES, so batches stay well under the 16 MiB per-call read limit
 const BATCH = 16;
 
@@ -186,29 +186,8 @@ export const deleteAccount = mutation({
 
 export const contact = mutation({
   args: { email: v.string(), message: v.string(), website: v.optional(v.string()) },
-  handler: async (ctx, input) => {
-    if (input.website) return { ok: true };
-    const email = input.email.trim().slice(0, 200);
-    const message = input.message.trim().slice(0, 4000);
-    if (!message || (email && !email.includes("@"))) return { ok: false };
-    const sender = (await ctx.auth.getUserIdentity())?.tokenIdentifier ?? "anonymous";
-    const latest = await ctx.db
-      .query("messages")
-      .withIndex("by_sender", (q) => q.eq("sender", sender))
-      .order("desc")
-      .first();
-    if (latest?.message === message) return { ok: true };
-    await ctx.db.insert("messages", { sender, email, message });
-    await ctx.db.insert("events", { name: "contact_sent", owner: sender === "anonymous" ? undefined : sender });
-    // ponytail: soft global cap on notification emails; concurrent sends can slip a few past it, use @convex-dev/rate-limiter if that matters
-    const lastHour = await ctx.db
-      .query("messages")
-      .withIndex("by_creation_time", (q) => q.gt("_creationTime", Date.now() - 3_600_000))
-      .take(EMAILS_PER_HOUR + 1);
-    if (lastHour.length <= EMAILS_PER_HOUR)
-      await ctx.scheduler.runAfter(0, internal.email.notify, { email, message });
-    return { ok: true };
-  },
+  returns: v.object({ ok: v.boolean(), retryAfterSeconds: v.optional(v.number()) }),
+  handler: sendContact,
 });
 
 async function purgeEventsFor(ctx: MutationCtx, who: string) {

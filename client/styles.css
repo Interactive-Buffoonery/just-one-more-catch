@@ -596,17 +596,6 @@ button.gb:is(:hover,:focus-visible) .bx{rotate:0deg;translate:0 -10px;box-shadow
 .app .footer-brand a{display:inline-flex;align-items:center;min-height:44px;color:var(--soft);font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-size:18px;text-decoration:none}
 
 /* mirrors public/legal.css card; keep in sync */
-.contact-card.lb{max-width:640px;margin:0 auto;display:grid;gap:26px}
-.contact-card .lcard{background:var(--surface);border-radius:22px;overflow:hidden;container-type:inline-size}
-.contact-card .lslab{background:var(--pink);color:var(--on-pink);min-height:112px;padding:22px 24px;position:relative;overflow:hidden}
-.contact-card .lslab h1{position:relative;z-index:1;font-size:36px;line-height:1;margin:0}
-.contact-card .lslab .partner{position:absolute;right:0;bottom:-28px;width:clamp(120px,calc(75cqw - 96px),144px);height:auto;image-rendering:pixelated}
-.contact-card .lbody{padding:18px 24px 22px}
-.contact-card .lbody p{margin:0 0 10px;line-height:1.55}.contact-card .lbody p:last-child{margin-bottom:0}
-.contact-card .lg{font-family:"Luckiest Guy",system-ui,sans-serif;font-weight:400}
-.contact-card .contact-form{display:grid;gap:14px}
-.contact-card .contact-send{justify-self:start}
-.contact-card .field input,.contact-card .field textarea{border-color:var(--soft)}
 
 .tabbar.four{grid-template-columns:repeat(4,1fr)}
 .filters.three{grid-template-columns:repeat(3,1fr)}
