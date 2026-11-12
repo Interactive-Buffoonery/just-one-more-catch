@@ -13,7 +13,7 @@
     "build": "vite build && node scripts/build_game_pages.ts",
     "check": "tsc --noEmit && node scripts/check_view.mjs && node scripts/check_forms.mjs && node scripts/check_clock.ts && node scripts/check_csv.ts && node scripts/check_summary.ts && node scripts/check_starters.mjs && node scripts/check_dashboard.mjs && node scripts/check_sw.mjs && node scripts/check_sprites.mjs && node --experimental-vm-modules scripts/check_startup.mjs && node scripts/check_image_versions.mjs",
     "build:prod": "env -u VITE_CLERK_PUBLISHABLE_KEY vite build && node scripts/build_game_pages.ts && (grep -qE 'pk_live_[A-Za-z0-9]{20,}' dist/assets/*.js || (echo 'No live Clerk key in the build. Add .env.production (see the main checkout).' >&2; exit 1))",
-    "deploy": "(test -z \"$(git status --porcelain --ignored public)\" || (echo 'Uncommitted files in public/ would be deployed. Commit or remove them first.' >&2; exit 1)) && convex deploy --cmd 'pnpm build:prod' && wrangler deploy"
+    "deploy": "(test -z \"$(git status --porcelain --ignored public)\" || (echo 'Uncommitted files in public/ would be deployed. Commit or remove them first.' >&2; exit 1)) && convex deploy -y --cmd 'pnpm build:prod' && wrangler deploy"
   },
   "dependencies": {
     "@clerk/clerk-js": "^6.42.3",
