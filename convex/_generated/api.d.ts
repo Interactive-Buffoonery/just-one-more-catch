@@ -13,6 +13,7 @@ import type * as contactSpam from "../contactSpam.js";
 import type * as devices from "../devices.js";
 import type * as email from "../email.js";
 import type * as events from "../events.js";
+import type * as pairing from "../pairing.js";
 import type * as runs from "../runs.js";
 import type * as stats from "../stats.js";
 
@@ -28,6 +29,7 @@ declare const fullApi: ApiFromModules<{
   devices: typeof devices;
   email: typeof email;
   events: typeof events;
+  pairing: typeof pairing;
   runs: typeof runs;
   stats: typeof stats;
 }>;
