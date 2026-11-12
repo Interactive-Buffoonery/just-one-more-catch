@@ -35,18 +35,18 @@ export const cover = (
   cls = "",
   alt = `${v.name} box art`,
 ) =>
-  `<img class="cover ${cls}" src="${imageUrl(`/covers/${v.short.toLowerCase()}.jpg`)}" alt="${alt}" width="46" height="46">`;
+  `<img class="cover ${cls}" src="${imageUrl(`/covers/${v.cover ?? v.short.toLowerCase()}.jpg`)}" alt="${alt}" width="46" height="46">`;
 export const confirmGame = (id: string, customize = false) => {
   const v = verOf(id);
-  if (customize) return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">Customize your ${esc(v.name)} playthrough?</h2><div class="hv-actions"><button class="app-primary" data-custom="1">Customize</button><button class="app-quiet" data-close="1">Not now</button></div><p class="small muted">You can update your playthrough at any time using Customize on the Journey or Dex tab.</p></div>`;
-  return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">Start ${esc(v.name)}?</h2><div class="hv-actions"><button class="app-primary" data-confirmrun="${esc(id)}">Yes please!</button><button class="app-quiet" data-close="1">No thank you, just browsing!</button></div></div>`;
+  if (customize) return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">Customize your ${esc(v.name)}${v.platform ? ` (${esc(v.platform)})` : ""} playthrough?</h2><div class="hv-actions"><button class="app-primary" data-custom="1">Customize</button><button class="app-quiet" data-close="1">Not now</button></div><p class="small muted">You can update your playthrough at any time using Customize on the Journey or Dex tab.</p></div>`;
+  return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">Start ${esc(v.name)}${v.platform ? ` (${esc(v.platform)})` : ""}?</h2><div class="hv-actions"><button class="app-primary" data-confirmrun="${esc(id)}">Yes please!</button><button class="app-quiet" data-close="1">No thank you, just browsing!</button></div></div>`;
 };
 const gameChoices = (heading = "new-game-heading", regions = false) =>
   CONSOLES.map((console, index) =>
     `<h3 class="console" id="${heading}-${index}">${esc(console.name)}</h3><div class="slide s2"><div class="reel" role="group" aria-labelledby="${heading}-${index}">${console.games.map((game) => {
       if (typeof game !== "string") return `<div class="gb soon" role="group" style="--c:${game.color}" aria-label="${esc(game.name)}, Coming soon"><span class="bx"><img class="cover" src="${imageUrl(`/covers/${game.short.toLowerCase()}.jpg`)}" alt="" width="160" height="160"></span><b>${esc(game.name)}</b><span class="small muted">Coming soon</span></div>`;
       const v = VERSIONS[game];
-      return `<button class="gb" data-newrun="${game}" data-game="${game}"><span class="bx">${cover(v, "", "")}</span><b>${esc(v.name)}</b>${regions ? `<span class="small muted">${esc(v.pack.region)}</span>` : "<em>Start</em>"}</button>`;
+      return `<button class="gb" data-newrun="${game}" data-game="${game}"><span class="bx">${cover(v, "", "")}</span><b>${esc(v.name)}${v.platform ? `<span class="sr"> (${esc(v.platform)})</span>` : ""}</b>${regions ? `<span class="small muted">${esc(v.pack.region)}</span>` : "<em>Start</em>"}</button>`;
     }).join("")}</div></div>`
   ).join("");
 
@@ -126,7 +126,7 @@ function resumeCard(row: RunRow, r: Summary, at: string) {
   return `<article class="save" data-game="${row.version}">
     <div class="slab">${cover(v, "box")}<p class="last">Last played ${lastPlayed(at)}</p><button class="go lg" data-switch="${row.id}" aria-label="Continue ${v.name}">Continue</button></div>
     <div class="file">
-      <div class="file-head"><div><h2 class="lg">${v.name}</h2><p class="soft">${p.region} · Started ${longDay(startDay(row))}${champTag(r)}</p></div>${ptMenu(row, v)}</div>
+      <div class="file-head"><div><h2 class="lg">${v.name}${v.platform ? ` <span class="tag plain">${v.platform}</span>` : ""}</h2><p class="soft">${p.region} · Started ${longDay(startDay(row))}${champTag(r)}</p></div>${ptMenu(row, v)}</div>
       <div><p class="lead"><b>${badgeCount(row.version, r)}</b> of ${groups.flatMap(([, l]) => l).length} ${badgesWord(p)}</p>
         <div class="case">${groups
           .map(
@@ -148,7 +148,7 @@ function miniCard(row: RunRow, r: Summary, at: string) {
   const v = verOf(row.version),
     p = v.pack,
     has = new Set(r.badges);
-  return `<div class="run" data-game="${row.version}"><button class="run-go" data-switch="${row.id}"><span class="blk">${cover(v)}</span><span class="who"><b class="lg">${v.name}</b><span class="meta">${p.region} · ${lastPlayed(at).replace(/^on /, "")}${champTag(r)}</span></span><span class="mini" aria-hidden="true">${badgeGroups(
+  return `<div class="run" data-game="${row.version}"><button class="run-go" data-switch="${row.id}"><span class="blk">${cover(v)}</span><span class="who"><b class="lg">${v.name}${v.platform ? ` <span class="tag plain">${v.platform}</span>` : ""}</b><span class="meta">${p.region} · ${lastPlayed(at).replace(/^on /, "")}${champTag(r)}</span></span><span class="mini" aria-hidden="true">${badgeGroups(
     p,
   )
     .map(
@@ -189,12 +189,12 @@ export function switcher(id?: string | null) {
   const cur = bridge.runs?.find((r) => r.id === id);
   if (!cur) return "";
   const now = verOf(cur.version);
-  return `<details class="gsw"><summary data-k="gsw" aria-label="${now.name}. Switch playthrough">${cover(now, "", "")}<span class="gname">${now.name}</span>${CHEV}</summary><div class="menu">${recentRuns()
+  return `<details class="gsw"><summary data-k="gsw" aria-label="${now.name}${now.platform ? ` (${now.platform})` : ""}. Switch playthrough">${cover(now, "", "")}<span class="gname">${now.name}${now.platform ? ` <span class="tag plain">${now.platform}</span>` : ""}</span>${CHEV}</summary><div class="menu">${recentRuns()
     .map(({ row, r }) => {
       const v = verOf(row.version),
         b = badgeCount(row.version, r),
         on = row.id === id;
-      return `<button data-switch="${row.id}" data-stay="1" data-k="gsw"${on ? ` aria-current="true"` : ""}>${cover(v, "", "")}<span class="grow">${v.name}<small>${r.caught} caught · ${b} ${badgesWord(v.pack, b)}</small></span>${on ? `<span class="gtick" aria-hidden="true">✓</span>` : ""}</button>`;
+      return `<button data-switch="${row.id}" data-stay="1" data-k="gsw"${on ? ` aria-current="true"` : ""}>${cover(v, "", "")}<span class="grow">${v.name}${v.platform ? ` <span class="tag plain">${v.platform}</span>` : ""}<small>${r.caught} caught · ${b} ${badgesWord(v.pack, b)}</small></span>${on ? `<span class="gtick" aria-hidden="true">✓</span>` : ""}</button>`;
     })
     .join(
       "",

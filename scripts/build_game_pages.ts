@@ -49,7 +49,7 @@ const template = checked(readFileSync("scripts/game-page.html", "utf8"));
 const shell = checked(readFileSync("public/about/index.html", "utf8")).replace(' aria-current="page"', '');
 const summaryIcon = `<svg class="gchev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>`;
 for (const [slug, id, region] of games) {
-  const versions = Object.values(VERSIONS).filter(v => v.pack.art === id);
+  const versions = Object.values(VERSIONS).filter(v => v.pack.art === id && !v.platform);
   const pack = versions[0].pack;
   const data = (await import(`../client/data/${id}.ts`)).default;
   const title = versions.map(v => v.name).join(" and ");
@@ -99,7 +99,7 @@ for (const [slug, id, region] of games) {
   const places = data.chapters.reduce((n: number, ch: any) => n + ch.places.length, 0);
   let stat = 0;
   content = content.replace(/<dd>\d+<\/dd>/g, () => `<dd>${[mons.length, data.chapters.length, places][stat++]}</dd>`).replace('Track your HeartGold or SoulSilver run', esc(`Track your ${versions.map(v => v.name).join(' or ')} run`));
-  content = content.replace("{{chapters}}", chapters).replace(/Also: .*?<\/p>/s, `Also: ${games.filter(g => g[0] !== slug).map(g => `<a href="/${g[0]}/">${esc(Object.values(VERSIONS).filter(v => v.pack.art === g[1]).map(v => v.name).join(' and '))}</a>`).join(' · ')}</p>`);
+  content = content.replace("{{chapters}}", chapters).replace(/Also: .*?<\/p>/s, `Also: ${games.filter(g => g[0] !== slug).map(g => `<a href="/${g[0]}/">${esc(Object.values(VERSIONS).filter(v => v.pack.art === g[1] && !v.platform).map(v => v.name).join(' and '))}</a>`).join(' · ')}</p>`);
   const description = `Track which Pokémon you can catch next in ${title}, based on your ${pack.badgesWord ?? 'badges'}.`;
   let html = shell.replace(/<main.*?<\/main>/s, content).replace(/About \| Just One More Catch/g, esc(`Pokémon ${title} | Just One More Catch`)).replaceAll('https://justonemorecatch.app/about/', `https://justonemorecatch.app/${slug}/`).replaceAll('What Just One More Catch is, where its Pokémon data comes from, and who we thank.', esc(description)).replace('<link rel="stylesheet" href="/legal.css" />', '<link rel="stylesheet" href="/legal.css" />\n<link rel="stylesheet" href="/game.css" />');
   html = html.replace("</head>", '<link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/luckiest-guy/LuckiestGuy-Regular.woff2"></head>');

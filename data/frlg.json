@@ -1,9 +1,11 @@
 {
-  "versions": {"firered": "f", "leafgreen": "l"},
+  "versions": {"firered": "f", "leafgreen": "l", "firered-switch": "F", "leafgreen-switch": "L"},
+  "version_sources": {"firered-switch": "firered", "leafgreen-switch": "leafgreen"},
+  "area_versions": {"Birth Island": ["firered-switch", "leafgreen-switch"], "Navel Rock": ["firered-switch", "leafgreen-switch"]},
   "pokedex": 2,
   "species": 386,
   "gen": "generation-iii",
-  "drop": ["^Birth Island$", "^Navel Rock$", "^Pokecenter$", "^Altering Cave [B-I]$"],
+  "drop": ["^Pokecenter$", "^Altering Cave [B-I]$"],
   "drop_methods": ["colosseum-bonus-disc-jpn"],
   "rename": {
     "Route 2 South Towards Viridian City": "Route 2",
@@ -35,6 +37,8 @@
     "Viapos Chamber": "Tanoby Ruins"
   },
   "needs": {
+    "Birth Island": ["Elite Four"],
+    "Navel Rock": ["Elite Four"],
     "Route 17": {"needs": "bicycle", "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Route_17", "quote": "only people with [[Bicycle]]s or Motorcycles are permitted to travel on the road"},
     "Icefall Cave Waterfall": ["surf", "waterfall"],
     "Icefall Cave": "surf",
@@ -73,7 +77,7 @@
     {"title": "Seafoam, Cinnabar and the Power Plant", "needs": ["surf"], "places": ["Sea Route 20", "Sea Route 21", "Seafoam Islands", "Cinnabar Island", "Pokemon Mansion", "Power Plant"]},
     {"title": "Sevii Islands, One to Three", "needs": ["Volcano", "tri-pass"], "places": ["One Island", "Kindle Road", "Treasure Beach", "Mt. Ember", "Cape Brink", "Bond Bridge", "Three Isle Port", "Berry Forest"]},
     {"title": "Victory Road", "needs": ["Earth", "surf"], "places": ["Victory Road"]},
-    {"title": "After the Elite Four", "needs": ["Elite Four"], "places": []},
+    {"title": "After the Elite Four", "needs": ["Elite Four"], "places": ["Birth Island", "Navel Rock"]},
     {"title": "Sevii Islands, Four to Seven", "needs": ["Elite Four", "rainbow-pass"], "places": ["Four Island", "Icefall Cave", "Five Island", "Five Isle Meadow", "Memorial Pillar", "Resort Gorgeous", "Water Labyrinth", "Lost Cave", "Water Path", "Ruin Valley", "Green Path", "Outcast Island", "Altering Cave", "Pattern Bush", "Trainer Tower", "Canyon Entrance", "Sevault Canyon", "Tanoby Ruins"]},
     {"title": "The completed Sevii network", "needs": ["Elite Four", "network"], "places": ["Cerulean Cave", "Roaming Kanto"]}
   ],

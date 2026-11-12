@@ -27,6 +27,9 @@ from PokeAPI and needs no source.
 
 ## FireRed and LeafGreen
 
+- https://serebii.net/fireredleafgreen/nintendoswitch.shtml — Switch release; Aurora and Mystic Tickets after the Hall of Fame, opening Birth Island and Navel Rock from Vermilion.
+- https://www.nintendolife.com/news/2026/02/psa-pokemon-firered-and-leafgreen-switch-version-gives-you-the-mystic-ticket-and-aurora-ticket — confirms automatic tickets and Deoxys, Lugia and Ho-Oh.
+
 - https://bulbapedia.bulbagarden.net/wiki/Appendix:FireRed_and_LeafGreen_walkthrough
 - https://strategywiki.org/wiki/Pok%C3%A9mon_FireRed_and_LeafGreen
 - No guide PDF yet.
@@ -121,6 +124,10 @@ include those baselines, rather than asserting the species is locally caught.
 
 - FireRed North American box art, resized to a 160 × 160 JPEG:
   https://raw.githubusercontent.com/libretro-thumbnails/Nintendo_-_Game_Boy_Advance/master/Named_Boxarts/Pokemon%20-%20FireRed%20Version%20(USA%2C%20Europe).png
+
+- FireRed and LeafGreen for Nintendo Switch, the square cover cropped from each Nintendo eShop listing image and resized to 160 × 160:
+  https://www.nintendo.com/us/store/products/english-pokemon-firered-version-switch/
+  https://www.nintendo.com/us/store/products/english-pokemon-leafgreen-version-switch/
 
 ### Coming Soon box art
 

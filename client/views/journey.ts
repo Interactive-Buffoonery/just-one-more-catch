@@ -330,13 +330,13 @@ export function Journey() {
       const open = unlocked(i),
         cs = chapterSpots(all, i),
         n = open ? cs.left : uniq(chapterGroups(i)),
-        done = open && !n && !cs.later;
+        done = open && !n && !cs.later && !cs.once;
       const label = open
         ? [
             i === cur && "You are here",
             c.places.length &&
-              (n || cs.later
-                ? [n && `${n} to catch`, cs.later && `${cs.later} later`]
+              (n || cs.later || cs.once
+                ? [n && `${n} to catch`, cs.later && `${cs.later} later`, cs.once && `${cs.once} one-time`]
                     .filter(Boolean)
                     .join(" · ")
                 : "All caught"),

@@ -103,7 +103,7 @@ export async function caughtCsv(rows: RunRow[], states: string[]) {
     for (const n of caught) {
       const p = dex.get(n);
       lines.push([
-        v.name,
+        v.platform ? `${v.name} (${v.platform})` : v.name,
         startDay(r),
         r.id,
         n,

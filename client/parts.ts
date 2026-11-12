@@ -275,6 +275,10 @@ export function chapterSpots(
       .join(""),
     left: left.size,
     later: later.size,
+    // a chapter holding only one-time Pokémon (Birth Island, Navel Rock) counts them instead
+    once: list.every(([, s]) => !s.got && !s.now.length && !s.later.length)
+      ? new Set(list.flatMap(([, s]) => s.once.map((x) => x.p.n))).size
+      : 0,
   };
 }
 export const kitGroup = (title: string, keep: (id: string) => boolean) => {
