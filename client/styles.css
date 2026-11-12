@@ -318,6 +318,7 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .tslab.id{min-height:0;border-radius:16px;padding:18px 20px}
 .tslab.id h2{font-size:34px}
 .tslab.id p{margin:2px 0 0;max-width:calc(100% - 100px);overflow-wrap:anywhere;font-weight:600}
+.tslab.id p[data-long]{font-size:14px}
 .tslab.id .partner{width:128px;height:128px;bottom:-22px}
 .sechead{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .sechead span{color:var(--soft);font-size:14px}
