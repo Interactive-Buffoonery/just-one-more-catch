@@ -11,6 +11,21 @@ from PokeAPI and needs no source.
 3. **Official strategy guides**: scanned PDFs in Sarah's iCloud
    `game-guides/` folder. Read them with the `read-guide` skill.
 4. **Serebii**: last tiebreaker.
+5. **pret decompilations**: the games' own map scripts and event data, best
+   for what triggers a gift, trade or static encounter (flags and script
+   order). They don't show HM gates, which live in the map tiles. Clone them
+   and read with grep; never build them.
+   - https://github.com/pret/pokecrystal
+   - https://github.com/pret/pokefirered
+   - https://github.com/pret/pokeheartgold
+   - https://github.com/pret (Red/Blue, Yellow, Gold/Silver, Ruby/Sapphire,
+     Emerald, Diamond/Pearl, Platinum and more)
+6. **PokeDaisy** (https://github.com/lidor30/pokedaisy): an emulator
+   companion with tables generated from those decompilations (area items,
+   gifts and trades) for Gen 1 to 5 and many ROM hacks, under
+   `app/src/main/kotlin/com/pokedaisy/app/companion/data/`. Its hand-written
+   guide pages are AI-assisted and unverified, so use it to find the
+   decompilation script, not as the citation.
 
 ## Crystal
 

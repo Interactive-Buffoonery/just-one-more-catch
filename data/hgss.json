@@ -69,6 +69,8 @@
     {"id": "kanto-starter", "label": "Get a Kanto starter from Oak", "q": "Did Professor Oak give you a Kanto starter?", "chap": 16, "after": ["red"]},
     {"id": "tower-orb", "label": "Get the Blue or Red Orb", "q": "Did Mr. Pokémon give you the Blue Orb or Red Orb?", "chap": 16, "after": ["kanto-starter"]},
     {"id": "jade-orb", "label": "Get the Jade Orb", "q": "Did Professor Oak give you the Jade Orb?", "chap": 16, "after": ["tower-orb"]},
+    {"id": "surge-number", "label": "Get Lt. Surge’s number", "q": "Did Lt. Surge give you his number on Route 10?", "chap": 16},
+    {"id": "enigma-stone", "label": "Visit Steven in Pewter City", "q": "Did you see Steven in his Pewter City house after the Enigma Stone event?", "chap": 16, "after": ["kanto-starter"]},
     {"id": "arceus", "label": "Bring an event Arceus", "q": "Did you bring an event Arceus to the Ruins of Alph?", "chap": 16}
   ],
   "row_needs": [
@@ -101,6 +103,8 @@
     {"place": "Saffron City Silph Co", "n": 252, "m": "gift", "needs": ["kanto-starter"]},
     {"place": "Saffron City Silph Co", "n": 255, "m": "gift", "needs": ["kanto-starter"]},
     {"place": "Saffron City Silph Co", "n": 258, "m": "gift", "needs": ["kanto-starter"]},
+    {"place": "Saffron City Magnet Train Station", "n": 25, "m": "npc-trade", "needs": ["Boulder", "Cascade", "Thunder", "Rainbow", "Soul", "Marsh", "Volcano", "Earth", "surge-number"], "src": "https://github.com/pret/pokeheartgold/blob/master/files/fielddata/script/scr_seq/scr_seq_0834_T11R0601.s", "quote": "CheckRegisteredPhoneNumber PHONE_CONTACT_LT__SURGE; Lt. Surge registers on Route 10 only after FLAG_CAUGHT_ZAPDOS (scr_seq_0191_R10.s)"},
+    {"place": "Saffron City Silph Co", "n": 374, "m": "npc-trade", "needs": ["kanto-starter", "enigma-stone"], "src": "https://github.com/pret/pokeheartgold/blob/master/files/fielddata/script/scr_seq/scr_seq_0837_T11R0701.s", "quote": "GoToIfSet FLAG_GOT_HOENN_STARTER_FROM_STEVEN, _03E8 (the Beldum trade); Steven stays hidden at VAR_UNK_4130 4 until his Pewter house scene after the Enigma Stone sets 5 (scr_seq_0755_T03R0101.s)"},
     {"place": "Route 47", "n": 20, "m": "walk", "needs": ["surf", "waterfall"]},
     {"place": "Route 47", "n": 21, "m": "walk", "needs": ["surf", "waterfall"]},
     {"place": "Route 47", "n": 22, "m": "walk", "needs": ["surf", "waterfall"]},

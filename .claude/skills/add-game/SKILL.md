@@ -117,6 +117,8 @@ is hand-written, so it needs a source.
 
 Sources, in order: Bulbapedia (`Appendix:<Game>_walkthrough` and location
 pages), then StrategyWiki, the official guides and Serebii to break ties.
+For what triggers a gift, trade or static encounter, read the game's pret
+decompilation scripts (see `SOURCES.md`).
 `SOURCES.md` lists the pages and guide files for each game; add new ones there. Make sure a location page that covers
 several games is describing the one you're working on.
 
