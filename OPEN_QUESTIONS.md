@@ -48,7 +48,10 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
   `cp 2 ; Surfing?` / `jr z, .cannotFish`; map and collision files at the same
   revision. Tester check: try all outdoor water edges with a rod before Surf,
   then reach the cave-door shore with Surf and fish from land. No data change
-  was applied while the two reviews disagree.
+  was applied while the two reviews disagree. A subsequent independent Codex
+  reviewer confirmed the coordinator's Surf result against the original
+  Yellow maps and fishing script; the initial Claude verdict still conflicts,
+  so the access-audit disagreement policy keeps this on the tester checklist.
 
 - Independent `audit-access` reviewer passes have not run in this implementation
   worktree; the coordinator owns them. In particular, independently confirm the
@@ -95,6 +98,22 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
   or save-import UI was changed in this task.
 
 ## Gold and Silver (`gs`)
+
+- **Route 1 grass access:** batch 4 suggested a Cut requirement, but its
+  approach was not independently established. After normal western-Kanto
+  access, test both Viridian and Pallet approaches without Cut. Keep current
+  data until the grass requirement is resolved. The suggested early Kanto
+  shortcut is blocked by the east-door Black Belt in
+  [VictoryRoadGate.asm](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/VictoryRoadGate.asm),
+  whose object remains until `EVENT_FOUGHT_SNORLAX`.
+- **Audit terrain-model limitations:** a second review rejected proposed
+  earlier access to Ice Path B3F (fallen B2F boulders initially hidden),
+  Route 27 grass (mandatory Tohjo Falls cave warps), and western Kanto via
+  Victory Road Gate or Route 19 (Black Belt and construction rocks).
+  Existing gates remain. Mt. Mortar's Tyrogue platform still needs complete
+  independent proof: the no-Surf path in batch 4 walked behind an exterior
+  cave warp, which is not a valid path. These source/model checks were not
+  emulator or gameplay verification.
 
 - **Dark Cave Blackthorn-room earliest entrance:** the original scripts link
   Violet-room warp (17,1) to the Blackthorn room, and the Psypoke maps show
