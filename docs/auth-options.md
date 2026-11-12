@@ -20,8 +20,9 @@ phone or computer where they are already signed in.
 
 ### Clerk's Device Authorization Grant
 
-Clerk added this in September 2026, following RFC 8628. Its docs label it
-beta, so confirm availability with Clerk before planning around it.
+Clerk added this in September 2026, following RFC 8628. The current docs
+show no beta gate; confirm on our instance. Chosen approach; the full scope
+is in `device-sign-in.md`.
 
 - Setup: create a public OAuth application in Clerk and turn on
   `device_authorization_grant_enabled`, with scopes
@@ -41,8 +42,8 @@ beta, so confirm availability with Clerk before planning around it.
 - Client: a "Sign in with another device" screen that shows the code and QR
   code, polls, handles expiry, stores and refreshes tokens, and passes them to
   `convex.setAuth`. Sign-out and guest migration need the same path.
-- Size: about two to three days, plus time for beta access and testing on a
-  Retroid.
+- Size: see `device-sign-in.md` (CSP first, a half-day spike, then a 4 to 6
+  day build).
 
 ### Alternative: Clerk sign-in tokens
 
@@ -56,14 +57,12 @@ no polling.
 This needs the Clerk secret key in Convex, which the site doesn't use today.
 The pairing request also needs to be single-use, expire quickly and be rate
 limited. The size is similar to the device grant, with less new token
-handling and no beta dependency.
+handling, since the device gets a normal Clerk session.
 
 ## Recommendation
 
-Worth doing for Retroid players. Start with a half-day spike that signs a
-Retroid in through each approach and checks that it reaches the same account
-as the web. Pick the sign-in token approach if the device grant's tokens don't
-fit Convex cleanly.
+Build the device grant for Retroid players, following `device-sign-in.md`.
+Fall back to sign-in tokens only if the spike's exit criteria fail.
 
 ## Sources
 
