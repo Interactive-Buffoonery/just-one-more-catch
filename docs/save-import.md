@@ -23,6 +23,7 @@ Website game support is an explicit adapter in `client/save-import.ts`:
 | GD / SI | Gold / Silver (paired choice when both are candidates) |
 | C | Crystal |
 | FR / LG | FireRed / LeafGreen, with a GBA or Switch choice |
+| E | Emerald |
 | HG / SS | HeartGold / SoulSilver |
 | US / UM | Ultra Sun / Ultra Moon |
 
@@ -53,7 +54,7 @@ supports HeartGold/SoulSilver and Sun/Moon/Ultra Sun/Ultra Moon; only the websit
 supported packs can be imported. The source fields are PKHeX's `SecondsToStart`
 with its `DateUtil.GetDateTime2000` conversion. The reader checks each format's
 console calendar bounds and omits uninitialized zero values. Red/Blue/Yellow, Gold/Silver/Crystal and
-FireRed/LeafGreen provide no recorded date through this reader. Missing, invalid
+FireRed/LeafGreen and Emerald provide no recorded date through this reader. Missing, invalid
 or future dates use import day; the preview never invents a recorded date.
 
 The website converts the selected calendar day to local midnight, matching the
@@ -143,13 +144,23 @@ finish there. The UI reports that outcome instead of opening it in a new account
 5. Test the preview and created playthrough against the known fixture flags.
    Check invalid saves, unsupported packs, zero caught, cancellation, storage
    failure, limits, account changes and the existing playthrough remaining intact.
-6. Cut a committed reader release with a new package version. Build and test it,
-   verify `sourceDirty: false`, notices, source URLs, asset sizes and browser
+6. If reader code changes, cut a committed release with a new package version.
+   Build and test it; verify `sourceDirty: false`, notices, source URLs, asset sizes and browser
    startup. Pack it and replace the website dependency with the new tarball.
    Rebuild the lockfile. Keep each Cloudflare asset below its 25 MiB limit.
 7. Run the checks below and a real-file check when a player supplies a save.
    Keep personal saves outside Git and public fixtures. Deploy only through the
    normal manual deployment process.
+
+Emerald uses the existing reader 0.1.1 without a package change. Its serialized
+fixtures passed native detection, raw-bit comparison, the published WASM worker
+and the built website's guest import flow. The fixture checks cover 128 KiB
+`.sav` files and `.srm` drop, caught history after storage removal, an empty
+Pokédex, rotated sectors and choosing the newer save slot. The pinned parser
+rejects 64 KiB saves; Ruby/Sapphire remain unsupported website games. No personal
+Emerald save, live account import or mobile Safari check was performed.
+Reproduction instructions are in
+[the Emerald fixture README](../scripts/emerald-save-fixtures/README.md).
 
 ## Adding a ROM hack
 
