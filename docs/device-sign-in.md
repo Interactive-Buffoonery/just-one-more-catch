@@ -93,11 +93,13 @@ revoked per device. Background is in `auth-options.md`.
 
 ## Spike checks (first hour of testing on dev)
 
-1. **Required before deploying:** the `convex` JWT template on both dev and
-   production carries `sid` (`"sid": "{{session.id}}"`), and Convex exposes
-   it on the identity. `identityOf` treats a token without `sid` as signed
-   out. Keep the template's token lifetime under 10 minutes, the time
-   `revokedSessions` rows are kept.
+1. **Required before deploying:** Convex must get Clerk's session token, not
+   the `convex` JWT template. Clerk reserves `sid` and leaves it out of
+   template tokens. `sessionToken()` in `client/main.ts` already sends the
+   session token when it has `"aud": "convex"`, so the customized session
+   token on dev and production must keep that claim. Session tokens last 60
+   seconds, well inside the 10 minutes `revokedSessions` rows are kept.
+   `identityOf` treats a token without `sid` as signed out.
 2. Ticket sign-in works in the Retroid browser and the installed app, with no
    new-device or second-factor step in the way.
 3. The new session appears in `getSessions()` on the phone.
