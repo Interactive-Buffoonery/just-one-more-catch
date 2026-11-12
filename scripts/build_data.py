@@ -111,11 +111,14 @@ def matches(loc, k):
 
 def rows_for(encounters, version, n):
     merged = {}
+    source_version = GAME.get("version_sources", {}).get(version, version)
     for a in encounters:
-        if not any(v["version"]["name"] == version for v in a["version_details"]):
+        if not any(v["version"]["name"] == source_version for v in a["version_details"]):
             continue
         loc = nice(a["location_area"]["name"])
         if any(re.search(p, loc) for p in GAME["drop"]):
+            continue
+        if any(matches(loc, place) and version not in allowed for place, allowed in GAME.get("area_versions", {}).items()):
             continue
         key = next((k for k in GAME["needs"] if matches(loc, k)), None)
         area_need = as_list(GAME["needs"][key]) if key else []
@@ -123,7 +126,7 @@ def rows_for(encounters, version, n):
         place = base_place(loc)
         chap = chapter_of(place)
         for v in a["version_details"]:
-            if v["version"]["name"] != version:
+            if v["version"]["name"] != source_version:
                 continue
             for d in v["encounter_details"]:
                 src = d["method"]["name"]

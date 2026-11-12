@@ -126,7 +126,7 @@ function resumeCard(row: RunRow, r: Summary, at: string) {
   return `<article class="save" data-game="${row.version}">
     <div class="slab">${cover(v, "box")}<p class="last">Last played ${lastPlayed(at)}</p><button class="go lg" data-switch="${row.id}" aria-label="Continue ${v.name}">Continue</button></div>
     <div class="file">
-      <div class="file-head"><div><h2 class="lg">${v.name}</h2><p class="soft">${p.region} · Started ${longDay(startDay(row))}${champTag(r)}</p></div>${ptMenu(row, v)}</div>
+      <div class="file-head"><div><h2 class="lg">${v.name}${v.platform ? ` <span class="tag plain">${v.platform}</span>` : ""}</h2><p class="soft">${p.region} · Started ${longDay(startDay(row))}${champTag(r)}</p></div>${ptMenu(row, v)}</div>
       <div><p class="lead"><b>${badgeCount(row.version, r)}</b> of ${groups.flatMap(([, l]) => l).length} ${badgesWord(p)}</p>
         <div class="case">${groups
           .map(
@@ -148,7 +148,7 @@ function miniCard(row: RunRow, r: Summary, at: string) {
   const v = verOf(row.version),
     p = v.pack,
     has = new Set(r.badges);
-  return `<div class="run" data-game="${row.version}"><button class="run-go" data-switch="${row.id}"><span class="blk">${cover(v)}</span><span class="who"><b class="lg">${v.name}</b><span class="meta">${p.region} · ${lastPlayed(at).replace(/^on /, "")}${champTag(r)}</span></span><span class="mini" aria-hidden="true">${badgeGroups(
+  return `<div class="run" data-game="${row.version}"><button class="run-go" data-switch="${row.id}"><span class="blk">${cover(v)}</span><span class="who"><b class="lg">${v.name}${v.platform ? ` <span class="tag plain">${v.platform}</span>` : ""}</b><span class="meta">${p.region} · ${lastPlayed(at).replace(/^on /, "")}${champTag(r)}</span></span><span class="mini" aria-hidden="true">${badgeGroups(
     p,
   )
     .map(
@@ -194,7 +194,7 @@ export function switcher(id?: string | null) {
       const v = verOf(row.version),
         b = badgeCount(row.version, r),
         on = row.id === id;
-      return `<button data-switch="${row.id}" data-stay="1" data-k="gsw"${on ? ` aria-current="true"` : ""}>${cover(v, "", "")}<span class="grow">${v.name}<small>${r.caught} caught · ${b} ${badgesWord(v.pack, b)}</small></span>${on ? `<span class="gtick" aria-hidden="true">✓</span>` : ""}</button>`;
+      return `<button data-switch="${row.id}" data-stay="1" data-k="gsw"${on ? ` aria-current="true"` : ""}>${cover(v, "", "")}<span class="grow">${v.name}${v.platform ? ` <span class="tag plain">${v.platform}</span>` : ""}<small>${r.caught} caught · ${b} ${badgesWord(v.pack, b)}</small></span>${on ? `<span class="gtick" aria-hidden="true">✓</span>` : ""}</button>`;
     })
     .join(
       "",

@@ -27,6 +27,9 @@ from PokeAPI and needs no source.
 
 ## FireRed and LeafGreen
 
+- https://serebii.net/fireredleafgreen/nintendoswitch.shtml — Switch release; Aurora and Mystic Tickets after the Hall of Fame, opening Birth Island and Navel Rock from Vermilion.
+- https://www.nintendolife.com/news/2026/02/psa-pokemon-firered-and-leafgreen-switch-version-gives-you-the-mystic-ticket-and-aurora-ticket — confirms automatic tickets and Deoxys, Lugia and Ho-Oh. Switch picker cards reuse the original cover art.
+
 - https://bulbapedia.bulbagarden.net/wiki/Appendix:FireRed_and_LeafGreen_walkthrough
 - https://strategywiki.org/wiki/Pok%C3%A9mon_FireRed_and_LeafGreen
 - No guide PDF yet.

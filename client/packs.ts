@@ -41,6 +41,7 @@ export type Pack = {
   boxes: [count: number, size: number];
 };
 export type Version = {
+  platform?: string;
   name: string;
   short: string;
   code: string;
@@ -269,6 +270,16 @@ export const VERSIONS: Record<VersionId, Version> = {
     other: "Ultra Sun",
     ring: ["ghost", "dragon"],
   },
+  "firered-switch": {
+    name: "FireRed", short: "FR", code: "F", gen: "Gen 3",
+    platform: "Switch", pack: FRLG, other: "LeafGreen (Switch)",
+    ring: ["fire", "fighting"],
+  },
+  "leafgreen-switch": {
+    name: "LeafGreen", short: "LG", code: "L", gen: "Gen 3",
+    platform: "Switch", pack: FRLG, other: "FireRed (Switch)",
+    ring: ["grass", "bug"],
+  },
 };
 
 export const CONSOLES: { name: string; games: (VersionId | { name: string; short: string; color: string })[] }[] = [
@@ -310,4 +321,5 @@ export const CONSOLES: { name: string; games: (VersionId | { name: string; short
     "ultrasun",
     "ultramoon",
   ] },
+  { name: "Nintendo Switch", games: ["firered-switch", "leafgreen-switch"] },
 ];

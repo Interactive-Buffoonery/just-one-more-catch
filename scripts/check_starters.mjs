@@ -24,3 +24,9 @@ run.caught.add(2);
 assert.equal(status(rows[1]).why, 'Your starter');
 assert.equal(status(rows[1]).kind, 'starter');
 console.log('starter tags ok');
+const frlg = JSON.parse(readFileSync(new URL('../client/data/frlg.ts', import.meta.url), 'utf8').split('export default ')[1].trim().replace(/;$/, ''));
+for (const n of [249, 250, 386]) {
+  const rows = frlg.dex.find(p => p.n === n).rows;
+  for (const code of ['F', 'L']) assert.ok(rows.some(r => r.v.includes(code) && r.m === 'static' && r.need.includes('Elite Four')));
+  assert.ok(rows.every(r => !r.v.includes('f') && !r.v.includes('l')));
+}
