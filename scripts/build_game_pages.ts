@@ -33,6 +33,7 @@ const esc = (s: unknown) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<'
 const games = [
   ["red-blue", "rb", "Kanto"],
   ["yellow", "yellow", "Kanto"],
+  ["gold-silver", "gs", "Johto and Kanto"],
   ["crystal", "crystal", "Johto and Kanto"],
   ["firered-leafgreen", "frlg", "Kanto and Sevii Islands"],
   ["heartgold-soulsilver", "hgss", "Johto and Kanto"],

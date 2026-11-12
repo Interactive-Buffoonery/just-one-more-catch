@@ -460,3 +460,195 @@ manual browser verification remain coordinator checkpoints. Existing covers
 are reused; their original provenance was not re-established in this pass.
 Tracking registration and the required species-limit entries do not enable
 or establish save-file import support.
+
+## Gold and Silver (`gs`)
+
+Original English Gold/Silver only; Crystal and HeartGold/SoulSilver are not
+mechanics sources. The `gold` / `silver` encounter codes are `g` / `i`.
+
+### Encounter generation and historical data
+
+- PokeAPI species encounters, separately inspected for both versions:
+  https://pokeapi.co/api/v2/pokemon/1/encounters
+  through species 251; original Johto order:
+  https://pokeapi.co/api/v2/pokedex/3/
+  The input has 124 distinct location areas. Preserve levels, odds, version
+  differences, weekday, swarm and time conditions. Three Headbutt tables
+  share one method; the existing merger retains the best table's chance,
+  rather than summing independent tree tables. No Crystal source-version
+  substitutions, remake areas, Celebi event or Dragon's Den Dratini gift.
+- Historical ancestry, evolution and types were checked against original
+  `pret/pokegold` at `f2cde36f49b994c143bfd18582182302fdc76492`:
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/pokemon/evos_attacks.asm
+  https://github.com/pret/pokegold/tree/f2cde36f49b994c143bfd18582182302fdc76492/data/pokemon/base_stats
+  Compared all 251 types and 119 non-stat evolution edges; inspected Tyrogue's
+  three stat branches separately. GS opts into filtering pre-evolutions
+  introduced after generation II: Happiny, Mime Jr., Munchlax, Azurill,
+  Bonsly and Wynaut must not appear as ancestors. Espeon's source is
+  `EVOLVE_HAPPINESS, TR_MORNDAY, ESPEON`; its pack-local text explicitly
+  includes morning. Other packs keep their existing generated data.
+  https://www.serebii.net/gs/evolution.shtml
+- PokeAPI calls the original Tin Tower “Bell Tower”; normalize that display
+  name. It also uses modern shared location labels for the S.S. Aqua dock,
+  Manias's house and cave sections. Floor-specific gates apply before
+  display-floor names are merged; no encounter area is dropped.
+
+### Chapters, access and events
+
+`src` / `quote` fields in `data/gs.json` identify individual gates. These
+walkthrough sections supply the route sequence and physical paths (their
+Gold/Silver text, not their Crystal additions):
+
+- New Bark, Routes 29–31/46, Violet, Sprout Tower and early Ruins:
+  https://www.psypokes.com/gsc/walkthrough.php?part=1
+  Ruins is west of Violet and accessible before Falkner:
+  https://www.psypokes.com/gsc/walkthrough.php?part=12
+- Route 32, Union Cave, Azalea and Slowpoke Well:
+  https://www.psypokes.com/gsc/walkthrough.php?part=2
+  The Route 32 guard checks both the Zephyr Badge and receipt of Elm's Egg:
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route32.asm
+  Ilex's rival waits for Slowpoke Well to be cleared; Hive proves that
+  rescue because the gym is blocked until then:
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/AzaleaTown.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/SlowpokeWellB1F.asm
+- Ilex Cut barrier, Routes 34–36, Goldenrod and National Park:
+  https://www.psypokes.com/gsc/walkthrough.php?part=3
+  Cut is a kit item `cut-hm` (distinct from FRLG's story-event ID `cut`).
+  The flower shop requires Plain; Sudowoodo requires the SquirtBottle:
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/GoldenrodFlowerShop.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route36.asm
+- Routes 37–39, Ecruteak, Burned Tower and Olivine:
+  https://www.psypokes.com/gsc/walkthrough.php?part=4
+  Bill's meeting enables the Goldenrod Eevee. Waking the beasts is optional,
+  requires the Burned Tower Rock Smash path, and releases all three roamers,
+  including Suicune; Morty's badge does not prove their release:
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/EcruteakPokecenter1F.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/BurnedTowerB1F.asm
+- Cianwood, sea Routes 40/41, Surf and deeper Slowpoke Well:
+  https://www.psypokes.com/gsc/walkthrough.php?part=5
+- Routes 42/43, Mt. Mortar, Mahogany, Lake of Rage and the Rocket hideout:
+  https://www.psypokes.com/gsc/walkthrough.php?part=6
+  Route 42 has a walk-through Mt. Mortar route; do not blanket-gate it on
+  Surf. Red Gyarados needs Surf. Lance reveals the hideout staircase after
+  the lake encounter. The Electrode room additionally needs its password:
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/MahoganyMart1F.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/TeamRocketBaseB2F.asm
+- Mahogany's east blocker disappears when the seventh Johto badge triggers
+  the Radio Tower takeover, before the tower is cleared. The script sets
+  `SCENE_MAHOGANYTOWN_NOOP`, and each gym's seventh-badge check calls it:
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/engine/events/std_scripts.asm#L255-L264
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/MahoganyGym.asm
+  Route 44's grass is on the Surf island. Ice Path's boulder puzzle needs
+  Strength to continue to its lowest floor and Blackthorn/Route 45:
+  https://www.psypokes.com/gsc/walkthrough.php?part=7
+  Blackthorn Gym itself waits for Radio Tower clearance. Dragon's Den opens
+  after Clair; retrieving the Dragon Fang needs Whirlpool, but the initial
+  water encounters only need Surf. GS has no elder quiz/Dratini gift:
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/BlackthornCity.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/DragonsDen1F.asm
+- New Bark's east water/Route 27 and Tohjo Falls can be visited with Surf;
+  crossing to Route 27 grass and Route 26 needs Waterfall. Victory Road's
+  checkpoint additionally requires all eight Johto badges:
+  https://www.psypokes.com/gsc/walkthrough.php?part=8
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/VictoryRoadGate.asm
+- Eastern Kanto opens after the League via S.S. Aqua. Routes 4/9/10 and the
+  eastern/southern circuit do not wait for Misty's or Sabrina's badge:
+  https://www.psypokes.com/gsc/walkthrough.php?part=9
+  https://www.psypokes.com/gsc/walkthrough.php?part=10
+  Route 10 grass requires Surf; Cycling Road requires the Bicycle. Power
+  restoration enables the Lavender EXPN Card, which supplies the Poké Flute
+  channel for Snorlax. Diglett's Cave then opens western Kanto:
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/LavRadioTower1F.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/VermilionCity.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/engine/events/specials.asm#L358-L367
+- Western Kanto and the sea routes; Mt. Silver opens only after all sixteen
+  badges and talking to Oak, not merely owning the badges:
+  https://www.psypokes.com/gsc/walkthrough.php?part=11
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/OaksLab.asm
+- Optional cave paths, Union Cave Lapras/Surf, Mt. Mortar upper cave and
+  Tyrogue/Waterfall, Ruins grass/Surf through Union Cave, and Whirl Islands:
+  https://www.psypokes.com/gsc/walkthrough.php?part=12
+  https://strategywiki.org/wiki/Pok%C3%A9mon_Gold_and_Silver/Ruins_of_Alph
+  Strength is required for the Omanyte puzzle route, not for Natu/Smeargle
+  grass. Whirl Islands needs Surf/Whirlpool; the direct Lugia route goes
+  down the waterfall, so do not require Waterfall to reach Lugia.
+- Dark Cave's connecting warp is mapped in the original scripts. The
+  provisional earlier Blackthorn-room gate uses the Violet approach with
+  Surf/Rock Smash, rather than waiting for Blackthorn City; see open question:
+  https://www.psypokes.com/gsc/images/darkcave2.png
+  https://www.psypokes.com/gsc/images/darkcave1.png
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/DarkCaveVioletEntrance.asm
+  The latter identifies the third outdoor exit as Route 46; the walkthrough
+  image's Route 45 label is inaccurate.
+
+### Gifts, statics, trades and forms
+
+- Starter gifts (Chikorita/Cyndaquil/Totodile, level 5), Togepi Egg after
+  Falkner, Bill's level-20 Eevee after meeting Bill, borrowed Shuckle, mail
+  Spearow and Karate King's level-10 Tyrogue:
+  https://www.serebii.net/gs/gift.shtml
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/ElmsLab.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/VioletPokecenter1F.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/BillsFamilysHouse.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/ManiasHouse.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route35GoldenrodGate.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/MountMortarB1F.asm
+- Game Corner prices/version prizes and six NPC trades are retained from
+  PokeAPI and checked against the scripts. Rhydon's request specifically
+  requires a female Dragonair: GS replaces `trade-dragonair` with the already
+  supported display condition `trade-dragonair-f` from `TRADE_GENDER_FEMALE`:
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/GoldenrodGameCorner.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/CeladonGameCornerPrizeRoom.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/events/npc_trades.asm
+- Friday level-20 Lapras, Rocket trap tiles, Electrode and red Gyarados:
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/UnionCaveB2F.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/TeamRocketBaseB1F.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/TeamRocketBaseB2F.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/LakeOfRage.asm
+- Version-specific wings and legendaries: Gold's director gives Rainbow,
+  Silver's gives Silver; Pewter's old man gives the opposite wing. Gold
+  Ho-Oh/Silver Lugia are level 40; their opposite-version encounters are 70.
+  Tin Tower also needs Fog and its upper staircase waits for the wing event:
+  https://www.serebii.net/gs/legends.shtml
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/RadioTower5F.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/PewterCity.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/TinTower1F.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/TinTowerRoof.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/WhirlIslandLugiaChamber.asm
+- Unown has 26 letters, no punctuation forms. Each puzzle releases a group;
+  the species encounter waits for any completed puzzle. The form catalog
+  lists eventual local availability, not per-letter puzzle unlock state:
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/RuinsOfAlphKabutoChamber.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/RuinsOfAlphOmanyteChamber.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/RuinsOfAlphAerodactylChamber.asm
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/RuinsOfAlphHoOhChamber.asm
+
+### Pack metadata and artwork
+
+- Original Johto/national dex bound 251 (tracking/import-validation limit,
+  not proof of save-file reader support), New Bark start, generation II:
+  https://www.serebii.net/gs/
+  https://pokeapi.co/api/v2/pokedex/3/
+- Johto/Kanto badge leaders including Janine and Blue:
+  https://www.serebii.net/gs/gyms.shtml
+  HM/kit acquisition:
+  https://www.serebii.net/gs/tmhm.shtml
+  Original field-move checks: Hive/Cut, Plain/Strength, Fog/Surf,
+  Glacier/Whirlpool, Rising/Waterfall. Rock Smash has no badge restriction;
+  Flash and Fly are not mandatory encounter-access kit in this pack:
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/engine/events/overworld.asm
+- English PC: 14 boxes of 20; night begins at 18:00 (morning begins 04:00):
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/constants/pokemon_data_constants.asm#L118-L123
+  https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/constants/misc_constants.asm#L37-L39
+- Both versions deliberately share Gold's generation-II transparent art,
+  including shiny and Unown A–Z. Inspected the upstream regular and shiny
+  directory listings before requesting files; all 251 species and 26 forms
+  exist in both. The downloader centers them and writes ring-fit metadata:
+  https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon/versions/generation-ii/gold/transparent
+  Existing `g.jpg` and `si.jpg` covers reuse the libretro sources above.
+  Ho-Oh's Fire/Flying and Lugia's Psychic/Flying types supply picker rings.
+
+Bulbapedia automated access was not attempted. No original Gold/Silver guide
+was available in the supplied local guide collection; Crystal/HGSS guides
+were not substituted. Independent access review and manual game/browser
+checks remain the coordinator's work. Open cave mappings are not certified.

@@ -80,3 +80,28 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
   items; regular sprites intentionally fill shiny paths. Do not interpret
   these fields as original-game mechanics or save-file support. No box UI
   or save-import UI was changed in this task.
+
+## Gold and Silver (`gs`)
+
+- **Dark Cave Blackthorn-room earliest entrance:** the original scripts link
+  Violet-room warp (17,1) to the Blackthorn room, and the Psypoke maps show
+  an earlier approach. The current provisional gate is Surf + Rock Smash
+  in the initial chapter. Independently trace the Violet room's shoreline,
+  smashable rock and ledges to establish whether both moves are necessary.
+  Do not confuse entry into this room with reaching Route 45/Blackthorn
+  City past the one-way ledge. Sources: SOURCES.md, Gold/Silver access list.
+- **Mt. Mortar basement and Ice Path floors:** independently map PokeAPI's
+  basement to the lower Surf entrance versus the raised Tyrogue platform;
+  the basement currently needs Surf, Tyrogue also needs Waterfall. Confirm
+  whether Ice Path B2F encounters are accessible before solving the boulder
+  puzzle (only B3F/Blackthorn are currently Strength-gated).
+- **Mt. Silver:** map PokeAPI's 1F/2F/Top rooms to original GS collision maps.
+  The main cave is open after Oak, but confirm whether any complete encounter
+  area waits for Surf/Waterfall. Do not use HGSS's Rock Climb layout.
+- **Route 42 grass:** the Mt. Mortar walking bypass reaches Mahogany without
+  Surf; independently verify the encounter grass's earliest path rather
+  than extending the route's lack of a blanket gate to every patch.
+- Unown A–Z lists eventual local forms. The app does not track the four
+  puzzles' individual letter groups; one `alph-puzzle` event opens the
+  species encounter, not all letter groups in the actual game. The original
+  puzzle scripts are linked in SOURCES.md if finer tracking is later wanted.

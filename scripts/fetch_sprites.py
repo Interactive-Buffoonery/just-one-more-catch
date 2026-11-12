@@ -18,6 +18,7 @@ BASE = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/"
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 UA = {"User-Agent": "just-one-more-catch-data-build"}
 ART = {
+    "gs": "pokemon/versions/generation-ii/gold/transparent/",
     "rb": "pokemon/versions/generation-i/red-blue/transparent/",
     "yellow": "pokemon/versions/generation-i/yellow/transparent/",
     "crystal": "pokemon/versions/generation-ii/crystal/transparent/",
@@ -29,7 +30,7 @@ ART = {
 BADGES = ["Boulder", "Cascade", "Thunder", "Rainbow", "Soul", "Marsh", "Volcano", "Earth",
           "Zephyr", "Hive", "Plain", "Fog", "Storm", "Mineral", "Glacier", "Rising"]
 # Kit items: rods are their own items; moves use a disc in the move's type colour
-ITEMS = {"old-rod": "old-rod", "good-rod": "good-rod", "super-rod": "super-rod", "headbutt": "tm-normal",
+ITEMS = {"old-rod": "old-rod", "good-rod": "good-rod", "super-rod": "super-rod", "headbutt": "tm-normal", "cut-hm": "tm-normal",
          "yellow-cut": "tm-normal", "rock-smash": "tm-fighting", "surf": "tm-water", "whirlpool": "tm-water", "waterfall": "tm-water", "strength": "tm-normal", "rock-climb": "tm-normal", "bicycle": "bicycle",
          # USUM: Poké Ride moves have no item art, so they use the ride Pokémon; Island Scan uses Rotom
          "fishing-rod": "fishing-rod", "tauros": "../pokemon/128", "mudsdale": "../pokemon/750", "machamp": "../pokemon/68", "island-scan": "../pokemon/479"}

@@ -121,6 +121,28 @@ const HGSS: Pack = {
   boxes: [18, 30],
 };
 
+const GS: Pack = {
+  load: () => import("./data/gs").then((m) => m.default),
+  art: "gs",
+  region: "Johto",
+  regional: 251,
+  national: 251,
+  start: "New Bark Town",
+  starters: [152, 155, 158],
+  badges: JOHTO_BADGES,
+  postgame: ["Kanto badges", kantoBadges("Janine", "Blue")],
+  kit: [...JOHTO_KIT, ["cut-hm", "Cut"]],
+  hm: {
+    "cut-hm": "Hive",
+    surf: "Fog",
+    strength: "Plain",
+    whirlpool: "Glacier",
+    waterfall: "Rising",
+  },
+  nightFrom: 18,
+  boxes: [14, 20],
+};
+
 const CRYSTAL: Pack = {
   load: () => import("./data/crystal").then((m) => m.default),
   art: "crystal",
@@ -268,6 +290,14 @@ export const VERSIONS: Record<VersionId, Version> = {
     pack: YELLOW,
     ring: ["electric", "normal"],
   },
+  gold: {
+    name: "Gold", short: "G", code: "g", gen: "Gen 2",
+    pack: GS, other: "Silver", ring: ["fire", "flying"],
+  },
+  silver: {
+    name: "Silver", short: "SI", code: "i", gen: "Gen 2",
+    pack: GS, other: "Gold", ring: ["psychic", "flying"],
+  },
   crystal: {
     name: "Crystal",
     short: "C",
@@ -349,8 +379,8 @@ export const CONSOLES: { name: string; games: (VersionId | { name: string; short
     "yellow",
   ] },
   { name: "Game Boy Color", games: [
-    { name: "Gold", short: "G", color: "#c9a227" },
-    { name: "Silver", short: "SI", color: "#9aa3b5" },
+    "gold",
+    "silver",
     "crystal",
   ] },
   { name: "Game Boy Advance", games: [

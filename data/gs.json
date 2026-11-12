@@ -1,0 +1,948 @@
+{
+  "versions": {
+    "gold": "g",
+    "silver": "i"
+  },
+  "pokedex": 3,
+  "species": 251,
+  "gen": "generation-ii",
+  "historical_pre_evolutions": true,
+  "drop": [],
+  "rename": {
+    "Violet City Poke Mart": "Violet City Pokemon Center",
+    "Roaming Johto": "Roaming Johto",
+    "Route 2 South Towards Viridian City": "Route 2",
+    "Cianwood City Manias House": "Cianwood City",
+    "Ruins Of Alph Outside": "Ruins Of Alph",
+    "Ruins Of Alph Interior A": "Ruins Of Alph",
+    "Ruins Of Alph Interior B": "Ruins Of Alph",
+    "Ruins Of Alph Interior C": "Ruins Of Alph",
+    "Ruins Of Alph Interior D": "Ruins Of Alph",
+    "Mt. Silver Outside": "Mt. Silver",
+    "Mt. Silver Top": "Mt. Silver",
+    "Bell Tower Roof": "Tin Tower",
+    "Bell Tower": "Tin Tower",
+    "Vermilion City Ss Anne Dock": "Vermilion City S.S. Aqua dock"
+  },
+  "needs": {
+    "Union Cave B2F": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=12",
+      "quote": "Return to Union Cave with Surf"
+    },
+    "Slowpoke Well B1F": {
+      "needs": [
+        "surf",
+        "strength"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=5",
+      "quote": "use Strength on the boulder and Surf over the water to get to the ladder"
+    },
+    "Ilex Forest": {
+      "needs": [
+        "slowpoke-rescue"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=3",
+      "quote": "you'll be stopped by your rival"
+    },
+    "Whirl Islands": {
+      "needs": [
+        "surf",
+        "whirlpool"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=12",
+      "quote": "the islands are surrounded by Whirlpools"
+    },
+    "Mt. Mortar Upper Cave": {
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=12",
+      "quote": "Surf up the Waterfall"
+    },
+    "Mt. Mortar B1F": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=12",
+      "quote": "Exit Mt Mortar and re-enter through the middle entrance"
+    },
+    "Ice Path B3F": {
+      "needs": [
+        "strength"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=7",
+      "quote": "push one rock down each hole"
+    },
+    "Blackthorn City": {
+      "needs": [
+        "strength"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=7",
+      "quote": "the rocks have conveniently formed a spiralling route"
+    },
+    "Route 45": {
+      "needs": [
+        "strength"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=8",
+      "quote": "You should explore routes 45 and 46"
+    },
+    "Dark Cave Blackthorn City Entrance": {
+      "needs": [
+        "surf",
+        "rock-smash"
+      ],
+      "src": "https://www.psypokes.com/gsc/images/darkcave2.png",
+      "quote": "Dark Cave"
+    },
+    "Dragons Den": {
+      "needs": [
+        "strength",
+        "surf",
+        "clair"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=7",
+      "quote": "grab yourself a Pokemon with Whirlpool and Surf"
+    },
+    "Route 26": {
+      "needs": [
+        "waterfall"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=8",
+      "quote": "take along a Pokemon that knows Surf, Waterfall, Whirlpool and Strength"
+    },
+    "Route 17": {
+      "needs": [
+        "bicycle"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=10",
+      "quote": "The guard won't let you through unless you have the bicycle"
+    },
+    "Sea Route 19": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=11",
+      "quote": "following the route east"
+    },
+    "Sea Route 20": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=11",
+      "quote": "surf east"
+    },
+    "Sea Route 21": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=11",
+      "quote": "Surf south of Pallet Town"
+    },
+    "Cinnabar Island": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=11",
+      "quote": "Surf south of Pallet Town"
+    },
+    "Team Rocket Hq": {
+      "needs": [
+        "surf",
+        "lance"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/MahoganyMart1F.asm",
+      "quote": "setevent EVENT_UNCOVERED_STAIRCASE_IN_MAHOGANY_MART"
+    },
+    "Bell Tower": {
+      "needs": [
+        "Fog",
+        "rainbow-wing"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/TinTower1F.asm",
+      "quote": "EVENT_TEAM_ROCKET_DISBANDED"
+    },
+    "Victory Road": {
+      "needs": [
+        "waterfall",
+        "Zephyr",
+        "Hive",
+        "Plain",
+        "Fog",
+        "Storm",
+        "Mineral",
+        "Glacier",
+        "Rising"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/VictoryRoadGate.asm",
+      "quote": "ifgreater NUM_JOHTO_BADGES - 1, .AllEightBadges"
+    }
+  },
+  "chapters": [
+    {
+      "title": "New Bark to Violet",
+      "needs": [],
+      "places": [
+        "New Bark Town",
+        "Route 29",
+        "Cherrygrove City",
+        "Route 30",
+        "Route 31",
+        "Route 46",
+        "Dark Cave Violet City Entrance",
+        "Violet City",
+        "Sprout Tower",
+        "Ruins Of Alph",
+        "Dark Cave Blackthorn City Entrance"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=1",
+      "quote": "Violet City"
+    },
+    {
+      "title": "Route 32 to Azalea",
+      "needs": [
+        "Zephyr",
+        "elm-egg"
+      ],
+      "places": [
+        "Route 32",
+        "Union Cave",
+        "Route 33",
+        "Slowpoke Well",
+        "Azalea Town",
+        "Ilex Forest"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=2",
+      "quote": "Union Cave"
+    },
+    {
+      "title": "Goldenrod and National Park",
+      "needs": [
+        "cut-hm"
+      ],
+      "places": [
+        "Route 34",
+        "Goldenrod City",
+        "Route 35",
+        "National Park",
+        "Route 36"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=3",
+      "quote": "slice through the small bush to the next part of Ilex Forest"
+    },
+    {
+      "title": "Ecruteak and Olivine",
+      "needs": [
+        "sudowoodo-cleared"
+      ],
+      "places": [
+        "Route 37",
+        "Ecruteak City",
+        "Burned Tower",
+        "Roaming Johto",
+        "Route 38",
+        "Route 39",
+        "Olivine City",
+        "Tin Tower"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=4",
+      "quote": "Ecruteak City"
+    },
+    {
+      "title": "Cianwood and Whirl Islands",
+      "needs": [
+        "surf"
+      ],
+      "places": [
+        "Sea Route 40",
+        "Sea Route 41",
+        "Cianwood City",
+        "Whirl Islands"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=5",
+      "quote": "head west of Olivine's Pokemon Center and start Surfing"
+    },
+    {
+      "title": "Mahogany and Lake of Rage",
+      "needs": [
+        "sudowoodo-cleared"
+      ],
+      "places": [
+        "Route 42",
+        "Mt. Mortar",
+        "Route 43",
+        "Lake Of Rage",
+        "Team Rocket Hq"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=6",
+      "quote": "You can head into Mt Mortar, or you can just Surf across the water"
+    },
+    {
+      "title": "Ice Path to Blackthorn",
+      "needs": [
+        "Zephyr",
+        "Hive",
+        "Plain",
+        "Fog",
+        "Storm",
+        "Mineral",
+        "Glacier"
+      ],
+      "places": [
+        "Route 44",
+        "Ice Path",
+        "Blackthorn City",
+        "Dragons Den",
+        "Route 45"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/engine/events/std_scripts.asm#L255-L264",
+      "quote": "setmapscene MAHOGANY_TOWN, SCENE_MAHOGANYTOWN_NOOP"
+    },
+    {
+      "title": "Tohjo Falls and Victory Road",
+      "needs": [
+        "surf"
+      ],
+      "places": [
+        "Route 26",
+        "Route 27",
+        "Tohjo Falls",
+        "Victory Road"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=8",
+      "quote": "Surf east of New Bark Town"
+    },
+    {
+      "title": "Eastern Kanto",
+      "needs": [
+        "Elite Four"
+      ],
+      "places": [
+        "Vermilion City",
+        "Route 6",
+        "Route 5",
+        "Cerulean City",
+        "Route 24",
+        "Route 25",
+        "Route 9",
+        "Route 10",
+        "Power Plant",
+        "Rock Tunnel",
+        "Route 8",
+        "Route 7",
+        "Celadon City",
+        "Route 16",
+        "Route 17",
+        "Route 18",
+        "Fuchsia City",
+        "Route 15",
+        "Route 14",
+        "Route 13",
+        "Route 12",
+        "Route 11",
+        "Route 4"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=9",
+      "quote": "Vermilion City"
+    },
+    {
+      "title": "Western Kanto",
+      "needs": [
+        "Elite Four",
+        "snorlax-cleared"
+      ],
+      "places": [
+        "Digletts Cave",
+        "Route 2",
+        "Pewter City",
+        "Route 3",
+        "Mt. Moon",
+        "Viridian City",
+        "Route 22",
+        "Route 1",
+        "Pallet Town",
+        "Sea Route 21",
+        "Cinnabar Island",
+        "Sea Route 20",
+        "Sea Route 19"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=10",
+      "quote": "The cave behind it is Diglett's Cave, and this leads to Pewter City"
+    },
+    {
+      "title": "Mt. Silver",
+      "needs": [
+        "Elite Four",
+        "Boulder",
+        "Cascade",
+        "Thunder",
+        "Rainbow",
+        "Soul",
+        "Marsh",
+        "Volcano",
+        "Earth",
+        "oak-access"
+      ],
+      "places": [
+        "Route 28",
+        "Mt. Silver"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=11",
+      "quote": "grant you access to Silver Cave"
+    }
+  ],
+  "methods": {
+    "headbutt-high": "headbutt",
+    "headbutt-low": "headbutt",
+    "headbutt-normal": "headbutt"
+  },
+  "events": [
+    {
+      "id": "elm-egg",
+      "label": "Accept Elm's Egg",
+      "q": "Did Elm's aide give you the Egg at the Violet Pok\u00e9mon Center?",
+      "chap": 0,
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route32.asm",
+      "quote": "checkevent EVENT_GOT_TOGEPI_EGG_FROM_ELMS_AIDE",
+      "by": "Hive"
+    },
+    {
+      "id": "alph-puzzle",
+      "label": "Solve a Ruins of Alph puzzle",
+      "q": "Did you solve a sliding puzzle and release Unown in the Ruins of Alph?",
+      "chap": 0,
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/RuinsOfAlphKabutoChamber.asm",
+      "quote": "setflag ENGINE_UNLOCKED_UNOWNS_A_TO_K"
+    },
+    {
+      "id": "slowpoke-rescue",
+      "label": "Rescue the Slowpoke",
+      "q": "Did you defeat Team Rocket in Slowpoke Well?",
+      "chap": 1,
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/SlowpokeWellB1F.asm",
+      "quote": "EVENT_CLEARED_SLOWPOKE_WELL",
+      "by": "Hive"
+    },
+    {
+      "id": "squirt-bottle",
+      "label": "Get the SquirtBottle",
+      "q": "Did the Goldenrod flower shop give you the SquirtBottle?",
+      "chap": 2,
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/GoldenrodFlowerShop.asm",
+      "quote": "checkflag ENGINE_PLAINBADGE"
+    },
+    {
+      "id": "sudowoodo-cleared",
+      "label": "Clear Sudowoodo from Route 36",
+      "q": "Did you use the SquirtBottle and clear Sudowoodo from Route 36?",
+      "chap": 2,
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route36.asm",
+      "quote": "setevent EVENT_FOUGHT_SUDOWOODO",
+      "after": [
+        "squirt-bottle"
+      ]
+    },
+    {
+      "id": "bill",
+      "label": "Meet Bill in Ecruteak",
+      "q": "Did you meet Bill in the Ecruteak Pok\u00e9mon Center?",
+      "chap": 3,
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/EcruteakPokecenter1F.asm",
+      "quote": "clearevent EVENT_MET_BILL"
+    },
+    {
+      "id": "beasts",
+      "label": "Wake the three beasts",
+      "q": "Did Raikou, Entei and Suicune run off in the Burned Tower?",
+      "chap": 3,
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/BurnedTowerB1F.asm",
+      "quote": "special InitRoamMons"
+    },
+    {
+      "id": "rainbow-wing",
+      "label": "Get the Rainbow Wing",
+      "q": "Did you get the Rainbow Wing from the Radio Tower director (Gold) or the old man in Pewter (Silver)?",
+      "chap": 3,
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/RadioTower5F.asm",
+      "quote": "verbosegiveitem RAINBOW_WING"
+    },
+    {
+      "id": "silver-wing",
+      "label": "Get the Silver Wing",
+      "q": "Did you get the Silver Wing from the Radio Tower director (Silver) or the old man in Pewter (Gold)?",
+      "chap": 3,
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/PewterCity.asm",
+      "quote": "verbosegiveitem SILVER_WING"
+    },
+    {
+      "id": "lance",
+      "label": "Help Lance open the Rocket hideout",
+      "q": "Did Lance open the hideout under the Mahogany shop?",
+      "chap": 5,
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/MahoganyMart1F.asm",
+      "quote": "setevent EVENT_UNCOVERED_STAIRCASE_IN_MAHOGANY_MART",
+      "by": "Glacier"
+    },
+    {
+      "id": "rocket-transmitter",
+      "label": "Open the Rocket transmitter room",
+      "q": "Did you use the passwords to open the transmitter room in the Rocket hideout?",
+      "chap": 5,
+      "after": [
+        "lance"
+      ],
+      "by": "Glacier",
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/TeamRocketBaseB2F.asm",
+      "quote": "setevent EVENT_OPENED_DOOR_TO_ROCKET_HIDEOUT_TRANSMITTER"
+    },
+    {
+      "id": "radio-clear",
+      "label": "Free the Radio Tower",
+      "q": "Did you defeat Team Rocket at the Goldenrod Radio Tower?",
+      "chap": 5,
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/RadioTower5F.asm",
+      "quote": "setevent EVENT_CLEARED_RADIO_TOWER",
+      "by": "Rising"
+    },
+    {
+      "id": "clair",
+      "label": "Beat Clair",
+      "q": "Did you beat Clair at the Blackthorn Gym?",
+      "chap": 6,
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/BlackthornGym1F.asm",
+      "quote": "setevent EVENT_BEAT_CLAIR",
+      "after": [
+        "radio-clear"
+      ],
+      "by": "Rising"
+    },
+    {
+      "id": "expn-card",
+      "label": "Get the EXPN Card",
+      "q": "Did you restore the Power Plant and get the EXPN Card from the Lavender radio manager?",
+      "chap": 8,
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/LavRadioTower1F.asm",
+      "quote": "checkevent EVENT_RETURNED_MACHINE_PART"
+    },
+    {
+      "id": "snorlax-cleared",
+      "label": "Wake and clear Snorlax",
+      "q": "Did you tune the Pok\u00e9gear to the Pok\u00e9 Flute and battle Snorlax outside Diglett's Cave?",
+      "chap": 8,
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/VermilionCity.asm",
+      "quote": "setevent EVENT_FOUGHT_SNORLAX",
+      "after": [
+        "expn-card"
+      ]
+    },
+    {
+      "id": "oak-access",
+      "label": "Ask Oak to open Mt. Silver",
+      "q": "After earning all sixteen badges, did Professor Oak open Mt. Silver?",
+      "chap": 9,
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/OaksLab.asm",
+      "quote": "setevent EVENT_OPENED_MT_SILVER"
+    }
+  ],
+  "row_needs": [
+    {
+      "place": "Violet City",
+      "n": 175,
+      "m": "gift-egg",
+      "needs": [
+        "Zephyr"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/VioletPokecenter1F.asm",
+      "quote": "setevent EVENT_GOT_TOGEPI_EGG_FROM_ELMS_AIDE"
+    },
+    {
+      "place": "Goldenrod City Bills House",
+      "n": 133,
+      "m": "gift",
+      "needs": [
+        "bill"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/EcruteakPokecenter1F.asm",
+      "quote": "clearevent EVENT_MET_BILL"
+    },
+    {
+      "place": "Route 36",
+      "n": 185,
+      "m": "squirt-bottle",
+      "needs": [
+        "Plain",
+        "squirt-bottle"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route36.asm",
+      "quote": "checkitem SQUIRTBOTTLE"
+    },
+    {
+      "place": "Roaming Johto",
+      "n": 243,
+      "m": "roaming-grass",
+      "needs": [
+        "beasts",
+        "rock-smash"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/BurnedTowerB1F.asm",
+      "quote": "special InitRoamMons"
+    },
+    {
+      "place": "Roaming Johto",
+      "n": 244,
+      "m": "roaming-grass",
+      "needs": [
+        "beasts",
+        "rock-smash"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/BurnedTowerB1F.asm",
+      "quote": "special InitRoamMons"
+    },
+    {
+      "place": "Roaming Johto",
+      "n": 245,
+      "m": "roaming-grass",
+      "needs": [
+        "beasts",
+        "rock-smash"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/BurnedTowerB1F.asm",
+      "quote": "special InitRoamMons"
+    },
+    {
+      "place": "Mt. Mortar",
+      "n": 236,
+      "m": "gift",
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=12",
+      "quote": "Surf up the Waterfall"
+    },
+    {
+      "place": "Lake Of Rage",
+      "n": 130,
+      "m": "static",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=6",
+      "quote": "head across to the middle of the lake"
+    },
+    {
+      "place": "Ruins Of Alph Outside",
+      "n": 177,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=12",
+      "quote": "surf across the water and exit at the northernmost opening"
+    },
+    {
+      "place": "Ruins Of Alph Outside",
+      "n": 235,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=12",
+      "quote": "surf across the water and exit at the northernmost opening"
+    },
+    {
+      "place": "Ruins Of Alph Interior",
+      "n": 201,
+      "m": "walk",
+      "needs": [
+        "alph-puzzle"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/RuinsOfAlphKabutoChamber.asm",
+      "quote": "setflag ENGINE_UNLOCKED_UNOWNS_A_TO_K"
+    },
+    {
+      "place": "Route 27",
+      "n": 20,
+      "m": "walk",
+      "needs": [
+        "waterfall"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=8",
+      "quote": "To the left of the waterfall"
+    },
+    {
+      "place": "Route 10",
+      "n": 20,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=10",
+      "quote": "Surf right around the canal"
+    },
+    {
+      "place": "Route 10",
+      "n": 21,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=10",
+      "quote": "Surf right around the canal"
+    },
+    {
+      "place": "Route 10",
+      "n": 22,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=10",
+      "quote": "Surf right around the canal"
+    },
+    {
+      "place": "Route 27",
+      "n": 24,
+      "m": "walk",
+      "needs": [
+        "waterfall"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=8",
+      "quote": "To the left of the waterfall"
+    },
+    {
+      "place": "Route 27",
+      "n": 28,
+      "m": "walk",
+      "needs": [
+        "waterfall"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=8",
+      "quote": "To the left of the waterfall"
+    },
+    {
+      "place": "Route 44",
+      "n": 69,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=7",
+      "quote": "you can surf to the middle of the lake"
+    },
+    {
+      "place": "Route 44",
+      "n": 70,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=7",
+      "quote": "you can surf to the middle of the lake"
+    },
+    {
+      "place": "Route 27",
+      "n": 77,
+      "m": "walk",
+      "needs": [
+        "waterfall"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=8",
+      "quote": "To the left of the waterfall"
+    },
+    {
+      "place": "Route 27",
+      "n": 84,
+      "m": "walk",
+      "needs": [
+        "waterfall"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=8",
+      "quote": "To the left of the waterfall"
+    },
+    {
+      "place": "Route 27",
+      "n": 85,
+      "m": "walk",
+      "needs": [
+        "waterfall"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=8",
+      "quote": "To the left of the waterfall"
+    },
+    {
+      "place": "Route 10",
+      "n": 100,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=10",
+      "quote": "Surf right around the canal"
+    },
+    {
+      "place": "Route 44",
+      "n": 108,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=7",
+      "quote": "you can surf to the middle of the lake"
+    },
+    {
+      "place": "Route 44",
+      "n": 114,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=7",
+      "quote": "you can surf to the middle of the lake"
+    },
+    {
+      "place": "Route 10",
+      "n": 125,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=10",
+      "quote": "Surf right around the canal"
+    },
+    {
+      "place": "Route 27",
+      "n": 195,
+      "m": "walk",
+      "needs": [
+        "waterfall"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=8",
+      "quote": "To the left of the waterfall"
+    },
+    {
+      "place": "Route 10",
+      "n": 195,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=10",
+      "quote": "Surf right around the canal"
+    },
+    {
+      "place": "Whirl Islands",
+      "n": 249,
+      "m": "static",
+      "needs": [
+        "Elite Four",
+        "silver-wing"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/PewterCity.asm",
+      "quote": "verbosegiveitem SILVER_WING",
+      "versions": [
+        "gold"
+      ]
+    },
+    {
+      "place": "Whirl Islands",
+      "n": 249,
+      "m": "static",
+      "needs": [
+        "silver-wing"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/RadioTower5F.asm",
+      "quote": "verbosegiveitem SILVER_WING",
+      "versions": [
+        "silver"
+      ]
+    },
+    {
+      "place": "Bell Tower Roof",
+      "n": 250,
+      "m": "static",
+      "needs": [
+        "rainbow-wing"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/RadioTower5F.asm",
+      "quote": "verbosegiveitem RAINBOW_WING",
+      "versions": [
+        "gold"
+      ]
+    },
+    {
+      "place": "Bell Tower Roof",
+      "n": 250,
+      "m": "static",
+      "needs": [
+        "Elite Four",
+        "rainbow-wing"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/PewterCity.asm",
+      "quote": "verbosegiveitem RAINBOW_WING",
+      "versions": [
+        "silver"
+      ]
+    },
+    {
+      "place": "Vermilion City",
+      "n": 143,
+      "m": "pokeflute",
+      "needs": [
+        "expn-card"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/VermilionCity.asm",
+      "quote": "special SnorlaxAwake"
+    },
+    {
+      "place": "Team Rocket Hq",
+      "n": 101,
+      "m": "static",
+      "needs": [
+        "rocket-transmitter"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/TeamRocketBaseB2F.asm",
+      "quote": "setevent EVENT_OPENED_DOOR_TO_ROCKET_HIDEOUT_TRANSMITTER"
+    }
+  ],
+  "obtainable_forms": {
+    "201": [
+      "unown-a",
+      "unown-b",
+      "unown-c",
+      "unown-d",
+      "unown-e",
+      "unown-f",
+      "unown-g",
+      "unown-h",
+      "unown-i",
+      "unown-j",
+      "unown-k",
+      "unown-l",
+      "unown-m",
+      "unown-n",
+      "unown-o",
+      "unown-p",
+      "unown-q",
+      "unown-r",
+      "unown-s",
+      "unown-t",
+      "unown-u",
+      "unown-v",
+      "unown-w",
+      "unown-x",
+      "unown-y",
+      "unown-z"
+    ]
+  },
+  "evolution_overrides": {
+    "196": "High friendship + Morning / Day"
+  },
+  "condition_replacements": {
+    "trade-dragonair": "trade-dragonair-f"
+  }
+}

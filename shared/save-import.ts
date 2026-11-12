@@ -4,6 +4,8 @@ export const IMPORT_SPECIES_LIMITS: Record<VersionId, number> = {
   red: 151,
   blue: 151,
   yellow: 151,
+  gold: 251,
+  silver: 251,
   crystal: 251,
   firered: 386,
   leafgreen: 386,

@@ -133,12 +133,12 @@ def rows_for(encounters, version, n):
                 src = d["method"]["name"]
                 if src in GAME.get("drop_methods", []):
                     continue
-                cond = sorted(c["name"] for c in d["condition_values"] if c["name"] not in DEFAULT_COND)
+                cond = sorted(GAME.get("condition_replacements", {}).get(c["name"], c["name"]) for c in d["condition_values"] if c["name"] not in DEFAULT_COND)
                 m = GAME.get("methods", {}).get(src, src)
                 extra = []
                 row_place = place
                 for i, g in enumerate(GAME.get("row_needs", [])):
-                    if g["n"] == n and matches(loc, g["place"]) and g.get("m", m) == m:
+                    if g["n"] == n and matches(loc, g["place"]) and g.get("m", m) == m and version in g.get("versions", VERSIONS):
                         row_hits.add(i)
                         extra += g["needs"]
                         row_place = g.get("show_as", row_place)
@@ -207,8 +207,14 @@ def species(n, johto):
     pre = sp["evolves_from_species"]
     if GAME["gen"] == "generation-i" and pre and int(pre["url"].rstrip("/").split("/")[-1]) > 151:
         pre = None
-    evo = None if GAME["gen"] == "generation-i" and not pre else evo_text(chain, sp["name"])
-    evo = GAME.get("evolution_overrides", {}).get(str(n), {}).get("evo", evo)
+    if GAME.get("historical_pre_evolutions") and pre:
+        pre_species = cached(f"pokemon_species_{pre['url'].rstrip('/').split('/')[-1]}")
+        if GENS.index(pre_species["generation"]["name"]) > GENS.index(GAME["gen"]):
+            pre = None
+    historical = GAME["gen"] == "generation-i" or GAME.get("historical_pre_evolutions")
+    evo = None if historical and not pre else evo_text(chain, sp["name"])
+    override = GAME.get("evolution_overrides", {}).get(str(n), {})
+    evo = override.get("evo", evo) if isinstance(override, dict) else override
     return {
         "n": n, "genderRate": sp["gender_rate"], "j": johto.get(n), "name": name(sp), "types": gen4_types(p),
         **({"forms": form_list(n)} if str(n) in GAME.get("obtainable_forms", {}) else {}),
