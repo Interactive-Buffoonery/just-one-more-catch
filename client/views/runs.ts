@@ -1,5 +1,6 @@
 import { imageUrl } from "../image-url.ts";
 import { $, esc } from "../dom";
+import { devicesRow, HANDHELD } from "./devices";
 import {
   badgeName,
   badgesWord,
@@ -225,7 +226,7 @@ function Account() {
 const AccountActions = () =>
   `<section class="s-acct"><h3>Account</h3>${
     bridge.auth.isAuthenticated
-      ? `<div class="chips"><button class="chip" data-signout="1">Sign out</button></div><details${$("#sheet").open && $("#sheetbody .s-acct details")?.open ? " open" : ""}><summary>More options</summary><button class="danger" data-delaccount="1">Delete account</button></details>`
+      ? `<div class="chips"><button class="chip" data-signout="1">Sign out</button></div><details${$("#view .s-acct details")?.open ? " open" : ""}><summary>More options</summary><button class="danger" data-delaccount="1">Delete account</button></details>`
       : `<div class="chips"><button class="chip" data-signinsheet="1">Sign in or create an account</button></div>`
   }</section>`;
 function exportChips() {
@@ -244,6 +245,10 @@ const exportError = () =>
 export function fillSignIn() {
   $("#sheetbody").innerHTML =
     `<div class="grab" aria-hidden="true"></div><h2 id="sheet-title" class="lg">Sign in</h2><div id="clerk-signin"></div><button class="app-quiet notnow" data-close="1">Not now</button>`;
+  $("#clerk-signin").insertAdjacentHTML(
+    matchMedia(HANDHELD).matches ? "beforebegin" : "afterend",
+    `<button class="app-primary other" data-pairstart="1" data-k="pairstart" autofocus>Use another device</button>`,
+  );
   const el = $("#clerk-signin") as HTMLDivElement;
   if (!bridge.mountSignIn(el))
     el.innerHTML = `<p class="muted" style="margin:0">Sign-in isn't available right now. You can keep playing as a guest.</p>`;
@@ -270,10 +275,9 @@ const AvatarPicker = () =>
       `<label title="${name}"><input type="radio" name="avatar" value="${n}" data-k="avatar-${n}" aria-label="${name}" ${n === avatarN() ? "checked" : ""}${bridge.auth.isLoading ? " disabled" : ""}><img src="${imageUrl(`/sprites/hgss/${n}.png`)}" alt="" width="80" height="80"></label>`,
   ).join("")}</div></section>`;
 export const Settings = () =>
-  `<h2 id="sheet-title" class="lg">Settings</h2>
-  <div class="sgrid"><div>${Account()}${Appearance()}</div>
-  <div>${AvatarPicker()}<section class="s-data"><h3>Your data</h3><div class="chips">${exportChips()}</div>${exportError()}</section>${AccountActions()}</div></div>
-  <div class="sfoot"><button class="app-primary" data-close="1">Done</button></div>`;
+  `<h1 class="lg pgtitle" tabindex="-1" data-k="pgtitle">Settings</h1>
+  <div class="sgrid"><div>${Account()}${devicesRow()}${Appearance()}</div>
+  <div>${AvatarPicker()}<section class="s-data"><h3>Your data</h3><div class="chips">${exportChips()}</div>${exportError()}</section>${AccountActions()}</div></div>`;
 
 export const exportLabel = () =>
   `Downloading ${ui.export.done} of ${ui.export.total}…`;

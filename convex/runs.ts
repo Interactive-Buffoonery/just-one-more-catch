@@ -9,11 +9,12 @@ import { isAvatar } from "../shared/avatars";
 import { importCaughtState, validateImportId, validateImportStart } from "../shared/save-import";
 
 import { sendContact } from "./contactSpam";
+import { identityOf } from "./auth";
 // Each run can carry up to MAX_RUN_BYTES, so batches stay well under the 16 MiB per-call read limit
 const BATCH = 16;
 
 async function owner(ctx: QueryCtx) {
-  const me = await ctx.auth.getUserIdentity();
+  const me = await identityOf(ctx);
   if (!me) throw new Error("Sign in first");
   return me.tokenIdentifier;
 }
@@ -53,7 +54,7 @@ async function mine(ctx: QueryCtx, id: string) {
 export const list = query({
   args: {},
   handler: async (ctx) => {
-    const me = await ctx.auth.getUserIdentity();
+    const me = await identityOf(ctx);
     if (!me) return [];
     return (await ownedBy(ctx, me.tokenIdentifier)).map((r) => ({
       id: r._id as string,
@@ -142,7 +143,7 @@ const profileOf = (ctx: QueryCtx, who: string) =>
 export const avatar = query({
   args: {},
   handler: async (ctx) => {
-    const me = await ctx.auth.getUserIdentity();
+    const me = await identityOf(ctx);
     return (me && (await profileOf(ctx, me.tokenIdentifier))[0]?.avatar) ?? null;
   },
 });
@@ -162,7 +163,7 @@ export const setAvatar = mutation({
 export const theme = query({
   args: {},
   handler: async (ctx) => {
-    const me = await ctx.auth.getUserIdentity();
+    const me = await identityOf(ctx);
     const p = me && (await profileOf(ctx, me.tokenIdentifier))[0];
     return p?.look && p.mode ? { look: p.look, mode: p.mode } : null;
   },
@@ -200,6 +201,11 @@ export const deleteAccount = mutation({
     await purgeRuns(ctx, who);
     await purgeEventsFor(ctx, who);
     for (const p of await profileOf(ctx, who)) await ctx.db.delete(p._id);
+    const devices = await ctx.db
+      .query("deviceLabels")
+      .withIndex("by_owner", (q) => q.eq("owner", who))
+      .take(100);
+    for (const d of devices) await ctx.db.delete(d._id);
     const sent = await ctx.db
       .query("messages")
       .withIndex("by_sender", (q) => q.eq("sender", who))

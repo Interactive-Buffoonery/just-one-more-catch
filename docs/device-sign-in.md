@@ -28,9 +28,10 @@ revoked per device. Background is in `auth-options.md`.
 2. **Device waits:** It subscribes to `pairing.status({ id, secret })`. The
    status is pending, approved, denied or expired. The ticket is returned
    only to the holder of the secret.
-3. **Phone opens it:** The QR code links to `justonemorecatch.app/?pair=CODE`.
-   A signed-in player can also type the code under "Sign in another device".
-   The app opens an approval sheet showing the code, the device's browser
+3. **Phone opens it:** The QR code links to
+   `justonemorecatch.app/pair?code=CODE`, which lands on `/settings/devices/`.
+   A signed-in player can also type the code there under "Sign in another
+   device". The app opens an approval sheet showing the code, the device's browser
    label and when it was started. The player confirms the code matches the
    device's screen (RFC 8628 section 5.4), then approves or denies. A
    signed-out player signs in first, then lands back on the approval sheet.
@@ -49,7 +50,8 @@ revoked per device. Background is in `auth-options.md`.
 
 ## Devices list and revocation
 
-- **Account sheet:** A "Signed-in devices" list on every signed-in device,
+- **Devices page:** Settings is a page at `/settings/`, with a Devices row
+  linking to `/settings/devices/`. That page has a "Signed-in devices" list,
   from `clerk.user.getSessions()`. It shows the label from Convex (or
   Clerk's browser and OS), last active time and city, and marks this device.
   The current device can't revoke itself; Sign out covers that.
@@ -60,7 +62,8 @@ revoked per device. Background is in `auth-options.md`.
   3. Writes `revokedSessions { sid, expiresAt }`, kept for 10 minutes, longer
      than any Convex token from that session can live.
 - **Instant cutoff:** One helper in `convex/auth.ts`, `identityOf(ctx)`,
-  reads the identity and returns null if its `sid` is in `revokedSessions`.
+  reads the identity and returns null if it has no `sid` or its `sid` is in
+  `revokedSessions`.
   - It replaces every raw `ctx.auth.getUserIdentity()`: `convex/runs.ts`
     (`owner()`, `list`, `avatar`, `theme`), `convex/events.ts` and
     `convex/contactSpam.ts`.
@@ -90,16 +93,21 @@ revoked per device. Background is in `auth-options.md`.
 
 ## Spike checks (first hour of testing on dev)
 
-1. The `convex` JWT template carries `sid` (add `"sid": "{{session.id}}"` if
-   not) and Convex exposes it on the identity.
+1. **Required before deploying:** Convex must get Clerk's session token, not
+   the `convex` JWT template. Clerk reserves `sid` and leaves it out of
+   template tokens. `sessionToken()` in `client/main.ts` already sends the
+   session token when it has `"aud": "convex"`, so the customized session
+   token on dev and production must keep that claim. Session tokens last 60
+   seconds, well inside the 10 minutes `revokedSessions` rows are kept.
+   `identityOf` treats a token without `sid` as signed out.
 2. Ticket sign-in works in the Retroid browser and the installed app, with no
    new-device or second-factor step in the way.
 3. The new session appears in `getSessions()` on the phone.
 4. After revoking, the Retroid's queries return empty at once, and it's
    signed out within about a minute.
-5. **Session lifetime:** Check Clerk's maximum session lifetime (7 days by
-   default on new instances) in the dashboard's Sessions settings, and raise
-   it if the plan allows. Otherwise the Retroid needs re-pairing weekly.
+5. **Session lifetime:** Clerk's maximum session lifetime is set to 30 days
+   with no inactivity timeout, so a Retroid signs in again about once a
+   month. Revoking still cuts a device off within about a minute.
 
 ## Checks
 

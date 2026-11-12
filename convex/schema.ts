@@ -36,4 +36,24 @@ export default defineSchema({
     email: v.string(),
     message: v.string(),
   }).index("by_sender", ["sender"]),
+  pairings: defineTable({
+    code: v.string(),
+    secretHash: v.string(),
+    label: v.string(),
+    status: v.union(v.literal("pending"), v.literal("approved"), v.literal("denied")),
+    expiresAt: v.number(),
+    userId: v.optional(v.string()),
+    claim: v.optional(v.string()),
+    ticket: v.optional(v.string()),
+  }).index("by_code", ["code"]),
+  deviceLabels: defineTable({
+    sid: v.string(),
+    owner: v.string(),
+    label: v.string(),
+  }).index("by_sid", ["sid"])
+    .index("by_owner", ["owner"]),
+  revokedSessions: defineTable({
+    sid: v.string(),
+    expiresAt: v.number(),
+  }).index("by_sid", ["sid"]),
 });

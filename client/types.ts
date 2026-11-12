@@ -1,3 +1,5 @@
+import type { FunctionReturnType } from "convex/server";
+import type { api } from "../convex/_generated/api";
 import { Summary } from "../shared/summary";
 
 export type Row = {
@@ -43,6 +45,11 @@ export type RunRow = {
   createdAt: string;
   updatedAt?: string;
 };
+export type PairingState = "pending" | "approved" | "denied" | "expired" | "signed-in" | "failed";
+export type PairingHandle = { code: string; url: string; expiresAt: number; cancel(): void };
+export type PairingLookup = FunctionReturnType<typeof api.pairing.lookup>;
+export type PairingAttempt = FunctionReturnType<typeof api.pairing.approve>;
+export type Device = { id: string; label: string; current: boolean; lastActiveAt: number; city?: string };
 export type Bridge = {
   track(name: import("convex/values").Infer<typeof import("../convex/schema").eventName>, version?: string): void;
   auth: {
@@ -72,4 +79,12 @@ export type Bridge = {
     message: string;
     website: string;
   }): Promise<{ ok: boolean; retryAfterSeconds?: number }>;
+  pairCode: string | null;
+  clearPairCode(): void;
+  startPairing(onState: (state: PairingState) => void): Promise<PairingHandle>;
+  lookupPairing(code: string): Promise<PairingLookup>;
+  approvePairing(code: string): Promise<PairingAttempt>;
+  denyPairing(code: string): Promise<PairingAttempt>;
+  listDevices(): Promise<Device[]>;
+  revokeDevice(sessionId: string): Promise<unknown>;
 };

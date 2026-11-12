@@ -2,7 +2,7 @@ import "@fontsource/jetbrains-mono/latin-500.css";
 import type { Clerk } from "@clerk/clerk-js";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex/_generated/api";
-import type { Bridge } from "./types";
+import type { Bridge, Device } from "./types";
 
 const legacyTab = new URLSearchParams(location.search).get("tab");
 if (location.pathname === "/" && legacyTab === "contact") {
@@ -57,6 +57,48 @@ async function startContact() {
   });
 }
 
+function deviceLabel() {
+  const ua = navigator.userAgent;
+  const browser = ([
+    ["Edg/", "Edge"], ["SamsungBrowser/", "Samsung Internet"], ["Firefox/", "Firefox"], ["FxiOS/", "Firefox"],
+    ["CriOS/", "Chrome"], ["Chrome/", "Chrome"], ["Safari/", "Safari"],
+  ] as const).find(([key]) => ua.includes(key))?.[1] ?? "Browser";
+  const os = (navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform ||
+    ([
+      [/Android/, "Android"], [/iPhone|iPad/, "iOS"], [/CrOS/, "ChromeOS"], [/Mac OS X/, "macOS"],
+      [/Windows/, "Windows"], [/Linux/, "Linux"],
+    ] as const).find(([pattern]) => pattern.test(ua))?.[1];
+  return os ? `${browser} on ${os}` : browser;
+}
+
+const PAIR_KEY = "jomc.pairCode";
+
+function validPairCode(raw: string | null) {
+  const code = raw?.toUpperCase().replace(/[\s-]/g, "");
+  return code && /^[A-Z]{8}$/.test(code) ? `${code.slice(0, 4)}-${code.slice(4)}` : null;
+}
+
+function storePairCode(code: string | null) {
+  try {
+    if (code) sessionStorage.setItem(PAIR_KEY, code);
+    else sessionStorage.removeItem(PAIR_KEY);
+  } catch {}
+}
+
+function takePairCode() {
+  if (!/^\/pair\/?$/.test(location.pathname)) {
+    try {
+      return validPairCode(sessionStorage.getItem(PAIR_KEY));
+    } catch {
+      return null;
+    }
+  }
+  const code = validPairCode(new URLSearchParams(location.search).get("code"));
+  history.replaceState(null, "", "/settings/devices/");
+  storePairCode(code);
+  return code;
+}
+
 function sessionToken(c: Pick<Clerk, "session"> | undefined, forceRefreshToken: boolean) {
   const session = c?.session;
   if (!session) return Promise.resolve(null);
@@ -90,6 +132,12 @@ async function startTracker() {
   let theme: Bridge["theme"];
   let stopTheme: (() => void) | undefined;
   let userId: string | null | undefined = expectsSession ? undefined : null;
+  let pairCode = takePairCode();
+  let labelAfterSignIn = false;
+  const clearPairCode = () => {
+    pairCode = null;
+    storePairCode(null);
+  };
 
   const bridge = (): Bridge => ({
     track: (name, version) => { void convex.mutation(api.events.track, { name, version }).catch(() => {}); },
@@ -195,6 +243,91 @@ async function startTracker() {
       await clerk?.user?.delete();
     },
     contact: (input) => convex.mutation(api.runs.contact, input),
+    pairCode,
+    clearPairCode,
+    startPairing: async (onState) => {
+      const { id, code, secret, expiresAt } = await convex.mutation(api.pairing.start, { label: deviceLabel() });
+      const release = () => { void convex.mutation(api.pairing.finish, { id, secret }).catch(() => {}); };
+      let done = false;
+      const expiry = setTimeout(() => {
+        if (done) return;
+        done = true;
+        stop();
+        release();
+        onState("expired");
+      }, expiresAt - Date.now());
+      const stop = convex.onUpdate(api.pairing.status, { id, secret }, (s) => {
+        if (done) return;
+        if (s.status === "pending") return onState("pending");
+        done = true;
+        clearTimeout(expiry);
+        stop();
+        if (s.status !== "approved") return onState(s.status);
+        onState("approved");
+        void (async () => {
+          try {
+            await loadClerk();
+            if (!clerk?.client) throw new Error("Sign-in is unavailable");
+            const attempt = await clerk.client.signIn.create({ strategy: "ticket", ticket: s.ticket });
+            if (attempt.status !== "complete" || !attempt.createdSessionId)
+              throw new Error(`Ticket sign-in stopped at ${attempt.status}`);
+            labelAfterSignIn = true;
+            await clerk.setActive({ session: attempt.createdSessionId });
+            onState("signed-in");
+          } catch (err) {
+            labelAfterSignIn = false;
+            console.warn("Device sign-in failed", err);
+            onState("failed");
+          } finally {
+            release();
+          }
+        })();
+      });
+      return {
+        code, expiresAt,
+        url: `${location.origin}/pair?code=${code.replace("-", "")}`,
+        cancel: () => {
+          if (done) return;
+          done = true;
+          clearTimeout(expiry);
+          stop();
+          release();
+        },
+      };
+    },
+    lookupPairing: async (code) => {
+      const r = await convex.mutation(api.pairing.lookup, { code });
+      if (r.status === "missing") clearPairCode();
+      return r;
+    },
+    approvePairing: async (code) => {
+      const r = await convex.action(api.pairing.approve, { code });
+      if (r.status !== "limited") clearPairCode();
+      return r;
+    },
+    denyPairing: async (code) => {
+      const r = await convex.mutation(api.pairing.deny, { code });
+      if (r.status !== "limited") clearPairCode();
+      return r;
+    },
+    listDevices: async () => {
+      const user = clerk?.user;
+      if (!user) return [];
+      const [sessions, labels] = await Promise.all([
+        user.getSessions(),
+        convex.query(api.devices.labels, {}),
+      ]);
+      const named = new Map(labels.map((l) => [l.sid, l.label]));
+      return sessions.map((s): Device => ({
+        id: s.id,
+        label: named.get(s.id) ??
+          ([s.latestActivity?.browserName, s.latestActivity?.deviceType].filter(Boolean).join(" on ") || "Unknown device"),
+        current: s.id === clerk?.session?.id,
+        lastActiveAt: s.lastActiveAt.getTime(),
+        city: s.latestActivity?.city,
+      }));
+    },
+    revokeDevice: (sessionId) => convex.action(api.devices.revoke, { sessionId }),
   });
   const render = () => update(bridge());
 
@@ -213,6 +346,10 @@ async function startTracker() {
       async ({ forceRefreshToken }) => user ? sessionToken(clerk, forceRefreshToken) : null,
       (ok) => {
         if (user && !ok) console.warn("Convex rejected the Clerk token");
+        if (ok && labelAfterSignIn) {
+          labelAfterSignIn = false;
+          void convex.mutation(api.devices.label, { label: deviceLabel() }).catch(() => {});
+        }
         auth = {
           isLoading: false,
           isAuthenticated: ok,
@@ -291,7 +428,7 @@ async function startTracker() {
       }
       clerk!.addListener(({ user }) => onUser(user));
     })());
-  if (expectsSession) {
+  if (expectsSession || pairCode) {
     void loadClerk();
     // ponytail: fixed wait before falling back to guest play; a slow sign-in
     // that finishes later still signs the user in.

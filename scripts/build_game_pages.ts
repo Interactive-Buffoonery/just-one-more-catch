@@ -116,6 +116,12 @@ for (const [slug, id, region] of games) {
   console.log(`${slug}: ${mons.length} Pokémon, ${data.chapters.length} chapters, ${places} places; ${region}`);
 }
 
+// The app page also answers at its own routes; pair.html serves /pair without a redirect that would drop ?code=.
+for (const file of ["settings/index.html", "settings/devices/index.html", "pair.html"]) {
+  mkdirSync(`dist/${file}`.replace(/\/[^/]+$/, ""), {recursive:true});
+  writeFileSync(`dist/${file}`, readFileSync("dist/index.html"));
+}
+
 // Public policy and fallback pages are copied unchanged by Vite.
 for (const file of readdirSync("dist", { recursive: true }).filter(file => file.endsWith(".html"))) {
   const path = `dist/${file}`;

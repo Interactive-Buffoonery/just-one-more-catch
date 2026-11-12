@@ -30,7 +30,8 @@ import {
 } from "./game";
 import { moveGuestAvatar, moveGuestRuns, withGuest } from "./guest";
 import { SETTINGS_ICON, TAB_ICONS } from "./parts";
-import { Bridge, RunRow } from "./types";
+import { Bridge, PairingHandle, PairingLookup, RunRow } from "./types";
+import { Devices, fillApprove, pairBody, pairErrorText, pairLetters, showCode, ttl } from "./views/devices";
 import { Boxes, fillBoxSheet, fillMonSheet, saveMon, updateMonSprite } from "./views/boxes";
 import { Dex, dexGrid, fillSpecies } from "./views/dex";
 import { fillClock, fillCustom, Journey, untick } from "./views/journey";
@@ -102,17 +103,46 @@ function fillSheet(s: any) {
           ? fillCustom()
           : s.kind === "clock"
             ? fillClock(s.mode)
-            : s.kind === "settings"
-              ? ($("#sheetbody").innerHTML = Settings())
-              : s.kind === "box"
-                ? fillBoxSheet(s.b)
-                : fillMonSheet(s);
+            : s.kind === "approve"
+              ? fillApprove(s.p)
+              : s.kind === "pair"
+                ? void showPair()
+                : s.kind === "box"
+                  ? fillBoxSheet(s.b)
+                  : fillMonSheet(s);
 }
-function openSheet(s: any) {
+// A closed dialog fires "close" a task later; finish that sheet before showing the next one.
+function showSheet(s: any, fill?: () => void) {
+  const open = $("#sheet").open;
+  if (!open) finishSheet();
+  if (s.hist) pushSheet(s.kind);
   ui.sheet = s;
-  $("#sheet").classList.toggle("wide", s.kind === "settings");
-  fillSheet(s);
-  if (!$("#sheet").open) $("#sheet").showModal();
+  fill?.();
+  if (!open) $("#sheet").showModal();
+}
+const openSheet = (s: any) => showSheet(s, () => fillSheet(s));
+function pushSheet(kind: string) {
+  if (history.state?.sheet !== kind)
+    history.pushState({ ...history.state, sheet: kind }, "", location.href);
+}
+function finishSheet() {
+  const s = ui.sheet;
+  if (!s) return;
+  ui.sheet = null;
+  if (s.kind === "signin")
+    bridge.unmountSignIn($("#clerk-signin") as HTMLDivElement);
+  if (s.kind === "pair") stopPair();
+  if (s.hist && history.state?.sheet === s.kind) history.back();
+  render();
+  if (s.kind === "pick") {
+    (root.querySelector(`[data-newrun="${s.id}"]`) as HTMLElement | null)?.focus();
+    return;
+  }
+  (
+    root.querySelector(
+      `[data-k="${typeof s === "number" ? "d" + s : s.k ? s.k : s.id ? "m" + s.id : s.b ? "rb" + s.b : "x"}"]`,
+    ) || (root.querySelector("[data-filter][aria-pressed=true]") as any)
+  )?.focus();
 }
 
 /* ---- Wiring ---- */
@@ -132,7 +162,14 @@ const VIEWS: Record<string, () => string> = {
   dex: Dex,
   boxes: Boxes,
   playthroughs: Runs,
+  settings: Settings,
+  devices: Devices,
 };
+const PATHS: Record<string, string> = {
+  settings: "/settings/",
+  devices: "/settings/devices/",
+};
+const APP_PATHS = ["/", ...Object.values(PATHS)];
 function shell() {
   return `<header class="top">
     <button class="logo" data-tab="playthroughs" aria-label="Just One More Catch, your playthroughs"><span class="full">Just One More Catch</span></button>
@@ -151,6 +188,8 @@ function shell() {
 }
 function tabFromUrl() {
   if (IMPORT_PATH.test(location.pathname)) return "import";
+  const path = Object.keys(PATHS).find((t) => PATHS[t] === location.pathname);
+  if (path) return path;
   const t = new URLSearchParams(location.search).get("tab");
   return t === "journey" && run?.view === "dexonly" ? "dex" : t && Object.hasOwn(VIEWS, t) ? t : "playthroughs";
 }
@@ -160,20 +199,30 @@ function render() {
     signedIn = a.isAuthenticated;
   const k = (document.activeElement as HTMLElement)?.dataset?.k;
   const onImport = ui.tab === "import";
-  const needsGame = ui.tab !== "playthroughs" && !onImport;
+  const needsGame = !["playthroughs", "import", ...Object.keys(PATHS)].includes(ui.tab);
   const loading = a.isLoading || !bridge.runs || (needsGame && !!opening);
   root.classList.toggle("loading", loading);
   const url = new URL(location.href);
-  url.pathname = onImport ? "/import/" : IMPORT_PATH.test(url.pathname) ? "/" : url.pathname;
-  if (ui.tab === "playthroughs" || onImport) url.searchParams.delete("tab");
+  if (onImport) url.pathname = "/import/";
+  else if (PATHS[ui.tab] || APP_PATHS.includes(url.pathname) || IMPORT_PATH.test(url.pathname))
+    url.pathname = PATHS[ui.tab] || "/";
+  if (onImport || PATHS[ui.tab] || ui.tab === "playthroughs") url.searchParams.delete("tab");
   else url.searchParams.set("tab", ui.tab);
-  if (url.href !== location.href)
-    history[ui.tab === tabFromUrl() ? "replaceState" : "pushState"](
-      null,
-      "",
-      url,
-    );
+  if (url.href !== location.href) {
+    const from = tabFromUrl();
+    if (ui.tab === from) history.replaceState(history.state, "", url);
+    else history.pushState({ from }, "", url);
+  }
   document.title = onImport ? "Import a save | Just One More Catch" : "Just One More Catch";
+  if (!signedIn) ui.devices = ui.devicesError = undefined;
+  else if (
+    PATHS[ui.tab] &&
+    (!PATHS[shownTab] ||
+      (ui.devicesError && ui.tab !== shownTab) ||
+      (ui.devices === undefined && !ui.devicesError))
+  )
+    void loadDevices();
+  shownTab = ui.tab;
   const leftImport = !onImport && saveImport.isOpen && importPage.contains(document.activeElement);
   if (!onImport) closeImport();
   const importLive = onImport && saveImport.isOpen;
@@ -187,7 +236,8 @@ function render() {
       : (ui.saveError
           ? `<p class="small" role="alert" style="text-align:center;margin:4px 0 16px;color:var(--coral)">${ui.saveError}</p>`
           : "") + VIEWS[ui.tab]();
-  const avatar = `<button class="avatar" data-settings="1" data-k="avatar" aria-label="Settings and avatar, ${esc(trainerName())}">${partner("")}</button>`;
+  const here = PATHS[ui.tab] ? ` aria-current="page"` : "";
+  const avatar = `<button class="avatar" data-tab="settings" data-k="avatar" aria-label="Settings and avatar, ${esc(trainerName())}"${here}>${partner("")}</button>`;
   $("#topright").innerHTML =
     switcher(run?.id ?? opening) +
     (a.isLoading
@@ -201,14 +251,14 @@ function render() {
       : `<div class="falert" role="note">Saved only in this browser<button data-signinsheet="1" data-k="signin-foot">Sign in</button></div>`;
   $("#toptabs").innerHTML = a.isLoading ? "" : tabButtons(false);
   $("#tabs").innerHTML = !a.isLoading
-    ? `<nav class="tabbar${run?.view === "dexonly" ? " four" : ""}" aria-label="Sections">${tabButtons(true)}<button class="tab-settings" data-settings="1" data-k="tab-settings">${SETTINGS_ICON}<span>Settings</span></button></nav>`
+    ? `<nav class="tabbar${run?.view === "dexonly" ? " four" : ""}" aria-label="Sections">${tabButtons(true)}<button class="tab-settings" data-tab="settings" data-k="tab-settings"${here}>${SETTINGS_ICON}<span>Settings</span></button></nav>`
     : "";
   $("#toast").innerHTML = ui.undo
     ? `<div class="toast">${ui.undo.msg}${ui.undo.n ? `<button data-undo="1">Undo</button>` : ""}</div>`
     : "";
   if (
     (typeof ui.sheet === "number" ||
-      ["settings", "custom"].includes(ui.sheet?.kind)) &&
+      ui.sheet?.kind === "custom") &&
     $("#sheet").open
   )
     fillSheet(ui.sheet);
@@ -320,6 +370,19 @@ async function download(kind: "json" | "csv") {
   }
 }
 async function onClick(e: MouseEvent) {
+  const link = (e.target as HTMLElement).closest("a[data-nav]") as HTMLAnchorElement | null;
+  if (link && !(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)) {
+    e.preventDefault();
+    if (link.dataset.nav === "settings" && history.state?.from === "settings") history.back();
+    else {
+      ui.tab = link.dataset.nav;
+      ui.undo = null;
+      render();
+      scrollTo(0, 0);
+      focusTitle();
+    }
+    return;
+  }
   const t = (e.target as HTMLElement).closest(
     "button, a[data-tab]",
   ) as HTMLButtonElement | null;
@@ -353,8 +416,29 @@ async function onClick(e: MouseEvent) {
     $("#sheet").close();
     return;
   }
-  if (d.settings) {
-    openSheet({ kind: "settings", k: d.k });
+  if (d.pairstart) {
+    void startPair();
+    return;
+  }
+  if (d.revokeask || d.revokecancel) {
+    ui.revoking = d.revokeask || null;
+    render();
+    (root.querySelector(
+      d.revokeask ? `[data-revokecancel="${d.revokeask}"]` : `[data-revokeask="${d.revokecancel}"]`,
+    ) as HTMLElement | null)?.focus();
+    return;
+  }
+  if (d.devretry) {
+    await loadDevices();
+    if (!ui.devicesError) $("#devs-title")?.focus();
+    return;
+  }
+  if (d.revoke) {
+    await revoke(d.revoke);
+    return;
+  }
+  if (d.approve || d.deny) {
+    await answerPair(!!d.approve);
     return;
   }
   if (d.signinsheet) {
@@ -715,14 +799,16 @@ export function mount(el: HTMLElement, b: Bridge) {
     location.replace("/about/");
     return;
   }
-  const settings = new URLSearchParams(location.search).get("tab") === "settings";
   setRoot(el);
   ui.tab = tabFromUrl();
   addEventListener("popstate", () => {
+    if (ui.sheet?.hist && history.state?.sheet !== ui.sheet.kind)
+      $("#sheet").close();
     if (tabFromUrl() === ui.tab) return;
     ui.tab = tabFromUrl();
     ui.undo = null;
     render();
+    if (PATHS[ui.tab]) focusTitle();
   });
   raw = b;
   setBridge(withGuest(b, refresh));
@@ -761,7 +847,6 @@ export function mount(el: HTMLElement, b: Bridge) {
     : "auto";
   applyTheme();
   darkMQ.addEventListener("change", applyTheme);
-  if (settings) openSheet({ kind: "settings" });
   el.addEventListener("click", onClick);
   el.addEventListener(
     "toggle",
@@ -782,9 +867,23 @@ export function mount(el: HTMLElement, b: Bridge) {
   );
   el.addEventListener("input", (e) => {
     const t = e.target as HTMLInputElement;
+    if (t.id === "paircode") {
+      const letters = pairLetters(t.value);
+      ui.pairInput = letters;
+      t.value = showCode(letters);
+      ($("#pairgo") as HTMLButtonElement).disabled = letters.length < 8;
+      t.form?.parentElement?.querySelector("[role=alert]")?.remove();
+      ui.pairError = undefined;
+      return;
+    }
     if (t.id !== "dexq") return;
     ui.q = t.value;
     $("#dexgrid").innerHTML = dexGrid();
+  });
+  el.addEventListener("submit", (e) => {
+    if ((e.target as HTMLElement).id !== "pairform") return;
+    e.preventDefault();
+    if (pairLetters(ui.pairInput || "").length === 8) void lookupPair(ui.pairInput);
   });
   el.addEventListener("change", (e) => {
     const t = e.target as HTMLInputElement;
@@ -841,21 +940,7 @@ export function mount(el: HTMLElement, b: Bridge) {
     }
   });
   $("#sheet").addEventListener("close", () => {
-    const s = ui.sheet;
-    ui.sheet = null;
-    if (s?.kind === "signin")
-      bridge.unmountSignIn($("#clerk-signin") as HTMLDivElement);
-    render();
-    if (s?.kind === "pick") {
-      (root.querySelector(`[data-newrun="${s.id}"]`) as HTMLElement | null)?.focus();
-      return;
-    }
-    if (s)
-      (
-        root.querySelector(
-          `[data-k="${typeof s === "number" ? "d" + s : s.k ? s.k : s.id ? "m" + s.id : s.b ? "rb" + s.b : "x"}"]`,
-        ) || (root.querySelector("[data-filter][aria-pressed=true]") as any)
-      )?.focus();
+    if (!$("#sheet").open) finishSheet();
   });
   const timeKey = () => (run ? `${nowTime()} ${gameNow(R().clock).day}` : "");
   let shownTime = timeKey();
@@ -877,6 +962,7 @@ export function mount(el: HTMLElement, b: Bridge) {
   });
   syncRuns();
   render();
+  queueMicrotask(checkPairCode);
 }
 export function update(b: Bridge) {
   if (
@@ -890,9 +976,161 @@ export function update(b: Bridge) {
   saveImport.accountChanged();
   syncRuns();
   syncTheme();
-  if (b.auth.isAuthenticated && ui.sheet?.kind === "signin")
+  if (b.auth.isAuthenticated && ["signin", "pair"].includes(ui.sheet?.kind))
     $("#sheet").close();
   if (!$("#sheet").open) render();
+  checkPairCode();
+}
+
+const focusTitle = () => (root.querySelector("#view .pgtitle") as HTMLElement | null)?.focus();
+
+/* ---- Devices ---- */
+let shownTab = "";
+let devicesLoading = false;
+async function loadDevices() {
+  if (devicesLoading) return;
+  devicesLoading = true;
+  try {
+    ui.devices = await bridge.listDevices();
+    ui.devicesError = undefined;
+  } catch {
+    ui.devicesError = "Load failed";
+  } finally {
+    devicesLoading = false;
+    render();
+  }
+}
+const revokeButtons = () =>
+  [...root.querySelectorAll<HTMLElement>("[data-revokeask],[data-revoke]")];
+async function revoke(id: string) {
+  const at = revokeButtons().findIndex((b) => b.dataset.revoke === id);
+  let done = false;
+  try {
+    await bridge.revokeDevice(id);
+    ui.revoking = null;
+    done = true;
+    flash("Device signed out");
+  } catch {
+    flash("Sign-out failed");
+  }
+  await loadDevices();
+  if (!done) return;
+  const left = revokeButtons();
+  (left[Math.min(at, left.length - 1)] || $("#devs-title"))?.focus();
+}
+
+let pairLooking = false;
+async function lookupPair(letters: string) {
+  if (pairLooking) return;
+  pairLooking = true;
+  ui.pairError = undefined;
+  try {
+    const r = await bridge.lookupPairing(showCode(pairLetters(letters)));
+    if (r.status === "ok") {
+      ui.pairInput = "";
+      render();
+      openApprove(r);
+    } else ui.pairError = pairErrorText(r);
+  } catch {
+    ui.pairError = "Code check failed";
+  } finally {
+    pairLooking = false;
+  }
+  if (ui.pairError) render();
+}
+function openApprove(p: Extract<PairingLookup, { status: "ok" }>) {
+  openSheet({ kind: "approve", p, k: "paircode", hist: true });
+  ($("#sheet [data-deny]") as HTMLElement).focus();
+}
+async function answerPair(approve: boolean) {
+  const s = ui.sheet;
+  if (s?.kind !== "approve" || s.busy) return;
+  s.busy = true;
+  const status = $("#approve-status");
+  status.textContent = approve ? "Approving…" : "Denying…";
+  try {
+    const r = await (approve ? bridge.approvePairing : bridge.denyPairing)(s.p.code);
+    const shown = ui.sheet === s;
+    if (r.status === "limited") {
+      if (shown) status.textContent = pairErrorText(r);
+      return;
+    }
+    if (shown) $("#sheet").close();
+    flash(r.status === "missing" ? "Code expired" : approve ? "Device approved" : "Sign-in denied");
+    void loadDevices();
+  } catch {
+    if (ui.sheet === s) status.textContent = "Connection failed";
+  } finally {
+    s.busy = false;
+  }
+}
+let pairPrompted = false,
+  pairLooked = false;
+function checkPairCode() {
+  const code = bridge.pairCode;
+  if (!code || bridge.auth.isLoading || $("#sheet").open) return;
+  const signedIn = bridge.auth.isAuthenticated;
+  if (signedIn ? pairLooked : pairPrompted) return;
+  if (signedIn) pairLooked = true;
+  else pairPrompted = true;
+  if (ui.tab !== "devices") {
+    ui.tab = "devices";
+    render();
+  }
+  if (signedIn) void lookupPair(code);
+  else openSheet({ kind: "signin", k: "signin-devices" });
+}
+
+/* ---- Device side: show a code, wait for approval ---- */
+let pairing: PairingHandle | null = null,
+  pairTick: any;
+function stopPair() {
+  pairing?.cancel();
+  pairing = null;
+  clearInterval(pairTick);
+}
+async function startPair() {
+  const prev = ui.sheet;
+  if (prev?.kind === "signin")
+    bridge.unmountSignIn($("#clerk-signin") as HTMLDivElement);
+  stopPair();
+  const s = { kind: "pair", k: prev?.k, hist: true, v: { state: "starting" } as any };
+  showSheet(s);
+  void showPair();
+  try {
+    const h = await bridge.startPairing((state) => {
+      if (state === "pending" || ui.sheet !== s) return;
+      s.v = { ...s.v, state };
+      void showPair();
+    });
+    if (ui.sheet !== s) return h.cancel();
+    pairing = h;
+    if (s.v.state === "starting") {
+      s.v = { state: "pending", code: h.code, url: h.url, expiresAt: h.expiresAt };
+      void showPair();
+    }
+    pairTick = setInterval(() => {
+      const el = $("#pairttl");
+      if (el) el.textContent = ttl(h.expiresAt);
+    }, 1000);
+  } catch {
+    if (ui.sheet !== s) return;
+    s.v = { state: "failed" };
+    void showPair();
+  }
+}
+async function showPair() {
+  const s = ui.sheet;
+  if (s?.kind !== "pair") return;
+  const v = s.v;
+  const html = await pairBody(v);
+  if (ui.sheet !== s || s.v !== v) return;
+  if (!$("#pairbody"))
+    $("#sheetbody").innerHTML =
+      `<div class="grab" aria-hidden="true"></div><div class="dev"><h2 id="sheet-title" class="lg" tabindex="-1">Sign in</h2><div id="pairbody"></div></div><p class="sr" aria-live="polite" id="pairlive"></p>`;
+  $("#pairbody").innerHTML = html;
+  $("#pairlive").textContent = $("#pairbody .big")?.textContent || $("#pairbody .pcode")?.getAttribute("aria-label") || "";
+  ($("#pairbody [data-autofocus]") || $("#sheet-title"))?.focus();
 }
 
 document.addEventListener("focusin", (event) => {

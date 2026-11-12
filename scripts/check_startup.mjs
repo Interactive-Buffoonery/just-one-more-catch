@@ -12,6 +12,7 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
   const contacts = [];
   const redirects = [];
   const mutations = [];
+  const replaced = [];
   let authenticated = false;
   const clients = [];
   let clerkInstance;
@@ -38,7 +39,7 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
     onUpdate() { return () => {}; }
   }
   let giveUp;
-  const context = createContext({clearTimeout(){},setTimeout:(fn,delay)=>{if(delay===10000)giveUp=fn;else if(delay===4000)idle=fn;},window:{},URLSearchParams,Element,console:{warn(){}},document:{cookie,getElementById:()=>({addEventListener(event, fn){listeners[event]=fn;}})},location:{hash:'',pathname,search,replace:url=>redirects.push(url)},history:{replaceState(){}}});
+  const context = createContext({clearTimeout(){},setTimeout:(fn,delay)=>{if(delay===10000)giveUp=fn;else if(delay===4000)idle=fn;},window:{},URLSearchParams,Element,console:{warn(){}},document:{cookie,getElementById:()=>({addEventListener(event, fn){listeners[event]=fn;}})},location:{hash:'',pathname,search,replace:url=>redirects.push(url)},history:{replaceState:(state,title,url)=>replaced.push(url)}});
   const modules = new Map();
   function makeModule(name, exports) {
     if (!modules.has(name)) modules.set(name,new SyntheticModule(Object.keys(exports), function(){for (const [k,v] of Object.entries(exports)) this.setExport(k,v);},{context}));
@@ -93,6 +94,13 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
     return;
   }
   const bridge=bridges[0];
+  if (pathname === '/pair') {
+    assert.deepEqual(replaced,['/settings/devices/'],'a pairing link must land on Devices without the code');
+    assert.equal(bridge.pairCode,'BCDF-GHJK');
+    assert.ok(imports.length>0,'a pairing link must load Clerk at startup');
+    assert.equal(bridge.auth.isLoading,false,'a pairing link must not hide guest play');
+    return;
+  }
   assert.equal(imports.length>0,signal,signal?`${cookie||search} must load Clerk at startup`:`${cookie||'a guest'} must defer Clerk until idle or intent`);
   if (signal) {
     assert.equal(bridge.auth.isLoading,true,'a returning session must show loading, not the guest view');
@@ -185,6 +193,7 @@ await run({search:'?tab=contact'});
 await run({pathname:'/import/'});
 await run({pathname:'/import/',failImport:true});
 await run({pathname:'/import/',cookie:'__client_uat=1731300000',user:{id:'user_1'},signal:true});
+await run({pathname:'/pair',search:'?code=bcdfghjk'});
 await run();
 await run({failImport:true});
 await run({user:{id:'user_1'},importCheck:true});

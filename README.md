@@ -73,7 +73,8 @@ and `.agents/skills/add-game/SKILL.md` before adding or changing a pack.
   - `.env.local`: Convex dev values (written by `pnpm exec convex dev`) and
     `VITE_CLERK_PUBLISHABLE_KEY` with the `pk_test_` key.
   - `.env.production`: `VITE_CLERK_PUBLISHABLE_KEY` with the `pk_live_` key.
-- **Settings in Convex:** `CLERK_JWT_ISSUER_DOMAIN`, `RESEND_API_KEY` (a
+- **Settings in Convex:** `CLERK_JWT_ISSUER_DOMAIN`, `CLERK_SECRET_KEY`
+  (used by the device sign-in and device list actions), `RESEND_API_KEY` (a
   sending-only key for `mail.justonemorecatch.app`) and `CONTACT_TO` (where
   contact-form messages are emailed) on each deployment. Set them with
   `pnpm exec convex env set`, and add `--prod` for production.
@@ -81,7 +82,8 @@ and `.agents/skills/add-game/SKILL.md` before adding or changing a pack.
   to `justonemorecatch@gmail.com`. Resend sends the contact-form
   notifications from `notify@mail.justonemorecatch.app` to the same inbox
   (`CONTACT_TO`).
-- The Clerk secret key isn't used anywhere. Keep it out of this repo.
+- The Clerk secret key lives only in Convex, on dev (`sk_test_`) and prod
+  (`sk_live_`). Keep it out of this repo.
 
 ## Run locally
 
