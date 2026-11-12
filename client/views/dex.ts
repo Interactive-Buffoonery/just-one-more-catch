@@ -15,6 +15,7 @@ import {
   P,
   pad,
   R,
+  isGuest,
   viewOf,
   regionalCaught,
   rowStatus,
@@ -163,7 +164,7 @@ export function fillSpecies(n: number) {
     </section>
     ${R().trackForms && available.length > 1 ? `<h3>Forms · ${forms.size} / ${available.length}</h3><div class="forms">${available.map((f) => `<button type="button" class="form" data-form="${f.id}" data-species="${n}" data-k="form-${f.id}" aria-pressed="${forms.has(f.id)}" aria-label="${esc(p.name + " " + f.name)}" ${mine.some((m) => (m.form || p.forms![0].id) === f.id) ? "disabled" : ""}>${sprite(p, "", false, f.id)}<span${f.name.split(" ").some((w) => w.length > 8) ? ' class="long"' : ""}>${esc(f.name)}</span></button>`).join("")}</div>` : ""}
     ${R().trackGenders && hasGenders(p) ? `<h3>Genders · ${genders.size} / 2</h3><div class="forms genders">${GENDERS.map(([g, symbol, label]) => `<button type="button" class="form" data-gender="${g}" data-species="${n}" data-k="gender-${n}-${g}" aria-pressed="${genders.has(g)}" aria-label="${esc(p.name + " " + label)}" ${mine.some((m) => m.g === g) ? "disabled" : ""}><span class="gsym" aria-hidden="true">${symbol}</span><span>${label}</span></button>`).join("")}</div>` : ""}
-    ${caught ? `<h3>Yours${mine.length ? ` · ${mine.length}` : ""}</h3><div class="card">${mine.map((m) => monLine(m, true)).join("")}<div class="yours">${mine.length ? "" : `<span class="muted small">Not in your party or boxes</span>`}<button type="button" class="quietbtn" data-addmon="${n}" data-k="add${n}">Add ${mine.length ? "another" : "one"}</button></div></div>` : ""}
+    ${caught && !isGuest() ? `<h3>Yours${mine.length ? ` · ${mine.length}` : ""}</h3><div class="card">${mine.map((m) => monLine(m, true)).join("")}<div class="yours">${mine.length ? "" : `<span class="muted small">Not in your party or boxes</span>`}<button type="button" class="quietbtn" data-addmon="${n}" data-k="add${n}">Add ${mine.length ? "another" : "one"}</button></div></div>` : ""}
     ${viewOf(R()) !== "dexonly" ? `${sect("Catchable now", groups.now)}${sect("Other times of day", groups.wrongtime)}${sect("Special conditions", groups.special)}${sect("Later", groups.later)}
     ${other ? `<h3>Other ways</h3><div class="card"><p class="spot">${other}</p></div>` : ""}
     ` : ""}

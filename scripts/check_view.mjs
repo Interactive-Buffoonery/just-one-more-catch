@@ -104,10 +104,26 @@ const guestRoute = runInNewContext(app.slice(app.indexOf("function tabFromUrl()"
 });
 assert.equal(guestRoute, "journey");
 const tabs = runInNewContext(stripTypeScriptTypes(app.slice(app.indexOf("const tabButtons"), app.indexOf("const VIEWS"))) + "\ntabButtons(true)", {
-  TABS: [["journey", "Journey"]], TAB_ICONS: {journey: "<svg></svg>"},
+  LOCKED: {journey: true, boxes: true}, TABS: [["journey", "Journey"], ["boxes", "Boxes"]], TAB_ICONS: {journey: "<svg></svg>"},
   run: {view: "dexonly"}, ui: {tab: "journey"}, isGuest: () => true,
 });
 assert(tabs.includes('aria-label="Journey, sign in required"') && tabs.includes('class="tlock"'));
 const dex = readFileSync(new URL("../client/views/dex.ts", import.meta.url), "utf8");
 assert(!dex.includes("R().view"));
 assert(dex.includes('k !== "now" || viewOf(R()) !== "dexonly"'));
+
+assert(tabs.includes('aria-label="Boxes, sign in required"'));
+const locked = runInNewContext(stripTypeScriptTypes(app.slice(app.indexOf("const LOCKED"), app.indexOf("const tabButtons"))) + '\nlockedView("boxes")', {
+  Journey: () => "journey", Boxes: () => "boxes ghost", TABS: [["boxes", "Boxes"]], run: null, isGuest: () => true,
+});
+assert(locked.includes('id="bl-h"') && locked.includes('data-k="signin-boxes"'));
+assert(locked.includes('Sign in or create a free account to track your party, boxes and held items on the Boxes tab.'));
+assert(!locked.includes('class="ghost"'));
+
+assert.equal(runInNewContext(app.slice(app.indexOf("function tabFromUrl()"), app.indexOf("function render()")) + "\ntabFromUrl()", {
+  URLSearchParams, IMPORT_PATH, PATHS, location: {pathname: "/boxes/", search: ""}, run: null, VIEWS: {boxes: true}, isGuest: () => true,
+}), "boxes");
+const signedTabs = runInNewContext(stripTypeScriptTypes(app.slice(app.indexOf("const tabButtons"), app.indexOf("const VIEWS"))) + "\ntabButtons(true)", {
+  LOCKED: {journey: true, boxes: true}, TABS: [["journey", "Journey"], ["boxes", "Boxes"]], TAB_ICONS: {}, run: null, ui: {}, isGuest: () => false,
+});
+assert(!signedTabs.includes('tlock') && !signedTabs.includes('sign in required'));

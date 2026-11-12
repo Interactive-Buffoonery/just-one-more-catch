@@ -121,7 +121,10 @@ function showSheet(s: any, fill?: () => void) {
   fill?.();
   if (!open) $("#sheet").showModal();
 }
-const openSheet = (s: any) => showSheet(s, () => fillSheet(s));
+const openSheet = (s: any) => {
+  if (isGuest() && ["mon", "box"].includes(s.kind)) return;
+  showSheet(s, () => fillSheet(s));
+};
 function pushSheet(kind: string) {
   if (history.state?.sheet !== kind)
     history.pushState({ ...history.state, sheet: kind }, "", location.href);
@@ -153,15 +156,23 @@ const TABS = [
   ["dex", "Dex"],
   ["boxes", "Boxes"],
 ];
+const LOCKED: Record<string, [() => string, string]> = {
+  journey: [Journey, "Sign in or create a free account to track your current area, badges and items on the Journey tab."],
+  boxes: [Boxes, "Sign in or create a free account to track your party, boxes and held items on the Boxes tab."],
+};
+function lockedView(tab: string) {
+  const [view, why] = LOCKED[tab], label = TABS.find(([t]) => t === tab)![1], id = tab === "journey" ? "jl-h" : "bl-h";
+  return isGuest() ? `<div class="pv">${run ? `<div class="ghost" inert aria-hidden="true">${view()}</div>` : ""}<div class="over"><section class="card" aria-labelledby="${id}"><h2 class="lg" id="${id}">${label}</h2><p class="jl-why">${why}</p><button class="app-primary" data-signinsheet="1" data-k="signin-${tab}">Sign in</button></section></div></div>` : view();
+}
 const tabButtons = (icons: boolean) =>
   TABS.filter(([t]) => t !== "journey" || isGuest() || run?.view !== "dexonly").map(
     ([t, l]) =>
-      `<button data-tab="${t}" ${isGuest() && t === "journey" ? `aria-label="Journey, sign in required"` : ""} ${ui.tab === t ? `aria-current="page"` : ""}>${icons ? isGuest() && t === "journey" ? `<span class="tlock">${TAB_ICONS.journey}<i><svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="5.5" width="8" height="5.5" rx="1.2" fill="currentColor"/><path d="M4 5.5V4a2 2 0 014 0v1.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></i></span>` : TAB_ICONS[t] : ""}<span>${l}</span></button>`,
+      `<button data-tab="${t}" ${isGuest() && LOCKED[t] ? `aria-label="${l}, sign in required"` : ""} ${ui.tab === t ? `aria-current="page"` : ""}>${icons ? isGuest() && LOCKED[t] ? `<span class="tlock">${TAB_ICONS[t]}<i><svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="5.5" width="8" height="5.5" rx="1.2" fill="currentColor"/><path d="M4 5.5V4a2 2 0 014 0v1.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></i></span>` : TAB_ICONS[t] : ""}<span>${l}</span></button>`,
   ).join("");
 const VIEWS: Record<string, () => string> = {
-  journey: () => isGuest() ? `<div class="pv">${run ? `<div class="ghost" inert aria-hidden="true">${Journey()}</div>` : ""}<div class="over"><section class="card" aria-labelledby="jl-h"><h2 class="lg" id="jl-h">Journey</h2><p class="jl-why">Sign in or create a free account to track your current area, badges and items on the Journey tab.</p><button class="app-primary" data-signinsheet="1" data-k="signin-journey">Sign in</button></section></div></div>` : Journey(),
+  journey: () => lockedView("journey"),
   dex: Dex,
-  boxes: Boxes,
+  boxes: () => lockedView("boxes"),
   playthroughs: Runs,
   settings: Settings,
   devices: Devices,
@@ -203,7 +214,7 @@ function render() {
     signedIn = a.isAuthenticated;
   const k = (document.activeElement as HTMLElement)?.dataset?.k;
   const onImport = ui.tab === "import";
-  const needsGame = !(isGuest() && ui.tab === "journey") && !["playthroughs", "import", ...SETTINGS].includes(ui.tab);
+  const needsGame = !(isGuest() && LOCKED[ui.tab]) && !["playthroughs", "import", ...SETTINGS].includes(ui.tab);
   const loading = a.isLoading || !bridge.runs || (needsGame && !!opening);
   root.classList.toggle("loading", loading);
   const url = new URL(location.href);
@@ -583,6 +594,7 @@ async function onClick(e: MouseEvent) {
     scheduleSave();
     return;
   }
+  if (isGuest() && (d.editmon || d.addmon || d.renamebox || d.savemon || d.savebox || d.delmon)) return;
   if (d.editmon) {
     openSheet({ kind: "mon", id: +d.editmon });
     return;
