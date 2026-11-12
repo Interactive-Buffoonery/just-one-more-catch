@@ -137,12 +137,21 @@ include those baselines, rather than asserting the species is locally caught.
 
 ## Box art
 
-- FireRed North American box art, resized to a 160 × 160 JPEG:
-  https://raw.githubusercontent.com/libretro-thumbnails/Nintendo_-_Game_Boy_Advance/master/Named_Boxarts/Pokemon%20-%20FireRed%20Version%20(USA%2C%20Europe).png
-
-- FireRed and LeafGreen for Nintendo Switch, the square cover cropped from each Nintendo eShop listing image and resized to 160 × 160:
-  https://www.nintendo.com/us/store/products/english-pokemon-firered-version-switch/
-  https://www.nintendo.com/us/store/products/english-pokemon-leafgreen-version-switch/
+- Covers keep the full source image and its proportions, at up to 512px on
+  the longest side, saved as JPEG at quality 92. The app uses
+  `object-fit: contain` so square frames show the complete artwork.
+- FireRed, LeafGreen, Crystal, HeartGold, SoulSilver, Ultra Sun and Ultra Moon:
+  - `fr.jpg`: https://raw.githubusercontent.com/libretro-thumbnails/Nintendo_-_Game_Boy_Advance/master/Named_Boxarts/Pokemon%20-%20FireRed%20Version%20%28USA%2C%20Europe%29.png
+  - `lg.jpg`: https://raw.githubusercontent.com/libretro-thumbnails/Nintendo_-_Game_Boy_Advance/master/Named_Boxarts/Pokemon%20-%20LeafGreen%20Version%20%28USA%2C%20Europe%29.png
+  - `hg.jpg`: https://raw.githubusercontent.com/libretro-thumbnails/Nintendo_-_Nintendo_DS/master/Named_Boxarts/Pokemon%20-%20HeartGold%20Version%20%28USA%29.png
+  - `ss.jpg`: https://raw.githubusercontent.com/libretro-thumbnails/Nintendo_-_Nintendo_DS/master/Named_Boxarts/Pokemon%20-%20SoulSilver%20Version%20%28USA%29.png
+  - `us.jpg`: https://raw.githubusercontent.com/libretro-thumbnails/Nintendo_-_Nintendo_3DS/master/Named_Boxarts/Pokemon%20Ultra%20Sun%20%28USA%29%20%28En%2CJa%2CFr%2CDe%2CEs%2CIt%2CZh%2CKo%29.png
+  - `um.jpg`: https://raw.githubusercontent.com/libretro-thumbnails/Nintendo_-_Nintendo_3DS/master/Named_Boxarts/Pokemon%20Ultra%20Moon%20%28USA%29%20%28En%2CJa%2CFr%2CDe%2CEs%2CIt%2CZh%2CKo%29.png
+  - `c.jpg`: https://raw.githubusercontent.com/libretro-thumbnails/Nintendo_-_Game_Boy_Color/master/Named_Boxarts/Pokemon%20-%20Crystal%20Version%20%28USA%29.png
+- FireRed and LeafGreen for Nintendo Switch use the official square eShop
+  artwork, resized to 512px without cropping the listing banner:
+  - `frs.jpg`: https://art.gametdb.com/switch/coverHQ/US/BPUJB.jpg
+  - `lgs.jpg`: https://art.gametdb.com/switch/coverHQ/US/BPUKB.jpg
 
 ### Coming Soon box art
 
