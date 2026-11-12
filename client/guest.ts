@@ -3,10 +3,10 @@ import { Bridge, RunRow } from "./types";
 import { isAvatar } from "../shared/avatars";
 import { MAX_RUNS } from "../shared/limits";
 import { summarize } from "../shared/summary";
-import { importCaughtState, validateImportId } from "../shared/save-import";
+import { importCaughtState, validateImportId, validateImportStart } from "../shared/save-import";
 
 /* ---- Guest runs live in this browser until sign-in ---- */
-type GuestRow = Omit<RunRow, "summary"> & { state: string; movedTo?: string };
+type GuestRow = Omit<RunRow, "summary"> & { state: string; movedTo?: string; importStartedAt?: number };
 const GUEST = "jomc.guest";
 let guestMem = "[]";
 export const guestRows = (): GuestRow[] => {
@@ -52,21 +52,23 @@ export function withGuest(b: Bridge, refresh: () => void): Bridge {
       refresh();
       return id;
     },
-    async importRun(version, caught, importId) {
+    async importRun(version, caught, importId, startedAt) {
       validateImportId(importId);
+      validateImportStart(startedAt);
       const state = importCaughtState(version, caught);
       const rows = guestRows();
       const id = "local-import-" + importId;
       const existing = rows.find((row) => row.id === id);
       if (existing) {
-        if (existing.version !== version || existing.state !== state)
+        if (existing.version !== version || existing.state !== state ||
+            existing.importStartedAt !== startedAt)
           throw new Error("Import ID already used for another playthrough");
         return id;
       }
       if (rows.length >= MAX_RUNS) throw new Error("Too many playthroughs");
       const next = JSON.stringify([
         ...rows,
-        { id, version, state, createdAt: new Date().toISOString() },
+        { id, version, state, importStartedAt: startedAt, createdAt: new Date(startedAt ?? Date.now()).toISOString() },
       ]);
       localStorage.setItem(GUEST, next);
       guestMem = next;

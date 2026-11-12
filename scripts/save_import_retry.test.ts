@@ -23,9 +23,11 @@ test("a lost response can retry the same import after filling the final slot", a
     preview: { version: string; caught: number[]; skipped: number; partial: boolean };
     target: string;
     importId: string;
+    selectedDay: string;
     create(): Promise<void>;
   };
   pending.active = true;
+  pending.selectedDay = "2010-03-14";
   pending.preview = { version: "heartgold", caught: [25], skipped: 0, partial: false };
   pending.target = importTarget(bridge);
   pending.importId = "d60f37e5-bef7-4e53-8726-1c964120c460";
@@ -37,6 +39,7 @@ test("a lost response can retry the same import after filling the final slot", a
   await pending.create();
   expect(complete).not.toHaveBeenCalled();
   expect(host.innerHTML).toContain("Back to preview");
+  pending.selectedDay = "2011-04-15"; // A retry retains the originally confirmed payload.
   await pending.create();
   expect(importRun).toHaveBeenCalledTimes(2);
   expect(importRun.mock.calls[1]).toEqual(importRun.mock.calls[0]);

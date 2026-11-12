@@ -4,6 +4,7 @@ import { VERSIONS, type GameData } from "./packs";
 import type { Bridge } from "./types";
 import type { VersionId } from "../shared/versions";
 import { MAX_RUNS } from "../shared/limits";
+import { validateImportStart } from "../shared/save-import";
 declare const __SAVE_READER_VERSION__: string;
 
 const MAX_FILE_BYTES = 64 * 1024 * 1024;
@@ -22,6 +23,7 @@ const VERSION_MAP: Record<string, VersionId[]> = {
 type Snapshot = {
   status: "ok";
   schemaVersion: number;
+  startDate?: string;
   game: { version: string; versions: string[]; name: string; formatId: string };
   pokedex: { status: string; coverage: string; speciesNamespace: string; caughtSpecies: number[]; warnings: string[] };
 };
@@ -60,6 +62,19 @@ export function caughtForPack(snapshot: Snapshot, version: VersionId, data: Game
   return { caught, skipped: all.length - caught.length, partial: dex.coverage === "partial" };
 }
 
+const dayOf = (date: Date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+export function importDate(day: string): number | undefined {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return;
+  const [y, m, d] = day.split("-").map(Number);
+  const date = new Date(y, m - 1, d);
+  if (dayOf(date) !== day) return;
+  try { validateImportStart(date.getTime()); } catch { return; }
+  return date.getTime();
+}
+const longDate = (day: string) => new Date(importDate(day)!).toLocaleDateString(undefined, { dateStyle: "long" });
+type DateSource = "recorded" | "today" | "picked";
+const CALENDAR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 2v6M16 2v6"/></svg>';
+
 export class SaveImport {
   private seq = 0;
   private reader?: Reader;
@@ -67,6 +82,13 @@ export class SaveImport {
   private file?: File;
   private snapshot?: Snapshot;
   private preview?: ReturnType<typeof caughtForPack> & { version: VersionId };
+  private recordedDay?: string;
+  private importDay = "";
+  private selectedDay = "";
+  private dateSource: DateSource = "today";
+  private draftDay = "";
+  private draftSource: DateSource = "today";
+  private confirmedStart?: number;
   private target = "";
   private importId = "";
   private active = false;
@@ -86,6 +108,25 @@ export class SaveImport {
         case "version": void this.selectVersion(button.dataset.version as VersionId); break;
         case "format": void this.read(button.dataset.format); break;
         case "create": void this.create(); break;
+        case "date-change":
+          if (this.confirmedStart !== undefined) break;
+          this.draftDay = this.selectedDay; this.draftSource = this.dateSource;
+          this.ready(true); break;
+        case "date-cancel": this.ready(); this.focusDate(); break;
+        case "date-recorded":
+          if (this.recordedDay && this.confirmedStart === undefined) {
+            this.selectedDay = this.recordedDay; this.dateSource = "recorded";
+            this.ready(); this.focusDate();
+          }
+          break;
+        case "date-option":
+          this.draftSource = button.dataset.source === "recorded" ? "recorded" : "today";
+          this.draftDay = this.draftSource === "recorded" ? this.recordedDay! : this.importDay;
+          this.ready(true); break;
+        case "date-use":
+          if (this.confirmedStart !== undefined || importDate(this.draftDay) === undefined || this.draftDay > dayOf(new Date())) break;
+          this.selectedDay = this.draftDay; this.dateSource = this.draftSource;
+          this.ready(); this.focusDate(); break;
       }
     });
     host.addEventListener("change", (event) => {
@@ -250,20 +291,56 @@ export class SaveImport {
         return;
       }
       this.importId = crypto.randomUUID();
+      this.confirmedStart = undefined;
+      this.importDay = dayOf(new Date());
+      this.recordedDay = typeof snapshot.startDate === "string" && importDate(snapshot.startDate) !== undefined && snapshot.startDate <= this.importDay ? snapshot.startDate : undefined;
+      this.selectedDay = this.recordedDay ?? this.importDay;
+      this.dateSource = this.recordedDay ? "recorded" : "today";
       this.ready();
     } catch {
       if (this.valid(seq)) this.problem("Couldn't prepare the preview", "The game data may not have loaded. Nothing was imported.", () => void this.selectVersion(version));
     }
   }
-  private ready() {
+  private focusDate() {
+    this.options.host.querySelector<HTMLButtonElement>("[data-import-action=date-change]")?.focus();
+  }
+  private dateBlock(editing: boolean) {
+    const locked = this.confirmedStart !== undefined ? " disabled" : "";
+    const recorded = this.recordedDay;
+    const date = this.selectedDay;
+    const label = this.dateSource === "recorded" ? "Recorded in your save" : this.dateSource === "picked" ? "Picked by you" : recorded ? "Recorded date not used" : "This save doesn't record a start date";
+    return `<section class="si-start" aria-labelledby="si-start-label"><h2 class="eyebrow" id="si-start-label">Start date</h2>${editing ? `
+      <div class="si-start-edit"><div class="si-start-opts" role="group" aria-label="Start date options">
+      ${recorded ? `<button class="chip" data-import-action="date-option" data-source="recorded" aria-pressed="${this.draftSource === "recorded"}">Recorded in save · ${longDate(recorded)}</button>` : ""}
+      <button class="chip" data-import-action="date-option" data-source="today" aria-pressed="${this.draftSource === "today"}">Import day</button></div>
+      <calendar-date class="start-calendar" aria-label="Playthrough start date" value="${this.draftDay}" min="1970-01-01" max="${dayOf(new Date())}"><calendar-month></calendar-month></calendar-date>
+      <p class="small muted" id="si-date-selected" aria-live="polite">${longDate(this.draftDay)}</p>
+      <div class="hv-actions"><button class="app-quiet" data-import-action="date-cancel">Cancel</button><button class="app-primary" data-import-action="date-use">Use this date</button></div></div>` : `
+      <div class="si-start-row">${CALENDAR}<div class="val">${this.dateSource === "today" && date === dayOf(new Date()) ? "Today, " : ""}${longDate(date)}<small>${label}</small></div>
+      ${recorded && this.dateSource !== "recorded" ? `<button data-import-action="date-recorded"${locked}>Use recorded</button>` : ""}<button data-import-action="date-change"${locked}>Change</button></div>`}</section>`;
+  }
+  private ready(editing = false) {
     const p = this.preview!;
     const v = VERSIONS[p.version];
     this.show(`${this.steps(2)}<span class="si-box" data-game="${p.version}"><img class="cover" src="${imageUrl(`/covers/${v.cover ?? v.short.toLowerCase()}.jpg`)}" alt="${esc(v.name)} box art" width="120" height="120"></span>
       <p class="eyebrow">Ready to import</p><h1 class="lg" id="import-title">${esc(v.name)}${v.platform ? ` <span class="tag plain">${esc(v.platform)}</span>` : ""}</h1>
       <div class="si-count"><p class="lead"><b>${p.caught.length}</b> of ${v.pack.national} caught</p><span class="meter" aria-hidden="true"><i style="width:${p.caught.length / v.pack.national * 100}%"></i></span></div>
       <div class="si-party" aria-hidden="true">${p.caught.slice(0, 6).map((n) => `<img src="${imageUrl(`/sprites/${v.pack.art}/${n}.png`)}" alt="" width="44" height="44">`).join("")}${p.caught.length > 6 ? `<span>+${p.caught.length - 6}</span>` : ""}</div>
-      <ul class="si-facts"><li>${LOCK}${PRIVACY}</li><li>${TICK}This tool imports your caught Pokémon only. Story progress and notes aren't imported.</li><li>${TICK}We create a new playthrough with your caught Pokémon marked.</li>${p.skipped ? `<li class="warn">${WARN}${p.skipped} species not recognized, skipped</li>` : ""}${p.partial ? `<li class="warn">${WARN}This save has partial Pokédex coverage. Some caught Pokémon may be missing.</li>` : ""}</ul>
-      ${this.actions("Create new playthrough", "create")}`, "Ready to import");
+      ${this.dateBlock(editing)}
+      <ul class="si-facts"><li>${LOCK}${PRIVACY}</li><li>${TICK}This tool imports your caught Pokémon${this.dateSource === "recorded" ? " and start date" : ""} only. Story progress and notes aren't imported.</li><li>${TICK}We create a new playthrough with your caught Pokémon marked.</li>${p.skipped ? `<li class="warn">${WARN}${p.skipped} species not recognized, skipped</li>` : ""}${p.partial ? `<li class="warn">${WARN}This save has partial Pokédex coverage. Some caught Pokémon may be missing.</li>` : ""}</ul>
+      ${editing ? "" : this.actions("Create new playthrough", "create")}`, "Ready to import");
+    if (editing) {
+      void import("cally");
+      const calendar = this.options.host.querySelector<HTMLElement & { value: string }>(".start-calendar")!;
+      calendar.addEventListener("change", () => {
+        if (!this.active || this.committing || !calendar.isConnected) return;
+        if (importDate(calendar.value) === undefined || calendar.value > dayOf(new Date())) return;
+        this.draftDay = calendar.value; this.draftSource = "picked";
+        this.options.host.querySelector("#si-date-selected")!.textContent = longDate(calendar.value);
+        this.options.host.querySelectorAll("[data-source]").forEach((b) => b.setAttribute("aria-pressed", "false"));
+      });
+      this.options.host.querySelector<HTMLButtonElement>("[data-import-action=date-option]")?.focus();
+    }
   }
   private problem(title: string, body: string, retry?: () => void, label = "Try again", file = label === "Choose another file") {
     this.retry = retry;
@@ -276,6 +353,8 @@ export class SaveImport {
     if (importTarget(this.options.bridge()) !== this.target) { this.accountChanged(); return; }
     const { preview, target, importId, session } = this;
     const current = () => this.active && session === this.session;
+    this.confirmedStart ??= importDate(this.selectedDay || dayOf(new Date()));
+    const startedAt = this.confirmedStart;
     this.committing = true;
     this.options.host.querySelectorAll<HTMLButtonElement>("button").forEach((b) => b.disabled = true);
     this.options.host.querySelector("[data-import-action=create]")!.textContent = "Creating…";
@@ -284,7 +363,7 @@ export class SaveImport {
       const bridge = this.options.bridge();
       if (importTarget(bridge) !== target) throw new Error("Account changed");
       if (!current()) return;
-      const id = await bridge.importRun(preview.version, preview.caught, importId);
+      const id = await bridge.importRun(preview.version, preview.caught, importId, startedAt);
       if (!current()) { this.options.complete(id, false); return; }
       if (importTarget(this.options.bridge()) !== target) {
         this.problem("Your account changed", "The playthrough was created in the account you confirmed. Switch back to see it.", () => this.open(), "Start again");
