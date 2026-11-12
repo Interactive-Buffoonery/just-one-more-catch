@@ -8,6 +8,8 @@
 - Hosting: a static Cloudflare Worker (`wrangler.jsonc`, `pnpm run deploy`). Keep the site static. See README.md for the full setup.
 - Guest playthroughs live in localStorage and move to the account on sign-in. Keep guest mode working when Clerk fails to load.
 - Game data: never write gates, times, locations or story steps from memory. Every hand-written row needs a source listed in SOURCES.md; if the sources don't settle it, add it to OPEN_QUESTIONS.md instead. Use the `add-game`, `audit-access` and `read-guide` skills.
+- Bulbapedia blocks automated fetches. Use the `read-guide` skill or Serebii instead, and list anything left unverified in your report.
+- Before mocking up a UI change, screenshot the live page at 390px and desktop widths and build the mockup from those screenshots.
 - Deploys are manual. After `pnpm run deploy`, report the deployed commit SHA and the top line of `pnpm exec wrangler deployments list`, and name any merged PRs that are not deployed yet.
 
 <!-- convex-ai-start -->
