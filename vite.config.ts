@@ -29,6 +29,15 @@ export default defineConfig({
   build: {
     rolldownOptions: {
       input: ["index.html", "contact/index.html"],
+      output: {
+        codeSplitting: {
+          groups: [
+            // The shared preload helper must stay outside the deferred UI chunk.
+            { name: "preload", test: /vite[\\/]preload-helper/, priority: 1 },
+            { name: "clerk-ui", test: /node_modules[\\/]@clerk[\\/]ui[\\/]/ },
+          ],
+        },
+      },
     },
   },
 });
