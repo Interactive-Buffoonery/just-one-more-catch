@@ -907,6 +907,83 @@
       ],
       "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/TeamRocketBaseB2F.asm",
       "quote": "setevent EVENT_OPENED_DOOR_TO_ROCKET_HIDEOUT_TRANSMITTER"
+    },
+    {
+      "place": "Route 13",
+      "n": 17,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/engine/overworld/tile_events.asm",
+      "quote": "CheckCutCollision:\n\tld a, c\n\tld hl, .blocks\n\tld de, 1\n\tcall IsInArray\n\tret",
+      "note": "The pinned Route13.blk, Kanto collision table and attributes enclose the grass behind the Cut tree at (44,4). Independent source floods, including all map-boundary entrances and Surf, reached zero grass cells without Cut and all 32 with Cut. Applies only to walking; rod and Surf encounters keep their method requirements."
+    },
+    {
+      "place": "Route 13",
+      "n": 30,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/engine/overworld/tile_events.asm",
+      "quote": "CheckCutCollision:\n\tld a, c\n\tld hl, .blocks\n\tld de, 1\n\tcall IsInArray\n\tret",
+      "note": "The pinned Route13.blk, Kanto collision table and attributes enclose the grass behind the Cut tree at (44,4). Independent source floods, including all map-boundary entrances and Surf, reached zero grass cells without Cut and all 32 with Cut. Applies only to walking; rod and Surf encounters keep their method requirements."
+    },
+    {
+      "place": "Route 13",
+      "n": 33,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/engine/overworld/tile_events.asm",
+      "quote": "CheckCutCollision:\n\tld a, c\n\tld hl, .blocks\n\tld de, 1\n\tcall IsInArray\n\tret",
+      "note": "The pinned Route13.blk, Kanto collision table and attributes enclose the grass behind the Cut tree at (44,4). Independent source floods, including all map-boundary entrances and Surf, reached zero grass cells without Cut and all 32 with Cut. Applies only to walking; rod and Surf encounters keep their method requirements."
+    },
+    {
+      "place": "Route 13",
+      "n": 113,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/engine/overworld/tile_events.asm",
+      "quote": "CheckCutCollision:\n\tld a, c\n\tld hl, .blocks\n\tld de, 1\n\tcall IsInArray\n\tret",
+      "note": "The pinned Route13.blk, Kanto collision table and attributes enclose the grass behind the Cut tree at (44,4). Independent source floods, including all map-boundary entrances and Surf, reached zero grass cells without Cut and all 32 with Cut. Applies only to walking; rod and Surf encounters keep their method requirements."
+    },
+    {
+      "place": "Route 13",
+      "n": 164,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/engine/overworld/tile_events.asm",
+      "quote": "CheckCutCollision:\n\tld a, c\n\tld hl, .blocks\n\tld de, 1\n\tcall IsInArray\n\tret",
+      "note": "The pinned Route13.blk, Kanto collision table and attributes enclose the grass behind the Cut tree at (44,4). Independent source floods, including all map-boundary entrances and Surf, reached zero grass cells without Cut and all 32 with Cut. Applies only to walking; rod and Surf encounters keep their method requirements."
+    },
+    {
+      "place": "Route 13",
+      "n": 187,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/engine/overworld/tile_events.asm",
+      "quote": "CheckCutCollision:\n\tld a, c\n\tld hl, .blocks\n\tld de, 1\n\tcall IsInArray\n\tret",
+      "note": "The pinned Route13.blk, Kanto collision table and attributes enclose the grass behind the Cut tree at (44,4). Independent source floods, including all map-boundary entrances and Surf, reached zero grass cells without Cut and all 32 with Cut. Applies only to walking; rod and Surf encounters keep their method requirements."
+    },
+    {
+      "place": "Route 13",
+      "n": 195,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/engine/overworld/tile_events.asm",
+      "quote": "CheckCutCollision:\n\tld a, c\n\tld hl, .blocks\n\tld de, 1\n\tcall IsInArray\n\tret",
+      "note": "The pinned Route13.blk, Kanto collision table and attributes enclose the grass behind the Cut tree at (44,4). Independent source floods, including all map-boundary entrances and Surf, reached zero grass cells without Cut and all 32 with Cut. Applies only to walking; rod and Surf encounters keep their method requirements."
     }
   ],
   "obtainable_forms": {
