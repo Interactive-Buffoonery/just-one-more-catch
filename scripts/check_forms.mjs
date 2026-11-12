@@ -49,7 +49,7 @@ const api = runInNewContext(stripTypeScriptTypes(stateCode.replaceAll("export ",
   verOf: () => ({ pack: { start: "Start", boxes: [2] } }),
   MON_DEFAULTS: defaults,
   compactMon: (m) => Object.fromEntries(Object.entries(m).filter(([k, v]) => defaults[k] !== v)),
-  R: () => current,
+  R: () => current, viewOf: r => r.view, isGuest: () => false,
 });
 const row = { id: "guest", version: "heartgold" };
 current = api.loadRun(row, "{}");
@@ -82,7 +82,7 @@ const moduleCode = (path) => stripTypeScriptTypes(read(path).replace(/^import[\s
 const parts = read('client/parts.ts');
 const spriteCode = stripTypeScriptTypes(parts.slice(parts.indexOf('const ring ='), parts.indexOf('export const lvl')).replaceAll('export ', ''));
 const context = {
-  $, esc, ui, byN, R: () => current, run: true, P: () => ({ art: 'hgss', boxes: [2, 30] }),
+  $, esc, ui, byN, R: () => current, viewOf: r => r.view, isGuest: () => false, run: true, P: () => ({ art: 'hgss', boxes: [2, 30] }),
   PARTY_SIZE: 6, HELD_ITEMS: [], FIT: {}, TYPE: { psychic: 'pink', normal: 'grey' },
   collectedForms: api.collectedForms, visibleForms: api.visibleForms, collectedGenders: api.collectedGenders, hasGenders: api.hasGenders, GENDERS: api.GENDERS, num: (p) => p.n, pad: (n) => String(n).padStart(3, '0'),
   tagBits: () => [], isHere: () => false, rowStatus: () => ({ s: 'now' }), howElse: () => '', cap: (s) => s,
@@ -219,7 +219,7 @@ assert.equal(Object.keys(api.loadRun({ ...row, id: 'other' }, '{}').genders).len
 
 const journey = read('client/views/journey.ts');
 const custom = runInNewContext(stripTypeScriptTypes(journey.slice(journey.indexOf('const SECTIONS ='), journey.indexOf('/* ---- Story events:')).replaceAll('export ', '')) + '\nfillCustom', {
-  $, R: () => current, ver: () => ({ name: 'HeartGold' }), badgesWord: () => 'badges',
+  $, R: () => current, viewOf: r => r.view, isGuest: () => false, ver: () => ({ name: 'HeartGold' }), badgesWord: () => 'badges',
 });
 current = api.loadRun(row, '{}');
 custom();

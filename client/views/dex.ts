@@ -15,6 +15,8 @@ import {
   P,
   pad,
   R,
+  isGuest,
+  viewOf,
   regionalCaught,
   rowStatus,
   run,
@@ -51,7 +53,7 @@ const FILTERS: [string, string, (s: string) => boolean][] = [
 const SEARCH_ICON = `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
 const withStatus = () => dexList().map((p) => ({ p, s: speciesStatus(p) }));
 const tile = (p: Species, s: string) => {
-  if (R().view === "dexonly") s = s === "caught" ? "caught" : "missing";
+  if (viewOf(R()) === "dexonly") s = s === "caught" ? "caught" : "missing";
   const genders = collectedGenders(p),
     available = visibleForms(p);
   const short = ["missing", "all"].includes(ui.filter) && SHORT[s];
@@ -62,7 +64,7 @@ const section = (title: string, list: { p: Species; s: string }[]) =>
     ? `<section class="dexsec">${title ? `<div class="sec-h"><h2 class="lg">${title}<small>${list.length}</small></h2></div>` : ""}<div class="dgrid${ui.bulk ? " bulk" : ""}">${list.map((x) => tile(x.p, x.s)).join("")}</div></section>`
     : "";
 export function dexGrid() {
-  if (R().view === "dexonly" && ui.filter === "now") ui.filter = "missing";
+  if (viewOf(R()) === "dexonly" && ui.filter === "now") ui.filter = "missing";
   const t = (ui.q || "").trim().toLowerCase().replace(/^#/, ""),
     keep = FILTERS.find((f) => f[0] === ui.filter)![2];
   const list = withStatus().filter(
@@ -90,7 +92,7 @@ export function dexGrid() {
 }
 export function Dex() {
   if (!run) return NoRun();
-  if (R().view === "dexonly" && ui.filter === "now") ui.filter = "missing";
+  if (viewOf(R()) === "dexonly" && ui.filter === "now") ui.filter = "missing";
   const all = withStatus(),
     total = e4() ? P().national : P().regional,
     have = e4() ? R().caught.size : regionalCaught();
@@ -99,7 +101,7 @@ export function Dex() {
     <div class="dexhead"><h1 class="lg" id="dex-h">${e4() ? "National" : P().region} dex</h1><div class="dexcount"><b>${have}</b>/ ${total}<span class="sr"> caught</span></div></div>
     <div class="bar"><i style="width:${(have / total) * 100}%"></i></div>
     <div class="dextop">
-      <div class="filters${R().view === "dexonly" ? " three" : ""}" role="group" aria-label="Show">${FILTERS.filter(([k]) => k !== "now" || R().view !== "dexonly").map(
+      <div class="filters${viewOf(R()) === "dexonly" ? " three" : ""}" role="group" aria-label="Show">${FILTERS.filter(([k]) => k !== "now" || viewOf(R()) !== "dexonly").map(
         ([k, l, f]) =>
           `<button type="button" data-filter="${k}" data-k="f-${k}" aria-pressed="${ui.filter === k}"><b>${all.filter((x) => f(x.s)).length}</b>${l}</button>`,
       ).join("")}</div>
@@ -163,7 +165,7 @@ export function fillSpecies(n: number) {
     ${R().trackForms && available.length > 1 ? `<h3>Forms · ${forms.size} / ${available.length}</h3><div class="forms">${available.map((f) => `<button type="button" class="form" data-form="${f.id}" data-species="${n}" data-k="form-${f.id}" aria-pressed="${forms.has(f.id)}" aria-label="${esc(p.name + " " + f.name)}" ${mine.some((m) => (m.form || p.forms![0].id) === f.id) ? "disabled" : ""}>${sprite(p, "", false, f.id)}<span${f.name.split(" ").some((w) => w.length > 8) ? ' class="long"' : ""}>${esc(f.name)}</span></button>`).join("")}</div>` : ""}
     ${R().trackGenders && hasGenders(p) ? `<h3>Genders · ${genders.size} / 2</h3><div class="forms genders">${GENDERS.map(([g, symbol, label]) => `<button type="button" class="form" data-gender="${g}" data-species="${n}" data-k="gender-${n}-${g}" aria-pressed="${genders.has(g)}" aria-label="${esc(p.name + " " + label)}" ${mine.some((m) => m.g === g) ? "disabled" : ""}><span class="gsym" aria-hidden="true">${symbol}</span><span>${label}</span></button>`).join("")}</div>` : ""}
     ${caught ? `<h3>Yours${mine.length ? ` · ${mine.length}` : ""}</h3><div class="card">${mine.map((m) => monLine(m, true)).join("")}<div class="yours">${mine.length ? "" : `<span class="muted small">Not in your party or boxes</span>`}<button type="button" class="quietbtn" data-addmon="${n}" data-k="add${n}">Add ${mine.length ? "another" : "one"}</button></div></div>` : ""}
-    ${R().view !== "dexonly" ? `${sect("Catchable now", groups.now)}${sect("Other times of day", groups.wrongtime)}${sect("Special conditions", groups.special)}${sect("Later", groups.later)}
+    ${viewOf(R()) !== "dexonly" ? `${sect("Catchable now", groups.now)}${sect("Other times of day", groups.wrongtime)}${sect("Special conditions", groups.special)}${sect("Later", groups.later)}
     ${other ? `<h3>Other ways</h3><div class="card"><p class="spot">${other}</p></div>` : ""}
     ` : ""}
     <button type="button" class="app-quiet done" data-close="1">Done</button>

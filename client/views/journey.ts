@@ -1,3 +1,4 @@
+import { isGuest } from "../game";
 import { $ } from "../dom";
 import {
   badgeName,
@@ -133,8 +134,8 @@ export function fillCustom() {
   const r = R();
   $("#sheetbody").innerHTML =
     `<h2 id="sheet-title">Customize this ${ver().name} playthrough</h2>
-    ${toggle(r.view !== "dexonly", "Journey tab", "", `data-journeytab="1"`)}
-    ${r.view !== "dexonly" ? `<div class="sw"><b class="grow">Start on</b><div class="seg3" role="group" aria-label="Start on">${["journey", "dex"].map((v) => `<button data-startview="${v}" aria-pressed="${r.view === v}">${v === "journey" ? "Journey" : "Dex"}</button>`).join("")}</div></div><p class="eyebrow">Journey sections</p>
+    ${isGuest() ? "" : toggle(r.view !== "dexonly", "Journey tab", "", `data-journeytab="1"`)}
+    ${!isGuest() && r.view !== "dexonly" ? `<div class="sw"><b class="grow">Start on</b><div class="seg3" role="group" aria-label="Start on">${["journey", "dex"].map((v) => `<button data-startview="${v}" aria-pressed="${r.view === v}">${v === "journey" ? "Journey" : "Dex"}</button>`).join("")}</div></div><p class="eyebrow">Journey sections</p>
     ${SECTIONS.map(([k, t, n]) => toggle(!r.hidden.has(k), t, n, `data-hide="${k}" data-k="h-${k}"`)).join("")}
     ${toggle(r.showLater, "Show Pokémon I can't reach yet", `List them in each section, not under "Come back later"`, `data-showlater="1" data-k="h-later"`)}
     <div class="sw"><span class="grow"><b>${badgesWord()[0].toUpperCase()}${badgesWord().slice(1)} and items</b><small>Always shown: this is how the app knows what you can catch</small></span><span class="lock">Always on</span></div>

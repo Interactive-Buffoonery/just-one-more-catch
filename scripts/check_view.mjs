@@ -15,13 +15,13 @@ const start = app.match(/if \(start && run\) (ui.tab = .*?);/)[1];
 const IMPORT_PATH = runInNewContext(app.match(/const IMPORT_PATH = (.*);/)[1]);
 const PATHS = Function(`return ${app.match(/const PATHS[^=]*= (\{[^}]*\});/)[1]}`)();
 const tabAt = (pathname, search, view, VIEWS = {journey: true}) => runInNewContext(app.slice(app.indexOf("function tabFromUrl()"), app.indexOf("function render()")) + "\ntabFromUrl", {
-  URLSearchParams, IMPORT_PATH, PATHS, location: {pathname, search}, run: {view}, VIEWS,
+  isGuest: () => false, URLSearchParams, IMPORT_PATH, PATHS, location: {pathname, search}, run: {view}, VIEWS,
 })();
 for (const pathname of ["/import/", "/import"]) assert.equal(tabAt(pathname, "?tab=journey", "journey"), "import");
 assert.equal(tabAt("/importer/", "", "journey"), "playthroughs");
 for (const view of ["journey", "dex", "dexonly"]) {
   const ui = {};
-  runInNewContext(start, {ui, run: {view}});
+  runInNewContext(start, {ui, run: {view}, isGuest: () => false});
   assert.equal(ui.tab, view === "journey" ? "journey" : "dex");
   assert.equal(tabAt("/journey/", "", view), view === "dexonly" ? "dex" : "journey");
   assert.equal(tabAt("/", "?tab=journey", view), view === "dexonly" ? "dex" : "journey");
@@ -51,7 +51,7 @@ for (const destination of ["stay", "dashboard", "fresh-import"]) {
     pendingImport = true;
     pendingRun = "imported";
     ({render, syncRuns, pending: () => ({pendingRun, pendingImport})});`, {
-    URL, URLSearchParams, IMPORT_PATH, PATHS, SETTINGS: ["settings", "devices"], APP_PATHS: ["/", ...Object.values(PATHS)], shownTab: "import", loadDevices() {},
+    isGuest: () => false, URL, URLSearchParams, IMPORT_PATH, PATHS, SETTINGS: ["settings", "devices"], APP_PATHS: ["/", ...Object.values(PATHS)], shownTab: "import", loadDevices() {},
     location, ui, bridge, raw: bridge,
     run: old, opening: null, pendingImport: false, saveImport: importer,
     importPage: {contains: () => false}, document: {activeElement: null},
@@ -97,3 +97,17 @@ for (const [tab, path] of [["journey", "/journey/"], ["dex", "/pokedex/"], ["box
   runInNewContext(routing, {URL, location, ui: {tab}, onImport: false, PATHS, APP_PATHS: ["/", ...Object.values(PATHS)], IMPORT_PATH, tabFromUrl: () => tab, history: {state: null, replaceState: (_s, _t, url) => replaced.push(url.pathname + url.search), pushState: () => assert.fail("legacy links must replace history")}});
   assert.deepEqual(replaced, [path]);
 }
+
+const guestRoute = runInNewContext(app.slice(app.indexOf("function tabFromUrl()"), app.indexOf("function render()")) + "\ntabFromUrl()", {
+  URLSearchParams, IMPORT_PATH, PATHS, location: {pathname: "/journey/", search: ""},
+  run: {view: "dexonly"}, VIEWS: {journey: true}, isGuest: () => true,
+});
+assert.equal(guestRoute, "journey");
+const tabs = runInNewContext(stripTypeScriptTypes(app.slice(app.indexOf("const tabButtons"), app.indexOf("const VIEWS"))) + "\ntabButtons(true)", {
+  TABS: [["journey", "Journey"]], TAB_ICONS: {journey: "<svg></svg>"},
+  run: {view: "dexonly"}, ui: {tab: "journey"}, isGuest: () => true,
+});
+assert(tabs.includes('aria-label="Journey, sign in required"') && tabs.includes('class="tlock"'));
+const dex = readFileSync(new URL("../client/views/dex.ts", import.meta.url), "utf8");
+assert(!dex.includes("R().view"));
+assert(dex.includes('k !== "now" || viewOf(R()) !== "dexonly"'));
