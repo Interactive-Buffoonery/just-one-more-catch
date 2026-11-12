@@ -47,6 +47,7 @@ export function withGuest(b: Bridge, refresh: () => void): Bridge {
         ...guestRows(),
         { id, version, state: "{}", createdAt: new Date().toISOString() },
       ]);
+      b.track("guest_run_created", version);
       refresh();
       return id;
     },
@@ -111,6 +112,7 @@ export async function moveGuestRuns(
       await raw.saveRun(id, g.state);
       await raw.setStart(id, Date.parse(g.createdAt));
       setGuestRows(guestRows().filter((r) => r.id !== g.id));
+      raw.track("guest_run_moved", g.version);
       moved1(g.id, id);
       moved++;
     }

@@ -47,6 +47,7 @@ export function saveFile(name: string, type: string, parts: BlobPart[]) {
   a.href = URL.createObjectURL(new Blob(parts, { type }));
   a.download = name;
   a.click();
+  bridge.track("export_used");
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 // ponytail: the open run's updatedAt is its last save, even though its state is the live one

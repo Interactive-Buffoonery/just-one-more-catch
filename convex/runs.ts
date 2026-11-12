@@ -174,6 +174,7 @@ export const deleteAccount = mutation({
   handler: async (ctx) => {
     const who = await owner(ctx);
     await purgeRuns(ctx, who);
+    await purgeEventsFor(ctx, who);
     for (const p of await profileOf(ctx, who)) await ctx.db.delete(p._id);
     const sent = await ctx.db
       .query("messages")
@@ -198,6 +199,7 @@ export const contact = mutation({
       .first();
     if (latest?.message === message) return { ok: true };
     await ctx.db.insert("messages", { sender, email, message });
+    await ctx.db.insert("events", { name: "contact_sent", owner: sender === "anonymous" ? undefined : sender });
     // ponytail: soft global cap on notification emails; concurrent sends can slip a few past it, use @convex-dev/rate-limiter if that matters
     const lastHour = await ctx.db
       .query("messages")
@@ -207,4 +209,15 @@ export const contact = mutation({
       await ctx.scheduler.runAfter(0, internal.email.notify, { email, message });
     return { ok: true };
   },
+});
+
+async function purgeEventsFor(ctx: MutationCtx, who: string) {
+  const rows = await ctx.db.query("events").withIndex("by_owner", (q) => q.eq("owner", who)).take(BATCH);
+  for (const row of rows) await ctx.db.delete(row._id);
+  if (rows.length === BATCH) await ctx.scheduler.runAfter(0, internal.runs.purgeEvents, { owner: who });
+}
+
+export const purgeEvents = internalMutation({
+  args: { owner: v.string() },
+  handler: (ctx, { owner }) => purgeEventsFor(ctx, owner),
 });

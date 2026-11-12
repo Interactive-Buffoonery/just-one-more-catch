@@ -44,6 +44,7 @@ export type RunRow = {
   updatedAt?: string;
 };
 export type Bridge = {
+  track(name: import("convex/values").Infer<typeof import("../convex/schema").eventName>, version?: string): void;
   auth: {
     isLoading: boolean;
     isAuthenticated: boolean;
