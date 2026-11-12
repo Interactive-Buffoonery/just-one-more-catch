@@ -71,15 +71,36 @@ function deviceLabel() {
   return os ? `${browser} on ${os}` : browser;
 }
 
+const PAIR_KEY = "jomc.pairCode";
+
+function validPairCode(raw: string | null) {
+  const code = raw?.toUpperCase().replace(/[\s-]/g, "");
+  return code && /^[A-Z]{8}$/.test(code) ? `${code.slice(0, 4)}-${code.slice(4)}` : null;
+}
+
+function storePairCode(code: string | null) {
+  try {
+    if (code) sessionStorage.setItem(PAIR_KEY, code);
+    else sessionStorage.removeItem(PAIR_KEY);
+  } catch {}
+}
+
 function takePairCode() {
   const params = new URLSearchParams(location.search);
   const raw = params.get("pair");
-  if (raw === null) return null;
+  if (raw === null) {
+    try {
+      return validPairCode(sessionStorage.getItem(PAIR_KEY));
+    } catch {
+      return null;
+    }
+  }
   params.delete("pair");
   const search = params.toString();
   history.replaceState(history.state, "", location.pathname + (search && `?${search}`) + location.hash);
-  const code = raw.toUpperCase().replace(/[\s-]/g, "");
-  return /^[A-Z]{8}$/.test(code) ? `${code.slice(0, 4)}-${code.slice(4)}` : null;
+  const code = validPairCode(raw);
+  storePairCode(code);
+  return code;
 }
 
 function sessionToken(c: Pick<Clerk, "session"> | undefined, forceRefreshToken: boolean) {
@@ -117,6 +138,10 @@ async function startTracker() {
   let userId: string | null | undefined = expectsSession ? undefined : null;
   let pairCode = takePairCode();
   let labelAfterSignIn = false;
+  const clearPairCode = () => {
+    pairCode = null;
+    storePairCode(null);
+  };
 
   const bridge = (): Bridge => ({
     track: (name, version) => { void convex.mutation(api.events.track, { name, version }).catch(() => {}); },
@@ -223,15 +248,23 @@ async function startTracker() {
     },
     contact: (input) => convex.mutation(api.runs.contact, input),
     pairCode,
-    clearPairCode: () => { pairCode = null; },
+    clearPairCode,
     startPairing: async (onState) => {
       const { id, code, secret, expiresAt } = await convex.mutation(api.pairing.start, { label: deviceLabel() });
       const release = () => { void convex.mutation(api.pairing.finish, { id, secret }).catch(() => {}); };
       let done = false;
+      const expiry = setTimeout(() => {
+        if (done) return;
+        done = true;
+        stop();
+        release();
+        onState("expired");
+      }, expiresAt - Date.now());
       const stop = convex.onUpdate(api.pairing.status, { id, secret }, (s) => {
         if (done) return;
         if (s.status === "pending") return onState("pending");
         done = true;
+        clearTimeout(expiry);
         stop();
         if (s.status !== "approved") return onState(s.status);
         onState("approved");
@@ -260,14 +293,27 @@ async function startTracker() {
         cancel: () => {
           if (done) return;
           done = true;
+          clearTimeout(expiry);
           stop();
           release();
         },
       };
     },
-    lookupPairing: (code) => convex.mutation(api.pairing.lookup, { code }),
-    approvePairing: (code) => convex.action(api.pairing.approve, { code }),
-    denyPairing: (code) => convex.mutation(api.pairing.deny, { code }),
+    lookupPairing: async (code) => {
+      const r = await convex.mutation(api.pairing.lookup, { code });
+      if (r.status === "missing") clearPairCode();
+      return r;
+    },
+    approvePairing: async (code) => {
+      const r = await convex.action(api.pairing.approve, { code });
+      if (r.status !== "limited") clearPairCode();
+      return r;
+    },
+    denyPairing: async (code) => {
+      const r = await convex.mutation(api.pairing.deny, { code });
+      if (r.status !== "limited") clearPairCode();
+      return r;
+    },
     listDevices: async () => {
       const user = clerk?.user;
       if (!user) return [];
