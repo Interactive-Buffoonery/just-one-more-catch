@@ -22,6 +22,8 @@ let runs: Bridge["runs"];
 let stopRuns: (() => void) | undefined;
 let avatar: Bridge["avatar"];
 let stopAvatar: (() => void) | undefined;
+let theme: Bridge["theme"];
+let stopTheme: (() => void) | undefined;
 let userId: string | null | undefined = expectsSession ? undefined : null;
 
 const bridge = (): Bridge => ({
@@ -29,6 +31,9 @@ const bridge = (): Bridge => ({
   runs: auth.isAuthenticated ? runs : [],
   avatar: auth.isAuthenticated ? avatar : null,
   setAvatar: (n) => convex.mutation(api.runs.setAvatar, { avatar: n }),
+  theme: auth.isAuthenticated ? theme : null,
+  setTheme: (look, mode) =>
+    convex.mutation(api.runs.setTheme, { look, mode: mode as "auto" }),
   getState: (id) => convex.query(api.runs.get, { id }),
   mountSignIn: (el) => {
     if (!clerk?.loaded) {
@@ -113,6 +118,8 @@ function onUser(user: Clerk["user"]) {
   stopRuns = runs = undefined;
   stopAvatar?.();
   stopAvatar = avatar = undefined;
+  stopTheme?.();
+  stopTheme = theme = undefined;
   auth = { isLoading: !!user, isAuthenticated: false };
   convex.setAuth(
     async ({ forceRefreshToken }) => {
@@ -146,6 +153,13 @@ function onUser(user: Clerk["user"]) {
       stopAvatar = ok
         ? convex.onUpdate(api.runs.avatar, {}, (n) => {
             avatar = n;
+            render();
+          })
+        : undefined;
+      stopTheme?.();
+      stopTheme = ok
+        ? convex.onUpdate(api.runs.theme, {}, (t) => {
+            theme = t;
             render();
           })
         : undefined;

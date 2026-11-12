@@ -294,17 +294,12 @@ async function onClick(e: MouseEvent) {
   ) as HTMLButtonElement | null;
   if (!t || t.disabled || (t.type === "submit" && t.form)) return;
   const d = t.dataset;
-  if (d.look) {
-    ui.look = d.look;
-    store.set("jomc.look", ui.look);
-    applyTheme();
-    render();
-    return;
-  }
-  if (d.mode) {
-    ui.mode = d.mode;
-    store.set("jomc.mode", ui.mode);
-    applyTheme();
+  if (d.look || d.mode) {
+    setLocalTheme(d.look || ui.look, d.mode || ui.mode);
+    if (raw.auth.isAuthenticated)
+      raw
+        .setTheme(ui.look, ui.mode)
+        .catch(() => flash("Couldn't save your theme. Try again."));
     render();
     return;
   }
@@ -634,6 +629,25 @@ async function onSubmit(e: SubmitEvent) {
   }
 }
 
+const MODES = ["auto", "light", "dark"];
+function setLocalTheme(look: string, mode: string) {
+  if (PALETTE[look]) store.set("jomc.look", (ui.look = look));
+  if (MODES.includes(mode)) store.set("jomc.mode", (ui.mode = mode));
+  applyTheme();
+}
+// Adopt the account's theme only when it changes, so a pending save never snaps back
+let seenTheme: string | undefined;
+function syncTheme() {
+  const t = raw.theme;
+  if (!raw.auth.isAuthenticated) seenTheme = undefined;
+  if (!raw.auth.isAuthenticated || t === undefined) return;
+  const key = t ? t.look + "/" + t.mode : "";
+  if (key === seenTheme) return;
+  seenTheme = key;
+  if (t) setLocalTheme(t.look, t.mode);
+  else void raw.setTheme(ui.look, ui.mode).catch(() => {});
+}
+
 const darkMQ = matchMedia("(prefers-color-scheme: dark)");
 function applyTheme() {
   const dark = ui.mode === "dark" || (ui.mode === "auto" && darkMQ.matches);
@@ -708,7 +722,7 @@ export function mount(el: HTMLElement, b: Bridge) {
   ui.look = PALETTE[store.get("jomc.look") || ""]
     ? store.get("jomc.look")
     : "blossom";
-  ui.mode = ["auto", "light", "dark"].includes(store.get("jomc.mode") || "")
+  ui.mode = MODES.includes(store.get("jomc.mode") || "")
     ? store.get("jomc.mode")
     : "auto";
   applyTheme();
@@ -841,6 +855,7 @@ export function update(b: Bridge) {
   raw = b;
   setBridge(withGuest(b, refresh));
   syncRuns();
+  syncTheme();
   if (b.auth.isAuthenticated && ui.sheet?.kind === "signin")
     $("#sheet").close();
   if (!$("#sheet").open) render();
