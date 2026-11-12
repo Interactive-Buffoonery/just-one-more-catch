@@ -78,8 +78,9 @@ changing a pack.
   contact-form messages are emailed) on each deployment. Set them with
   `pnpm exec convex env set`, and add `--prod` for production.
 - **Email:** Cloudflare Email Routing forwards `contact@justonemorecatch.app`
-  to Sarah's inbox. Resend sends the contact-form notifications from
-  `notify@mail.justonemorecatch.app`.
+  to `justonemorecatch@gmail.com`. Resend sends the contact-form
+  notifications from `notify@mail.justonemorecatch.app` to the same inbox
+  (`CONTACT_TO`).
 - The Clerk secret key isn't used anywhere. Keep it out of this repo.
 
 ## Run locally
