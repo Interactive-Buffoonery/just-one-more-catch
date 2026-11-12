@@ -349,7 +349,6 @@ export function openRun(row: RunRow, data: GameData, state: string) {
   const v = verOf(row.version);
   ui.loadError = false;
   run = loadRun(row, state);
-  CHAPTERS = data.chapters;
   EVENTS = Object.fromEntries(data.events.map((e) => [e.id, e]));
   LATER = Object.fromEntries(
     data.events.map((e) => [
@@ -362,6 +361,14 @@ export function openRun(row: RunRow, data: GameData, state: string) {
     ...p,
     all: p.rows,
     rows: p.rows.filter((r: Row) => r.v.includes(v.code)),
+  }));
+  const under = (pl: string) => (r: Row) => r.place === pl || r.place.startsWith(pl + " ");
+  // drop places only the other version can visit (Birth Island on GBA, Lake of the Sunne in Ultra Sun)
+  CHAPTERS = data.chapters.map((c) => ({
+    ...c,
+    places: c.places.filter(
+      (pl) => !DEX.some((p) => p.all.some(under(pl))) || DEX.some((p) => p.rows.some(under(pl))),
+    ),
   }));
   byName = Object.fromEntries(DEX.map((p) => [p.name, p]));
   byN = Object.fromEntries(DEX.map((p) => [p.n, p]));
@@ -512,7 +519,8 @@ export function rowStatus(r: Row): { s: string; why?: string; need?: string; kin
 }
 export function howElse(p: Species) {
   const v = ver();
-  const elsewhere = (s: Species) => s.all.some((r) => !r.v.includes(v.code));
+  const pair = v.other && Object.values(VERSIONS).find((x) => x.pack === v.pack && x.code !== v.code && x.platform === v.platform);
+  const elsewhere = (s: Species) => !!pair && s.all.some((r) => r.v.includes(pair.code));
   const trade = (s: Species) =>
     elsewhere(s) && v.other
       ? `Not in ${v.name}. Trade from ${v.other}.`

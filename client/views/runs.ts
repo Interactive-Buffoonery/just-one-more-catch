@@ -38,15 +38,15 @@ export const cover = (
   `<img class="cover ${cls}" src="${imageUrl(`/covers/${v.short.toLowerCase()}.jpg`)}" alt="${alt}" width="46" height="46">`;
 export const confirmGame = (id: string, customize = false) => {
   const v = verOf(id);
-  if (customize) return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">Customize your ${esc(v.name)} playthrough?</h2><div class="hv-actions"><button class="app-primary" data-custom="1">Customize</button><button class="app-quiet" data-close="1">Not now</button></div><p class="small muted">You can update your playthrough at any time using Customize on the Journey or Dex tab.</p></div>`;
-  return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">Start ${esc(v.name)}?</h2><div class="hv-actions"><button class="app-primary" data-confirmrun="${esc(id)}">Yes please!</button><button class="app-quiet" data-close="1">No thank you, just browsing!</button></div></div>`;
+  if (customize) return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">Customize your ${esc(v.name)}${v.platform ? ` (${esc(v.platform)})` : ""} playthrough?</h2><div class="hv-actions"><button class="app-primary" data-custom="1">Customize</button><button class="app-quiet" data-close="1">Not now</button></div><p class="small muted">You can update your playthrough at any time using Customize on the Journey or Dex tab.</p></div>`;
+  return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">Start ${esc(v.name)}${v.platform ? ` (${esc(v.platform)})` : ""}?</h2><div class="hv-actions"><button class="app-primary" data-confirmrun="${esc(id)}">Yes please!</button><button class="app-quiet" data-close="1">No thank you, just browsing!</button></div></div>`;
 };
 const gameChoices = (heading = "new-game-heading", regions = false) =>
   CONSOLES.map((console, index) =>
     `<h3 class="console" id="${heading}-${index}">${esc(console.name)}</h3><div class="slide s2"><div class="reel" role="group" aria-labelledby="${heading}-${index}">${console.games.map((game) => {
       if (typeof game !== "string") return `<div class="gb soon" role="group" style="--c:${game.color}" aria-label="${esc(game.name)}, Coming soon"><span class="bx"><img class="cover" src="${imageUrl(`/covers/${game.short.toLowerCase()}.jpg`)}" alt="" width="160" height="160"></span><b>${esc(game.name)}</b><span class="small muted">Coming soon</span></div>`;
       const v = VERSIONS[game];
-      return `<button class="gb" data-newrun="${game}" data-game="${game}"><span class="bx">${cover(v, "", "")}</span><b>${esc(v.name)}</b>${regions ? `<span class="small muted">${esc(v.pack.region)}</span>` : "<em>Start</em>"}</button>`;
+      return `<button class="gb" data-newrun="${game}" data-game="${game}"><span class="bx">${cover(v, "", "")}</span><b>${esc(v.name)}${v.platform ? `<span class="sr"> (${esc(v.platform)})</span>` : ""}</b>${regions ? `<span class="small muted">${esc(v.pack.region)}</span>` : "<em>Start</em>"}</button>`;
     }).join("")}</div></div>`
   ).join("");
 
@@ -189,7 +189,7 @@ export function switcher(id?: string | null) {
   const cur = bridge.runs?.find((r) => r.id === id);
   if (!cur) return "";
   const now = verOf(cur.version);
-  return `<details class="gsw"><summary data-k="gsw" aria-label="${now.name}. Switch playthrough">${cover(now, "", "")}<span class="gname">${now.name}</span>${CHEV}</summary><div class="menu">${recentRuns()
+  return `<details class="gsw"><summary data-k="gsw" aria-label="${now.name}${now.platform ? ` (${now.platform})` : ""}. Switch playthrough">${cover(now, "", "")}<span class="gname">${now.name}${now.platform ? ` <span class="tag plain">${now.platform}</span>` : ""}</span>${CHEV}</summary><div class="menu">${recentRuns()
     .map(({ row, r }) => {
       const v = verOf(row.version),
         b = badgeCount(row.version, r),
