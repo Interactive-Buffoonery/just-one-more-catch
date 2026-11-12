@@ -38,6 +38,7 @@ import { Dex, dexGrid, fillSpecies } from "./views/dex";
 import { fillClock, fillCustom, Journey, untick } from "./views/journey";
 import {
   confirmGame,
+  dash,
   exportLabel,
   fillSignIn,
   fillStartDate,
@@ -211,6 +212,7 @@ function tabFromUrl() {
   return t === "journey" && !isGuest() && run?.view === "dexonly" ? "dex" : t && Object.hasOwn(VIEWS, t) ? t : "playthroughs";
 }
 function render() {
+  if (ui.tab !== "playthroughs") dash.slot = undefined;
   if (ui.tab === "journey" && !isGuest() && run?.view === "dexonly") ui.tab = "dex";
   const a = bridge.auth,
     signedIn = a.isAuthenticated;
@@ -491,6 +493,12 @@ async function onClick(e: MouseEvent) {
     await bridge.deleteAccount();
     closeRun();
     bridge.signOut();
+    return;
+  }
+  if (d.slot || d.shelf) {
+    if (d.slot) dash.slot = d.slot;
+    if (d.shelf) dash.shelf = d.shelf;
+    render();
     return;
   }
   if (d.newrun) {
