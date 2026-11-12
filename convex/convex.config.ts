@@ -6,6 +6,7 @@ const app = defineApp({
   env: {
     RESEND_API_KEY: v.optional(v.string()),
     CONTACT_TO: v.optional(v.string()),
+    CLERK_SECRET_KEY: v.optional(v.string()),
   },
 });
 app.use(rateLimiter);

@@ -1,6 +1,7 @@
 import { HOUR, MINUTE, RateLimiter } from "@convex-dev/rate-limiter";
 import { components, internal } from "./_generated/api";
 import type { MutationCtx } from "./_generated/server";
+import { identityOf } from "./auth";
 
 const limits = new RateLimiter(components.rateLimiter, {
   contactSender: { kind: "token bucket", rate: 3, period: HOUR, capacity: 2 },
@@ -18,7 +19,7 @@ export async function sendContact(
   if (!message || message.length > 4000 || email.length > 200 ||
       (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)))
     return { ok: false };
-  const identity = await ctx.auth.getUserIdentity();
+  const identity = await identityOf(ctx);
   const sender = identity?.tokenIdentifier ?? "anonymous";
   const latest = await ctx.db.query("messages")
     .withIndex("by_sender", (q) => q.eq("sender", sender))
