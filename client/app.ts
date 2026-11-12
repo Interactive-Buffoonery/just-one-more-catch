@@ -29,7 +29,6 @@ import {
 import { moveGuestAvatar, moveGuestRuns, withGuest } from "./guest";
 import { SETTINGS_ICON, TAB_ICONS } from "./parts";
 import { Bridge, RunRow } from "./types";
-import { Contact } from "./views/about";
 import { Boxes, fillBoxSheet, fillMonSheet, saveMon, updateMonSprite } from "./views/boxes";
 import { Dex, dexGrid, fillSpecies } from "./views/dex";
 import { fillClock, fillCustom, Journey, untick } from "./views/journey";
@@ -127,7 +126,6 @@ const VIEWS: Record<string, () => string> = {
   dex: Dex,
   boxes: Boxes,
   playthroughs: Runs,
-  contact: Contact,
 };
 function shell() {
   return `<header class="top">
@@ -140,7 +138,7 @@ function shell() {
   <div class="balls" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M2 12h7M15 12h7"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M2 12h7M15 12h7"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M2 12h7M15 12h7"/></svg></div>
   <div class="footer-brand"><a href="/about/" aria-label="About Just One More Catch">Just One More Catch</a></div>
   <p class="foot">Unofficial fan project, not affiliated with Nintendo, Creatures, GAME FREAK or The Pokémon Company. Free and non-commercial. Box art, sprites and badges © Nintendo, Creatures and GAME FREAK. Encounter data and sprites sourced from <a href="https://pokeapi.co" target="_blank" rel="noopener">PokeAPI</a>. Thank you!</p>
-  <nav class="footnav" aria-label="About this site"><a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><button data-tab="contact">Contact</button></nav></footer>
+  <nav class="footnav" aria-label="About this site"><a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a></nav></footer>
   <div class="dock"><div id="toast"></div><div id="tabs"></div></div>
   <dialog class="sheet" id="sheet" aria-labelledby="sheet-title"><div class="sheetbody" id="sheetbody"></div></dialog>
   <div class="sr" aria-live="polite" id="live"></div>`;
@@ -332,13 +330,6 @@ async function onClick(e: MouseEvent) {
   }
   if (d.download) {
     await download(d.download === "csv" ? "csv" : "json");
-    return;
-  }
-  if (d.another) {
-    ui.sent = false;
-    ui.sendError = "";
-    render();
-    document.getElementById("c-msg")?.focus();
     return;
   }
   if (d.delaccount) {
@@ -594,41 +585,6 @@ async function onClick(e: MouseEvent) {
   render();
 }
 
-async function onSubmit(e: SubmitEvent) {
-  const form = e.target as HTMLFormElement;
-  if (!form.dataset.contact) return;
-  e.preventDefault();
-  const btn = form.querySelector("button") as HTMLButtonElement;
-  btn.disabled = true;
-  try {
-    const res = await bridge.contact({
-      message: $("#c-msg").value,
-      email: $("#c-email").value,
-      website: $("#c-website").value,
-    });
-    ui.sent = res.ok;
-    ui.sendError = res.ok
-      ? ""
-      : "Please write a message, and check the email address.";
-  } catch {
-    ui.sendError = "That didn't send. Please try again.";
-  }
-  if (ui.sent) {
-    render();
-    document.getElementById("contact-thanks")?.focus();
-  }
-  else {
-    document.getElementById("c-msg")?.setAttribute("aria-invalid", "true");
-    document.getElementById("c-msg")?.setAttribute("aria-describedby", "contact-error");
-    btn.disabled = false;
-    form.querySelector(".small")?.remove();
-    btn.insertAdjacentHTML(
-      "afterend",
-      `<p id="contact-error" class="small" role="alert" style="color:var(--coral)">${ui.sendError}</p>`,
-    );
-  }
-}
-
 const MODES = ["auto", "light", "dark"];
 function setLocalTheme(look: string, mode: string) {
   if (PALETTE[look]) store.set("jomc.look", (ui.look = look));
@@ -729,7 +685,6 @@ export function mount(el: HTMLElement, b: Bridge) {
   darkMQ.addEventListener("change", applyTheme);
   if (settings) openSheet({ kind: "settings" });
   el.addEventListener("click", onClick);
-  el.addEventListener("submit", onSubmit as any);
   el.addEventListener(
     "toggle",
     (e) => {

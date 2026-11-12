@@ -3,4 +3,9 @@ import { imageVersions } from "./scripts/image-versions.ts";
 
 export default defineConfig({
   define: { __IMAGE_VERSIONS__: JSON.stringify(imageVersions()) },
+  build: {
+    rolldownOptions: {
+      input: ["index.html", "contact/index.html"],
+    },
+  },
 });
