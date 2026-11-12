@@ -198,3 +198,7 @@ flags matched a separate raw-bit check, nine seen flags did not become nine
 caught Pokémon, and both the original file and existing playthrough stayed
 unchanged. Personal save files remain outside the repository. Live Clerk/Convex,
 Safari and physical mobile performance remain unverified.
+
+GB/GBC reader-only fixture results and remaining adapter work are recorded in
+[Game Boy save validation](game-boy-save-validation.md). Passing those reader
+checks alone does not enable website import.

@@ -1,0 +1,227 @@
+{
+  "readerVersion": "0.1.1",
+  "readerSource": "5263b86e798e9e189c1d71a127b0192ec4828b88",
+  "coreRevision": "02c9ec108fe3c96735f6c2397eaebc10e29a049f",
+  "publicSource": "https://github.com/ncorgan/pksav-test-saves/tree/e4d42e112cbb03b7e9f9424ab62931f953ef22d8",
+  "passed": 14,
+  "invalidRejected": true,
+  "files": [
+    {
+      "name": "public/red",
+      "bytes": 32768,
+      "sha256": "9f3e7089075a50ff280e286e96de9fef08ffde98cd034b77dfca6a25107ff7a1",
+      "caught": 151,
+      "seen": 151,
+      "checksums": [
+        true
+      ],
+      "versions": [
+        "RD",
+        "GN",
+        "BU"
+      ],
+      "unchanged": true
+    },
+    {
+      "name": "public/yellow",
+      "bytes": 32768,
+      "sha256": "f3db2fbe059d5dc7f006a8e3c0274d0edfd27fbfc8fde8937385aa8909f5f1ef",
+      "caught": 151,
+      "seen": 151,
+      "checksums": [
+        true
+      ],
+      "versions": [
+        "YW"
+      ],
+      "unchanged": true
+    },
+    {
+      "name": "public/gold",
+      "bytes": 32768,
+      "sha256": "fcf17cce2f6aeed15dc4d35abf6697bf70a935a0f3c5a98b2b1cb22ef8355c1c",
+      "caught": 181,
+      "seen": 220,
+      "checksums": [
+        true,
+        true
+      ],
+      "versions": [
+        "GD",
+        "SI"
+      ],
+      "unchanged": true
+    },
+    {
+      "name": "public/crystal",
+      "bytes": 32812,
+      "sha256": "a1fdbf5d3e03b6be78eb84460322078d66ec344ebaf29abf0ddd5f315da91f02",
+      "caught": 251,
+      "seen": 251,
+      "checksums": [
+        true,
+        true
+      ],
+      "versions": [
+        "C"
+      ],
+      "unchanged": true
+    },
+    {
+      "name": "synthetic/RD",
+      "bytes": 32768,
+      "sha256": "0630fca68262615d5c87eef7a23acf06bcf552606ac4dae122a62fad8d496711",
+      "caught": 2,
+      "seen": 3,
+      "checksums": [
+        true
+      ],
+      "versions": [
+        "RD",
+        "GN",
+        "BU"
+      ],
+      "unchanged": true
+    },
+    {
+      "name": "synthetic/RD-empty",
+      "bytes": 32768,
+      "sha256": "1d7424784e2d1eefc27058fa8d39c452be3654c7f9c664431610936c1464c071",
+      "caught": 0,
+      "seen": 0,
+      "checksums": [
+        true
+      ],
+      "versions": [
+        "RD",
+        "GN",
+        "BU"
+      ],
+      "unchanged": true
+    },
+    {
+      "name": "synthetic/BU",
+      "bytes": 32768,
+      "sha256": "0630fca68262615d5c87eef7a23acf06bcf552606ac4dae122a62fad8d496711",
+      "caught": 2,
+      "seen": 3,
+      "checksums": [
+        true
+      ],
+      "versions": [
+        "RD",
+        "GN",
+        "BU"
+      ],
+      "unchanged": true
+    },
+    {
+      "name": "synthetic/BU-empty",
+      "bytes": 32768,
+      "sha256": "1d7424784e2d1eefc27058fa8d39c452be3654c7f9c664431610936c1464c071",
+      "caught": 0,
+      "seen": 0,
+      "checksums": [
+        true
+      ],
+      "versions": [
+        "RD",
+        "GN",
+        "BU"
+      ],
+      "unchanged": true
+    },
+    {
+      "name": "synthetic/YW",
+      "bytes": 32768,
+      "sha256": "27eea02d86db45b1c16eca179ad89a700cb5718615a60602b706e2d21ab526b5",
+      "caught": 2,
+      "seen": 3,
+      "checksums": [
+        true
+      ],
+      "versions": [
+        "YW"
+      ],
+      "unchanged": true
+    },
+    {
+      "name": "synthetic/YW-empty",
+      "bytes": 32768,
+      "sha256": "0cfa74ee383001b5d79259a5f8eb973374cf9a3e75a4e55bc778071b2f4a95bb",
+      "caught": 0,
+      "seen": 0,
+      "checksums": [
+        true
+      ],
+      "versions": [
+        "YW"
+      ],
+      "unchanged": true
+    },
+    {
+      "name": "synthetic/GD",
+      "bytes": 65536,
+      "sha256": "78d7bcdcb512337885bac4c5366a8ea40a932f230d6eb26d0a90a20e4ca59967",
+      "caught": 2,
+      "seen": 3,
+      "checksums": [
+        true,
+        true
+      ],
+      "versions": [
+        "GD",
+        "SI"
+      ],
+      "unchanged": true
+    },
+    {
+      "name": "synthetic/GD-empty",
+      "bytes": 65536,
+      "sha256": "ecf6ed945aa881de398600f74830494b5984e3ac2c34e36f0d5f2a144d061b12",
+      "caught": 0,
+      "seen": 0,
+      "checksums": [
+        true,
+        true
+      ],
+      "versions": [
+        "GD",
+        "SI"
+      ],
+      "unchanged": true
+    },
+    {
+      "name": "synthetic/SI",
+      "bytes": 65536,
+      "sha256": "78d7bcdcb512337885bac4c5366a8ea40a932f230d6eb26d0a90a20e4ca59967",
+      "caught": 2,
+      "seen": 3,
+      "checksums": [
+        true,
+        true
+      ],
+      "versions": [
+        "GD",
+        "SI"
+      ],
+      "unchanged": true
+    },
+    {
+      "name": "synthetic/SI-empty",
+      "bytes": 65536,
+      "sha256": "ecf6ed945aa881de398600f74830494b5984e3ac2c34e36f0d5f2a144d061b12",
+      "caught": 0,
+      "seen": 0,
+      "checksums": [
+        true,
+        true
+      ],
+      "versions": [
+        "GD",
+        "SI"
+      ],
+      "unchanged": true
+    }
+  ]
+}
