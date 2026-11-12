@@ -215,11 +215,17 @@ export function Runs() {
   <section class="sec wide"><h2 class="lg" id="new-game-heading">Start another playthrough</h2>${rows.length < MAX_RUNS ? gameChoices() : `<p class="muted">You have ${MAX_RUNS} playthroughs. Delete one to start another.</p>`}</section></div>
   ${signInNote()}</div>`;
 }
+function emailLine(email = "") {
+  const [local, domain = ""] = email.split("@");
+  const long = Math.max(local.length, domain.length + 1) > 20;
+  const text = esc(email || "Signed in").replace(/[.@]/g, (m) => (m === "@" ? "<wbr>@" : ".<wbr>"));
+  return `<p${long ? " data-long" : ""}>${text}</p>`;
+}
 function Account() {
   const a = bridge.auth;
   return `<section class="s-id"><div class="tslab id"><h2 class="lg">${esc(trainerName())}</h2>${
     a.isAuthenticated
-      ? `<p>${esc(a.email || "Signed in")}</p>`
+      ? emailLine(a.email)
       : `<p>Saved only in this browser</p>`
   }${partner("partner")}</div></section>`;
 }
