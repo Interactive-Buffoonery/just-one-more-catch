@@ -18,6 +18,7 @@ BASE = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/"
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 UA = {"User-Agent": "just-one-more-catch-data-build"}
 ART = {
+    "rb": "pokemon/versions/generation-i/red-blue/transparent/",
     "yellow": "pokemon/versions/generation-i/yellow/transparent/",
     "crystal": "pokemon/versions/generation-ii/crystal/transparent/",
     "frlg": "pokemon/versions/generation-iii/firered-leafgreen/",
@@ -117,7 +118,7 @@ if __name__ == "__main__":
     for pack, path in ART.items():
         game = json.load(open(os.path.join(ROOT, "data", pack + ".json")))
         for shiny in ("", "shiny/"):
-            jobs += [(f"{BASE}{path}{'' if pack == 'yellow' else shiny}{form(n, game)}.png", os.path.join(ROOT, "public", "sprites", pack, shiny, f"{n}.png")) for n in range(1, game["species"] + 1)]
+            jobs += [(f"{BASE}{path}{'' if game['gen'] == 'generation-i' else shiny}{form(n, game)}.png", os.path.join(ROOT, "public", "sprites", pack, shiny, f"{n}.png")) for n in range(1, game["species"] + 1)]
     for pack in ART:
         game = json.load(open(os.path.join(ROOT, "data", pack + ".json")))
         for forms in game.get("obtainable_forms", {}).values():

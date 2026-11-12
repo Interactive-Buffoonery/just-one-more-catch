@@ -38,8 +38,9 @@ def pretty(s):
 
 def base_place(loc):
     loc = GAME["rename"].get(loc, loc)
-    loc = re.sub(r" (\d+F|B\d+F)( Top)?$", "", loc)
-    loc = GAME["rename"].get(loc, loc)
+    if not GAME.get("keep_floors"):
+        loc = re.sub(r" (\d+F|B\d+F)( Top)?$", "", loc)
+        loc = GAME["rename"].get(loc, loc)
     loc = re.sub(r"^Mt\. Moon Mt\. Moon ", "Mt. Moon ", loc)
     return re.sub(r"^Victory Road 1$", "Victory Road", loc)
 

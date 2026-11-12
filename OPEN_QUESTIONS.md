@@ -56,3 +56,27 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
   sprites and generated-page browser QA remain unperformed. No cartridge or
   emulator gameplay, account sync or save-file import verification was run.
   Yellow tracking does not enable file import.
+
+## Red and Blue
+
+- Independent access audit remains for the coordinator, particularly the
+  first reachable parts of Seafoam's basement floors, Route 12's southern
+  grass, and the Route 2 trade-house approach. The implementation cites
+  original pret scripts/maps and accessible walkthroughs, but no local
+  Red/Blue scanned guide or emulator confirmation was available.
+- PokeAPI's NPC-trade levels are fixed example levels; original NPC trades
+  retain the offered Pokémon's level (`engine/events/in_game_trades.asm`).
+  The shared encounter row schema only supports numeric ranges, so these
+  source levels are retained, not claimed as mandatory in-game levels.
+  Coordinator should decide a shared variable-level presentation rather
+  than introducing Red/Blue-only UI changes in this pack task.
+- The S.S. Anne dock is a temporary location after the ship departs. The
+  tracker models access via Bill's ticket but does not model losing access
+  after departure. Its source-backed PokeAPI fishing rows are retained;
+  verify an appropriate shared temporary-area presentation before claiming
+  all currently available encounters are exact.
+- The shared box editor still offers later-generation metadata (gender,
+  shiny and held-item fields). Red/Blue has no visible shiny art or held
+  items; regular sprites intentionally fill shiny paths. Do not interpret
+  these fields as original-game mechanics or save-file support. No box UI
+  or save-import UI was changed in this task.
