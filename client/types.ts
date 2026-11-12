@@ -48,6 +48,7 @@ export type Bridge = {
   auth: {
     isLoading: boolean;
     isAuthenticated: boolean;
+    userId?: string;
     displayName?: string;
     email?: string;
   };
@@ -61,6 +62,7 @@ export type Bridge = {
   unmountSignIn(el: HTMLDivElement): void;
   signOut(): void;
   createRun(version: string): Promise<string>;
+  importRun(version: string, caught: number[], importId: string): Promise<string>;
   saveRun(id: string, state: string): Promise<unknown>;
   deleteRun(id: string): Promise<unknown>;
   setStart(id: string, startedAt: number): Promise<unknown>;

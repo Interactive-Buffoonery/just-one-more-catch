@@ -3,6 +3,7 @@ import { Bridge, RunRow } from "./types";
 import { isAvatar } from "../shared/avatars";
 import { MAX_RUNS } from "../shared/limits";
 import { summarize } from "../shared/summary";
+import { importCaughtState, validateImportId } from "../shared/save-import";
 
 /* ---- Guest runs live in this browser until sign-in ---- */
 type GuestRow = Omit<RunRow, "summary"> & { state: string; movedTo?: string };
@@ -47,6 +48,28 @@ export function withGuest(b: Bridge, refresh: () => void): Bridge {
         ...guestRows(),
         { id, version, state: "{}", createdAt: new Date().toISOString() },
       ]);
+      b.track("guest_run_created", version);
+      refresh();
+      return id;
+    },
+    async importRun(version, caught, importId) {
+      validateImportId(importId);
+      const state = importCaughtState(version, caught);
+      const rows = guestRows();
+      const id = "local-import-" + importId;
+      const existing = rows.find((row) => row.id === id);
+      if (existing) {
+        if (existing.version !== version || existing.state !== state)
+          throw new Error("Import ID already used for another playthrough");
+        return id;
+      }
+      if (rows.length >= MAX_RUNS) throw new Error("Too many playthroughs");
+      const next = JSON.stringify([
+        ...rows,
+        { id, version, state, createdAt: new Date().toISOString() },
+      ]);
+      localStorage.setItem(GUEST, next);
+      guestMem = next;
       b.track("guest_run_created", version);
       refresh();
       return id;

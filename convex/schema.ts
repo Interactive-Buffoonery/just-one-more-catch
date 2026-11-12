@@ -10,6 +10,7 @@ export default defineSchema({
   runs: defineTable({
     owner: v.string(),
     version: v.string(),
+    importId: v.optional(v.string()),
     summary: v.object({
       badges: v.array(v.string()),
       caught: v.number(),
@@ -17,7 +18,8 @@ export default defineSchema({
     }),
     updatedAt: v.optional(v.number()),
     startedAt: v.optional(v.number()),
-  }).index("by_owner", ["owner"]),
+  }).index("by_owner", ["owner"])
+    .index("by_owner_importId", ["owner", "importId"]),
   // Full playthrough state, kept apart so listing runs reads only the small run documents
   states: defineTable({
     run: v.id("runs"),
