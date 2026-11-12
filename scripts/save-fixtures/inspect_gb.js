@@ -3,6 +3,7 @@ export async function run() {
   const reader = await createSaveReader({ baseUrl: '/reader/assets/' });
   const names = ['red', 'yellow', 'gold', 'crystal'].map((n) => `public/${n}`);
   names.push(...['RD', 'BU', 'YW', 'GD', 'SI'].flatMap((n) => [`synthetic/${n}`, `synthetic/${n}-empty`]));
+  names.push('in-game/red-zero');
   const results = [];
   const hash = async (bytes) => Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))).join(',');
   try {

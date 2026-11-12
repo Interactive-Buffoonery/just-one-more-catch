@@ -1,7 +1,8 @@
-# GB/GBC save-reader validation
+# GB/GBC save import validation
 
 On 2026-11-12, the website's installed reader 0.1.1 successfully inspected four
-public saves and ten controlled synthetic saves through its actual browser
+public saves, ten controlled synthetic saves and one genuine in-game Red save
+through its actual browser
 worker/WASM. An independent Python check matched every caught and seen species
 against raw saved bitfields, verified checksums and confirmed input bytes stayed
 unchanged. A malformed input was rejected as `invalid-save`.
@@ -34,8 +35,8 @@ Silver it serialized two cases:
   and seen `[1,25,133]`, with empty party/current box and no occupied boxes in
   the native re-read. This verifies saved history rather than storage scanning.
 - Empty caught and seen flags. WASM returned successful empty arrays, not a
-  parser failure. These are synthetic structural cases; no legitimate
-  pre-starter in-game zero-caught save was obtained.
+  parser failure. These are synthetic structural cases, separate from the
+  genuine pre-starter save below.
 
 All GB/GBC cases omitted `startDate`, preserving the import-day fallback.
 Red/Blue and Gold/Silver ambiguity survived serialization and WASM parsing.
@@ -50,13 +51,45 @@ totals. Offset and checksum references are pinned Core's
 and `Saves/SAV2.cs`. The shipped reader source is
 `5263b86e798e9e189c1d71a127b0192ec4828b88`, with `sourceDirty: false`.
 
-## Scope and remaining work
+## Genuine zero-caught save
 
-This is reader-level evidence. Website mappings, Works with copy and import
-support for the new packs remain unchanged. These checks do not prove website
-file selection, paired-version choice, preview, playthrough creation or live
-account persistence for the new games. Follow [the future-game checklist](save-import.md#adding-a-future-official-game)
-before advertising support. In particular, obtain a legitimate zero-caught save,
-add maintained reader fixture tests, and test exact website mappings while
-preserving ambiguous titles. No ROM hack fallback, reader release, deployment
-or upstream checkout edit was made.
+Built unmodified English Red from pret/pokered at
+`130ac3fa5493fb29a8005e8439fd31b4826e46af` with RGBDS 1.0.4. The ROM's SHA-1
+matched the original-source manifest: `ea9bcae617fdf159b045185467ae58b2e4a48b9a`.
+PyBoy 2.9.0 ran the game through the introduction into the opening room. The
+in-game **Save → Yes** command produced a valid battery save before receiving a
+starter, with an empty party and zero caught/seen flags. No memory edits were
+used. The saved-game confirmation was inspected. A fresh run of the retained
+button script reproduced the save successfully (clock bytes can change hashes).
+The actual WASM reader and raw checker accepted the exported cartridge RAM;
+the website created and persisted a new Red playthrough with `caught: []`.
+ROMs, save files and screenshots stay in the ignored local cache.
+
+## Website and persistence verification
+
+Red, Blue, Yellow, Gold and Silver now have exact website identity adapters and
+Works with entries. Green remains unsupported. Red/Blue and Gold/Silver show
+explicit paired choices; filenames do not pick a version. The installed reader
+0.1.1 already handles these fixtures, so no reader change or release was needed.
+
+The built website passed 15 real-worker/WASM import round trips in Chromium:
+ten controlled cases, four public saves and the genuine zero-caught save.
+Each checked exact paired choices, preview counts, import-day fallback, existing
+run preservation, exact caught state, successful navigation to Dex Caught,
+localStorage persistence after reload, unchanged source bytes and no non-GET
+requests. Bulbasaur's seen-only flag stayed absent from caught state. The Yellow
+controlled case ran at a 390px viewport; Silver's empty case used drag and drop.
+Separate browser cases passed cancellation, malformed-file rejection and browser
+storage failure followed by successful retry without duplicating the run.
+
+Maintained mapping tests cover exact identities, unsupported Green, loaded-pack
+intersection and national caps. Guest and Convex tests cover both nonempty and
+empty imports for every new version, preserve an existing run, and verify account
+ownership. The complete suite passed 74 tests. These are local guest browser and
+simulated-account backend results; live Clerk/Convex, Safari and physical mobile
+performance remain unverified. Encounter progression and unresolved gameplay
+routes are covered separately in [the access report](game-boy-access-audit.md).
+
+The shared preview snapshot timed out twice; browser verification used the
+existing Playwright harness after that failure. No upstream reader checkout was
+edited. Nothing was pushed or deployed.

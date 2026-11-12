@@ -43,6 +43,19 @@ describe("guest caught-list imports", () => {
     expect(track).toHaveBeenCalledWith("guest_run_created", "heartgold");
   });
 
+  it.each(["red", "blue", "yellow", "gold", "silver"] as const)("keeps %s caught history and empty guest imports", async (version) => {
+    const { values, guest, guestRows } = await setup();
+    const existing = { id: "local-existing", version: "crystal", state: '{"caught":[1],"notes":"Keep me"}', createdAt: "2026-01-01T00:00:00.000Z" };
+    values.set("jomc.guest", JSON.stringify([existing]));
+    const id = await guest.importRun(version, [133, 25], importId);
+    const empty = await guest.importRun(version, [], "e60f37e5-bef7-4e53-8726-1c964120c460");
+    expect(guestRows()).toEqual([
+      existing,
+      expect.objectContaining({ id, version, state: '{"caught":[25,133]}' }),
+      expect.objectContaining({ id: empty, version, state: '{"caught":[]}' }),
+    ]);
+  });
+
   it("persists the selected start date and rejects changing it during retry", async () => {
     const { guest, guestRows, storage } = await setup();
     const startedAt = new Date(2010, 2, 14).getTime();

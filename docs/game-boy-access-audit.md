@@ -78,7 +78,10 @@ models. The review did not exhaustively re-derive every encounter rate, time
 condition, version split or tile. Money, party capacity, temporary ship access
 and some other game conditions remain outside the product's model.
 
-Browser picker, guest persistence, progression interactions, account sync and
-real-game/emulator checks remain separate manual checkpoints. No original
-GB/GBC save-file mapping was enabled by this expansion. Builds and local
-commits are not production deployment receipts.
+Progression interactions, live account sync and the route-specific gameplay
+checks remain separate checkpoints. Subsequent GB/GBC save import work verified
+local guest creation and persistence, simulated-account ownership, real-worker
+parsing and a genuine pre-starter Red save; see
+[save import validation](game-boy-save-validation.md). That evidence does not
+settle the access questions above. Builds and local commits are not production
+deployment receipts.

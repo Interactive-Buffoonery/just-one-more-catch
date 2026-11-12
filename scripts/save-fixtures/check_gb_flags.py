@@ -17,7 +17,7 @@ rows = []
 for result in report["results"]:
     name = result["name"]
     data = (root / (name + ".sav")).read_bytes()
-    gen1 = name.split("/")[-1].split("-")[0] in {"red", "yellow", "RD", "BU", "YW"}
+    gen1 = name.split("/")[-1].split("-")[0] in {"red", "red-zero", "yellow", "RD", "BU", "YW"}
     crystal = name == "public/crystal"
     caught, seen, count = (0x25A3, 0x25B6, 151) if gen1 else (
         (0x2A27, 0x2A47, 251) if crystal else (0x2A4C, 0x2A6C, 251))
@@ -49,12 +49,16 @@ for result in report["results"]:
         assert bits(caught) == ([] if empty else [25, 133]), name
         assert bits(seen) == ([] if empty else [1, 25, 133]), name
         assert data[party] == data[box] == 0, name
+    if name == "in-game/red-zero":
+        assert bits(caught) == bits(seen) == [], name
+        assert data[party] == 0, name
     rows.append(dict(name=name, bytes=len(data), sha256=hashlib.sha256(data).hexdigest(),
                      caught=len(bits(caught)), seen=len(bits(seen)), checksums=checksums,
                      versions=expected_versions, unchanged=True))
 expected_names = {"public/" + n for n in ("red", "yellow", "gold", "crystal")}
 expected_names.update("synthetic/" + n + suffix
                       for n in ("RD", "BU", "YW", "GD", "SI") for suffix in ("", "-empty"))
-assert len(rows) == len(expected_names) == 14
+expected_names.add("in-game/red-zero")
+assert len(rows) == len(expected_names) == 15
 assert {row["name"] for row in rows} == expected_names
 print(json.dumps({"passed": len(rows), "invalidRejected": True, "files": rows}, indent=2))

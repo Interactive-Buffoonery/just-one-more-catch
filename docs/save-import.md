@@ -18,6 +18,9 @@ Website game support is an explicit adapter in `client/save-import.ts`:
 
 | Reader identity | Website playthrough |
 | --- | --- |
+| RD / BU | Red / Blue (paired choice when both are candidates) |
+| YW | Yellow |
+| GD / SI | Gold / Silver (paired choice when both are candidates) |
 | C | Crystal |
 | FR / LG | FireRed / LeafGreen, with a GBA or Switch choice |
 | HG / SS | HeartGold / SoulSilver |
@@ -49,7 +52,7 @@ Reader schema 1 adds optional top-level `startDate` (`YYYY-MM-DD`). Release 0.1.
 supports HeartGold/SoulSilver and Sun/Moon/Ultra Sun/Ultra Moon; only the website's
 supported packs can be imported. The source fields are PKHeX's `SecondsToStart`
 with its `DateUtil.GetDateTime2000` conversion. The reader checks each format's
-console calendar bounds and omits uninitialized zero values. Crystal and
+console calendar bounds and omits uninitialized zero values. Red/Blue/Yellow, Gold/Silver/Crystal and
 FireRed/LeafGreen provide no recorded date through this reader. Missing, invalid
 or future dates use import day; the preview never invents a recorded date.
 
@@ -199,6 +202,7 @@ caught Pokémon, and both the original file and existing playthrough stayed
 unchanged. Personal save files remain outside the repository. Live Clerk/Convex,
 Safari and physical mobile performance remain unverified.
 
-GB/GBC reader-only fixture results and remaining adapter work are recorded in
-[Game Boy save validation](game-boy-save-validation.md). Passing those reader
-checks alone does not enable website import.
+GB/GBC fixture and website import results are recorded in
+[Game Boy save validation](game-boy-save-validation.md). Red, Blue, Yellow, Gold
+and Silver now have explicit website adapters, tested with caught and empty
+saves. Green remains unsupported, and paired titles require a player choice.

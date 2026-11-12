@@ -3,7 +3,7 @@
   "readerSource": "5263b86e798e9e189c1d71a127b0192ec4828b88",
   "coreRevision": "02c9ec108fe3c96735f6c2397eaebc10e29a049f",
   "publicSource": "https://github.com/ncorgan/pksav-test-saves/tree/e4d42e112cbb03b7e9f9424ab62931f953ef22d8",
-  "passed": 14,
+  "passed": 15,
   "invalidRejected": true,
   "files": [
     {
@@ -222,6 +222,199 @@
         "SI"
       ],
       "unchanged": true
+    },
+    {
+      "name": "in-game/red-zero",
+      "bytes": 32768,
+      "sha256": "b8fdd75aecd039bf9a6cc400b52e30b0936ed01c85a9b4f02f650399d9fa648f",
+      "caught": 0,
+      "seen": 0,
+      "checksums": [
+        true
+      ],
+      "versions": [
+        "RD",
+        "GN",
+        "BU"
+      ],
+      "unchanged": true
     }
-  ]
+  ],
+  "inGameSource": {
+    "repository": "https://github.com/pret/pokered/tree/130ac3fa5493fb29a8005e8439fd31b4826e46af",
+    "romSha1": "ea9bcae617fdf159b045185467ae58b2e4a48b9a",
+    "rgbds": "1.0.4",
+    "pyboy": "2.9.0",
+    "pillow": "13.0.0",
+    "method": "Unmodified game, opening room before starter, Start > Save > Yes; exported cartridge RAM with no memory edits"
+  },
+  "website": {
+    "results": [
+      {
+        "name": "synthetic/RD",
+        "version": "red",
+        "caught": 2,
+        "choices": [
+          "red",
+          "blue"
+        ],
+        "unchanged": true,
+        "persisted": true
+      },
+      {
+        "name": "synthetic/RD-empty",
+        "version": "red",
+        "caught": 0,
+        "choices": [
+          "red",
+          "blue"
+        ],
+        "unchanged": true,
+        "persisted": true
+      },
+      {
+        "name": "synthetic/BU",
+        "version": "blue",
+        "caught": 2,
+        "choices": [
+          "red",
+          "blue"
+        ],
+        "unchanged": true,
+        "persisted": true
+      },
+      {
+        "name": "synthetic/BU-empty",
+        "version": "blue",
+        "caught": 0,
+        "choices": [
+          "red",
+          "blue"
+        ],
+        "unchanged": true,
+        "persisted": true
+      },
+      {
+        "name": "synthetic/YW",
+        "version": "yellow",
+        "caught": 2,
+        "choices": [],
+        "unchanged": true,
+        "persisted": true
+      },
+      {
+        "name": "synthetic/YW-empty",
+        "version": "yellow",
+        "caught": 0,
+        "choices": [],
+        "unchanged": true,
+        "persisted": true
+      },
+      {
+        "name": "synthetic/GD",
+        "version": "gold",
+        "caught": 2,
+        "choices": [
+          "gold",
+          "silver"
+        ],
+        "unchanged": true,
+        "persisted": true
+      },
+      {
+        "name": "synthetic/GD-empty",
+        "version": "gold",
+        "caught": 0,
+        "choices": [
+          "gold",
+          "silver"
+        ],
+        "unchanged": true,
+        "persisted": true
+      },
+      {
+        "name": "synthetic/SI",
+        "version": "silver",
+        "caught": 2,
+        "choices": [
+          "gold",
+          "silver"
+        ],
+        "unchanged": true,
+        "persisted": true
+      },
+      {
+        "name": "synthetic/SI-empty",
+        "version": "silver",
+        "caught": 0,
+        "choices": [
+          "gold",
+          "silver"
+        ],
+        "unchanged": true,
+        "persisted": true
+      },
+      {
+        "name": "public/red",
+        "version": "red",
+        "caught": 151,
+        "choices": [
+          "red",
+          "blue"
+        ],
+        "unchanged": true,
+        "persisted": true
+      },
+      {
+        "name": "public/yellow",
+        "version": "yellow",
+        "caught": 151,
+        "choices": [],
+        "unchanged": true,
+        "persisted": true
+      },
+      {
+        "name": "public/gold",
+        "version": "gold",
+        "caught": 181,
+        "choices": [
+          "gold",
+          "silver"
+        ],
+        "unchanged": true,
+        "persisted": true
+      },
+      {
+        "name": "public/crystal",
+        "version": "crystal",
+        "caught": 251,
+        "choices": [],
+        "unchanged": true,
+        "persisted": true
+      },
+      {
+        "name": "in-game/red-zero",
+        "version": "red",
+        "caught": 0,
+        "choices": [
+          "red",
+          "blue"
+        ],
+        "unchanged": true,
+        "persisted": true
+      },
+      {
+        "scenario": "cancel",
+        "passed": true
+      },
+      {
+        "scenario": "invalid",
+        "passed": true
+      },
+      {
+        "scenario": "storage-retry",
+        "passed": true
+      }
+    ]
+  }
 }
