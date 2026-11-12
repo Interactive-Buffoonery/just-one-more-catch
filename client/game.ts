@@ -582,5 +582,5 @@ export const ymd = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 export const startDay = (row: RunRow) => ymd(new Date(row.createdAt));
 
-export const isGuest = () => !bridge.auth.isAuthenticated && !bridge.auth.isLoading;
+export const isGuest = () => !!bridge && !bridge.auth.isAuthenticated && !bridge.auth.isLoading;
 export const viewOf = (r: Run) => isGuest() ? "dexonly" : r.view;
