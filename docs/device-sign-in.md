@@ -64,10 +64,15 @@ Exit criteria. The build goes ahead only if all of these pass:
    a public client can revoke its refresh token without a secret, and whether
    refresh tokens rotate. Decide how a player cuts off a lost Retroid (from
    the web account sheet, or a backend revoke behind a Convex action). If
-   there's no workable answer, stop.
-6. **Approval page:** It works on production's Account Portal at `/device`,
-   reuses the phone's existing web session, and shows the code for the player
-   to confirm.
+   there's no workable answer, stop. Revoking stops refreshes, but an access
+   token already issued stays valid until it expires (up to a day). We accept
+   that window. Shorten the access token lifetime in Clerk if it allows.
+6. **Approval page:** It works on production's Account Portal at `/device`
+   and reuses the phone's existing web session. Opened from
+   `verification_uri_complete`, it must show the code and make the player
+   confirm it matches the Retroid before approving (RFC 8628 section 5.4). If
+   it approves without that, the QR code uses `verification_uri` and the
+   player types the code on the phone.
 
 ## 3. Build
 
@@ -97,14 +102,16 @@ This is the bulk of the work.
   has to compare source and generation too, not just the user ID.
 - **Authenticated only after Convex accepts:** Set `isAuthenticated` from the
   `setAuth` callback, as today.
-- **Polling:** Honor `interval`, add 5 seconds on `slow_down`, stop on
-  `access_denied` / `expired_token` / other errors, back off on network
-  errors, and stop on cancel or when the sheet closes. Write it as a pure
-  function.
+- **Polling:** Keep polling on `authorization_pending` at `interval`. Add 5
+  seconds on each `slow_down` (it adds up). Stop on `access_denied`,
+  `expired_token` and any other error. Back off on network errors. Always
+  stop at `expires_in`, on cancel, or when the sheet closes, even mid-backoff.
+  Write it as a pure function.
 - **Tokens:** Store the refresh and access tokens in localStorage under one
   key. Run one shared refresh at a time, used by both the main client and
-  the import client. Coordinate across tabs with a `storage` event or
-  `BroadcastChannel`, so one tab refreshes and sign-out reaches every tab.
+  the import client. Across tabs, take a Web Lock (`navigator.locks`) around
+  the refresh so only one tab refreshes. Use `storage` events to pass new
+  tokens and sign-out to the other tabs.
 - **Refresh failures:** A rejected refresh (`invalid_grant`) signs the device
   out. A timeout, 5xx or being offline keeps the refresh token and retries
   later, so a reload while offline doesn't sign the player out.
@@ -118,7 +125,9 @@ This is the bulk of the work.
 - **Account deletion:** Add a Bridge capability flag. Hide "Delete account"
   for device sign-ins (`client/views/runs.ts`), and have `deleteAccount`
   refuse before the Convex purge when it can't delete the Clerk user.
-- **Contact page:** Device players send as guests. No change.
+- **Contact page:** `startContact` skips the Clerk restore when device tokens
+  are present, so device players send as guests and never as a leftover
+  Clerk account.
 
 ### Sheet UI (`client/views/runs.ts`)
 
@@ -137,8 +146,8 @@ This is the bulk of the work.
 - `scripts/check_device_sign_in.mjs`, added to `pnpm check`, covers the
   polling machine, refresh decisions (terminal versus retryable), and
   generation fencing.
-- `scripts/check_sw.mjs`: assert the service worker leaves POSTs and
-  cross-origin requests alone.
+- `scripts/check_sw.mjs` already asserts the service worker leaves POSTs and
+  cross-origin requests alone. Keep those checks.
 - Startup checks: device tokens present with a late Clerk load; both
   sources present; cancel during token exchange.
 - Manual, on the dev instance with a real Retroid and a phone:
@@ -146,7 +155,9 @@ This is the bulk of the work.
   - Guest playthroughs move over.
   - A reload keeps the session, including an offline reload.
   - Two tabs share one refresh, and sign-out reaches both.
-  - Revoking from the web cuts off the Retroid.
+  - Revoking from the web makes the Retroid's next refresh fail. Its current
+    access token still works until it expires.
+  - Contact from a Retroid that also has a Clerk session sends as a guest.
   - Delete account is hidden on the Retroid.
 
 ## Size
