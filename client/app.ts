@@ -111,10 +111,38 @@ function fillSheet(s: any) {
                   ? fillBoxSheet(s.b)
                   : fillMonSheet(s);
 }
-function openSheet(s: any) {
+// A closed dialog fires "close" a task later; finish that sheet before showing the next one.
+function showSheet(s: any, fill?: () => void) {
+  const open = $("#sheet").open;
+  if (!open) finishSheet();
+  if (s.hist) pushSheet(s.kind);
   ui.sheet = s;
-  fillSheet(s);
-  if (!$("#sheet").open) $("#sheet").showModal();
+  fill?.();
+  if (!open) $("#sheet").showModal();
+}
+const openSheet = (s: any) => showSheet(s, () => fillSheet(s));
+function pushSheet(kind: string) {
+  if (history.state?.sheet !== kind)
+    history.pushState({ ...history.state, sheet: kind }, "", location.href);
+}
+function finishSheet() {
+  const s = ui.sheet;
+  if (!s) return;
+  ui.sheet = null;
+  if (s.kind === "signin")
+    bridge.unmountSignIn($("#clerk-signin") as HTMLDivElement);
+  if (s.kind === "pair") stopPair();
+  if (s.hist && history.state?.sheet === s.kind) history.back();
+  render();
+  if (s.kind === "pick") {
+    (root.querySelector(`[data-newrun="${s.id}"]`) as HTMLElement | null)?.focus();
+    return;
+  }
+  (
+    root.querySelector(
+      `[data-k="${typeof s === "number" ? "d" + s : s.k ? s.k : s.id ? "m" + s.id : s.b ? "rb" + s.b : "x"}"]`,
+    ) || (root.querySelector("[data-filter][aria-pressed=true]") as any)
+  )?.focus();
 }
 
 /* ---- Wiring ---- */
@@ -763,7 +791,7 @@ export function mount(el: HTMLElement, b: Bridge) {
   setRoot(el);
   ui.tab = tabFromUrl();
   addEventListener("popstate", () => {
-    if (ui.sheet?.kind === "approve" && history.state?.sheet !== "approve")
+    if (ui.sheet?.hist && history.state?.sheet !== ui.sheet.kind)
       $("#sheet").close();
     if (tabFromUrl() === ui.tab) return;
     ui.tab = tabFromUrl();
@@ -900,24 +928,7 @@ export function mount(el: HTMLElement, b: Bridge) {
     }
   });
   $("#sheet").addEventListener("close", () => {
-    const s = ui.sheet;
-    ui.sheet = null;
-    if (s?.kind === "signin")
-      bridge.unmountSignIn($("#clerk-signin") as HTMLDivElement);
-    if (s?.kind === "pair") stopPair();
-    if (s?.kind === "approve" && history.state?.sheet === "approve")
-      history.back();
-    render();
-    if (s?.kind === "pick") {
-      (root.querySelector(`[data-newrun="${s.id}"]`) as HTMLElement | null)?.focus();
-      return;
-    }
-    if (s)
-      (
-        root.querySelector(
-          `[data-k="${typeof s === "number" ? "d" + s : s.k ? s.k : s.id ? "m" + s.id : s.b ? "rb" + s.b : "x"}"]`,
-        ) || (root.querySelector("[data-filter][aria-pressed=true]") as any)
-      )?.focus();
+    if (!$("#sheet").open) finishSheet();
   });
   const timeKey = () => (run ? `${nowTime()} ${gameNow(R().clock).day}` : "");
   let shownTime = timeKey();
@@ -1006,8 +1017,7 @@ async function lookupPair(letters: string) {
   if (ui.pairError) render();
 }
 function openApprove(p: Extract<PairingLookup, { status: "ok" }>) {
-  history.pushState({ ...history.state, sheet: "approve" }, "", location.href);
-  openSheet({ kind: "approve", p, k: "paircode" });
+  openSheet({ kind: "approve", p, k: "paircode", hist: true });
   ($("#sheet [data-deny]") as HTMLElement).focus();
 }
 async function answerPair(approve: boolean) {
@@ -1018,15 +1028,16 @@ async function answerPair(approve: boolean) {
   status.textContent = approve ? "Approving…" : "Denying…";
   try {
     const r = await (approve ? bridge.approvePairing : bridge.denyPairing)(s.p.code);
+    const shown = ui.sheet === s;
     if (r.status === "limited") {
-      status.textContent = pairErrorText(r);
+      if (shown) status.textContent = pairErrorText(r);
       return;
     }
-    $("#sheet").close();
+    if (shown) $("#sheet").close();
     flash(r.status === "missing" ? "Code expired" : approve ? "Device approved" : "Sign-in denied");
     void loadDevices();
   } catch {
-    status.textContent = "Couldn't reach the server. Try again.";
+    if (ui.sheet === s) status.textContent = "Couldn't reach the server. Try again.";
   } finally {
     s.busy = false;
   }
@@ -1061,9 +1072,8 @@ async function startPair() {
   if (prev?.kind === "signin")
     bridge.unmountSignIn($("#clerk-signin") as HTMLDivElement);
   stopPair();
-  const s = { kind: "pair", k: prev?.k, v: { state: "starting" } as any };
-  ui.sheet = s;
-  if (!$("#sheet").open) $("#sheet").showModal();
+  const s = { kind: "pair", k: prev?.k, hist: true, v: { state: "starting" } as any };
+  showSheet(s);
   void showPair();
   try {
     const h = await bridge.startPairing((state) => {
