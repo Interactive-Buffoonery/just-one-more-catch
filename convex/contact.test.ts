@@ -38,13 +38,13 @@ test("anonymous requests cannot evade their limit by changing email", async () =
 });
 
 test("retries are deduplicated and authenticated senders keep independent limits", async () => {
-  const t = setup(), a = t.withIdentity({ tokenIdentifier: "issuer|a" });
+  const t = setup(), a = t.withIdentity({ tokenIdentifier: "issuer|a", sid: "sess_test" });
   const input = { email: "A@example.com", message: "Hello" };
   await a.mutation(api.runs.contact, input);
   await a.mutation(api.runs.contact, input);
   await a.mutation(api.runs.contact, { ...input, message: "Second" });
   expect((await a.mutation(api.runs.contact, { ...input, message: "Third" })).ok).toBe(false);
-  expect((await t.withIdentity({ tokenIdentifier: "issuer|b" }).mutation(api.runs.contact, input)).ok).toBe(true);
+  expect((await t.withIdentity({ tokenIdentifier: "issuer|b", sid: "sess_test" }).mutation(api.runs.contact, input)).ok).toBe(true);
   const messages = await t.run((ctx) => ctx.db.query("messages").collect());
   expect(messages).toHaveLength(3);
   expect(messages.map((m) => m.sender)).toEqual(["issuer|a", "issuer|a", "issuer|b"]);
@@ -56,15 +56,15 @@ test("site limits stop rotating accounts and replenish after waiting", async () 
   vi.spyOn(Math, "random").mockReturnValue(0.5);
   const t = setup();
   for (let i = 0; i < 5; i++)
-    expect((await t.withIdentity({ subject: `user-${i}` }).mutation(api.runs.contact, { email: "", message: "Hello" })).ok).toBe(true);
-  expect((await t.withIdentity({ subject: "sixth" }).mutation(api.runs.contact, { email: "", message: "Hello" })).ok).toBe(false);
+    expect((await t.withIdentity({ subject: `user-${i}`, sid: "sess_test" }).mutation(api.runs.contact, { email: "", message: "Hello" })).ok).toBe(true);
+  expect((await t.withIdentity({ subject: "sixth", sid: "sess_test" }).mutation(api.runs.contact, { email: "", message: "Hello" })).ok).toBe(false);
   vi.advanceTimersByTime(60_000);
-  expect((await t.withIdentity({ subject: "after-wait" }).mutation(api.runs.contact, { email: "", message: "Hello" })).ok).toBe(true);
+  expect((await t.withIdentity({ subject: "after-wait", sid: "sess_test" }).mutation(api.runs.contact, { email: "", message: "Hello" })).ok).toBe(true);
   for (let i = 6; i < 20; i++) {
     vi.advanceTimersByTime(12_000);
-    expect((await t.withIdentity({ subject: `user-${i}` }).mutation(api.runs.contact, { email: "", message: "Hello" })).ok).toBe(true);
+    expect((await t.withIdentity({ subject: `user-${i}`, sid: "sess_test" }).mutation(api.runs.contact, { email: "", message: "Hello" })).ok).toBe(true);
   }
   vi.advanceTimersByTime(60_000);
-  expect((await t.withIdentity({ subject: "over-hour-cap" }).mutation(api.runs.contact, { email: "", message: "Hello" })).ok).toBe(false);
+  expect((await t.withIdentity({ subject: "over-hour-cap", sid: "sess_test" }).mutation(api.runs.contact, { email: "", message: "Hello" })).ok).toBe(false);
   expect(await t.run((ctx) => ctx.db.query("messages").collect())).toHaveLength(20);
 });

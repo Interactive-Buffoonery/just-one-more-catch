@@ -60,7 +60,8 @@ revoked per device. Background is in `auth-options.md`.
   3. Writes `revokedSessions { sid, expiresAt }`, kept for 10 minutes, longer
      than any Convex token from that session can live.
 - **Instant cutoff:** One helper in `convex/auth.ts`, `identityOf(ctx)`,
-  reads the identity and returns null if its `sid` is in `revokedSessions`.
+  reads the identity and returns null if it has no `sid` or its `sid` is in
+  `revokedSessions`.
   - It replaces every raw `ctx.auth.getUserIdentity()`: `convex/runs.ts`
     (`owner()`, `list`, `avatar`, `theme`), `convex/events.ts` and
     `convex/contactSpam.ts`.
@@ -90,8 +91,11 @@ revoked per device. Background is in `auth-options.md`.
 
 ## Spike checks (first hour of testing on dev)
 
-1. The `convex` JWT template carries `sid` (add `"sid": "{{session.id}}"` if
-   not) and Convex exposes it on the identity.
+1. **Required before deploying:** the `convex` JWT template on both dev and
+   production carries `sid` (`"sid": "{{session.id}}"`), and Convex exposes
+   it on the identity. `identityOf` treats a token without `sid` as signed
+   out. Keep the template's token lifetime under 10 minutes, the time
+   `revokedSessions` rows are kept.
 2. Ticket sign-in works in the Retroid browser and the installed app, with no
    new-device or second-factor step in the way.
 3. The new session appears in `getSessions()` on the phone.

@@ -6,13 +6,13 @@ export async function identityOf(ctx: QueryCtx) {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) return null;
   const sid = sessionOf(identity);
-  if (sid && await ctx.db.query("revokedSessions").withIndex("by_sid", (q) => q.eq("sid", sid)).first())
+  if (!sid || await ctx.db.query("revokedSessions").withIndex("by_sid", (q) => q.eq("sid", sid)).first())
     return null;
   return identity;
 }
 
 export const sessionOf = (identity: UserIdentity) =>
-  typeof identity.sid === "string" ? identity.sid : undefined;
+  typeof identity.sid === "string" && identity.sid ? identity.sid : undefined;
 
 export const current = internalQuery({
   args: {},

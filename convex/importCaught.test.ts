@@ -8,7 +8,7 @@ import { IMPORT_SPECIES_LIMITS, importCaughtState } from "../shared/save-import"
 
 const modules = import.meta.glob("./**/*.ts");
 const importId = "d60f37e5-bef7-4e53-8726-1c964120c460";
-const identity = { subject: "first-user", tokenIdentifier: "issuer|first-user" };
+const identity = { subject: "first-user", tokenIdentifier: "issuer|first-user", sid: "sess_test" };
 
 describe("caught-list imports", () => {
   it("creates one owned playthrough and its initial state together", async () => {
@@ -75,7 +75,7 @@ describe("caught-list imports", () => {
     const t = convexTest(schema, modules);
     await expect(t.mutation(api.runs.importCaught, { importId, version: "crystal", caught: [1] })).rejects.toThrow("Sign in first");
     const id = await t.withIdentity(identity).mutation(api.runs.importCaught, { importId, version: "crystal", caught: [] });
-    const other = t.withIdentity({ subject: "other-user" });
+    const other = t.withIdentity({ subject: "other-user", sid: "sess_test" });
     expect(await other.query(api.runs.list, {})).toEqual([]);
     await expect(other.query(api.runs.get, { id })).rejects.toThrow("Not your playthrough");
     await expect(other.mutation(api.runs.save, { id, state: "{}" })).rejects.toThrow("Not your playthrough");
@@ -102,7 +102,7 @@ describe("caught-list imports", () => {
     const t = convexTest(schema, modules);
     const input = { importId, version: "crystal", caught: [25] };
     const first = t.withIdentity(identity);
-    const second = t.withIdentity({ subject: "second-user" });
+    const second = t.withIdentity({ subject: "second-user", sid: "sess_test" });
     const firstId = await first.mutation(api.runs.importCaught, input);
     const secondId = await second.mutation(api.runs.importCaught, input);
     expect(firstId).not.toBe(secondId);
@@ -158,7 +158,7 @@ describe("caught-list imports", () => {
     await t.run(async (ctx) => {
       expect(await ctx.db.query("states").take(1)).toEqual([]);
     });
-    const other = t.withIdentity({ subject: "other-user" });
+    const other = t.withIdentity({ subject: "other-user", sid: "sess_test" });
     await expect(other.mutation(api.runs.importCaught, { importId, version: "crystal", caught: [25] })).resolves.toEqual(expect.any(String));
   });
 

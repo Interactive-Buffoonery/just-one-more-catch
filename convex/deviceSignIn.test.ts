@@ -252,6 +252,17 @@ describe("devices", () => {
     );
   });
 
+  it("treats an identity without a session ID as signed out", async () => {
+    const t = setup();
+    for (const sid of [undefined, ""]) {
+      const device = t.withIdentity({ ...player, sid });
+      expect(await device.query(api.runs.list, {})).toEqual([]);
+      await expect(
+        device.mutation(api.runs.create, { version: "crystal" }),
+      ).rejects.toThrow("Sign in first");
+    }
+  });
+
   it("refuses another player's session and the caller's own", async () => {
     const t = setup();
     stubClerk(() => ({
