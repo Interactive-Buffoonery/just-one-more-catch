@@ -148,16 +148,16 @@ function miniCard(row: RunRow, r: Summary, at: string) {
   const v = verOf(row.version),
     p = v.pack,
     has = new Set(r.badges);
-  return `<div class="run" data-game="${row.version}"><button class="run-go" data-switch="${row.id}"><span class="blk">${cover(v)}</span><span class="who"><b class="lg">${v.name}${v.platform ? ` <span class="tag plain">${v.platform}</span>` : ""}</b><span class="meta">${p.region} · ${lastPlayed(at).replace(/^on /, "")}${champTag(r)}</span></span><span class="mini" aria-hidden="true">${badgeGroups(
+  return `<div class="run" data-game="${row.version}"><button class="run-go" data-switch="${row.id}"><span class="blk">${cover(v)}</span><span class="run-body"><span class="who"><b class="lg">${v.name}${v.platform ? ` <span class="tag plain">${v.platform}</span>` : ""}</b><span class="meta">${p.region} · ${lastPlayed(at).replace(/^on /, "")}${champTag(r)}</span></span><span class="mini" aria-hidden="true">${badgeGroups(
     p,
   )
     .map(
       ([, list]) =>
-        `<span>${list.map((b) => `<span>${has.has(b[0]) ? badgeImg(b[0], 16) : "<i></i>"}</span>`).join("")}</span>`,
+        `<span>${list.map((b) => `<span>${has.has(b[0]) ? badgeImg(b[0], 20) : "<i></i>"}</span>`).join("")}</span>`,
     )
     .join(
       "",
-    )}</span><span class="sr">${badgeCount(row.version, r)} ${badgesWord(p)},</span><span class="got"><b>${r.caught}</b> of ${p.national}<span class="sr"> caught</span>${meter(r.caught, p.national)}</span></button>${ptMenu(row, v)}</div>`;
+    )}</span><span class="sr">${badgeCount(row.version, r)} ${badgesWord(p)},</span><span class="got"><b>${r.caught}</b> of ${p.national}<span class="sr"> caught</span>${meter(r.caught, p.national)}</span></span></button>${ptMenu(row, v)}</div>`;
 }
 const trainerCard = (rows: { row: RunRow; r: Summary }[]) =>
   `<aside class="trainer"><div class="tslab"><h2 class="lg">${esc(trainerName())}</h2>${partner("partner")}</div>
@@ -210,7 +210,7 @@ export function Runs() {
   <section class="card welcome"><h2 id="new-game-heading">Pick your game</h2>${gameChoices("new-game-heading", true)}</section>${signInNote()}</div>`;
   return `<div class="dash"><div class="dash-heading"><h1 class="lg">Dashboard</h1><a class="chip" href="/import/" data-tab="import" data-k="import-save">Import a save</a></div>
   <div class="dash-grid">${resumeCard(top.row, top.r, top.at)}${trainerCard(rows)}
-  ${rest.length ? `<section class="sec"><h2 class="lg">Other playthroughs</h2><div class="runs">${rest.map((x) => miniCard(x.row, x.r, x.at)).join("")}</div></section>` : ""}
+  ${rest.length ? `<section class="sec wide"><h2 class="lg">Other playthroughs</h2><div class="runs">${rest.map((x) => miniCard(x.row, x.r, x.at)).join("")}</div></section>` : ""}
   <section class="sec wide"><h2 class="lg" id="new-game-heading">Start another playthrough</h2>${rows.length < MAX_RUNS ? gameChoices() : `<p class="muted">You have ${MAX_RUNS} playthroughs. Delete one to start another.</p>`}</section></div>
   ${signInNote()}</div>`;
 }
