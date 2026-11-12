@@ -1,0 +1,668 @@
+{
+  "versions": {
+    "red": "r",
+    "blue": "b"
+  },
+  "pokedex": 2,
+  "species": 151,
+  "gen": "generation-i",
+  "keep_floors": true,
+  "drop": [
+    "^Route 3 Pokemon Center$"
+  ],
+  "rename": {
+    "Route 2 South Towards Viridian City": "Route 2",
+    "Route 2 North Towards Pewter City": "Route 2 North",
+    "Victory Road 2 1F": "Victory Road 1F",
+    "Victory Road 2 2F": "Victory Road 2F",
+    "Victory Road 2 3F": "Victory Road 3F",
+    "Rock Tunnel B1F": "Rock Tunnel 1F",
+    "Rock Tunnel B2F": "Rock Tunnel B1F"
+  },
+  "needs": {
+    "Route 23": {
+      "needs": [
+        "Cascade",
+        "Thunder",
+        "Rainbow"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/Route23.asm",
+      "quote": "Route23GuardsYCoords:",
+      "note": "Guard coordinates: Cascade y136, Thunder y119, Rainbow y105. The first water is north of y105 in the original PLATEAU map."
+    },
+    "Route 17": {
+      "needs": [
+        "bicycle"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/Route16Gate1F.asm",
+      "quote": "ld b, BICYCLE"
+    },
+    "Power Plant": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://www.pokemon-france.com/en/guides/blue-red/walkthrough-28/",
+      "quote": "Access by surfing from Route 10"
+    },
+    "Victory Road 2 2F": {
+      "needs": [
+        "strength"
+      ],
+      "src": "https://www.pokemon-france.com/en/guides/blue-red/walkthrough-25/",
+      "quote": "push the boulders with Strength onto the switches in the floor"
+    },
+    "Victory Road 2 3F": {
+      "needs": [
+        "strength"
+      ],
+      "src": "https://www.pokemon-france.com/en/guides/blue-red/walkthrough-25/",
+      "quote": "push the boulders with Strength onto the switches in the floor"
+    },
+    "Pokemon Tower 7F": {
+      "needs": [
+        "marowak"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/PokemonTower6F.asm",
+      "quote": "CheckEvent EVENT_BEAT_GHOST_MAROWAK"
+    }
+  },
+  "chapters": [
+    {
+      "title": "Pallet to Pewter",
+      "needs": [],
+      "places": [
+        "Pallet Town",
+        "Route 1",
+        "Viridian City",
+        "Route 22",
+        "Route 2",
+        "Route 2 North",
+        "Viridian Forest"
+      ],
+      "src": "https://www.pokemon-france.com/en/guides/blue-red/walkthrough-3/"
+    },
+    {
+      "title": "Mt. Moon and Cerulean",
+      "needs": [
+        "Boulder"
+      ],
+      "places": [
+        "Route 3",
+        "Route 4",
+        "Mt. Moon",
+        "Cerulean City",
+        "Route 24",
+        "Route 25",
+        "Route 23"
+      ],
+      "src": "https://www.pokemon-france.com/en/guides/blue-red/walkthrough-5/"
+    },
+    {
+      "title": "Vermilion and Diglett’s Cave",
+      "needs": [
+        "Boulder",
+        "bill"
+      ],
+      "places": [
+        "Route 5",
+        "Underground Path",
+        "Route 6",
+        "Vermilion City",
+        "Route 11",
+        "Digletts Cave"
+      ],
+      "src": "https://www.pokemon-france.com/en/guides/blue-red/walkthrough-8/"
+    },
+    {
+      "title": "Rock Tunnel, Lavender and Celadon",
+      "needs": [
+        "Cascade",
+        "cut"
+      ],
+      "places": [
+        "Route 9",
+        "Route 10",
+        "Rock Tunnel",
+        "Route 8",
+        "Route 7",
+        "Celadon City",
+        "Route 12",
+        "Route 16"
+      ],
+      "src": "https://www.pokemon-france.com/en/guides/blue-red/walkthrough-14/"
+    },
+    {
+      "title": "Saffron City",
+      "needs": [
+        "Cascade",
+        "cut",
+        "drink"
+      ],
+      "places": [
+        "Saffron City"
+      ],
+      "src": "https://www.pokemon-france.com/en/guides/blue-red/walkthrough-19/"
+    },
+    {
+      "title": "The revealed Pokémon Tower",
+      "needs": [
+        "Cascade",
+        "cut",
+        "scope"
+      ],
+      "places": [
+        "Pokemon Tower"
+      ],
+      "src": "https://www.pokemon-france.com/en/guides/blue-red/walkthrough-18/"
+    },
+    {
+      "title": "Southern Kanto and Fuchsia",
+      "needs": [
+        "Cascade",
+        "cut",
+        "flute"
+      ],
+      "places": [
+        "Route 13",
+        "Route 14",
+        "Route 15",
+        "Route 17",
+        "Route 18",
+        "Fuchsia City",
+        "Safari Zone",
+        "Sea Route 19"
+      ],
+      "src": "https://www.pokemon-france.com/en/guides/blue-red/walkthrough-20/"
+    },
+    {
+      "title": "Seafoam, Cinnabar and the Power Plant",
+      "needs": [
+        "surf"
+      ],
+      "places": [
+        "Sea Route 20",
+        "Sea Route 21",
+        "Seafoam Islands",
+        "Cinnabar Island",
+        "Pokemon Mansion",
+        "Power Plant"
+      ],
+      "src": "https://www.pokemon-france.com/en/guides/blue-red/walkthrough-22/"
+    },
+    {
+      "title": "Victory Road",
+      "needs": [
+        "Boulder",
+        "Cascade",
+        "Thunder",
+        "Rainbow",
+        "Soul",
+        "Marsh",
+        "Volcano",
+        "Earth",
+        "surf"
+      ],
+      "places": [
+        "Victory Road"
+      ],
+      "src": "https://www.pokemon-france.com/en/guides/blue-red/walkthrough-25/"
+    },
+    {
+      "title": "After the Elite Four",
+      "needs": [
+        "Elite Four",
+        "surf"
+      ],
+      "places": [
+        "Cerulean Cave"
+      ],
+      "src": "https://www.pokemon-france.com/en/guides/blue-red/walkthrough-29/"
+    }
+  ],
+  "events": [
+    {
+      "id": "bill",
+      "label": "Get Bill’s S.S. Ticket",
+      "q": "Did Bill give you the S.S. Ticket?",
+      "chap": 1,
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/BillsHouse.asm"
+    },
+    {
+      "id": "cut",
+      "label": "Have a Pokémon that knows Cut",
+      "q": "Does one of your Pokémon know Cut?",
+      "chap": 2,
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/SSAnneCaptainsRoom.asm"
+    },
+    {
+      "id": "drink",
+      "label": "Give a drink to a Saffron guard",
+      "q": "Did you give Fresh Water, Soda Pop or Lemonade to a Saffron guard?",
+      "chap": 3,
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/Route7Gate.asm"
+    },
+    {
+      "id": "scope",
+      "label": "Get the Silph Scope",
+      "q": "Did you get the Silph Scope from the Rocket Hideout?",
+      "chap": 3,
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/RocketHideoutB4F.asm"
+    },
+    {
+      "id": "coin-case",
+      "label": "Get the Coin Case",
+      "q": "Did the man in Celadon’s diner give you the Coin Case?",
+      "chap": 3,
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/CeladonDiner.asm"
+    },
+    {
+      "id": "dojo",
+      "label": "Beat the Fighting Dojo",
+      "q": "Did you beat the Karate Master in Saffron’s Fighting Dojo?",
+      "chap": 4,
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/FightingDojo.asm"
+    },
+    {
+      "id": "marowak",
+      "label": "Put the Marowak ghost to rest",
+      "q": "Did you defeat the Marowak ghost on Pokémon Tower’s sixth floor?",
+      "chap": 5,
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/PokemonTower6F.asm",
+      "after": [
+        "scope"
+      ]
+    },
+    {
+      "id": "fuji",
+      "label": "Rescue Mr. Fuji",
+      "q": "Did you rescue Mr. Fuji at the top of Pokémon Tower?",
+      "chap": 5,
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/PokemonTower7F.asm",
+      "after": [
+        "marowak"
+      ]
+    },
+    {
+      "id": "flute",
+      "label": "Get the Poké Flute",
+      "q": "Did Mr. Fuji give you the Poké Flute?",
+      "chap": 5,
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/MrFujisHouse.asm",
+      "after": [
+        "fuji"
+      ]
+    },
+    {
+      "id": "silph-rival",
+      "label": "Beat your rival in Silph Co.",
+      "q": "Did you beat your rival on Silph Co.’s seventh floor?",
+      "chap": 4,
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/SilphCo7F.asm",
+      "after": [
+        "fuji",
+        "drink"
+      ]
+    }
+  ],
+  "row_needs": [
+    {
+      "place": "Route 2 North Towards Pewter City",
+      "n": 122,
+      "m": "npc-trade",
+      "needs": [
+        "bill"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/BillsHouse.asm",
+      "quote": "SetEvent EVENT_GOT_SS_TICKET",
+      "note": "The following code moves the Cerulean guard. The resulting Route5/Vermilion/Diglett’s Cave route reaches the eastern trade house; walkthrough part 12."
+    },
+    {
+      "place": "Route 12",
+      "n": 16,
+      "m": "walk",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
+      "quote": "Route12SnorlaxFluteCoords:",
+      "note": "The grass is south of Snorlax; walkthrough part 20 and the original Route12 map show the blocker."
+    },
+    {
+      "place": "Route 23",
+      "n": 21,
+      "m": "walk",
+      "needs": [
+        "surf",
+        "Soul",
+        "Marsh"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/Route23.asm",
+      "quote": "dw MarshBadgeText",
+      "note": "The original Route23 PLATEAU map puts the first grass north of the Marsh guard y85, beyond the water."
+    },
+    {
+      "place": "Route 23",
+      "n": 22,
+      "m": "walk",
+      "needs": [
+        "surf",
+        "Soul",
+        "Marsh"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/Route23.asm",
+      "quote": "dw MarshBadgeText",
+      "note": "The original Route23 PLATEAU map puts the first grass north of the Marsh guard y85, beyond the water."
+    },
+    {
+      "place": "Route 23",
+      "n": 23,
+      "m": "walk",
+      "needs": [
+        "surf",
+        "Soul",
+        "Marsh"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/Route23.asm",
+      "quote": "dw MarshBadgeText",
+      "note": "The original Route23 PLATEAU map puts the first grass north of the Marsh guard y85, beyond the water."
+    },
+    {
+      "place": "Route 23",
+      "n": 24,
+      "m": "walk",
+      "needs": [
+        "surf",
+        "Soul",
+        "Marsh"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/Route23.asm",
+      "quote": "dw MarshBadgeText",
+      "note": "The original Route23 PLATEAU map puts the first grass north of the Marsh guard y85, beyond the water."
+    },
+    {
+      "place": "Route 23",
+      "n": 27,
+      "m": "walk",
+      "needs": [
+        "surf",
+        "Soul",
+        "Marsh"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/Route23.asm",
+      "quote": "dw MarshBadgeText",
+      "note": "The original Route23 PLATEAU map puts the first grass north of the Marsh guard y85, beyond the water."
+    },
+    {
+      "place": "Route 23",
+      "n": 28,
+      "m": "walk",
+      "needs": [
+        "surf",
+        "Soul",
+        "Marsh"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/Route23.asm",
+      "quote": "dw MarshBadgeText",
+      "note": "The original Route23 PLATEAU map puts the first grass north of the Marsh guard y85, beyond the water."
+    },
+    {
+      "place": "Route 12",
+      "n": 43,
+      "m": "walk",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
+      "quote": "Route12SnorlaxFluteCoords:",
+      "note": "The grass is south of Snorlax; walkthrough part 20 and the original Route12 map show the blocker."
+    },
+    {
+      "place": "Route 12",
+      "n": 44,
+      "m": "walk",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
+      "quote": "Route12SnorlaxFluteCoords:",
+      "note": "The grass is south of Snorlax; walkthrough part 20 and the original Route12 map show the blocker."
+    },
+    {
+      "place": "Route 12",
+      "n": 48,
+      "m": "walk",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
+      "quote": "Route12SnorlaxFluteCoords:",
+      "note": "The grass is south of Snorlax; walkthrough part 20 and the original Route12 map show the blocker."
+    },
+    {
+      "place": "Route 12",
+      "n": 69,
+      "m": "walk",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
+      "quote": "Route12SnorlaxFluteCoords:",
+      "note": "The grass is south of Snorlax; walkthrough part 20 and the original Route12 map show the blocker."
+    },
+    {
+      "place": "Route 12",
+      "n": 70,
+      "m": "walk",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
+      "quote": "Route12SnorlaxFluteCoords:",
+      "note": "The grass is south of Snorlax; walkthrough part 20 and the original Route12 map show the blocker."
+    },
+    {
+      "place": "Route 23",
+      "n": 132,
+      "m": "walk",
+      "needs": [
+        "surf",
+        "Soul",
+        "Marsh"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/Route23.asm",
+      "quote": "dw MarshBadgeText",
+      "note": "The original Route23 PLATEAU map puts the first grass north of the Marsh guard y85, beyond the water."
+    },
+    {
+      "place": "Route 12",
+      "n": 143,
+      "m": "pokeflute",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
+      "quote": "Route12SnorlaxFluteCoords:"
+    },
+    {
+      "place": "Route 16",
+      "n": 143,
+      "m": "pokeflute",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
+      "quote": "Route16SnorlaxFluteCoords:"
+    },
+    {
+      "place": "Saffron City Fighting Dojo",
+      "n": 106,
+      "m": "gift",
+      "needs": [
+        "dojo"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/FightingDojo.asm",
+      "quote": "CheckEvent EVENT_BEAT_KARATE_MASTER"
+    },
+    {
+      "place": "Saffron City Fighting Dojo",
+      "n": 107,
+      "m": "gift",
+      "needs": [
+        "dojo"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/FightingDojo.asm",
+      "quote": "CheckEvent EVENT_BEAT_KARATE_MASTER"
+    },
+    {
+      "place": "Saffron City Silph Co",
+      "n": 131,
+      "m": "gift",
+      "needs": [
+        "silph-rival"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/SilphCo7F.asm",
+      "quote": "lb bc, LAPRAS, 15",
+      "note": "The rival blocks the 7F warp-room approach; the event also accounts for Fuji opening Silph Co."
+    },
+    {
+      "place": "Seafoam Islands B4F",
+      "n": 144,
+      "m": "static",
+      "needs": [
+        "strength"
+      ],
+      "src": "https://www.pokemon-france.com/en/guides/blue-red/walkthrough-22/",
+      "quote": "push boulders with Strength into the holes in the floor"
+    },
+    {
+      "place": "Celadon City Prize Corner",
+      "n": 30,
+      "m": "gift",
+      "needs": [
+        "coin-case"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/events/prize_menu.asm",
+      "quote": "ld b, COIN_CASE"
+    },
+    {
+      "place": "Celadon City Prize Corner",
+      "n": 33,
+      "m": "gift",
+      "needs": [
+        "coin-case"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/events/prize_menu.asm",
+      "quote": "ld b, COIN_CASE"
+    },
+    {
+      "place": "Celadon City Prize Corner",
+      "n": 35,
+      "m": "gift",
+      "needs": [
+        "coin-case"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/events/prize_menu.asm",
+      "quote": "ld b, COIN_CASE"
+    },
+    {
+      "place": "Celadon City Prize Corner",
+      "n": 63,
+      "m": "gift",
+      "needs": [
+        "coin-case"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/events/prize_menu.asm",
+      "quote": "ld b, COIN_CASE"
+    },
+    {
+      "place": "Celadon City Prize Corner",
+      "n": 123,
+      "m": "gift",
+      "needs": [
+        "coin-case"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/events/prize_menu.asm",
+      "quote": "ld b, COIN_CASE"
+    },
+    {
+      "place": "Celadon City Prize Corner",
+      "n": 127,
+      "m": "gift",
+      "needs": [
+        "coin-case"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/events/prize_menu.asm",
+      "quote": "ld b, COIN_CASE"
+    },
+    {
+      "place": "Celadon City Prize Corner",
+      "n": 137,
+      "m": "gift",
+      "needs": [
+        "coin-case"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/events/prize_menu.asm",
+      "quote": "ld b, COIN_CASE"
+    },
+    {
+      "place": "Celadon City Prize Corner",
+      "n": 147,
+      "m": "gift",
+      "needs": [
+        "coin-case"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/events/prize_menu.asm",
+      "quote": "ld b, COIN_CASE"
+    },
+    {
+      "place": "Cerulean City",
+      "n": 54,
+      "needs": [
+        "surf"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
+      "quote": "\tcall IsNextTileShoreOrWater\n\tret c\n\tld a, [wWalkBikeSurfState]\n\tcp 2 ; Surfing?\n\tjr z, .surfing",
+      "note": "Fishing requires standing on land. The pinned CeruleanCity and Route4 maps, overworld blockset, collisions and ledges put all accessible fishing shore in the cave-door pocket, reached only via Surf; Route24 fishing uses its own map encounters. NPC trade remains unaffected."
+    },
+    {
+      "place": "Cerulean City",
+      "n": 60,
+      "needs": [
+        "surf"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
+      "quote": "\tcall IsNextTileShoreOrWater\n\tret c\n\tld a, [wWalkBikeSurfState]\n\tcp 2 ; Surfing?\n\tjr z, .surfing",
+      "note": "Fishing requires standing on land. The pinned CeruleanCity and Route4 maps, overworld blockset, collisions and ledges put all accessible fishing shore in the cave-door pocket, reached only via Surf; Route24 fishing uses its own map encounters. NPC trade remains unaffected."
+    },
+    {
+      "place": "Cerulean City",
+      "n": 98,
+      "needs": [
+        "surf"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
+      "quote": "\tcall IsNextTileShoreOrWater\n\tret c\n\tld a, [wWalkBikeSurfState]\n\tcp 2 ; Surfing?\n\tjr z, .surfing",
+      "note": "Fishing requires standing on land. The pinned CeruleanCity and Route4 maps, overworld blockset, collisions and ledges put all accessible fishing shore in the cave-door pocket, reached only via Surf; Route24 fishing uses its own map encounters. NPC trade remains unaffected."
+    },
+    {
+      "place": "Cerulean City",
+      "n": 118,
+      "needs": [
+        "surf"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
+      "quote": "\tcall IsNextTileShoreOrWater\n\tret c\n\tld a, [wWalkBikeSurfState]\n\tcp 2 ; Surfing?\n\tjr z, .surfing",
+      "note": "Fishing requires standing on land. The pinned CeruleanCity and Route4 maps, overworld blockset, collisions and ledges put all accessible fishing shore in the cave-door pocket, reached only via Surf; Route24 fishing uses its own map encounters. NPC trade remains unaffected."
+    },
+    {
+      "place": "Cerulean City",
+      "n": 129,
+      "needs": [
+        "surf"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
+      "quote": "\tcall IsNextTileShoreOrWater\n\tret c\n\tld a, [wWalkBikeSurfState]\n\tcp 2 ; Surfing?\n\tjr z, .surfing",
+      "note": "Fishing requires standing on land. The pinned CeruleanCity and Route4 maps, overworld blockset, collisions and ledges put all accessible fishing shore in the cave-door pocket, reached only via Surf; Route24 fishing uses its own map encounters. NPC trade remains unaffected."
+    }
+  ]
+}

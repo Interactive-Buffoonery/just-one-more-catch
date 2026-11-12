@@ -58,8 +58,8 @@ python3 scripts/fetch_sprites.py   # downloads only missing files
 ```
 
 Story gates (chapters, story steps, HM badge rules) are written by hand and
-must be sourced. See `.claude/skills/add-game/SKILL.md` before adding or
-changing a pack.
+must be sourced. Start with [the game-addition checklist](docs/adding-games.md)
+and `.agents/skills/add-game/SKILL.md` before adding or changing a pack.
 
 ## Accounts and settings
 

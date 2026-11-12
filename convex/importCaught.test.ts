@@ -31,6 +31,25 @@ describe("caught-list imports", () => {
     });
   });
 
+  it.each(["red", "blue", "yellow", "gold", "silver"] as const)("persists %s caught history and empty imports independently", async (version) => {
+    const t = convexTest(schema, modules);
+    const account = t.withIdentity(identity);
+    const existing = await account.mutation(api.runs.create, { version: "crystal" });
+    const state = '{"caught":[1],"notes":"Keep me"}';
+    await account.mutation(api.runs.save, { id: existing, state });
+    for (const [index, caught] of [[133, 25], []].entries()) {
+      const id = await account.mutation(api.runs.importCaught, {
+        importId: index ? "e60f37e5-bef7-4e53-8726-1c964120c460" : importId,
+        version, caught,
+      });
+      expect(JSON.parse(await account.query(api.runs.get, { id }))).toEqual({ caught: [...caught].sort((a, b) => a - b) });
+      expect(await account.query(api.runs.list, {})).toContainEqual(expect.objectContaining({ id, version }));
+      await expect(t.withIdentity({ subject: "other-user" }).query(api.runs.get, { id })).rejects.toThrow("Not your playthrough");
+    }
+    expect(await account.query(api.runs.get, { id: existing })).toBe(state);
+    expect(await account.query(api.runs.list, {})).toHaveLength(3);
+  });
+
   it("creates the chosen start date atomically and binds retries to it", async () => {
     const t = convexTest(schema, modules);
     const account = t.withIdentity(identity);

@@ -31,6 +31,9 @@ import { VERSIONS } from "../client/packs.ts";
 
 const esc = (s: unknown) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
 const games = [
+  ["red-blue", "rb", "Kanto"],
+  ["yellow", "yellow", "Kanto"],
+  ["gold-silver", "gs", "Johto and Kanto"],
   ["crystal", "crystal", "Johto and Kanto"],
   ["firered-leafgreen", "frlg", "Kanto and Sevii Islands"],
   ["heartgold-soulsilver", "hgss", "Johto and Kanto"],

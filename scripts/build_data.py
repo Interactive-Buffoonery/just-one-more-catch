@@ -38,8 +38,9 @@ def pretty(s):
 
 def base_place(loc):
     loc = GAME["rename"].get(loc, loc)
-    loc = re.sub(r" (\d+F|B\d+F)( Top)?$", "", loc)
-    loc = GAME["rename"].get(loc, loc)
+    if not GAME.get("keep_floors"):
+        loc = re.sub(r" (\d+F|B\d+F)( Top)?$", "", loc)
+        loc = GAME["rename"].get(loc, loc)
     loc = re.sub(r"^Mt\. Moon Mt\. Moon ", "Mt. Moon ", loc)
     return re.sub(r"^Victory Road 1$", "Victory Road", loc)
 
@@ -132,12 +133,12 @@ def rows_for(encounters, version, n):
                 src = d["method"]["name"]
                 if src in GAME.get("drop_methods", []):
                     continue
-                cond = sorted(c["name"] for c in d["condition_values"] if c["name"] not in DEFAULT_COND)
+                cond = sorted(GAME.get("condition_replacements", {}).get(c["name"], c["name"]) for c in d["condition_values"] if c["name"] not in DEFAULT_COND)
                 m = GAME.get("methods", {}).get(src, src)
                 extra = []
                 row_place = place
                 for i, g in enumerate(GAME.get("row_needs", [])):
-                    if g["n"] == n and matches(loc, g["place"]) and g.get("m", m) == m:
+                    if g["n"] == n and matches(loc, g["place"]) and g.get("m", m) == m and version in g.get("versions", VERSIONS):
                         row_hits.add(i)
                         extra += g["needs"]
                         row_place = g.get("show_as", row_place)
@@ -204,11 +205,21 @@ def species(n, johto):
             key = json.dumps(r, sort_keys=True)
             rows[key] = rows.get(key, "") + v
     pre = sp["evolves_from_species"]
+    if GAME["gen"] == "generation-i" and pre and int(pre["url"].rstrip("/").split("/")[-1]) > 151:
+        pre = None
+    if GAME.get("historical_pre_evolutions") and pre:
+        pre_species = cached(f"pokemon_species_{pre['url'].rstrip('/').split('/')[-1]}")
+        if GENS.index(pre_species["generation"]["name"]) > GENS.index(GAME["gen"]):
+            pre = None
+    historical = GAME["gen"] == "generation-i" or GAME.get("historical_pre_evolutions")
+    evo = None if historical and not pre else evo_text(chain, sp["name"])
+    override = GAME.get("evolution_overrides", {}).get(str(n), {})
+    evo = override.get("evo", evo) if isinstance(override, dict) else override
     return {
         "n": n, "genderRate": sp["gender_rate"], "j": johto.get(n), "name": name(sp), "types": gen4_types(p),
         **({"forms": form_list(n)} if str(n) in GAME.get("obtainable_forms", {}) else {}),
         "from": name(cached(f"pokemon_species_{pre['url'].rstrip('/').split('/')[-1]}")) if pre else None,
-        "evo": evo_text(chain, sp["name"]), "baby": sp["is_baby"],
+        "evo": evo, "baby": sp["is_baby"],
         "rows": sorted(({**json.loads(k), "v": v} for k, v in rows.items()), key=lambda r: (r["chap"], -r["c"])),
     }
 

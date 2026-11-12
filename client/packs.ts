@@ -121,6 +121,28 @@ const HGSS: Pack = {
   boxes: [18, 30],
 };
 
+const GS: Pack = {
+  load: () => import("./data/gs").then((m) => m.default),
+  art: "gs",
+  region: "Johto",
+  regional: 251,
+  national: 251,
+  start: "New Bark Town",
+  starters: [152, 155, 158],
+  badges: JOHTO_BADGES,
+  postgame: ["Kanto badges", kantoBadges("Janine", "Blue")],
+  kit: [...JOHTO_KIT, ["cut-hm", "Cut"]],
+  hm: {
+    "cut-hm": "Hive",
+    surf: "Fog",
+    strength: "Plain",
+    whirlpool: "Glacier",
+    waterfall: "Rising",
+  },
+  nightFrom: 18,
+  boxes: [14, 20],
+};
+
 const CRYSTAL: Pack = {
   load: () => import("./data/crystal").then((m) => m.default),
   art: "crystal",
@@ -141,6 +163,49 @@ const CRYSTAL: Pack = {
   },
   nightFrom: 18,
   boxes: [14, 20],
+};
+
+const RB: Pack = {
+  load: () => import("./data/rb").then((m) => m.default),
+  art: "rb",
+  region: "Kanto",
+  regional: 151,
+  national: 151,
+  start: "Pallet Town",
+  starters: [1, 4, 7],
+  badges: kantoBadges("Koga", "Giovanni"),
+  kit: [
+    ["old-rod", "Old Rod"],
+    ["good-rod", "Good Rod"],
+    ["super-rod", "Super Rod"],
+    ["surf", "Surf"],
+    ["strength", "Strength"],
+    ["bicycle", "Bicycle"],
+  ],
+  hm: { surf: "Soul", strength: "Rainbow" },
+  boxes: [12, 20],
+};
+
+const YELLOW: Pack = {
+  load: () => import("./data/yellow").then((m) => m.default),
+  art: "yellow",
+  region: "Kanto",
+  regional: 151,
+  national: 151,
+  start: "Pallet Town",
+  starters: [25],
+  badges: kantoBadges("Koga", "Giovanni"),
+  kit: [
+    ["old-rod", "Old Rod"],
+    ["good-rod", "Good Rod"],
+    ["super-rod", "Super Rod"],
+    ["yellow-cut", "Cut"],
+    ["surf", "Surf"],
+    ["strength", "Strength"],
+    ["bicycle", "Bicycle"],
+  ],
+  hm: { "yellow-cut": "Cascade", surf: "Soul", strength: "Rainbow" },
+  boxes: [12, 20],
 };
 
 const FRLG: Pack = {
@@ -209,6 +274,30 @@ const USUM: Pack = {
 };
 
 export const VERSIONS: Record<VersionId, Version> = {
+  red: {
+    name: "Red", short: "R", code: "r", gen: "Gen 1",
+    pack: RB, other: "Blue", ring: ["fire", "fighting"],
+  },
+  blue: {
+    name: "Blue", short: "B", code: "b", gen: "Gen 1",
+    pack: RB, other: "Red", ring: ["water", "ice"],
+  },
+  yellow: {
+    name: "Yellow",
+    short: "Y",
+    code: "y",
+    gen: "Gen 1",
+    pack: YELLOW,
+    ring: ["electric", "normal"],
+  },
+  gold: {
+    name: "Gold", short: "G", code: "g", gen: "Gen 2",
+    pack: GS, other: "Silver", ring: ["fire", "flying"],
+  },
+  silver: {
+    name: "Silver", short: "SI", code: "i", gen: "Gen 2",
+    pack: GS, other: "Gold", ring: ["psychic", "flying"],
+  },
   crystal: {
     name: "Crystal",
     short: "C",
@@ -285,13 +374,13 @@ export const VERSIONS: Record<VersionId, Version> = {
 
 export const CONSOLES: { name: string; games: (VersionId | { name: string; short: string; color: string })[] }[] = [
   { name: "Game Boy", games: [
-    { name: "Red", short: "R", color: "#d8403a" },
-    { name: "Blue", short: "B", color: "#3a67c9" },
-    { name: "Yellow", short: "Y", color: "#e0b52c" },
+    "red",
+    "blue",
+    "yellow",
   ] },
   { name: "Game Boy Color", games: [
-    { name: "Gold", short: "G", color: "#c9a227" },
-    { name: "Silver", short: "SI", color: "#9aa3b5" },
+    "gold",
+    "silver",
     "crystal",
   ] },
   { name: "Game Boy Advance", games: [

@@ -1,0 +1,604 @@
+{
+  "versions": {
+    "yellow": "y"
+  },
+  "pokedex": 2,
+  "species": 151,
+  "gen": "generation-i",
+  "drop": [],
+  "rename": {
+    "Route 2 South Towards Viridian City": "Route 2 South",
+    "Route 2 North Towards Pewter City": "Route 2 North",
+    "Route 3 Pokemon Center": "Route 4 Pokemon Center",
+    "Mt. Moon B1F": "Mt. Moon (B1F)",
+    "Mt. Moon B2F": "Mt. Moon (B2F)",
+    "Cerulean Cave B1F": "Cerulean Cave (B1F)",
+    "Rock Tunnel B2F": "Rock Tunnel (B1F)",
+    "Victory Road 2 1F": "Victory Road (1F)",
+    "Victory Road 2 2F": "Victory Road (2F)",
+    "Victory Road 2 3F": "Victory Road (3F)",
+    "Cerulean Cave 1F": "Cerulean Cave (1F)",
+    "Mt. Moon 1F": "Mt. Moon (1F)",
+    "Rock Tunnel B1F": "Rock Tunnel (1F)",
+    "Pokemon Tower 3F": "Pokemon Tower (3F)",
+    "Pokemon Tower 4F": "Pokemon Tower (4F)",
+    "Pokemon Tower 5F": "Pokemon Tower (5F)",
+    "Pokemon Tower 6F": "Pokemon Tower (6F)",
+    "Pokemon Tower 7F": "Pokemon Tower (7F)",
+    "Seafoam Islands B3F": "Seafoam Islands (B3F)",
+    "Seafoam Islands B4F": "Seafoam Islands (B4F)",
+    "Pokemon Mansion 1F": "Pokemon Mansion (1F)",
+    "Seafoam Islands 1F": "Seafoam Islands (1F)",
+    "Seafoam Islands B1F": "Seafoam Islands (B1F)",
+    "Seafoam Islands B2F": "Seafoam Islands (B2F)",
+    "Saffron City Silph Co 7F": "Saffron City Silph Co (7F)",
+    "Pokemon Mansion 2F": "Pokemon Mansion (2F)",
+    "Pokemon Mansion 3F": "Pokemon Mansion (3F)",
+    "Cerulean Cave 2F": "Cerulean Cave (2F)",
+    "Pokemon Mansion B1F": "Pokemon Mansion (B1F)"
+  },
+  "needs": {
+    "Route 17": {
+      "needs": [
+        "bicycle"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/Route16Gate1F.asm",
+      "quote": "call Route16Gate1FIsBicycleInBagScript"
+    },
+    "Cerulean Cave": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Yellow/Part_17",
+      "quote": "To get there, visitors must Surf southward from Route 24."
+    },
+    "Victory Road 2 2F": {
+      "needs": [
+        "strength"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/VictoryRoad1F.asm",
+      "quote": "EVENT_VICTORY_ROAD_1_BOULDER_ON_SWITCH"
+    },
+    "Victory Road 2 3F": {
+      "needs": [
+        "strength"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/VictoryRoad1F.asm",
+      "quote": "EVENT_VICTORY_ROAD_1_BOULDER_ON_SWITCH"
+    },
+    "Pokemon Tower 7F": {
+      "needs": [
+        "fuji-access"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/PokemonTower6F.asm",
+      "quote": "CheckEvent EVENT_BEAT_GHOST_MAROWAK"
+    }
+  },
+  "chapters": [
+    {
+      "title": "Pallet to Pewter",
+      "needs": [],
+      "places": [
+        "Pallet Town",
+        "Route 1",
+        "Viridian City",
+        "Route 22",
+        "Route 2 South",
+        "Route 2 North",
+        "Viridian Forest"
+      ]
+    },
+    {
+      "title": "Mt. Moon and Cerulean",
+      "needs": [
+        "Boulder"
+      ],
+      "places": [
+        "Route 3",
+        "Route 4",
+        "Mt. Moon",
+        "Cerulean City",
+        "Route 24",
+        "Route 25",
+        "Route 23"
+      ]
+    },
+    {
+      "title": "Vermilion and Diglett’s Cave",
+      "needs": [
+        "Boulder",
+        "bill"
+      ],
+      "places": [
+        "Route 5",
+        "Underground Path",
+        "Route 6",
+        "Vermilion City",
+        "Route 11",
+        "Digletts Cave"
+      ]
+    },
+    {
+      "title": "Rock Tunnel, Lavender and Celadon",
+      "needs": [
+        "yellow-cut"
+      ],
+      "places": [
+        "Route 9",
+        "Route 10",
+        "Rock Tunnel",
+        "Route 8",
+        "Route 7",
+        "Celadon City",
+        "Route 12",
+        "Route 16"
+      ]
+    },
+    {
+      "title": "Saffron City",
+      "needs": [
+        "yellow-cut",
+        "guard-drink"
+      ],
+      "places": [
+        "Saffron City"
+      ]
+    },
+    {
+      "title": "Identify the Pokémon Tower ghosts",
+      "needs": [
+        "yellow-cut",
+        "scope"
+      ],
+      "places": [
+        "Pokemon Tower"
+      ]
+    },
+    {
+      "title": "Southern Kanto and the Safari Zone",
+      "needs": [
+        "yellow-cut",
+        "flute"
+      ],
+      "places": [
+        "Route 13",
+        "Route 14",
+        "Route 15",
+        "Route 17",
+        "Route 18",
+        "Fuchsia City",
+        "Safari Zone",
+        "Sea Route 19"
+      ]
+    },
+    {
+      "title": "Seafoam, Cinnabar and the Power Plant",
+      "needs": [
+        "surf"
+      ],
+      "places": [
+        "Sea Route 20",
+        "Sea Route 21",
+        "Seafoam Islands",
+        "Cinnabar Island",
+        "Pokemon Mansion",
+        "Power Plant"
+      ]
+    },
+    {
+      "title": "Victory Road",
+      "needs": [
+        "Boulder",
+        "Cascade",
+        "Thunder",
+        "Rainbow",
+        "Soul",
+        "Marsh",
+        "Volcano",
+        "Earth",
+        "surf"
+      ],
+      "places": [
+        "Victory Road"
+      ]
+    },
+    {
+      "title": "After the Elite Four",
+      "needs": [
+        "Elite Four"
+      ],
+      "places": [
+        "Cerulean Cave"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "bill",
+      "label": "Help Bill at Sea Cottage",
+      "q": "Did you help Bill return to human form at Sea Cottage?",
+      "chap": 1
+    },
+    {
+      "id": "pikachu-happy",
+      "label": "Raise Pikachu’s happiness to 147",
+      "q": "Is your Pikachu happy enough for Melanie to offer Bulbasaur (147 happiness)?",
+      "chap": 1
+    },
+    {
+      "id": "guard-drink",
+      "label": "Give a drink to a Saffron guard",
+      "q": "Did you give Fresh Water, Soda Pop or Lemonade to a Saffron gate guard?",
+      "chap": 3
+    },
+    {
+      "id": "scope",
+      "label": "Get the Silph Scope",
+      "q": "Did you collect the Silph Scope from the Rocket Hideout?",
+      "chap": 3
+    },
+    {
+      "id": "fuji-access",
+      "label": "Defeat the ghost Marowak",
+      "q": "Did you defeat the ghost Marowak on Pokémon Tower’s sixth floor?",
+      "chap": 5,
+      "after": [
+        "scope"
+      ]
+    },
+    {
+      "id": "fuji",
+      "label": "Rescue Mr. Fuji",
+      "q": "Did you rescue Mr. Fuji from the top of Pokémon Tower?",
+      "chap": 5,
+      "after": [
+        "fuji-access"
+      ]
+    },
+    {
+      "id": "flute",
+      "label": "Get the Poké Flute",
+      "q": "Did Mr. Fuji give you the Poké Flute?",
+      "chap": 5,
+      "after": [
+        "fuji"
+      ]
+    },
+    {
+      "id": "dojo",
+      "label": "Beat the Fighting Dojo",
+      "q": "Did you beat the Karate Master in Saffron’s Fighting Dojo?",
+      "chap": 4
+    },
+    {
+      "id": "silph-rival",
+      "label": "Beat your rival in Silph Co.",
+      "q": "Did you beat your rival on Silph Co.’s seventh floor?",
+      "chap": 4,
+      "after": [
+        "fuji",
+        "guard-drink"
+      ]
+    }
+  ],
+  "row_needs": [
+    {
+      "place": "Cerulean City",
+      "n": 1,
+      "m": "gift",
+      "needs": [
+        "pikachu-happy"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/CeruleanMelaniesHouse.asm",
+      "quote": "cp 147"
+    },
+    {
+      "place": "Vermilion City",
+      "n": 7,
+      "m": "gift",
+      "needs": [
+        "Thunder"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/VermilionCity_2.asm",
+      "quote": "bit BIT_THUNDERBADGE, a"
+    },
+    {
+      "place": "Route 2 North",
+      "n": 122,
+      "m": "npc-trade",
+      "needs": [
+        "bill"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/Route2TradeHouse.asm",
+      "quote": "ld a, TRADE_FOR_MILES"
+    },
+    {
+      "place": "Route 12",
+      "n": 143,
+      "m": "pokeflute",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/engine/items/item_effects.asm",
+      "quote": "SetEvent EVENT_FIGHT_ROUTE12_SNORLAX"
+    },
+    {
+      "place": "Route 16",
+      "n": 143,
+      "m": "pokeflute",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/engine/items/item_effects.asm",
+      "quote": "SetEvent EVENT_FIGHT_ROUTE16_SNORLAX"
+    },
+    {
+      "place": "Saffron City Fighting Dojo",
+      "n": 106,
+      "m": "gift",
+      "needs": [
+        "dojo"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/FightingDojo.asm",
+      "quote": "SetEvents EVENT_GOT_HITMONLEE, EVENT_DEFEATED_FIGHTING_DOJO"
+    },
+    {
+      "place": "Saffron City Fighting Dojo",
+      "n": 107,
+      "m": "gift",
+      "needs": [
+        "dojo"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/FightingDojo.asm",
+      "quote": "SetEvents EVENT_GOT_HITMONCHAN, EVENT_DEFEATED_FIGHTING_DOJO"
+    },
+    {
+      "place": "Saffron City Silph Co",
+      "n": 131,
+      "m": "gift",
+      "needs": [
+        "fuji",
+        "silph-rival"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/SilphCo7F.asm",
+      "quote": "lb bc, LAPRAS, 15"
+    },
+    {
+      "place": "Seafoam Islands",
+      "n": 144,
+      "m": "static",
+      "needs": [
+        "strength"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/SeafoamIslandsB4F.asm",
+      "quote": "EVENT_SEAFOAM4_BOULDER1_DOWN_HOLE"
+    },
+    {
+      "place": "Route 23",
+      "n": 33,
+      "m": "walk",
+      "needs": [
+        "Boulder",
+        "Cascade",
+        "Thunder",
+        "Rainbow",
+        "Soul",
+        "Marsh",
+        "surf"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/Route23.asm",
+      "quote": "BadgeTextPointers:"
+    },
+    {
+      "place": "Route 23",
+      "n": 57,
+      "m": "walk",
+      "needs": [
+        "Boulder",
+        "Cascade",
+        "Thunder",
+        "Rainbow",
+        "Soul",
+        "Marsh",
+        "surf"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/Route23.asm",
+      "quote": "BadgeTextPointers:"
+    },
+    {
+      "place": "Route 23",
+      "n": 129,
+      "m": "old-rod",
+      "needs": [
+        "Boulder",
+        "Cascade",
+        "Thunder",
+        "Rainbow"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/Route23.asm",
+      "quote": "BadgeTextPointers:"
+    },
+    {
+      "place": "Route 23",
+      "n": 22,
+      "m": "walk",
+      "needs": [
+        "Boulder",
+        "Cascade",
+        "Thunder",
+        "Rainbow",
+        "Soul",
+        "Marsh",
+        "surf"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/Route23.asm",
+      "quote": "BadgeTextPointers:"
+    },
+    {
+      "place": "Route 23",
+      "n": 56,
+      "m": "walk",
+      "needs": [
+        "Boulder",
+        "Cascade",
+        "Thunder",
+        "Rainbow",
+        "Soul",
+        "Marsh",
+        "surf"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/Route23.asm",
+      "quote": "BadgeTextPointers:"
+    },
+    {
+      "place": "Route 23",
+      "n": 118,
+      "m": "good-rod",
+      "needs": [
+        "Boulder",
+        "Cascade",
+        "Thunder",
+        "Rainbow"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/Route23.asm",
+      "quote": "BadgeTextPointers:"
+    },
+    {
+      "place": "Route 23",
+      "n": 61,
+      "m": "super-rod",
+      "needs": [
+        "Boulder",
+        "Cascade",
+        "Thunder",
+        "Rainbow"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/Route23.asm",
+      "quote": "BadgeTextPointers:"
+    },
+    {
+      "place": "Route 23",
+      "n": 30,
+      "m": "walk",
+      "needs": [
+        "Boulder",
+        "Cascade",
+        "Thunder",
+        "Rainbow",
+        "Soul",
+        "Marsh",
+        "surf"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/Route23.asm",
+      "quote": "BadgeTextPointers:"
+    },
+    {
+      "place": "Route 23",
+      "n": 60,
+      "m": "good-rod",
+      "needs": [
+        "Boulder",
+        "Cascade",
+        "Thunder",
+        "Rainbow"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/Route23.asm",
+      "quote": "BadgeTextPointers:"
+    },
+    {
+      "place": "Route 23",
+      "n": 60,
+      "m": "super-rod",
+      "needs": [
+        "Boulder",
+        "Cascade",
+        "Thunder",
+        "Rainbow"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/Route23.asm",
+      "quote": "BadgeTextPointers:"
+    },
+    {
+      "place": "Route 12",
+      "n": 16,
+      "m": "walk",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/Route12.asm",
+      "quote": "object_event 10, 62, SPRITE_SNORLAX, STAY, DOWN, TEXT_ROUTE12_SNORLAX",
+      "note": "All original Route12 grass is south of the Snorlax. The northern fishing bank is accessible without clearing it. Route16 Cut reaches only the northern enclosure, not the southern Cycling Road bypass; Surf acquisition also requires Fuchsia access. Gate walking only."
+    },
+    {
+      "place": "Route 12",
+      "n": 17,
+      "m": "walk",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/Route12.asm",
+      "quote": "object_event 10, 62, SPRITE_SNORLAX, STAY, DOWN, TEXT_ROUTE12_SNORLAX",
+      "note": "All original Route12 grass is south of the Snorlax. The northern fishing bank is accessible without clearing it. Route16 Cut reaches only the northern enclosure, not the southern Cycling Road bypass; Surf acquisition also requires Fuchsia access. Gate walking only."
+    },
+    {
+      "place": "Route 12",
+      "n": 43,
+      "m": "walk",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/Route12.asm",
+      "quote": "object_event 10, 62, SPRITE_SNORLAX, STAY, DOWN, TEXT_ROUTE12_SNORLAX",
+      "note": "All original Route12 grass is south of the Snorlax. The northern fishing bank is accessible without clearing it. Route16 Cut reaches only the northern enclosure, not the southern Cycling Road bypass; Surf acquisition also requires Fuchsia access. Gate walking only."
+    },
+    {
+      "place": "Route 12",
+      "n": 44,
+      "m": "walk",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/Route12.asm",
+      "quote": "object_event 10, 62, SPRITE_SNORLAX, STAY, DOWN, TEXT_ROUTE12_SNORLAX",
+      "note": "All original Route12 grass is south of the Snorlax. The northern fishing bank is accessible without clearing it. Route16 Cut reaches only the northern enclosure, not the southern Cycling Road bypass; Surf acquisition also requires Fuchsia access. Gate walking only."
+    },
+    {
+      "place": "Route 12",
+      "n": 69,
+      "m": "walk",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/Route12.asm",
+      "quote": "object_event 10, 62, SPRITE_SNORLAX, STAY, DOWN, TEXT_ROUTE12_SNORLAX",
+      "note": "All original Route12 grass is south of the Snorlax. The northern fishing bank is accessible without clearing it. Route16 Cut reaches only the northern enclosure, not the southern Cycling Road bypass; Surf acquisition also requires Fuchsia access. Gate walking only."
+    },
+    {
+      "place": "Route 12",
+      "n": 70,
+      "m": "walk",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/Route12.asm",
+      "quote": "object_event 10, 62, SPRITE_SNORLAX, STAY, DOWN, TEXT_ROUTE12_SNORLAX",
+      "note": "All original Route12 grass is south of the Snorlax. The northern fishing bank is accessible without clearing it. Route16 Cut reaches only the northern enclosure, not the southern Cycling Road bypass; Surf acquisition also requires Fuchsia access. Gate walking only."
+    },
+    {
+      "place": "Route 12",
+      "n": 83,
+      "m": "walk",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/Route12.asm",
+      "quote": "object_event 10, 62, SPRITE_SNORLAX, STAY, DOWN, TEXT_ROUTE12_SNORLAX",
+      "note": "All original Route12 grass is south of the Snorlax. The northern fishing bank is accessible without clearing it. Route16 Cut reaches only the northern enclosure, not the southern Cycling Road bypass; Surf acquisition also requires Fuchsia access. Gate walking only."
+    }
+  ],
+  "evolution_overrides": {
+    "26": {
+      "evo": "Thunder Stone (starter Pikachu refuses; use a traded Pikachu)"
+    }
+  }
+}

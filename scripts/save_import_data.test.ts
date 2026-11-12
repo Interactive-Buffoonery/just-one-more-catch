@@ -49,3 +49,21 @@ test("wrong games, future schemas and invalid IDs never become a preview", async
   expect(() => caughtForPack(s, "heartgold", data)).toThrow();
   expect(() => caughtForPack(snapshot(["C"]), "heartgold", data)).toThrow();
 });
+
+test("GB identities retain paired choices and exclude unsupported Green", async () => {
+  expect(importVersions(snapshot(["RD", "GN", "BU"]))).toEqual(["red", "blue"]);
+  expect(importVersions(snapshot(["GD", "SI"]))).toEqual(["gold", "silver"]);
+  expect(importVersions(snapshot(["GN"]))).toEqual([]);
+  for (const [identity, version, limit] of [
+    ["RD", "red", 151], ["BU", "blue", 151], ["YW", "yellow", 151],
+    ["GD", "gold", 251], ["SI", "silver", 251],
+  ] as const) {
+    const s = snapshot([identity]);
+    expect(importVersions(s)).toEqual([version]);
+    const data = await VERSIONS[version].pack.load();
+    s.pokedex.caughtSpecies = [25, 133, limit, limit + 1];
+    expect(caughtForPack(s, version, data)).toEqual({ caught: [25, 133, limit], skipped: 1, partial: false });
+    s.pokedex.caughtSpecies = [];
+    expect(caughtForPack(s, version, data).caught).toEqual([]);
+  }
+});
