@@ -50,7 +50,8 @@ for (const destination of ["stay", "dashboard", "fresh-import"]) {
     pendingImport = true;
     pendingRun = "imported";
     ({render, syncRuns, pending: () => ({pendingRun, pendingImport})});`, {
-    URL, URLSearchParams, IMPORT_PATH, location, ui, bridge, raw: bridge,
+    URL, URLSearchParams, IMPORT_PATH, PATHS, APP_PATHS: ["/", ...Object.values(PATHS)], shownTab: "import", loadDevices() {},
+    location, ui, bridge, raw: bridge,
     run: old, opening: null, pendingImport: false, saveImport: importer,
     importPage: {contains: () => false}, document: {activeElement: null},
     history: {pushState: move, replaceState: move},

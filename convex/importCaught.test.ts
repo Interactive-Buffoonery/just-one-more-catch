@@ -44,7 +44,7 @@ describe("caught-list imports", () => {
       });
       expect(JSON.parse(await account.query(api.runs.get, { id }))).toEqual({ caught: [...caught].sort((a, b) => a - b) });
       expect(await account.query(api.runs.list, {})).toContainEqual(expect.objectContaining({ id, version }));
-      await expect(t.withIdentity({ subject: "other-user" }).query(api.runs.get, { id })).rejects.toThrow("Not your playthrough");
+      await expect(t.withIdentity({ subject: "other-user", sid: "sess_test" }).query(api.runs.get, { id })).rejects.toThrow("Not your playthrough");
     }
     expect(await account.query(api.runs.get, { id: existing })).toBe(state);
     expect(await account.query(api.runs.list, {})).toHaveLength(3);
