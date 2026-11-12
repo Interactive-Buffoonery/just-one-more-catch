@@ -21,8 +21,8 @@ phone or computer where they are already signed in.
 ### Clerk's Device Authorization Grant
 
 Clerk added this in September 2026, following RFC 8628. The current docs
-show no beta gate; confirm on our instance. Chosen approach; the full scope
-is in `device-sign-in.md`.
+show no beta gate, and our instance has the setting. Not chosen: its tokens
+can't be revoked per device (see below).
 
 - Setup: create a public OAuth application in Clerk and turn on
   `device_authorization_grant_enabled`, with scopes
@@ -45,7 +45,7 @@ is in `device-sign-in.md`.
 - Size: see `device-sign-in.md` (CSP first, a half-day spike, then a 4 to 6
   day build).
 
-### Alternative: Clerk sign-in tokens
+### Chosen: Clerk sign-in tokens
 
 The same pairing screen can end in a normal Clerk session. The device creates
 a short-lived pairing request in Convex and shows its code. The signed-in
@@ -59,10 +59,14 @@ The pairing request also needs to be single-use, expire quickly and be rate
 limited. The size is similar to the device grant, with less new token
 handling, since the device gets a normal Clerk session.
 
-## Recommendation
+## Decision
 
-Build the device grant for Retroid players, following `device-sign-in.md`.
-Fall back to sign-in tokens only if the spike's exit criteria fail.
+Sign-in tokens, chosen 2026-11-12. Every device must be cut off promptly
+when revoked. With sign-in tokens each device is its own Clerk session that
+can be revoked from a devices list, plus an instant Convex-side check. The
+device grant's OAuth tokens identify the account but not the device, and
+revoking them would mean storing every device's refresh token. The full
+scope is in `device-sign-in.md`.
 
 ## Sources
 

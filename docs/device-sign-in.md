@@ -1,180 +1,129 @@
 # Device sign-in scope
 
-Goal: a player on a Retroid Pocket (or any device where typing is slow) taps
-"Use another device", sees a short code and a QR code, approves on their phone,
-and is signed in to the same account and playthroughs they have on the web.
-Built on Clerk's OAuth Device Authorization Grant (RFC 8628). Background is in
-`auth-options.md`.
+Goal: a player on a Retroid Pocket, or any device where typing is slow, taps
+"Use another device" and sees a short code and a QR code. They approve it on
+a phone or computer where they're already signed in. The device then has its
+own Clerk session on the same account. Any signed-in device can see and
+revoke the others, and a revoked device loses access at once.
 
-## Where it fits
-
-The app layer only sees `Bridge["auth"]` (`client/types.ts`), and Convex only
-uses `tokenIdentifier` (`sub` + `iss`). Device sign-in is a second auth source
-in `client/main.ts` next to Clerk, plus one Convex provider entry. The account
-sheet and guest migration also need changes (below).
+Built on Clerk sign-in tokens (the `ticket` strategy). We chose this over
+Clerk's OAuth Device Authorization Grant because the grant's tokens can't be
+revoked per device. Background is in `auth-options.md`.
 
 ## Order of work
 
-1. CSP, as its own change.
-2. Spike on the dev instance. Its exit criteria decide whether the build goes
-   ahead.
-3. Build, then re-estimate it from what the spike found.
+1. CSP (`feat/site-csp`). Worth having anyway, but it no longer blocks this
+   work, because no long-lived token is stored in localStorage.
+2. Mockups for the three screens, approved before any UI work.
+3. Backend and client plumbing, alongside the mockups.
+4. UI from the approved mockups.
+5. Test on the dev instance with a real Retroid and a phone.
 
-## 1. CSP (ships first)
+## Flow
 
-The site sets no Content-Security-Policy today (`public/_headers` only sets
-caching). Device sign-in keeps a long-lived refresh token in localStorage,
-which any script on the origin can read, so a CSP is required.
+1. **Device starts:** A guest calls `pairing.start`. It creates a row with an
+   8-letter code (unambiguous letters, shown as `BCDF-GHJK`), a random device
+   secret, the device's browser label and a 10-minute expiry. The code and
+   secret go back to the device only. A deletion is scheduled for expiry.
+2. **Device waits:** It subscribes to `pairing.status({ id, secret })`. The
+   status is pending, approved, denied or expired. The ticket is returned
+   only to the holder of the secret.
+3. **Phone opens it:** The QR code links to `justonemorecatch.app/?pair=CODE`.
+   A signed-in player can also type the code under "Sign in another device".
+   The app opens an approval sheet showing the code, the device's browser
+   label and when it was started. The player confirms the code matches the
+   device's screen (RFC 8628 section 5.4), then approves or denies. A
+   signed-out player signs in first, then lands back on the approval sheet.
+4. **Approve:** The `pairing.approve` action checks the caller is signed in
+   and the pairing is pending and unexpired. It calls Clerk's Backend API
+   `POST /v1/sign_in_tokens` with the caller's own `subject` and
+   `expires_in_seconds: 120`, then stores the ticket on the row as approved.
+   The row is then single-use.
+5. **Device signs in:** It receives the ticket through its subscription,
+   calls `clerk.signIn.create({ strategy: "ticket", ticket })` then
+   `setActive`, and calls `pairing.finish` to delete the row. From here it's
+   a normal Clerk session. Convex auth, guest migration, import, contact and
+   delete account all work unchanged.
+6. **Device label:** After sign-in, the device calls `devices.label` to store
+   its browser label against its session ID (`sid`), owned by the player.
 
-- Cover the whole origin in `public/_headers`: the app, `/contact/` and the
-  static legal pages, since they share localStorage.
-- Allow our own scripts, Cloudflare's analytics beacon
-  (`static.cloudflareinsights.com`), the Clerk Frontend API
-  (`clerk.justonemorecatch.app`), Clerk images, Convex (`https` and `wss`),
-  and Cloudflare's bot check if Clerk's sign-in uses it.
-- Inline scripts in `index.html` and `public/{about,privacy,terms}/index.html`:
-  move them to files or allow them by hash, never with `'unsafe-inline'`.
-- Start with `Content-Security-Policy-Report-Only`, check sign-in, avatars,
-  contact, save import (worker) and the service worker on dev and production,
-  then enforce.
+## Devices list and revocation
 
-## 2. Spike (half a day, dev instance)
+- **Account sheet:** A "Signed-in devices" list on every signed-in device,
+  from `clerk.user.getSessions()`. It shows the label from Convex (or
+  Clerk's browser and OS), last active time and city, and marks this device.
+  The current device can't revoke itself; Sign out covers that.
+- **Revoke:** The `devices.revoke({ sessionId })` action:
+  1. Loads the session from Clerk (`GET /v1/sessions/{id}`) and checks it
+     belongs to the caller.
+  2. Calls `POST /v1/sessions/{id}/revoke`.
+  3. Writes `revokedSessions { sid, expiresAt }`, kept for 10 minutes, longer
+     than any Convex token from that session can live.
+- **Instant cutoff:** One helper in `convex/auth.ts`, `identityOf(ctx)`,
+  reads the identity and returns null if its `sid` is in `revokedSessions`.
+  - It replaces every raw `ctx.auth.getUserIdentity()`: `convex/runs.ts`
+    (`owner()`, `list`, `avatar`, `theme`), `convex/events.ts` and
+    `convex/contactSpam.ts`.
+  - A check in `pnpm check` fails on any other call.
+  - Live queries read the table, so the revoked device's subscriptions
+    re-run at once and come back empty. Clerk signs that device out within
+    about a minute.
+- **Cleanup:** A scheduled function deletes expired rows.
 
-Exit criteria. The build goes ahead only if all of these pass:
+## Security
 
-1. **Availability:** Discovery (`/.well-known/openid-configuration`) lists
-   `device_authorization_endpoint` after turning the grant on for a public
-   OAuth app. Current Clerk docs show no beta gate; confirm on our instance.
-2. **CORS:** The browser can call `/oauth/device_authorization`,
-   `/oauth/token` (device code and refresh) and revocation from
-   `justonemorecatch.app`. If it can't, stop and re-scope. A proxy is a new
-   security surface, not a quick fallback.
-3. **Claims:** For a real access token, record `iss`, `sub`, `aud`, `alg`,
-   `typ`, `iat`, `exp` and `kid`. `iss` must equal `CLERK_JWT_ISSUER_DOMAIN`
-   and `sub` must be the Clerk user ID. Don't assume the access token's `aud`
-   matches the ID token's.
-4. **Convex:** A second provider in `convex/auth.config.ts`, with the same
-   `domain` and `applicationID` set to the access token's `aud`. Convex
-   matches providers by issuer and audience, so the two entries can share a
-   domain. A test query returns the same `tokenIdentifier` for a web sign-in
-   and a device sign-in. A token from a different OAuth client is rejected.
-   Any `customJwt` fallback keeps audience checks.
-5. **Revocation:** Clerk documents one-day access tokens, refresh tokens that
-   don't expire, and JWT access tokens that can't be revoked. Find out whether
-   a public client can revoke its refresh token without a secret, and whether
-   refresh tokens rotate. Decide how a player cuts off a lost Retroid (from
-   the web account sheet, or a backend revoke behind a Convex action). If
-   there's no workable answer, stop. Revoking stops refreshes, but an access
-   token already issued stays valid until it expires (up to a day). We accept
-   that window. Shorten the access token lifetime in Clerk if it allows.
-6. **Approval page:** It works on production's Account Portal at `/device`
-   and reuses the phone's existing web session. Opened from
-   `verification_uri_complete`, it must show the code and make the player
-   confirm it matches the Retroid before approving (RFC 8628 section 5.4). If
-   it approves without that, the QR code uses `verification_uri` and the
-   player types the code on the phone.
+- **Pairing:** The secret never leaves the device. Approving needs a
+  signed-in player and an explicit confirmation. Both `pairing.start` and
+  approval attempts are rate limited with `@convex-dev/rate-limiter`, which
+  is already used in `convex/contactSpam.ts`. Starts use a global bucket;
+  approve and lookup attempts are limited per player, which stops someone
+  from guessing codes.
+- **Tickets:** Clerk sign-in tokens are single-use, and ours expire in two
+  minutes. The ticket is deleted once the device finishes.
+- **Secret key:** `CLERK_SECRET_KEY` lives in Convex env on dev and
+  production, and is used only in the actions. Update the README's "the
+  secret key isn't used" line.
+- **Phishing:** A stranger could show a player their own code and ask them
+  to approve it. The approval sheet shows the device label and start time,
+  and asks the player to confirm the code matches the screen in front of
+  them.
 
-## 3. Build
+## Spike checks (first hour of testing on dev)
 
-### Clerk and config
+1. The `convex` JWT template carries `sid` (add `"sid": "{{session.id}}"` if
+   not) and Convex exposes it on the identity.
+2. Ticket sign-in works in the Retroid browser and the installed app, with no
+   new-device or second-factor step in the way.
+3. The new session appears in `getSessions()` on the phone.
+4. After revoking, the Retroid's queries return empty at once, and it's
+   signed out within about a minute.
+5. **Session lifetime:** Check Clerk's maximum session lifetime (7 days by
+   default on new instances) in the dashboard's Sessions settings, and raise
+   it if the plan allows. Otherwise the Retroid needs re-pairing weekly.
 
-- Dev and production instances: one public OAuth app each, device grant on,
-  scopes `openid profile email offline_access`, JWT access tokens.
-- `VITE_CLERK_OAUTH_CLIENT_ID` per instance. Extend the `build:prod` env
-  isolation in `package.json` so a dev client ID can't reach production.
+## Checks
 
-### Convex
-
-- `convex/auth.config.ts`: the second provider from spike step 4.
-- No schema or function changes; ownership stays on `tokenIdentifier`.
-- If revocation needs the backend (spike step 5): one authenticated Convex
-  action that revokes the caller's device tokens. This adds the Clerk secret
-  key to Convex env, so update the README.
-
-### Client auth lifecycle (`client/main.ts`)
-
-This is the bulk of the work.
-
-- **One active source:** Device tokens take precedence over Clerk. Every
-  sign-in, sign-out or source change bumps a session generation. Results
-  from older generations (polls, refreshes, `setAuth` callbacks, late Clerk
-  loads, the startup timeout) are dropped. `onUser`'s same-user early return
-  has to compare source and generation too, not just the user ID.
-- **Authenticated only after Convex accepts:** Set `isAuthenticated` from the
-  `setAuth` callback, as today.
-- **Polling:** Keep polling on `authorization_pending` at `interval`. Add 5
-  seconds on each `slow_down` (it adds up). Stop on `access_denied`,
-  `expired_token` and any other error. Back off on network errors. Always
-  stop at `expires_in`, on cancel, or when the sheet closes, even mid-backoff.
-  Write it as a pure function.
-- **Tokens:** Store the refresh and access tokens in localStorage under one
-  key. Run one shared refresh at a time, used by both the main client and
-  the import client. Across tabs, take a Web Lock (`navigator.locks`) around
-  the refresh so only one tab refreshes. Use `storage` events to pass new
-  tokens and sign-out to the other tabs.
-- **Refresh failures:** A rejected refresh (`invalid_grant`) signs the device
-  out. A timeout, 5xx or being offline keeps the refresh token and retries
-  later, so a reload while offline doesn't sign the player out.
-- **Sign-out:** Revoke if possible (spike step 5), clear storage, bump the
-  generation, return to guest, and tell other tabs.
-- **Import (`importRun`):** Bind retries to the session generation rather
-  than `clerk.session`, so signing out and back in can't revive an old import.
-- **Guest migration (`client/guest.ts`):** Fence each awaited write to the
-  generation that started it, so a switch mid-migration can't move the
-  remaining guest runs into another account.
-- **Account deletion:** Add a Bridge capability flag. Hide "Delete account"
-  for device sign-ins (`client/views/runs.ts`), and have `deleteAccount`
-  refuse before the Convex purge when it can't delete the Clerk user.
-- **Contact page:** `startContact` skips the Clerk restore when device tokens
-  are present, so device players send as guests and never as a leftover
-  Clerk account.
-
-### Sheet UI (`client/views/runs.ts`)
-
-- A "Use another device" button in the sign-in sheet opens a view with the
-  code, a QR code of `verification_uri_complete`, the URL, and Cancel.
-- One short line: approve only the code shown here. RFC 8628 calls for this,
-  since Clerk's approval page can't tell an attacker's request from ours.
-- Mockup first. Labels only, apart from that line. Reachable with a d-pad
-  (focus order, visible focus).
-- QR code: the smallest maintained encoder (for example
-  `qrcode-generator`), loaded only when the view opens. It's the only new
-  dependency.
-
-### Checks
-
-- `scripts/check_device_sign_in.mjs`, added to `pnpm check`, covers the
-  polling machine, refresh decisions (terminal versus retryable), and
-  generation fencing.
-- `scripts/check_sw.mjs` already asserts the service worker leaves POSTs and
-  cross-origin requests alone. Keep those checks.
-- Startup checks: device tokens present with a late Clerk load; both
-  sources present; cancel during token exchange.
-- Manual, on the dev instance with a real Retroid and a phone:
-  - The Retroid shows the same playthroughs as the web.
+- Convex tests with `convex-test`, next to the existing
+  `convex/importCaught.test.ts`:
+  - Pairing start, status and expiry.
+  - Only the holder of the secret sees the ticket.
+  - Approve needs a signed-in player and works once.
+  - Rate limits apply.
+  - `identityOf` rejects a revoked `sid`.
+  - Revoke refuses another player's session.
+  - Clerk calls are stubbed.
+- `pnpm check`: no raw `getUserIdentity` outside `convex/auth.ts`.
+- Manual on dev:
+  - Pair a Retroid and see the same playthroughs as the web.
   - Guest playthroughs move over.
-  - A reload keeps the session, including an offline reload.
-  - Two tabs share one refresh, and sign-out reaches both.
-  - Revoking from the web makes the Retroid's next refresh fail. Its current
-    access token still works until it expires.
-  - Contact from a Retroid that also has a Clerk session sends as a guest.
-  - Delete account is hidden on the Retroid.
+  - Revoke from the phone cuts the Retroid off.
+  - A denied or expired code shows that state.
+  - The QR code opens the approval sheet on a signed-out phone after sign-in.
 
 ## Size
 
-- CSP: half a day to one day, mostly testing.
-- Spike: half a day.
-- Build: 4 to 6 days. Clerk setup and the Convex provider take half a day.
-  The auth lifecycle (source precedence, refresh, tabs, fencing) takes 2 to 3
-  days. The sheet UI with mockup and QR takes 1 day. Checks and Retroid
-  testing take 1 day.
+About 5 to 6 days. The pairing backend and revocation take 2 days, the three
+screens with mockups take 2, and checks and testing take 1 to 1.5.
 
-Re-estimate after the spike.
-
-## Cuts if it needs to be smaller
-
-- Stop if CORS fails, rather than building a proxy.
-- Keep Clerk's hosted approval page.
-- Device players send contact messages as guests.
-- Defer account deletion from the Retroid.
-- Keep the QR code; it's the point for Retroid players.
+The OAuth app created for the device grant isn't used. Delete it after the
+dev test passes.
