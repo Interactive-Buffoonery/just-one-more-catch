@@ -32,7 +32,9 @@ export function mountContact(send: Bridge["contact"]) {
         website: website.value,
       });
       if (!result.ok) {
-        status.textContent = "Please check your message and email, then try again.";
+        status.textContent = result.retryAfterSeconds
+          ? `Too many messages right now. Please try again in ${Math.max(1, Math.ceil(result.retryAfterSeconds / 60))} minute${result.retryAfterSeconds > 60 ? "s" : ""}. Your message is still here.`
+          : "Please check your message and email, then try again.";
         return;
       }
       form.hidden = true;

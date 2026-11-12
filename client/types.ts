@@ -69,5 +69,5 @@ export type Bridge = {
     email: string;
     message: string;
     website: string;
-  }): Promise<{ ok: boolean }>;
+  }): Promise<{ ok: boolean; retryAfterSeconds?: number }>;
 };
