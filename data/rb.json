@@ -613,6 +613,56 @@
       ],
       "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/events/prize_menu.asm",
       "quote": "ld b, COIN_CASE"
+    },
+    {
+      "place": "Cerulean City",
+      "n": 54,
+      "needs": [
+        "surf"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
+      "quote": "\tcall IsNextTileShoreOrWater\n\tret c\n\tld a, [wWalkBikeSurfState]\n\tcp 2 ; Surfing?\n\tjr z, .surfing",
+      "note": "Fishing requires standing on land. The pinned CeruleanCity and Route4 maps, overworld blockset, collisions and ledges put all accessible fishing shore in the cave-door pocket, reached only via Surf; Route24 fishing uses its own map encounters. NPC trade remains unaffected."
+    },
+    {
+      "place": "Cerulean City",
+      "n": 60,
+      "needs": [
+        "surf"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
+      "quote": "\tcall IsNextTileShoreOrWater\n\tret c\n\tld a, [wWalkBikeSurfState]\n\tcp 2 ; Surfing?\n\tjr z, .surfing",
+      "note": "Fishing requires standing on land. The pinned CeruleanCity and Route4 maps, overworld blockset, collisions and ledges put all accessible fishing shore in the cave-door pocket, reached only via Surf; Route24 fishing uses its own map encounters. NPC trade remains unaffected."
+    },
+    {
+      "place": "Cerulean City",
+      "n": 98,
+      "needs": [
+        "surf"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
+      "quote": "\tcall IsNextTileShoreOrWater\n\tret c\n\tld a, [wWalkBikeSurfState]\n\tcp 2 ; Surfing?\n\tjr z, .surfing",
+      "note": "Fishing requires standing on land. The pinned CeruleanCity and Route4 maps, overworld blockset, collisions and ledges put all accessible fishing shore in the cave-door pocket, reached only via Surf; Route24 fishing uses its own map encounters. NPC trade remains unaffected."
+    },
+    {
+      "place": "Cerulean City",
+      "n": 118,
+      "needs": [
+        "surf"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
+      "quote": "\tcall IsNextTileShoreOrWater\n\tret c\n\tld a, [wWalkBikeSurfState]\n\tcp 2 ; Surfing?\n\tjr z, .surfing",
+      "note": "Fishing requires standing on land. The pinned CeruleanCity and Route4 maps, overworld blockset, collisions and ledges put all accessible fishing shore in the cave-door pocket, reached only via Surf; Route24 fishing uses its own map encounters. NPC trade remains unaffected."
+    },
+    {
+      "place": "Cerulean City",
+      "n": 129,
+      "needs": [
+        "surf"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
+      "quote": "\tcall IsNextTileShoreOrWater\n\tret c\n\tld a, [wWalkBikeSurfState]\n\tcp 2 ; Surfing?\n\tjr z, .surfing",
+      "note": "Fishing requires standing on land. The pinned CeruleanCity and Route4 maps, overworld blockset, collisions and ledges put all accessible fishing shore in the cave-door pocket, reached only via Surf; Route24 fishing uses its own map encounters. NPC trade remains unaffected."
     }
   ]
 }

@@ -652,3 +652,9 @@ Bulbapedia automated access was not attempted. No original Gold/Silver guide
 was available in the supplied local guide collection; Crystal/HGSS guides
 were not substituted. Independent access review and manual game/browser
 checks remain the coordinator's work. Open cave mappings are not certified.
+
+### Red/Blue: Cerulean fishing access audit
+
+- Required Surf for Cerulean City's fishing rows (54, 60, 98, 118, 129). The Jynx trade is unaffected. Independently checked by the Claude first pass and Codex coordinator against pinned `pret/pokered` revision `130ac3fa5493fb29a8005e8439fd31b4826e46af`.
+- [Fishing rules](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm): `call IsNextTileShoreOrWater` checks the facing tile, and `scf ; can't fish when surfing` rejects fishing while surfing.
+- [Cerulean map](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/maps/CeruleanCity.blk), [Route 4 map](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/maps/Route4.blk), [overworld blockset](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/gfx/blocksets/overworld.bst), [collision IDs](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/tilesets/collision_tile_ids.asm) and [ledge directions](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/tilesets/ledge_tiles.asm) establish the spatial inference: on-foot entrances cannot reach the fishing shore by the cave door; Surf reaches it. This includes the Route 4 approach. Standing on Route 24 uses Route 24's encounter table. Binary-map decoding and source review were performed; emulator verification remains outstanding.
