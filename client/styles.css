@@ -589,6 +589,10 @@ button.gb:is(:hover,:focus-visible) .bx{rotate:0deg;translate:0 -10px;box-shadow
 .pickbody{text-align:center;display:grid;justify-items:center;--w:180px;--t:-6deg}
 .pickbody>.gb{margin:28px 0 38px}
 .pickbody .hv-actions{flex-wrap:wrap;justify-content:center;width:100%}
+.pickbody .start-choices{display:grid;grid-template-columns:1fr;gap:8px;max-width:400px}
+.pickbody .start-choices>*{width:100%}
+.app .start-import{display:inline-flex;align-items:center;justify-content:center;gap:8px;color:var(--ink);text-decoration:none}
+.start-import svg{width:20px;height:20px;flex:none}
 .pickbody>h2.lg{font-size:30px;line-height:1;margin:0 0 18px}
 @media (min-width:640px){.pickbody{--w:220px}}
 @media (max-width:639px){.pickbody .hv-actions>*{flex:1 1 100%}}
