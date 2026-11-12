@@ -1,0 +1,46 @@
+.dash-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.dash .dash-heading h1.lg{margin:8px 0 0}
+.save-import{display:grid;justify-items:center;gap:16px;text-align:center}
+.save-import p{margin:0}
+.save-import h2.lg{font-size:30px;line-height:1.1;margin:0;max-width:100%;overflow-wrap:anywhere}
+.save-import [tabindex="-1"]:focus{outline:0}
+.si-steps{list-style:none;padding:0;margin:0 0 6px;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800;color:var(--soft)}
+.si-steps li{display:flex;align-items:center;gap:6px}
+.si-steps li+li::before{content:"";width:18px;height:2px;background:var(--line);border-radius:2px;margin-right:2px}
+.si-steps i{font-style:normal;border:2px solid var(--line);border-radius:50%;width:22px;height:22px;display:grid;place-items:center;font-size:12px}
+.si-steps .on{color:var(--ink)}
+.si-steps .on i{border-color:var(--teal);color:var(--teal);background:var(--teal-soft)}
+.si-steps .done i{border-color:var(--fill);background:var(--fill);color:var(--on-fill)}
+.si-drop{width:100%;border:2px dashed var(--line);border-radius:18px;display:grid;justify-items:center;gap:14px;padding:24px 16px;background:color-mix(in srgb,var(--teal-soft) 45%,transparent)}
+.si-ball{display:block;width:64px;height:64px;color:var(--ink)}
+.si-ball svg{width:100%;height:100%;transform-origin:50% 92%}
+.si-loading .si-ball svg{animation:si-wobble 1.6s ease-in-out infinite}
+@keyframes si-wobble{0%,40%,100%{rotate:0deg}10%{rotate:-16deg}22%{rotate:14deg}32%{rotate:-6deg}}
+.si-file{font-weight:700;color:var(--soft);overflow-wrap:anywhere;max-width:100%}
+.si-progress{width:100%;max-width:400px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;min-height:24px}
+.si-bar{height:12px;border-radius:99px;background:var(--line);overflow:hidden}
+.si-bar i{display:block;height:100%;border-radius:inherit;background:var(--meter)}
+.si-bar.ind i{animation:si-slide 1.3s ease-in-out infinite}
+@keyframes si-slide{from{translate:-110% 0}to{translate:270% 0}}
+.si-percent{font-weight:800;font-variant-numeric:tabular-nums}
+.si-percent:empty{display:none}
+.si-privacy,.si-works,.si-help{font-size:14px;max-width:400px}
+.si-works{color:var(--soft);display:grid;gap:6px}
+.si-box{display:block;width:120px;height:120px;background:var(--g);padding:12px;border-radius:18px;rotate:-6deg;box-shadow:0 7px 0 color-mix(in srgb,var(--g) 70%,#000);margin:8px 0 12px}
+.si-box img{width:100%;height:100%;border-radius:3px}
+.si-eyebrow{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--soft)}
+.si-count{display:grid;gap:10px;width:100%;max-width:340px}
+.si-count .lead{justify-content:center}
+.si-sprites{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:2px;width:100%}
+.si-sprites img{image-rendering:pixelated}
+.si-sprites span{font-weight:800;color:var(--soft);margin-left:6px}
+.si-facts{list-style:none;display:grid;gap:12px;margin:0;padding:12px 14px;border-radius:14px;background:var(--bg);max-width:400px;text-align:left;font-size:14px;font-weight:700}
+.si-facts li{position:relative;padding-left:24px}
+.si-facts li::before{content:"✓";position:absolute;left:0;color:var(--teal);font-weight:900}
+.si-choices{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.si-oops{display:grid;place-items:center;width:64px;height:64px;background:var(--coral-soft);color:var(--coral);border-radius:50%;font-size:36px;font-weight:800}
+.si-help a{color:var(--teal);text-decoration:underline;text-underline-offset:3px}
+.save-import .hv-actions{justify-content:center;flex-wrap:wrap}
+.save-import button:disabled{cursor:default;opacity:.6}
+@media(max-width:639px){.save-import .hv-actions{width:100%}.save-import .hv-actions>*{flex:1 1 100%}.si-sprites img{width:36px;height:36px}}
+@media(prefers-reduced-motion:reduce){.si-loading .si-ball svg,.si-bar.ind i{animation:none}.si-bar.ind i{width:100%!important;background:repeating-linear-gradient(120deg,var(--meter) 0 10px,var(--line) 10px 20px)}}

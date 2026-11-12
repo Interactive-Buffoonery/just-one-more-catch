@@ -101,6 +101,11 @@ installing.
 In development, Clerk accepts test emails like `name+clerk_test@example.com`
 with the code `424242`.
 
+## Save imports
+
+See [the save-import guide](docs/save-import.md) for the browser reader, release
+assets, testing and how to add official games or ROM hacks.
+
 ## Deploy
 
 ```sh

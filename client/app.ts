@@ -1,6 +1,8 @@
 // Ported from the approved mockup: string-rendered views on one root, event delegation, no framework.
 // main.ts owns auth and server calls and hands them in through the bridge.
 import "./styles.css";
+import "./save-import.css";
+import { SaveImport } from "./save-import";
 import { $, announce, esc, root, setRoot } from "./dom";
 import { caughtCsv, fetchStates, jsonParts, saveFile } from "./export";
 import {
@@ -50,6 +52,8 @@ let creating = false;
 let pickOpenedAt = 0;
 let opening: string | null = null;
 let openSeq = 0;
+let saveImport: SaveImport;
+let pendingImport = false;
 function useRun(row: RunRow, start = false, customize = false) {
   const v = verOf(row.version);
   closeRun();
@@ -242,6 +246,22 @@ function flushSave() {
     );
   }
 }
+async function saveBeforeImport() {
+  clearTimeout(saveTimer);
+  if (!run) return;
+  const id = run.id, state = dumpRun(run);
+  if (state === ui.saved) return;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    await Promise.race([
+      bridge.saveRun(id, state),
+      new Promise<never>((_, reject) => {
+        timer = setTimeout(() => reject(new Error("Saving timed out")), 30000);
+      }),
+    ]);
+  } finally { clearTimeout(timer); }
+  if (run?.id === id) ui.saved = state;
+}
 function toggleCaught(n: number) {
   const p = byN[n],
     r = R(),
@@ -292,6 +312,13 @@ async function onClick(e: MouseEvent) {
   ) as HTMLButtonElement | null;
   if (!t || t.disabled || (t.type === "submit" && t.form)) return;
   const d = t.dataset;
+  if (d.importsave) {
+    ui.sheet = { kind: "import", k: "import-save" };
+    $("#sheet").classList.remove("wide");
+    $("#sheet").showModal();
+    saveImport.open();
+    return;
+  }
   if (d.look || d.mode) {
     setLocalTheme(d.look || ui.look, d.mode || ui.mode);
     if (raw.auth.isAuthenticated)
@@ -647,7 +674,11 @@ function syncRuns() {
   const want = pendingRun && rows.find((r) => r.id === pendingRun);
   if (want) {
     pendingRun = null;
-    useRun(want, true, true);
+    if (pendingImport) {
+      pendingImport = false;
+      ui.tab = "dex";
+      useRun(want);
+    } else useRun(want, true, true);
     return;
   }
   if (!run && !opening && !ui.loadError && rows.length)
@@ -675,6 +706,19 @@ export function mount(el: HTMLElement, b: Bridge) {
   setBridge(withGuest(b, refresh));
   el.className = "app";
   el.innerHTML = shell();
+  saveImport = new SaveImport({
+    host: $("#sheetbody"),
+    bridge: () => bridge,
+    flush: saveBeforeImport,
+    complete: (id) => {
+      $("#sheet").close();
+      pendingImport = true;
+      pendingRun = id;
+      refresh();
+      flash(bridge.auth.isAuthenticated ? "Caught Pokémon imported. Saved to your account." : "Caught Pokémon imported. Saved only in this browser.");
+    },
+    dismiss: () => $("#sheet").close(),
+  });
   ui.look = PALETTE[store.get("jomc.look") || ""]
     ? store.get("jomc.look")
     : "blossom";
@@ -759,12 +803,17 @@ export function mount(el: HTMLElement, b: Bridge) {
   $("#sheet").addEventListener("click", (e: Event) => {
     if ((e.target as HTMLElement).id === "sheet") {
       if (ui.sheet?.kind === "pick" && performance.now() - pickOpenedAt < 350) return;
+      if (ui.sheet?.kind === "import" && saveImport.busy) return;
       $("#sheet").close();
     }
+  });
+  $("#sheet").addEventListener("cancel", (event: Event) => {
+    if (ui.sheet?.kind === "import" && saveImport.busy) event.preventDefault();
   });
   $("#sheet").addEventListener("close", () => {
     const s = ui.sheet;
     ui.sheet = null;
+    if (s?.kind === "import") saveImport.close();
     if (s?.kind === "signin")
       bridge.unmountSignIn($("#clerk-signin") as HTMLDivElement);
     render();
@@ -809,6 +858,7 @@ export function update(b: Bridge) {
     flushSave();
   raw = b;
   setBridge(withGuest(b, refresh));
+  saveImport.accountChanged();
   syncRuns();
   syncTheme();
   if (b.auth.isAuthenticated && ui.sheet?.kind === "signin")

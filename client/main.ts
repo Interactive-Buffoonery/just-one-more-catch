@@ -57,7 +57,7 @@ async function startContact() {
   });
 }
 
-function sessionToken(c: Clerk | undefined, forceRefreshToken: boolean) {
+function sessionToken(c: Pick<Clerk, "session"> | undefined, forceRefreshToken: boolean) {
   const session = c?.session;
   if (!session) return Promise.resolve(null);
   const aud = session.lastActiveToken?.jwt?.claims.aud;
@@ -164,6 +164,28 @@ async function startTracker() {
     },
     signOut: () => void clerk?.signOut(),
     createRun: (version) => convex.mutation(api.runs.create, { version }),
+    importRun: async (version, caught, importId) => {
+      const session = clerk?.session, target = auth.userId;
+      if (!session || !target || !auth.isAuthenticated) throw new Error("Sign in first");
+      // Keep retries bound to the session that confirmed the import.
+      const importer = new ConvexClient(import.meta.env.VITE_CONVEX_URL);
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      importer.setAuth(({ forceRefreshToken }) =>
+        clerk?.user?.id === target && clerk.session?.id === session.id
+          ? sessionToken({ session }, forceRefreshToken)
+          : Promise.resolve(null));
+      try {
+        return await Promise.race([
+          importer.mutation(api.runs.importCaught, { version, caught, importId }),
+          new Promise<never>((_, reject) => {
+            timer = setTimeout(() => reject(new Error("Import timed out")), 30000);
+          }),
+        ]);
+      } finally {
+        clearTimeout(timer);
+        await importer.close();
+      }
+    },
     saveRun: (id, state) => convex.mutation(api.runs.save, { id, state }),
     deleteRun: (id) => convex.mutation(api.runs.remove, { id }),
     setStart: (id, startedAt) =>
@@ -194,6 +216,7 @@ async function startTracker() {
         auth = {
           isLoading: false,
           isAuthenticated: ok,
+          userId: ok ? user?.id : undefined,
           displayName: user?.firstName || user?.fullName || undefined,
           email: user?.primaryEmailAddress?.emailAddress,
         };

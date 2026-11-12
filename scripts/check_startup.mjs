@@ -3,7 +3,7 @@ import {readFileSync} from 'node:fs';
 import {stripTypeScriptTypes} from 'node:module';
 import {createContext, runInNewContext, SourceTextModule, SyntheticModule} from 'node:vm';
 const source = readFileSync(new URL('../client/main.ts', import.meta.url), 'utf8');
-async function run({failImport = false, cookie = '', search = '', user = null, signal = false, pathname = '/', contactStalled = false} = {}) {
+async function run({failImport = false, cookie = '', search = '', user = null, signal = false, pathname = '/', contactStalled = false, importCheck = false} = {}) {
   let release;
   const loaded = new Promise(r => release = r);
   const mounted = [];
@@ -13,23 +13,27 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
   const redirects = [];
   const mutations = [];
   let authenticated = false;
+  const clients = [];
+  let clerkInstance;
   let constructed = 0;
   let loads = 0;
   class Element { closest() { return true; } }
   const listeners = {};
   let idle;
   class Clerk {
-    constructor() { constructed++; }
+    constructor() { constructed++; clerkInstance = this; }
     loaded = false;
     async load() { loads++; await loaded; this.loaded = true; }
     user = user;
-    session = user && {getToken: async () => 'token'};
+    session = user && {id: 'session-a', getToken: async () => 'token'};
     addListener(fn) { fn({user}); }
     mountSignIn(el) { mounted.push(el); }
     unmountSignIn() {}
   }
   class ConvexClient {
-    setAuth(token, onAuth) { Promise.resolve(token({})).then(t => { authenticated = !!t; onAuth?.(!!t); }); }
+    constructor() { clients.push(this); }
+    async close() { this.closed = true; }
+    setAuth(token, onAuth) { this.tokenProvider = token; Promise.resolve(token({})).then(t => { authenticated = !!t; onAuth?.(!!t); }); }
     mutation(api, input) { mutations.push({input, authenticated}); return Promise.resolve({ok:true}); }
     onUpdate() { return () => {}; }
   }
@@ -135,6 +139,20 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
     await new Promise(setImmediate);
     assert.equal(mounted.length,0,'an existing session must not mount sign-in');
     assert.equal(bridges.at(-1).auth.isAuthenticated,true,'an existing session must sign in once Clerk loads');
+    if (importCheck) {
+      const b = bridges.at(-1);
+      assert.equal(b.auth.userId, 'user_1');
+      const importId = '00000000-0000-4000-8000-000000000001';
+      await b.importRun('leafgreen', [25], importId);
+      const connection = clients.at(-1);
+      assert.notEqual(connection, clients[0], 'imports need a connection bound to their confirming session');
+      assert.equal(connection.closed, true, 'imports must release their connection');
+      assert.deepEqual(JSON.parse(JSON.stringify(mutations.at(-1).input)), {version:'leafgreen', caught:[25], importId});
+      assert.equal(await connection.tokenProvider({forceRefreshToken:false}), 'token');
+      clerkInstance.user = {id:'other-user'};
+      clerkInstance.session = {id:'session-b',getToken:async ()=>'other-token'};
+      assert.equal(await connection.tokenProvider({forceRefreshToken:true}), null, 'retries must never use another account token');
+    }
     return;
   }
   assert.equal(bridge.auth.isLoading,false,'guest mode must start before auth resolves');
@@ -166,7 +184,7 @@ await run({pathname:'/contact/',cookie:'__client_uat=1731300000',contactStalled:
 await run({search:'?tab=contact'});
 await run();
 await run({failImport:true});
-await run({user:{id:'user_1'}});
+await run({user:{id:'user_1'},importCheck:true});
 await run({cookie:'__client_uat=0; theme=dark'});
 await run({cookie:'theme=dark; __client_uat=1731300000',signal:true});
 await run({cookie:'__client_uat_abc123=1731300000',signal:true});

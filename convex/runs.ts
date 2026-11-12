@@ -6,6 +6,7 @@ import { MAX_RUN_BYTES, MAX_RUNS, runBytes } from "../shared/limits";
 import { summarize } from "../shared/summary";
 import { VERSION_IDS } from "../shared/versions";
 import { isAvatar } from "../shared/avatars";
+import { importCaughtState, validateImportId } from "../shared/save-import";
 
 import { sendContact } from "./contactSpam";
 // Each run can carry up to MAX_RUN_BYTES, so batches stay well under the 16 MiB per-call read limit
@@ -79,6 +80,28 @@ export const create = mutation({
     if (!(VERSION_IDS as readonly string[]).includes(version)) throw new Error("Unknown game");
     if ((await ownedBy(ctx, who)).length >= MAX_RUNS) throw new Error("Too many playthroughs");
     return (await ctx.db.insert("runs", { owner: who, version, summary: summarize("{}") })) as string;
+  },
+});
+
+export const importCaught = mutation({
+  args: { version: v.string(), caught: v.array(v.number()), importId: v.string() },
+  returns: v.string(),
+  handler: async (ctx, { version, caught, importId }) => {
+    const who = await owner(ctx);
+    validateImportId(importId);
+    const state = importCaughtState(version, caught);
+    const existing = await ctx.db.query("runs")
+      .withIndex("by_owner_importId", (q) => q.eq("owner", who).eq("importId", importId))
+      .unique();
+    if (existing) {
+      if (existing.version !== version || (await stateOf(ctx, existing._id))?.state !== state)
+        throw new Error("Import ID already used for another playthrough");
+      return existing._id as string;
+    }
+    if ((await ownedBy(ctx, who)).length >= MAX_RUNS) throw new Error("Too many playthroughs");
+    const id = await ctx.db.insert("runs", { owner: who, version, importId, summary: summarize(state) });
+    await ctx.db.insert("states", { run: id, state });
+    return id as string;
   },
 });
 

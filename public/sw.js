@@ -1,7 +1,7 @@
 // ponytail: one runtime cache and no precache list. Hashed bundles persist;
 // image fingerprints replace older copies of the same path when stored.
 const CACHE = "jomc-v2";
-const STATIC = /^\/(assets|sprites|badges|items|covers|fonts|icons)\//;
+const STATIC = /^\/(assets|sprites|badges|items|covers|fonts|icons|save-reader)\//;
 
 const put = (key, res) => caches.open(CACHE).then(async (c) => {
   await c.delete(key, { ignoreSearch: true });
