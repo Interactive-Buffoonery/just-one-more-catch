@@ -32,3 +32,18 @@
 .lgo svg{color:var(--soft)}
 
 
+.app .soc{display:inline-flex;vertical-align:-6px;width:28px;height:28px;align-items:center;justify-content:center;margin-left:2px;border-radius:8px;color:var(--teal);position:relative}
+.app .soc::after{content:"";position:absolute;inset:-8px}
+.app .soc:hover{background:var(--teal-soft)}
+.lai{background:var(--surface);border-radius:18px}
+.lai summary,.lsrc summary{list-style:none;display:flex;align-items:center;gap:12px;cursor:pointer}
+.lai summary::-webkit-details-marker,.lsrc summary::-webkit-details-marker{display:none}
+.lai summary{min-height:56px;padding:0 18px;font-weight:700}
+.lsrc{margin-top:-8px}
+.lsrc summary{min-height:48px}
+.lai summary svg,.lsrc summary svg{flex:none;color:var(--soft);transition:transform .2s}
+.lai[open] summary svg,.lsrc[open] summary svg{transform:rotate(180deg)}
+.lai summary:focus-visible,.lsrc summary:focus-visible{outline:3px solid var(--teal);outline-offset:2px;border-radius:10px}
+.lai .lbody{padding-top:0}
+.lsrc ul{margin:0;padding:0 0 4px 20px;display:grid;gap:6px}
+@media(prefers-reduced-motion:reduce){.lai summary svg,.lsrc summary svg{transition:none}}
