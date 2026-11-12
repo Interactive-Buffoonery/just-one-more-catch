@@ -28,8 +28,10 @@ The checks compare raw National Dex bits in the newest section 0 (`0x28` caught,
 an older empty Pokédex and a newer populated save in the second slot, with the
 sectors rotated three places. The website tests file selection, `.srm` drop,
 the preview, creation, reload, cancellation and preserving an existing run.
-They include an empty Pokédex at a 390px viewport, a rejected 64 KiB file and
-readable Ruby/Sapphire that cannot create an unsupported website playthrough.
+They include empty Pokédex previews at a 390px viewport, valid 64 KiB saves
+with ordered or rotated sections, their recovery warning, and rejected damaged
+64 KiB files (bad checksum, missing/duplicate section, bad signature and mixed
+counters). Readable Ruby/Sapphire cannot create an unsupported website playthrough.
 They assert unchanged input files/buffers and no upload requests.
 
 Source references at the pinned Core revision:
@@ -39,8 +41,8 @@ Source references at the pinned Core revision:
 - `Saves/Util/SaveUtil.cs`: serialized save detection and 128 KiB requirement.
 - `Saves/Blocks/Gen3/SaveBlock3SmallE.cs`: Emerald security key.
 
-Reader source is pinned at `5263b86e798e9e189c1d71a127b0192ec4828b88`.
-No reader change or new release is needed for the website's Emerald adapter.
+Reader 0.1.2 source is pinned at `8cc08fd58b9b148ecba9c9ef262703559e1979e1`.
+The fork adds validated half-size Emerald recovery; Core and its pin are unchanged.
 The harness writes `native-results.json`, `wasm-results.json` and
 `website-results.json` locally. Real player saves, signed-in account imports
 and mobile Safari remain separate checks; do not commit personal saves.

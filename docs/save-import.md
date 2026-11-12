@@ -36,7 +36,7 @@ Nothing silently falls back to an original game.
 A successful import requires schema version 1, the `national-dex` species
 namespace, a known official format and a website game matching the reader's
 candidate versions. Caught IDs intersect the loaded pack's actual species list
-and national limit. Skipped species and partial coverage appear in the preview.
+and national limit. Skipped species, partial coverage and reader warnings appear in the preview.
 An unavailable Pokédex never becomes a successful empty list. A valid empty
 caught list is allowed.
 
@@ -78,11 +78,11 @@ local release tarball under `vendor/`; it does not load a CDN parser. It exposes
 The dedicated host exports inspection only. The existing upstream editor APIs,
 submodule revisions and main branch remain intact in the fork.
 
-Release 0.1.1 pins source commit `5263b86e798e9e189c1d71a127b0192ec4828b88`.
+Release 0.1.2 pins source commit `8cc08fd58b9b148ecba9c9ef262703559e1979e1`.
 The tarball SHA-256 is
-`b276f63177c00ddc2e7d05da19fe6eceef2eb419d20b031e835d26668d63e732`.
-Runtime assets total 19,995,550 bytes before compression, 5,593,094 with gzip,
-or 3,677,655 with Brotli. Source archives are separate optional downloads and
+`f7d8d2575ac0552df2d91fa41e7f0fd6d0425bd1ad561a8d6128f30bd0fe0f2d`.
+Runtime assets total 20,149,982 bytes before compression, 5,630,428 with gzip,
+or 3,697,929 with Brotli. Source archives are separate optional downloads and
 are not fetched during import. These are transfer sizes, not peak memory.
 
 `vite.config.ts` uses `scripts/save-reader-assets.ts` to copy the package assets
@@ -152,15 +152,27 @@ finish there. The UI reports that outcome instead of opening it in a new account
    Keep personal saves outside Git and public fixtures. Deploy only through the
    normal manual deployment process.
 
-Emerald uses the existing reader 0.1.1 without a package change. Its serialized
-fixtures passed native detection, raw-bit comparison, the published WASM worker
-and the built website's guest import flow. The fixture checks cover 128 KiB
-`.sav` files and `.srm` drop, caught history after storage removal, an empty
-Pokédex, rotated sectors and choosing the newer save slot. The pinned parser
-rejects 64 KiB saves; Ruby/Sapphire remain unsupported website games. No personal
-Emerald save, live account import or mobile Safari check was performed.
-Reproduction instructions are in
+Emerald uses reader 0.1.2. Its serialized fixtures exercise native detection,
+raw-bit comparison, the published WASM worker and the built website's guest
+import flow. They cover 128 KiB `.sav` files and `.srm` drop, caught history after
+storage removal, an empty Pokédex, rotated sectors and choosing the newer slot.
+
+For exactly 64 KiB, the fork verifies all 14 unique main sections, their sector
+signatures, a consistent counter, checksums and Emerald identity. A private copy
+is extended with erased bytes only for normal Core and ROM-hack detection. The
+original file is never rewritten or repaired. The preview warns that a newer
+save may be missing; complete flag coverage describes only the surviving slot.
+Missing/duplicate sections, invalid signatures, mixed counters, bad checksums
+and 64 KiB RS/FRLG layouts are rejected. Ruby/Sapphire remain unsupported website
+games. Reproduction instructions are in
 [the Emerald fixture README](../scripts/emerald-save-fixtures/README.md).
+
+A real 64 KiB emulator export remains a separate check. Obtain an existing
+65,536-byte in-game `.sav` or `.srm` from its owner with permission to test it.
+A disposable emulator profile using a user-supplied ROM and 64 KiB flash settings
+is another possible reproduction, but has not been verified here. Do not change
+a player's active profile or truncate their only save. No personal Emerald
+save, live account import or mobile Safari check was performed.
 
 ## Adding a ROM hack
 

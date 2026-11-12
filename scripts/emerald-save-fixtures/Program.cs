@@ -5,7 +5,7 @@ using PKHeX.Core;
 Directory.CreateDirectory(args[0]);
 ushort[] caught = [25, 133, 252, 255, 258, 280, 290, 292, 349, 350, 380, 381, 384, 386];
 var results = new List<object>();
-foreach (var name in new[] { "caught", "empty", "rotated", "half", "ruby-sapphire" })
+foreach (var name in new[] { "caught", "empty", "rotated", "half", "half-empty", "half-rotated", "half-checksum", "half-missing", "half-duplicate", "half-signature", "half-counter", "ruby-sapphire" })
 {
     var data = new byte[SaveUtil.SIZE_G3RAW];
     for (var sector = 0; sector < 28; sector++)
@@ -22,7 +22,7 @@ foreach (var name in new[] { "caught", "empty", "rotated", "half", "ruby-sapphir
         emerald.SmallBlock.SecurityKey = 0x12345678;
         emerald.Small[0x890] = 1;
     }
-    if (name != "empty")
+    if (name != "empty" && name != "half-empty")
     {
         foreach (var species in caught)
         {
@@ -47,19 +47,34 @@ foreach (var name in new[] { "caught", "empty", "rotated", "half", "ruby-sapphir
         for (var sector = 0; sector < 14; sector++)
             newest.AsSpan(sector * 0x1000, 0x1000).CopyTo(bytes.AsSpan((14 + (sector + 3) % 14) * 0x1000));
     }
-    if (name == "half")
+    if (name.StartsWith("half"))
     {
         bytes = bytes[..0x10000];
-        if (SaveUtil.GetSaveFile(bytes) is not null)
-            throw new InvalidDataException("The pinned reader unexpectedly accepts half-size saves");
-        File.WriteAllBytes(Path.Combine(args[0], name + ".sav"), bytes);
-        results.Add(new { name, length = bytes.Length, unsupported = true });
-        continue;
+        if (name == "half-rotated")
+        {
+            var source = bytes.ToArray();
+            for (var sector = 0; sector < 14; sector++)
+                source.AsSpan(sector * 0x1000, 0x1000).CopyTo(bytes.AsSpan(((sector + 3) % 14) * 0x1000));
+        }
+        switch (name)
+        {
+            case "half-checksum": bytes[0x28] ^= 1; break;
+            case "half-missing": bytes.AsSpan(0x1000, 0x1000).Fill(0xFF); break;
+            case "half-duplicate": BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(0x1FF4), 0); break;
+            case "half-signature": bytes[0x1FF8] ^= 1; break;
+            case "half-counter": bytes[0x1FFC] ^= 1; break;
+        }
+        if (new[] { "half-checksum", "half-missing", "half-duplicate", "half-signature", "half-counter" }.Contains(name))
+        {
+            File.WriteAllBytes(Path.Combine(args[0], name + ".sav"), bytes);
+            results.Add(new { name, length = bytes.Length, invalid = true });
+            continue;
+        }
     }
-    var reread = SaveUtil.GetSaveFile(bytes);
+    var reread = bytes.Length == 0x10000 ? new SAV3E(bytes) : SaveUtil.GetSaveFile(bytes);
     if (reread is null || !reread.ChecksumsValid)
         throw new InvalidDataException($"Invalid serialized fixture: {name}");
-    var expected = name == "empty" ? Array.Empty<int>() : caught.Select(n => (int)n).ToArray();
+    var expected = name is "empty" or "half-empty" ? Array.Empty<int>() : caught.Select(n => (int)n).ToArray();
     var actual = Enumerable.Range(1, 386).Where(n => reread.GetCaught((ushort)n)).ToArray();
     if (!actual.SequenceEqual(expected) || reread.BoxData.Any(p => p.Species != 0))
         throw new InvalidDataException($"Fixture history did not round-trip: {name}");

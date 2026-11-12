@@ -22,6 +22,11 @@ See [save-import validation](save-import.md) for verified formats and limits.
 - `scripts/check_emerald.mjs` checks historical pre-evolutions and types,
   desert gates, roaming selection, Beldum/Rayquaza/Bagon requirements,
   special methods, excluded source artifacts, version codes and sprite files.
+- Reader 0.1.2 and the website import harness passed native/raw-bit checks,
+  the real WASM worker and 13 guest-browser scenarios: 128 KiB files, valid
+  64 KiB caught/empty/rotated files with a recovery warning, five damaged
+  64 KiB cases, unsupported Ruby/Sapphire and cancellation. Inputs and an
+  existing playthrough stayed unchanged, and no upload requests occurred.
 - All checks passed after the access corrections below, including the real
   row-status checks for Dynamo/Rock Smash, Mind/Dive and Feebas with any rod.
 

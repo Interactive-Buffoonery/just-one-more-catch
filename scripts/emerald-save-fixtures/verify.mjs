@@ -10,21 +10,24 @@ const { chromium } = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE).h
 const cache = path.resolve(process.argv[2] || '.cache/emerald-save-tests');
 const build = path.resolve('dist');
 const reader = path.resolve('node_modules/@serabi/pokemon-save-reader');
+const invalid = ['half-checksum', 'half-missing', 'half-duplicate', 'half-signature', 'half-counter'];
+const names = ['caught', 'empty', 'rotated', 'half', 'half-empty', 'half-rotated', ...invalid, 'ruby-sapphire'];
+const isEmpty = name => name === 'empty' || name === 'half-empty';
 const expected = [25, 133, 252, 255, 258, 280, 290, 292, 349, 350, 380, 381, 384, 386];
 const native = JSON.parse(fs.readFileSync(path.join(cache, 'native-results.json')));
 const digest = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
 const before = new Map(native.map(({ name }) => [name, digest(fs.readFileSync(path.join(cache, name + '.sav')))]));
-for (const name of ['caught', 'empty', 'rotated']) {
+for (const name of ['caught', 'empty', 'rotated', 'half', 'half-empty', 'half-rotated']) {
   const bytes = fs.readFileSync(path.join(cache, name + '.sav'));
   const sectors = [];
-  for (let offset = 0; offset < 28 * 0x1000; offset += 0x1000)
+  for (let offset = 0; offset < Math.min(bytes.length, 28 * 0x1000); offset += 0x1000)
     if (bytes.readUInt16LE(offset + 0xFF4) === 0) sectors.push(offset);
   const active = sectors.sort((a, b) => bytes.readUInt32LE(b + 0xFFC) - bytes.readUInt32LE(a + 0xFFC))[0];
   if (name === 'rotated') assert.ok(active >= 14 * 0x1000 && active !== 14 * 0x1000);
   const bits = offset => Array.from({ length: 386 }, (_, i) => i + 1).filter(n => bytes[active + offset + ((n - 1) >> 3)] & (1 << ((n - 1) & 7)));
-  const flags = name === 'empty' ? [] : expected;
+  const flags = isEmpty(name) ? [] : expected;
   assert.deepEqual(bits(0x28), flags);
-  assert.deepEqual(bits(0x5C), name === 'empty' ? [] : [1, ...expected]);
+  assert.deepEqual(bits(0x5C), isEmpty(name) ? [] : [1, ...expected]);
   assert.deepEqual(native.find(row => row.name === name).caught, flags);
 }
 
@@ -76,12 +79,12 @@ const results = [];
 try {
   const { context, page, errors, writes } = await setup();
   try {
-    const worker = await page.evaluate(async () => {
+    const worker = await page.evaluate(async (names) => {
       const { createSaveReader } = await import('/__reader/dist/index.js');
       const reader = await createSaveReader({ baseUrl: '/__reader/assets/' });
       const results = [];
       try {
-        for (const name of ['caught', 'empty', 'rotated', 'half', 'ruby-sapphire']) {
+        for (const name of names) {
           const bytes = new Uint8Array(await (await fetch(`/__fixtures/${name}.sav`)).arrayBuffer());
           const hash = async () => Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))).join(',');
           const before = await hash();
@@ -91,35 +94,38 @@ try {
         }
         return results;
       } finally { reader.dispose(); }
-    });
+    }, names);
     for (const { name, inspected, unchanged } of worker) {
       assert.ok(unchanged);
-      if (name === 'half') { assert.equal(inspected.status, 'error'); continue; }
+      if (invalid.includes(name)) { assert.equal(inspected.code, 'invalid-save'); continue; }
       assert.equal(inspected.status, 'ok');
       if (name === 'ruby-sapphire') { assert.ok(!inspected.game.versions.includes('E')); continue; }
       assert.deepEqual(inspected.game.versions, ['E']);
       assert.equal(inspected.pokedex.speciesNamespace, 'national-dex');
       assert.equal(inspected.pokedex.coverage, 'complete');
-      assert.deepEqual(inspected.pokedex.caughtSpecies, name === 'empty' ? [] : expected);
-      assert.deepEqual(inspected.pokedex.seenSpecies, name === 'empty' ? [] : [1, ...expected]);
+      assert.deepEqual(inspected.pokedex.caughtSpecies, isEmpty(name) ? [] : expected);
+      assert.deepEqual(inspected.pokedex.seenSpecies, isEmpty(name) ? [] : [1, ...expected]);
       assert.equal(inspected.startDate, undefined);
+      assert.equal(inspected.pokedex.warnings.length, name.startsWith('half') ? 1 : 0);
     }
     assert.deepEqual(errors, []);
     assert.deepEqual(writes, []);
     fs.writeFileSync(path.join(cache, 'wasm-results.json'), JSON.stringify(worker, null, 2));
     console.log('PASS published worker: Emerald identity, raw National Dex flags, active slot, empty dex, input preservation, unsupported formats');
   } finally { await context.close(); }
-  for (const name of ['caught', 'empty', 'rotated', 'half', 'ruby-sapphire', 'cancel']) {
-    const { context, page, errors, writes } = await setup(name === 'empty');
+  for (const name of [...names, 'cancel']) {
+    const { context, page, errors, writes } = await setup(isEmpty(name));
     try {
       await choose(page, name === 'cancel' ? 'caught' : name, name === 'rotated');
-      if (['half', 'ruby-sapphire'].includes(name)) {
+      if ([...invalid, 'ruby-sapphire'].includes(name)) {
         await page.locator('.si-oops').waitFor();
         assert.equal(await page.locator('[data-import-action=create]').count(), 0);
       } else {
         await page.locator('[data-import-action=create]').waitFor();
         assert.match(await page.locator('#import-title').innerText(), /^Emerald$/i);
-        assert.match((await page.locator('.si-count').innerText()).replace(/\s+/g, ' '), new RegExp(`${name === 'empty' ? 0 : expected.length} of 386 caught`));
+        assert.match((await page.locator('.si-count').innerText()).replace(/\s+/g, ' '), new RegExp(`${isEmpty(name) ? 0 : expected.length} of 386 caught`));
+        assert.equal(await page.locator('.si-facts .warn').count(), name.startsWith('half') ? 1 : 0);
+        if (name.startsWith('half')) assert.match(await page.locator('.si-facts .warn').innerText(), /newer save may be missing/);
         assert.match(await page.locator('.si-start').innerText(), /This save doesn't record a start date/);
         assert.deepEqual(await readRows(page), [old]);
         if (name === 'cancel') await page.locator('[data-import-action=close]').click();
@@ -130,12 +136,12 @@ try {
           assert.equal(rows.length, 2);
           assert.deepEqual(rows[0], old);
           assert.equal(rows[1].version, 'emerald');
-          assert.deepEqual(JSON.parse(rows[1].state), { caught: name === 'empty' ? [] : expected });
+          assert.deepEqual(JSON.parse(rows[1].state), { caught: isEmpty(name) ? [] : expected });
           await page.reload();
           assert.deepEqual(await readRows(page), rows);
         }
       }
-      if (['half', 'ruby-sapphire', 'cancel'].includes(name)) assert.deepEqual(await readRows(page), [old]);
+      if ([...invalid, 'ruby-sapphire', 'cancel'].includes(name)) assert.deepEqual(await readRows(page), [old]);
       assert.deepEqual(errors, []);
       assert.deepEqual(writes, []);
       results.push({ name, passed: true });
