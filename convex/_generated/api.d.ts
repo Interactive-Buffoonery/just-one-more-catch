@@ -9,7 +9,9 @@
  */
 
 import type * as email from "../email.js";
+import type * as events from "../events.js";
 import type * as runs from "../runs.js";
+import type * as stats from "../stats.js";
 
 import type {
   ApiFromModules,
@@ -19,7 +21,9 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   email: typeof email;
+  events: typeof events;
   runs: typeof runs;
+  stats: typeof stats;
 }>;
 
 /**

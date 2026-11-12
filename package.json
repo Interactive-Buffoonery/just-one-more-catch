@@ -8,6 +8,7 @@
   "packageManager": "pnpm@11.1.3",
   "scripts": {
     "dev": "vite",
+    "stats": "node scripts/stats.mjs",
     "convex": "convex dev",
     "build": "vite build && node scripts/build_game_pages.ts",
     "check": "tsc --noEmit && node scripts/check_view.mjs && node scripts/check_forms.mjs && node scripts/check_clock.ts && node scripts/check_csv.ts && node scripts/check_summary.ts && node scripts/check_starters.mjs && node scripts/check_dashboard.mjs && node scripts/check_sw.mjs && node scripts/check_sprites.mjs && node --experimental-vm-modules scripts/check_startup.mjs && node scripts/check_image_versions.mjs",

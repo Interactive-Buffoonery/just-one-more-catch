@@ -27,6 +27,7 @@ let stopTheme: (() => void) | undefined;
 let userId: string | null | undefined = expectsSession ? undefined : null;
 
 const bridge = (): Bridge => ({
+  track: (name, version) => { void convex.mutation(api.events.track, { name, version }).catch(() => {}); },
   auth,
   runs: auth.isAuthenticated ? runs : [],
   avatar: auth.isAuthenticated ? avatar : null,
