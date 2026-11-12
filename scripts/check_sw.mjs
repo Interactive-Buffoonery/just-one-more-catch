@@ -43,7 +43,7 @@ assert.equal(await get('/about/', 'navigate'), undefined, 'About goes straight t
 assert.equal(await get('/terms/', 'navigate'), undefined, 'Terms goes straight to the network');
 assert.equal(await get('/privacy/', 'navigate'), undefined, 'legal pages go straight to the network');
 
-assert.match((await get('/?tab=dex', 'navigate')).body, /^net /, 'the app page comes from the network when online');
+assert.match((await get('/pokedex/', 'navigate')).body, /^net /, 'the app page comes from the network when online');
 assert.match((await get('/assets/app-abc.js')).body, /^net /);
 const before = fetched.length;
 assert.match((await get('/assets/app-abc.js')).body, /^net /, 'a cached file is served again');
@@ -66,8 +66,8 @@ await stored;
 assert.equal(store.has('/sprites/hgss/25.png?v=cccccccc'), true);
 online = false;
 await get('/sprites/hgss/25.png?v=cccccccc');
-assert.match((await get('/?tab=journey', 'navigate')).body, /^net /, 'offline, the app page comes from the cache');
-for (const route of ['/settings/', '/settings/devices/', '/pair?code=ABCDEFGH'])
+assert.match((await get('/journey/', 'navigate')).body, /^net /, 'offline, the app page comes from the cache');
+for (const route of ['/journey/', '/pokedex/', '/boxes/', '/settings/', '/settings/devices/', '/pair?code=ABCDEFGH'])
   assert.match((await get(route, 'navigate')).body, /^net /, `offline, ${route} gets the cached app page`);
 assert.match((await get('/assets/app-abc.js')).body, /^net /, 'offline, cached files still load');
 assert.match((await get('/assets/first-visit.js')).body, /^net /, 'offline, first-visit files load');

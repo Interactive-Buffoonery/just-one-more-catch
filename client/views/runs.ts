@@ -15,6 +15,7 @@ import {
   ui,
   verOf,
   ymd,
+  isGuest,
 } from "../game";
 import { guestRows, moving, waitingNote } from "../guest";
 import { CONSOLES, Pack, VERSIONS } from "../packs";
@@ -39,7 +40,7 @@ export const cover = (
   `<img class="cover ${cls}" src="${imageUrl(`/covers/${v.cover ?? v.short.toLowerCase()}.jpg`)}" alt="${alt}" width="46" height="46">`;
 export const confirmGame = (id: string, customize = false) => {
   const v = verOf(id);
-  if (customize) return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">Customize your ${esc(v.name)}${v.platform ? ` (${esc(v.platform)})` : ""} playthrough?</h2><div class="hv-actions"><button class="app-primary" data-custom="1">Customize</button><button class="app-quiet" data-close="1">Not now</button></div><p class="small muted">You can update your playthrough at any time using Customize on the Journey or Dex tab.</p></div>`;
+  if (customize) return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">Customize your ${esc(v.name)}${v.platform ? ` (${esc(v.platform)})` : ""} playthrough?</h2><div class="hv-actions"><button class="app-primary" data-custom="1">Customize</button><button class="app-quiet" data-close="1">Not now</button></div><p class="small muted">You can update your playthrough at any time using Customize on the ${isGuest() ? "Dex tab" : "Journey or Dex tab"}.</p></div>`;
   return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">Start ${esc(v.name)}${v.platform ? ` (${esc(v.platform)})` : ""}?</h2><div class="hv-actions start-choices"><button class="app-primary" data-confirmrun="${esc(id)}">Start a new playthrough</button><a class="app-quiet start-import" href="/import/" data-tab="import"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="var(--surface)"/><path d="M4 24a20 20 0 0 1 40 0z" fill="var(--pink)"/><circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="4"/><path d="M4 24h13M31 24h13" stroke="currentColor" stroke-width="4"/><circle cx="24" cy="24" r="7" fill="var(--surface)" stroke="currentColor" stroke-width="4"/></svg>Import a save</a><button class="app-quiet" data-close="1">No thank you, just browsing!</button></div></div>`;
 };
 const gameChoices = (heading = "new-game-heading", regions = false) =>

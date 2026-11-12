@@ -27,6 +27,7 @@ import {
   ver,
   verOf,
   ymd,
+  isGuest,
 } from "./game";
 import { moveGuestAvatar, moveGuestRuns, withGuest } from "./guest";
 import { SETTINGS_ICON, TAB_ICONS } from "./parts";
@@ -73,7 +74,7 @@ function useRun(row: RunRow, start = false, customize = false) {
       opening = null;
       const latest = bridge.runs?.find((r) => r.id === row.id);
       if (latest) openRun(latest, d, state);
-      if (start && run) ui.tab = run.view === "journey" ? "journey" : "dex";
+      if (start && run) ui.tab = !isGuest() && run.view === "journey" ? "journey" : "dex";
       render();
       if (customize && run) {
         $("#sheetbody").innerHTML = confirmGame(run.version, true);
@@ -120,7 +121,10 @@ function showSheet(s: any, fill?: () => void) {
   fill?.();
   if (!open) $("#sheet").showModal();
 }
-const openSheet = (s: any) => showSheet(s, () => fillSheet(s));
+const openSheet = (s: any) => {
+  if (isGuest() && ["mon", "box"].includes(s.kind)) return;
+  showSheet(s, () => fillSheet(s));
+};
 function pushSheet(kind: string) {
   if (history.state?.sheet !== kind)
     history.pushState({ ...history.state, sheet: kind }, "", location.href);
@@ -152,23 +156,37 @@ const TABS = [
   ["dex", "Dex"],
   ["boxes", "Boxes"],
 ];
+const LOCKED: Record<string, [() => string, string]> = {
+  journey: [Journey, "Sign in or create a free account to track your current area, badges and items on the Journey tab."],
+  boxes: [Boxes, "Sign in or create a free account to track your party, boxes and held items on the Boxes tab."],
+};
+function lockedView(tab: string) {
+  const [view, why] = LOCKED[tab], label = TABS.find(([t]) => t === tab)![1], id = tab === "journey" ? "jl-h" : "bl-h";
+  return isGuest() ? `<div class="pv">${run ? `<div class="ghost" inert aria-hidden="true">${view()}</div>` : ""}<div class="over"><section class="card" aria-labelledby="${id}"><h2 class="lg" id="${id}">${label}</h2><p class="jl-why">${why}</p><button class="app-primary" data-signinsheet="1" data-k="signin-${tab}">Sign in</button></section></div></div>` : view();
+}
 const tabButtons = (icons: boolean) =>
-  TABS.filter(([t]) => t !== "journey" || run?.view !== "dexonly").map(
-    ([t, l]) =>
-      `<button data-tab="${t}" ${ui.tab === t ? `aria-current="page"` : ""}>${icons ? TAB_ICONS[t] : ""}<span>${l}</span></button>`,
-  ).join("");
+  TABS.filter(([t]) => t !== "journey" || isGuest() || run?.view !== "dexonly").map(([t, l]) => {
+    const locked = isGuest() && LOCKED[t];
+    const icon = icons ? (locked ? `<span class="tlock">${TAB_ICONS[t]}<i>${LOCK}</i></span>` : TAB_ICONS[t]) : "";
+    return `<button data-tab="${t}" ${locked ? `aria-label="${l}, sign in required"` : ""} ${ui.tab === t ? `aria-current="page"` : ""}>${icon}<span>${l}</span>${!icons && locked ? `<i class="tlock-top">${LOCK}</i>` : ""}</button>`;
+  }).join("");
+const LOCK = `<svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="5.5" width="8" height="5.5" rx="1.2" fill="currentColor"/><path d="M4 5.5V4a2 2 0 014 0v1.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>`;
 const VIEWS: Record<string, () => string> = {
-  journey: Journey,
+  journey: () => lockedView("journey"),
   dex: Dex,
-  boxes: Boxes,
+  boxes: () => lockedView("boxes"),
   playthroughs: Runs,
   settings: Settings,
   devices: Devices,
 };
 const PATHS: Record<string, string> = {
+  journey: "/journey/",
+  dex: "/pokedex/",
+  boxes: "/boxes/",
   settings: "/settings/",
   devices: "/settings/devices/",
 };
+const SETTINGS = ["settings", "devices"];
 const APP_PATHS = ["/", ...Object.values(PATHS)];
 function shell() {
   return `<header class="top">
@@ -189,17 +207,16 @@ function shell() {
 function tabFromUrl() {
   if (IMPORT_PATH.test(location.pathname)) return "import";
   const path = Object.keys(PATHS).find((t) => PATHS[t] === location.pathname);
-  if (path) return path;
-  const t = new URLSearchParams(location.search).get("tab");
-  return t === "journey" && run?.view === "dexonly" ? "dex" : t && Object.hasOwn(VIEWS, t) ? t : "playthroughs";
+  const t = path || new URLSearchParams(location.search).get("tab");
+  return t === "journey" && !isGuest() && run?.view === "dexonly" ? "dex" : t && Object.hasOwn(VIEWS, t) ? t : "playthroughs";
 }
 function render() {
-  if (ui.tab === "journey" && run?.view === "dexonly") ui.tab = "dex";
+  if (ui.tab === "journey" && !isGuest() && run?.view === "dexonly") ui.tab = "dex";
   const a = bridge.auth,
     signedIn = a.isAuthenticated;
   const k = (document.activeElement as HTMLElement)?.dataset?.k;
   const onImport = ui.tab === "import";
-  const needsGame = !["playthroughs", "import", ...Object.keys(PATHS)].includes(ui.tab);
+  const needsGame = !(isGuest() && LOCKED[ui.tab]) && !["playthroughs", "import", ...SETTINGS].includes(ui.tab);
   const loading = a.isLoading || !bridge.runs || (needsGame && !!opening);
   root.classList.toggle("loading", loading);
   const url = new URL(location.href);
@@ -216,8 +233,8 @@ function render() {
   document.title = onImport ? "Import a save | Just One More Catch" : "Just One More Catch";
   if (!signedIn) ui.devices = ui.devicesError = undefined;
   else if (
-    PATHS[ui.tab] &&
-    (!PATHS[shownTab] ||
+    SETTINGS.includes(ui.tab) &&
+    (!SETTINGS.includes(shownTab) ||
       (ui.devicesError && ui.tab !== shownTab) ||
       (ui.devices === undefined && !ui.devicesError))
   )
@@ -236,7 +253,7 @@ function render() {
       : (ui.saveError
           ? `<p class="small" role="alert" style="text-align:center;margin:4px 0 16px;color:var(--coral)">${ui.saveError}</p>`
           : "") + VIEWS[ui.tab]();
-  const here = PATHS[ui.tab] ? ` aria-current="page"` : "";
+  const here = SETTINGS.includes(ui.tab) ? ` aria-current="page"` : "";
   const avatar = `<button class="avatar" data-tab="settings" data-k="avatar" aria-label="Settings and avatar, ${esc(trainerName())}"${here}>${partner("")}</button>`;
   $("#topright").innerHTML =
     switcher(run?.id ?? opening) +
@@ -251,7 +268,7 @@ function render() {
       : `<div class="falert" role="note">Saved only in this browser<button data-signinsheet="1" data-k="signin-foot">Sign in</button></div>`;
   $("#toptabs").innerHTML = a.isLoading ? "" : tabButtons(false);
   $("#tabs").innerHTML = !a.isLoading
-    ? `<nav class="tabbar${run?.view === "dexonly" ? " four" : ""}" aria-label="Sections">${tabButtons(true)}<button class="tab-settings" data-tab="settings" data-k="tab-settings"${here}>${SETTINGS_ICON}<span>Settings</span></button></nav>`
+    ? `<nav class="tabbar${!isGuest() && run?.view === "dexonly" ? " four" : ""}" aria-label="Sections">${tabButtons(true)}<button class="tab-settings" data-tab="settings" data-k="tab-settings"${here}>${SETTINGS_ICON}<span>Settings</span></button></nav>`
     : "";
   $("#toast").innerHTML = ui.undo
     ? `<div class="toast">${ui.undo.msg}${ui.undo.n ? `<button data-undo="1">Undo</button>` : ""}</div>`
@@ -505,7 +522,7 @@ async function onClick(e: MouseEvent) {
     if (row) {
       if (row.id !== run?.id) useRun(row, !d.stay);
       if (d.stay) ui.undo = null;
-      else ui.tab = run?.view === "journey" ? "journey" : "dex";
+      else ui.tab = !isGuest() && run?.view === "journey" ? "journey" : "dex";
       render();
     }
     return;
@@ -579,6 +596,7 @@ async function onClick(e: MouseEvent) {
     scheduleSave();
     return;
   }
+  if (isGuest() && (d.editmon || d.addmon || d.renamebox || d.savemon || d.savebox || d.delmon)) return;
   if (d.editmon) {
     openSheet({ kind: "mon", id: +d.editmon });
     return;
@@ -690,6 +708,13 @@ async function onClick(e: MouseEvent) {
     if (d.yes) scheduleSave();
     return;
   } else if (d.goevent) {
+    if (isGuest()) {
+      ui.tab = "journey";
+      if ($("#sheet").open) $("#sheet").close();
+      render();
+      (root.querySelector('[data-k="signin-journey"]') as HTMLElement | null)?.focus();
+      return;
+    }
     ui.open.add(String(EVENTS[d.goevent].chap));
     ui.shut.delete(String(EVENTS[d.goevent].chap));
     ui.tab = "journey";
@@ -787,7 +812,7 @@ function syncRuns() {
     pendingRun = null;
     if (pendingImport) {
       pendingImport = false;
-      if (IMPORT_PATH.test(location.pathname)) history.replaceState(null, "", "/?tab=dex");
+      if (IMPORT_PATH.test(location.pathname)) history.replaceState(null, "", "/pokedex/");
       ui.tab = "dex";
       ui.filter = "caught";
       useRun(want);
@@ -814,7 +839,7 @@ export function mount(el: HTMLElement, b: Bridge) {
     ui.tab = tabFromUrl();
     ui.undo = null;
     render();
-    if (PATHS[ui.tab]) focusTitle();
+    if (SETTINGS.includes(ui.tab)) focusTitle();
   });
   raw = b;
   setBridge(withGuest(b, refresh));
