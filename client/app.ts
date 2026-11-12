@@ -166,9 +166,13 @@ const VIEWS: Record<string, () => string> = {
   devices: Devices,
 };
 const PATHS: Record<string, string> = {
+  journey: "/journey/",
+  dex: "/pokedex/",
+  boxes: "/boxes/",
   settings: "/settings/",
   devices: "/settings/devices/",
 };
+const SETTINGS = ["settings", "devices"];
 const APP_PATHS = ["/", ...Object.values(PATHS)];
 function shell() {
   return `<header class="top">
@@ -189,8 +193,7 @@ function shell() {
 function tabFromUrl() {
   if (IMPORT_PATH.test(location.pathname)) return "import";
   const path = Object.keys(PATHS).find((t) => PATHS[t] === location.pathname);
-  if (path) return path;
-  const t = new URLSearchParams(location.search).get("tab");
+  const t = path || new URLSearchParams(location.search).get("tab");
   return t === "journey" && run?.view === "dexonly" ? "dex" : t && Object.hasOwn(VIEWS, t) ? t : "playthroughs";
 }
 function render() {
@@ -199,7 +202,7 @@ function render() {
     signedIn = a.isAuthenticated;
   const k = (document.activeElement as HTMLElement)?.dataset?.k;
   const onImport = ui.tab === "import";
-  const needsGame = !["playthroughs", "import", ...Object.keys(PATHS)].includes(ui.tab);
+  const needsGame = !["playthroughs", "import", ...SETTINGS].includes(ui.tab);
   const loading = a.isLoading || !bridge.runs || (needsGame && !!opening);
   root.classList.toggle("loading", loading);
   const url = new URL(location.href);
@@ -216,8 +219,8 @@ function render() {
   document.title = onImport ? "Import a save | Just One More Catch" : "Just One More Catch";
   if (!signedIn) ui.devices = ui.devicesError = undefined;
   else if (
-    PATHS[ui.tab] &&
-    (!PATHS[shownTab] ||
+    SETTINGS.includes(ui.tab) &&
+    (!SETTINGS.includes(shownTab) ||
       (ui.devicesError && ui.tab !== shownTab) ||
       (ui.devices === undefined && !ui.devicesError))
   )
@@ -236,7 +239,7 @@ function render() {
       : (ui.saveError
           ? `<p class="small" role="alert" style="text-align:center;margin:4px 0 16px;color:var(--coral)">${ui.saveError}</p>`
           : "") + VIEWS[ui.tab]();
-  const here = PATHS[ui.tab] ? ` aria-current="page"` : "";
+  const here = SETTINGS.includes(ui.tab) ? ` aria-current="page"` : "";
   const avatar = `<button class="avatar" data-tab="settings" data-k="avatar" aria-label="Settings and avatar, ${esc(trainerName())}"${here}>${partner("")}</button>`;
   $("#topright").innerHTML =
     switcher(run?.id ?? opening) +
@@ -787,7 +790,7 @@ function syncRuns() {
     pendingRun = null;
     if (pendingImport) {
       pendingImport = false;
-      if (IMPORT_PATH.test(location.pathname)) history.replaceState(null, "", "/?tab=dex");
+      if (IMPORT_PATH.test(location.pathname)) history.replaceState(null, "", "/pokedex/");
       ui.tab = "dex";
       ui.filter = "caught";
       useRun(want);
@@ -814,7 +817,7 @@ export function mount(el: HTMLElement, b: Bridge) {
     ui.tab = tabFromUrl();
     ui.undo = null;
     render();
-    if (PATHS[ui.tab]) focusTitle();
+    if (SETTINGS.includes(ui.tab)) focusTitle();
   });
   raw = b;
   setBridge(withGuest(b, refresh));

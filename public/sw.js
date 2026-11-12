@@ -35,7 +35,7 @@ self.addEventListener("message", (e) => {
     ),
   );
 });
-const APP_PAGES = new Set(["/", "/settings/", "/settings/devices/", "/pair"]);
+const APP_PAGES = new Set(["/", "/journey/", "/pokedex/", "/boxes/", "/settings/", "/settings/devices/", "/pair"]);
 
 self.addEventListener("fetch", (e) => {
   const req = e.request;

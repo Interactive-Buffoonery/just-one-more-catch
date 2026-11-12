@@ -123,7 +123,7 @@ for (const [slug, id, region] of games) {
 }
 
 // The app page also answers at its own routes; pair.html serves /pair without a redirect that would drop ?code=.
-for (const file of ["settings/index.html", "settings/devices/index.html", "pair.html"]) {
+for (const file of ["journey/index.html", "pokedex/index.html", "boxes/index.html", "settings/index.html", "settings/devices/index.html", "pair.html"]) {
   mkdirSync(`dist/${file}`.replace(/\/[^/]+$/, ""), {recursive:true});
   writeFileSync(`dist/${file}`, readFileSync("dist/index.html"));
 }

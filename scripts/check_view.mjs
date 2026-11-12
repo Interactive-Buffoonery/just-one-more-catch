@@ -23,6 +23,7 @@ for (const view of ["journey", "dex", "dexonly"]) {
   const ui = {};
   runInNewContext(start, {ui, run: {view}});
   assert.equal(ui.tab, view === "journey" ? "journey" : "dex");
+  assert.equal(tabAt("/journey/", "", view), view === "dexonly" ? "dex" : "journey");
   assert.equal(tabAt("/", "?tab=journey", view), view === "dexonly" ? "dex" : "journey");
 }
 for (const [pathname, search, tab] of [["/settings/", "", "settings"], ["/settings/devices/", "?tab=dex", "devices"], ["/", "?tab=settings", "settings"], ["/", "", "playthroughs"]]) {
@@ -50,7 +51,7 @@ for (const destination of ["stay", "dashboard", "fresh-import"]) {
     pendingImport = true;
     pendingRun = "imported";
     ({render, syncRuns, pending: () => ({pendingRun, pendingImport})});`, {
-    URL, URLSearchParams, IMPORT_PATH, PATHS, APP_PATHS: ["/", ...Object.values(PATHS)], shownTab: "import", loadDevices() {},
+    URL, URLSearchParams, IMPORT_PATH, PATHS, SETTINGS: ["settings", "devices"], APP_PATHS: ["/", ...Object.values(PATHS)], shownTab: "import", loadDevices() {},
     location, ui, bridge, raw: bridge,
     run: old, opening: null, pendingImport: false, saveImport: importer,
     importPage: {contains: () => false}, document: {activeElement: null},
@@ -88,3 +89,11 @@ const placeCard = runInNewContext(stripTypeScriptTypes(parts.slice(parts.indexOf
 const card = placeCard("Route 29", {now: [], later: [{}, {}, {}], got: 4, caught: [], once: []});
 assert(!card.includes("donepl") && !card.includes("quietpl"));
 assert(card.includes("mini-meter") && card.includes("<b>4</b> / 7") && card.includes("3 later"));
+
+for (const [tab, path] of [["journey", "/journey/"], ["dex", "/pokedex/"], ["boxes", "/boxes/"], ["settings", "/settings/"], ["playthroughs", "/"]]) {
+  const location = {href: "https://example.test/?tab=" + tab, pathname: "/", search: "?tab=" + tab};
+  const replaced = [];
+  const routing = app.slice(app.indexOf("  const url = new URL(location.href);"), app.indexOf("  document.title = onImport"));
+  runInNewContext(routing, {URL, location, ui: {tab}, onImport: false, PATHS, APP_PATHS: ["/", ...Object.values(PATHS)], IMPORT_PATH, tabFromUrl: () => tab, history: {state: null, replaceState: (_s, _t, url) => replaced.push(url.pathname + url.search), pushState: () => assert.fail("legacy links must replace history")}});
+  assert.deepEqual(replaced, [path]);
+}
