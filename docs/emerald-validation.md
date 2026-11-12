@@ -10,18 +10,23 @@ from `data/emerald.json`. Sprites include all 386 regular and shiny images.
 The implementation retains the existing picker and playthrough UI. It reuses
 `public/covers/e.jpg`, adds the Hoenn badges and travel tools, and builds the
 static `/emerald/` game page and sitemap entry. Ruby/Sapphire remain Coming Soon.
-Save-file reader mapping is unchanged: the new ID accepts manually supplied
-caught species within 1–386 but does not enable Emerald save-file imports.
+Emerald save imports use reader identity `E`, bounded to National Dex IDs 1–386.
+See [save-import validation](save-import.md) for verified formats and limits.
 
 ## Automated checks
 
 - Generated data: `python3 scripts/build_data.py emerald`.
 - Full checks and build: `pnpm check`, `pnpm build`.
-- Shared version/import compatibility: `pnpm test:convex` (87 tests) and
+- Shared version/import compatibility: `pnpm test:convex` (88 tests) and
   `pnpm exec tsc --noEmit -p convex/tsconfig.json`.
 - `scripts/check_emerald.mjs` checks historical pre-evolutions and types,
   desert gates, roaming selection, Beldum/Rayquaza/Bagon requirements,
   special methods, excluded source artifacts, version codes and sprite files.
+- Reader 0.1.2 and the website import harness passed native/raw-bit checks,
+  the real WASM worker and 13 guest-browser scenarios: 128 KiB files, valid
+  64 KiB caught/empty/rotated files with a recovery warning, five damaged
+  64 KiB cases, unsupported Ruby/Sapphire and cancellation. Inputs and an
+  existing playthrough stayed unchanged, and no upload requests occurred.
 - All checks passed after the access corrections below, including the real
   row-status checks for Dynamo/Rock Smash, Mind/Dive and Feebas with any rod.
 
@@ -76,6 +81,8 @@ caught species within 1–386 but does not enable Emerald save-file imports.
   check Safari bike areas, expanded Safari and Mirage Island when applicable.
 - Inspect regular/shiny sprites, dex numbering, 14 × 30 boxes and the
   `/emerald/` public page's title, canonical URL, cover and links.
-- Signed-in account sync and save-file import are not covered by these checks.
+- Signed-in account sync is not covered by these checks. Save-import fixture
+  checks are recorded separately in [the import guide](save-import.md).
 
-No browser QA or deployment has been performed. Builds are local only.
+The game pack was merged and deployed in PR #92. The manual game-tracking
+checks above remain open; the save-import checks cover the import flow only.

@@ -23,6 +23,18 @@ test("game caps match the pack data", () => {
     expect(VERSIONS[id as keyof typeof VERSIONS].pack.national).toBe(limit);
 });
 
+test("Emerald imports National Dex flags and keeps other Hoenn games unsupported", async () => {
+  const data = await VERSIONS.emerald.pack.load();
+  const s = snapshot(["E"]);
+  expect(importVersions(s)).toEqual(["emerald"]);
+  s.pokedex.caughtSpecies = [386, 252, 25, 252, 387];
+  expect(caughtForPack(s, "emerald", data)).toEqual({ caught: [25, 252, 386], skipped: 1, partial: false });
+  s.pokedex.caughtSpecies = [];
+  expect(caughtForPack(s, "emerald", data).caught).toEqual([]);
+  expect(importVersions(snapshot(["R", "S", "RS"]))).toEqual([]);
+  expect(() => caughtForPack(snapshot(["R", "S"]), "emerald", data)).toThrow();
+});
+
 test("caught IDs are canonical, bounded and intersect the actual pack", async () => {
   const data = await VERSIONS.heartgold.pack.load();
   const s = snapshot();
