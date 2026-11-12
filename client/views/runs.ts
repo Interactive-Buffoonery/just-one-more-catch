@@ -275,7 +275,7 @@ const AvatarPicker = () =>
       `<label title="${name}"><input type="radio" name="avatar" value="${n}" data-k="avatar-${n}" aria-label="${name}" ${n === avatarN() ? "checked" : ""}${bridge.auth.isLoading ? " disabled" : ""}><img src="${imageUrl(`/sprites/hgss/${n}.png`)}" alt="" width="80" height="80"></label>`,
   ).join("")}</div></section>`;
 export const Settings = () =>
-  `<h1 class="lg pgtitle">Settings</h1>
+  `<h1 class="lg pgtitle" tabindex="-1" data-k="pgtitle">Settings</h1>
   <div class="sgrid"><div>${Account()}${devicesRow()}${Appearance()}</div>
   <div>${AvatarPicker()}<section class="s-data"><h3>Your data</h3><div class="chips">${exportChips()}</div>${exportError()}</section>${AccountActions()}</div></div>`;
 

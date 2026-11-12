@@ -377,6 +377,7 @@ async function onClick(e: MouseEvent) {
       ui.undo = null;
       render();
       scrollTo(0, 0);
+      focusTitle();
     }
     return;
   }
@@ -420,6 +421,9 @@ async function onClick(e: MouseEvent) {
   if (d.revokeask || d.revokecancel) {
     ui.revoking = d.revokeask || null;
     render();
+    (root.querySelector(
+      d.revokeask ? `[data-revokecancel="${d.revokeask}"]` : `[data-revokeask="${d.revokecancel}"]`,
+    ) as HTMLElement | null)?.focus();
     return;
   }
   if (d.revoke) {
@@ -797,6 +801,7 @@ export function mount(el: HTMLElement, b: Bridge) {
     ui.tab = tabFromUrl();
     ui.undo = null;
     render();
+    if (PATHS[ui.tab]) focusTitle();
   });
   raw = b;
   setBridge(withGuest(b, refresh));
@@ -970,6 +975,8 @@ export function update(b: Bridge) {
   checkPairCode();
 }
 
+const focusTitle = () => (root.querySelector("#view .pgtitle") as HTMLElement | null)?.focus();
+
 /* ---- Devices ---- */
 let shownTab = "";
 let devicesLoading = false;
@@ -986,15 +993,23 @@ async function loadDevices() {
     render();
   }
 }
+const revokeButtons = () =>
+  [...root.querySelectorAll<HTMLElement>("[data-revokeask],[data-revoke]")];
 async function revoke(id: string) {
+  const at = revokeButtons().findIndex((b) => b.dataset.revoke === id);
+  let done = false;
   try {
     await bridge.revokeDevice(id);
     ui.revoking = null;
+    done = true;
     flash("Device signed out");
   } catch {
     flash("Couldn't sign out that device. Try again.");
   }
   await loadDevices();
+  if (!done) return;
+  const left = revokeButtons();
+  (left[Math.min(at, left.length - 1)] || $("#devs-title"))?.focus();
 }
 
 let pairLooking = false;

@@ -61,13 +61,13 @@ const deviceList = () =>
           .join("")}</ul>`;
 
 export function Devices() {
-  const head = `<a class="back" href="/settings/" data-nav="settings" data-k="back">${BACK}<span>Settings</span></a><h1 class="lg pgtitle">Devices</h1>`;
+  const head = `<a class="back" href="/settings/" data-nav="settings" data-k="back">${BACK}<span>Settings</span></a><h1 class="lg pgtitle" tabindex="-1" data-k="pgtitle">Devices</h1>`;
   if (!bridge.auth.isAuthenticated)
     return `${head}<div class="chips"><button class="chip" data-signinsheet="1" data-k="signin-devices">Sign in</button></div>`;
   const letters = pairLetters(ui.pairInput || "");
   return `${head}<div class="devpage">
     <section class="s-pair"><h3>Sign in another device</h3><form class="codeform" id="pairform"><label class="field"><span>Code</span><input id="paircode" data-k="paircode" value="${showCode(letters)}" maxlength="9" autocapitalize="characters" autocomplete="off" spellcheck="false" enterkeyhint="go"></label><button class="app-primary" id="pairgo" data-k="pairgo"${letters.length < 8 || ui.pairBusy ? " disabled" : ""}>Continue</button></form>${ui.pairError ? `<p class="small" role="alert" style="margin:8px 0 0;color:var(--coral)">${ui.pairError}</p>` : ""}</section>
-    <section class="s-dev"><h3>Signed-in devices</h3>${deviceList()}</section></div>`;
+    <section class="s-dev"><h3 id="devs-title" tabindex="-1">Signed-in devices</h3>${deviceList()}</section></div>`;
 }
 
 export const pairErrorText = (r: {
