@@ -2,7 +2,7 @@
 import { convexTest } from "convex-test";
 import rateLimiter from "@convex-dev/rate-limiter/test";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { api } from "./_generated/api";
+import { api, internal } from "./_generated/api";
 import schema from "./schema";
 import { CODE_ALPHABET, PAIRING_MS } from "./pairing";
 import { REVOKED_MS } from "./devices";
@@ -93,6 +93,12 @@ describe("pairing", () => {
     ).toEqual({ status: "pending" });
     vi.advanceTimersByTime(2000);
     expect(
+      await t.run((ctx) => ctx.db.query("pairings").collect()),
+    ).toHaveLength(1);
+    expect(
+      await t.query(api.pairing.status, { id: p.id, secret: p.secret }),
+    ).toEqual({ status: "expired" });
+    expect(
       await t
         .withIdentity(player)
         .mutation(api.pairing.lookup, { code: p.code }),
@@ -177,6 +183,63 @@ describe("pairing", () => {
         .withIdentity(player)
         .action(api.pairing.approve, { code: p.code }),
     ).toEqual({ status: "ok" });
+  });
+
+  it("fails and releases the claim when the pairing expires during approval", async () => {
+    vi.useFakeTimers();
+    const t = setup();
+    const p = await t.mutation(api.pairing.start, { label: "Device" });
+    stubClerk(() => {
+      vi.setSystemTime(Date.now() + PAIRING_MS);
+      return { json: { token: "ticket_late" } };
+    });
+    expect(
+      await t
+        .withIdentity(player)
+        .action(api.pairing.approve, { code: p.code }),
+    ).toEqual({ status: "missing" });
+    const row = await t.run(async (ctx) => (await ctx.db.query("pairings").first())!);
+    expect(row).toMatchObject({ status: "pending" });
+    expect(row.userId).toBeUndefined();
+    expect(row.ticket).toBeUndefined();
+    expect(
+      await t.query(api.pairing.status, { id: p.id, secret: p.secret }),
+    ).toEqual({ status: "expired" });
+  });
+
+  it("lets only the current claim release a pairing", async () => {
+    const t = setup();
+    const p = await t.mutation(api.pairing.start, { label: "Device" });
+    const claimed = await t
+      .withIdentity(player)
+      .mutation(internal.pairing.claim, { code: p.code });
+    if (claimed.status !== "ok") throw new Error(claimed.status);
+    await t.mutation(internal.pairing.release, { id: claimed.id, claim: "older" });
+    expect(
+      await t.run((ctx) => ctx.db.get(claimed.id)),
+    ).toMatchObject({ userId: "user_phone", claim: claimed.claim });
+    await t.mutation(internal.pairing.release, { id: claimed.id, claim: claimed.claim });
+    expect(
+      await t.withIdentity(player).mutation(api.pairing.lookup, { code: p.code }),
+    ).toMatchObject({ status: "ok" });
+  });
+
+  it("stops calling Clerk once approve attempts run out", async () => {
+    const t = setup();
+    stubClerk(() => ({ json: { token: "ticket_123" } }));
+    const p = await t.mutation(api.pairing.start, { label: "Device" });
+    const guesser = t.withIdentity(stranger);
+    for (let i = 0; i < 10; i++)
+      expect(
+        await guesser.action(api.pairing.approve, { code: "BCDF-GHJK" }),
+      ).toEqual({ status: "missing" });
+    expect(
+      await guesser.action(api.pairing.approve, { code: p.code }),
+    ).toMatchObject({ status: "limited" });
+    expect(calls).toEqual([]);
+    expect(
+      await t.query(api.pairing.status, { id: p.id, secret: p.secret }),
+    ).toEqual({ status: "pending" });
   });
 
   it("shows a denial to the device", async () => {

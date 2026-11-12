@@ -43,6 +43,7 @@ export default defineSchema({
     status: v.union(v.literal("pending"), v.literal("approved"), v.literal("denied")),
     expiresAt: v.number(),
     userId: v.optional(v.string()),
+    claim: v.optional(v.string()),
     ticket: v.optional(v.string()),
   }).index("by_code", ["code"]),
   deviceLabels: defineTable({

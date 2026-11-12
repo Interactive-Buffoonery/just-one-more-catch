@@ -117,7 +117,11 @@ export const status = query({
   handler: async (ctx, { id, secret }) => {
     const pairingId = ctx.db.normalizeId("pairings", id);
     const row = pairingId && (await ctx.db.get(pairingId));
-    if (!row || !sameText(row.secretHash, await sha256(secret)))
+    if (
+      !row ||
+      !sameText(row.secretHash, await sha256(secret)) ||
+      row.expiresAt <= Date.now()
+    )
       return { status: "expired" as const };
     if (row.status === "approved" && row.ticket)
       return { status: "approved" as const, ticket: row.ticket };
@@ -217,6 +221,7 @@ export const claim = internalMutation({
       status: v.literal("ok"),
       id: v.id("pairings"),
       userId: v.string(),
+      claim: v.string(),
     }),
     missing,
     limited,
@@ -224,29 +229,41 @@ export const claim = internalMutation({
   handler: async (ctx, { code }) => {
     const r = await attempt(ctx, code);
     if (r.status !== "ok") return r;
-    await ctx.db.patch(r.row._id, { userId: r.me.subject });
-    return { status: "ok" as const, id: r.row._id, userId: r.me.subject };
+    const claim = hex(randomBytes(16));
+    await ctx.db.patch(r.row._id, { userId: r.me.subject, claim });
+    return {
+      status: "ok" as const,
+      id: r.row._id,
+      userId: r.me.subject,
+      claim,
+    };
   },
 });
 
 export const release = internalMutation({
-  args: { id: v.id("pairings") },
+  args: { id: v.id("pairings"), claim: v.string() },
   returns: v.null(),
-  handler: async (ctx, { id }) => {
+  handler: async (ctx, { id, claim }) => {
     const row = await ctx.db.get(id);
-    if (row?.status === "pending")
-      await ctx.db.patch(id, { userId: undefined });
+    if (row?.status === "pending" && row.claim === claim)
+      await ctx.db.patch(id, { userId: undefined, claim: undefined });
     return null;
   },
 });
 
 export const grant = internalMutation({
-  args: { id: v.id("pairings"), ticket: v.string() },
-  returns: v.null(),
-  handler: async (ctx, { id, ticket }) => {
-    if (await ctx.db.get(id))
-      await ctx.db.patch(id, { status: "approved", ticket });
-    return null;
+  args: { id: v.id("pairings"), claim: v.string(), ticket: v.string() },
+  returns: v.boolean(),
+  handler: async (ctx, { id, claim, ticket }) => {
+    const row = await ctx.db.get(id);
+    if (
+      row?.status !== "pending" ||
+      row.claim !== claim ||
+      row.expiresAt <= Date.now()
+    )
+      return false;
+    await ctx.db.patch(id, { status: "approved", ticket });
+    return true;
   },
 });
 
@@ -262,23 +279,29 @@ export const approve = action({
     | { status: "limited"; retryAfterSeconds: number }
   > => {
     const claimed:
-      | { status: "ok"; id: Id<"pairings">; userId: string }
+      | { status: "ok"; id: Id<"pairings">; userId: string; claim: string }
       | { status: "missing" }
       | { status: "limited"; retryAfterSeconds: number } =
       await ctx.runMutation(internal.pairing.claim, { code });
     if (claimed.status !== "ok") return claimed;
-    const token = await clerkApi("/sign_in_tokens", {
-      method: "POST",
-      body: { user_id: claimed.userId, expires_in_seconds: TICKET_SECONDS },
-    }).catch(() => null);
-    if (typeof token?.token !== "string") {
-      await ctx.runMutation(internal.pairing.release, { id: claimed.id });
-      throw new Error("Couldn't approve that device. Try again.");
+    const { id, claim } = claimed;
+    let granted = false;
+    try {
+      const token = await clerkApi("/sign_in_tokens", {
+        method: "POST",
+        body: { user_id: claimed.userId, expires_in_seconds: TICKET_SECONDS },
+      }).catch(() => null);
+      if (typeof token?.token !== "string")
+        throw new Error("Couldn't approve that device. Try again.");
+      granted = await ctx.runMutation(internal.pairing.grant, {
+        id,
+        claim,
+        ticket: token.token,
+      });
+    } finally {
+      if (!granted)
+        await ctx.runMutation(internal.pairing.release, { id, claim });
     }
-    await ctx.runMutation(internal.pairing.grant, {
-      id: claimed.id,
-      ticket: token.token,
-    });
-    return { status: "ok" };
+    return granted ? { status: "ok" } : { status: "missing" };
   },
 });
