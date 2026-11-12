@@ -11,7 +11,7 @@ const setup = () => {
   rateLimiter.register(t);
   return t;
 };
-afterEach(() => vi.useRealTimers());
+afterEach(() => { vi.useRealTimers(); vi.restoreAllMocks(); });
 
 test("honeypot and invalid submissions never store or schedule mail", async () => {
   const t = setup();
@@ -53,6 +53,7 @@ test("retries are deduplicated and authenticated senders keep independent limits
 test("site limits stop rotating accounts and replenish after waiting", async () => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date("2026-11-12T12:00:00Z"));
+  vi.spyOn(Math, "random").mockReturnValue(0.5);
   const t = setup();
   for (let i = 0; i < 5; i++)
     expect((await t.withIdentity({ subject: `user-${i}` }).mutation(api.runs.contact, { email: "", message: "Hello" })).ok).toBe(true);
