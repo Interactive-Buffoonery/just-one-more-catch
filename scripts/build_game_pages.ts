@@ -6,6 +6,11 @@ import { needLabel } from "../client/need-labels.ts";
 import { readFileSync, writeFileSync, mkdirSync, accessSync, readdirSync } from "node:fs";
 const METHOD: Record<string, [string, string | null]> = {
   walk: ["Walking", null],
+  seaweed: ["Underwater", "dive"],
+  "feebas-tile-fishing": ["Feebas fishing tiles", "old-rod"],
+  "devon-scope": ["Devon Scope", null],
+  "wailmer-pail": ["Wailmer Pail", "wailmer-pail"],
+  "roaming-water": ["Roaming on water", "surf"],
   "old-rod": ["Old Rod", "old-rod"],
   "good-rod": ["Good Rod", "good-rod"],
   "super-rod": ["Super Rod", "super-rod"],
@@ -31,6 +36,7 @@ import { VERSIONS } from "../client/packs.ts";
 
 const esc = (s: unknown) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
 const games = [
+  ["emerald", "emerald", "Hoenn"],
   ["red-blue", "rb", "Kanto"],
   ["yellow", "yellow", "Kanto"],
   ["gold-silver", "gs", "Johto and Kanto"],

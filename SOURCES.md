@@ -697,3 +697,76 @@ Yellow Cerulean fishing and Gold/Silver Mt. Mortar / Route 1 uncertainties remai
 Claude first pass and independent Codex second pass agreed that the seven Route 12 walking species (16, 17, 43, 44, 69, 70, 83) require `flute`. All grass lies south of the Snorlax; the northern bank remains available for fishing. Sources at pinned `pret/pokeyellow` revision `b452f2ab07185075140061c5084ab866d5e4a794`: [Route 12 objects](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/Route12.asm), with `object_event 10, 62, SPRITE_SNORLAX`, and the [Route 12 map](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/Route12.blk). The independent source model included Cut and both Route 12/16 Snorlax blockers; the Route 16 Cut enclosure is not a bypass onto Cycling Road. Fishing and Surf rows are unchanged. No emulator verification was performed.
 
 Additional rejected proposals: Yellow's [Route 2 warp table](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/Route2.asm) includes both Diglett's Cave and the trade house. The Diglett exit reaches the house without Cut, supporting the existing Bill requirement. Gold/Silver's [Lake of Rage](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/LakeOfRage.asm) only shows Lance after the Red Gyarados encounter (`appear LAKEOFRAGE_LANCE`); reaching Mahogany on foot does not establish Surf-free hideout access.
+
+## Emerald
+
+Pack/version ID: `emerald`, encounter code `e`. This is the original Game Boy
+Advance game. Ruby and Sapphire remain separate Coming Soon entries.
+
+- Encounter species, levels, odds, methods, regional numbering and historical
+  types: https://pokeapi.co/api/v2/version/9/ and
+  https://pokeapi.co/api/v2/pokedex/4/ through the cached data pipeline.
+- Chapter places and access: https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Emerald
+  Parts 1–2 cover the opening and Peeko/Devon Letter; Part 3 covers Briney's
+  Dewford/Slateport voyage and Granite Cave; Parts 4–5 cover the Museum,
+  Mauville and Verdanturf; Parts 6–8 cover Rock Smash, Mt. Chimney, Lavaridge,
+  Go-Goggles and Mirage Tower; Parts 9–12 cover Surf, Route 118/123, New
+  Mauville, Weather Institute, Devon Scope, Safari Zone and Mt. Pyre;
+  Parts 13–18 cover the submarine, eastern ocean, Dive, Seafloor Cavern,
+  Sootopolis, Regis, Rayquaza and Victory Road. Parts 20–22 cover postgame
+  gifts, weather caves, Battle Frontier and historical distribution islands.
+  Each chapter/event/gate in `data/emerald.json` links its relevant part.
+- Primary source pinned to pret/pokeemerald
+  `731ad5bfd6e6f265508d0efcca0ba42f9dcf5881`:
+  https://github.com/pret/pokeemerald/tree/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881
+  No ROM was built or used.
+- HM badge order (Cut/Stone, Flash/Knuckle, Rock Smash/Dynamo,
+  Strength/Heat, Surf/Balance, Fly/Feather, Dive/Mind, Waterfall/Rain):
+  `src/party_menu.c`, `sFieldMoveBadgeRequirements`. Gym names/leaders:
+  `data/maps/*Gym/scripts.inc`, including Juan in Sootopolis and Tate/Liza
+  in Mossdeep. This pack exposes catch-relevant travel tools; Fly isn't an
+  encounter access requirement.
+- 14 boxes of 30: `include/pokemon_storage_system.h` (`TOTAL_BOXES_COUNT`)
+  (`IN_BOX_COUNT`, 5 rows × 6 columns). 202 Hoenn / 386
+  National: `include/constants/pokedex.h`. Starting gifts Treecko, Torchic,
+  Mudkip: `src/starter_choose.c` and `data/maps/Route101/scripts.inc`.
+- Gifts, fossils, trades and events were checked in `data/maps/` scripts:
+  `DewfordTown`, `RustboroCity_DevonCorp_2F`, `RustboroCity_House1`,
+  `Route119_WeatherInstitute_2F`, `LavaridgeTown`,
+  `MossdeepCity_StevensHouse`, `LittlerootTown_ProfessorBirchsLab`,
+  `SkyPillar_Outside`, `SkyPillar_Top`, `LilycoveCity`,
+  `BattleFrontier_OutsideEast`, and `SeafloorCavern_Room9`.
+  Beldum needs the Hall of Fame; Johto starters require Birch's completion
+  reward; fossils require possession; Latias/Latios follow the red/blue TV
+  choice; Rayquaza can be caught before the League after ending the crisis.
+- Feebas: `src/wild_encounter.c`, `FishingWildEncounter` calls `CheckFeebas`
+  before selecting the rod's ordinary encounter table, so any rod works.
+  Underwater seaweed requires Dive; static Kecleon requires the Devon Scope;
+  Battle Frontier Sudowoodo requires the Wailmer Pail.
+- Historical pre-evolutions and stone/beauty evolution text:
+  `src/data/pokemon/evolution.h`, `src/pokemon.c` (friendship clock windows),
+  and `src/evolution_scene.c` (Shedinja needs a free slot, no spare ball). Budew, Chingling, Munchlax, Bonsly, Mime Jr.
+  and Happiny do not exist in this generation.
+- Excluded PokeAPI artifacts: `Team Magma Hideout` is the Ruby duplicate,
+  not Emerald's `Magma Hideout`; Cave of Origin B1F is Wallace's room with
+  no wild encounters and B2F/B3F are unused. Retain Entrance and 1F.
+  `Hoenn Pokecenter` bonus-distribution rows are not ordinary encounters.
+- Art: https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon/versions/generation-iii/emerald
+  provides static regular and shiny sprites for all 386 species. Hoenn
+  badge sprites are PokeAPI IDs 17–24. Existing `public/covers/e.jpg` is reused.
+- No Emerald official guide PDF was available in the local guide collection.
+  Event islands require historical distribution items (Old Sea Map was
+  distributed for Japanese Emerald); tracking them does not imply modern
+  availability. Save-file import remains separately unsupported.
+- Independent access corrections: the Weather Institute clears Route 119's
+  bridge blockers (`data/maps/Route119/map.json`,
+  `Route119_WeatherInstitute_2F/scripts.inc`); New Mauville's populated
+  entrance precedes the key door (`NewMauville_Entrance/map.json` and
+  `scripts.inc`); Mirage Tower 1F has the same wild species before the
+  summit's bike/rock puzzles (`src/data/wild_encounters.json`).
+  Southern Island's scripts select the opposite `VAR_ROAMER_POKEMON` species.
+  Route 123's western Berry Master section has no encounter tiles: verified
+  from `data/layouts/Route123/map.bin`, its General/Lilycove metatile
+  attributes and `include/global.fieldmap.h` collision bits. The western
+  connection reaches at most x=41; grass begins at x=49, beyond westbound
+  ledges. Its encounters therefore stay with the later Route 122 approach.

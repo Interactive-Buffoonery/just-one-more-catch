@@ -188,3 +188,9 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
   puzzles' individual letter groups; one `alph-puzzle` event opens the
   species encounter, not all letter groups in the actual game. The original
   puzzle scripts are linked in SOURCES.md if finer tracking is later wanted.
+
+## Emerald
+
+- Victory Road B2F: does the first reachable encounter tile require Rock
+  Smash as well as Strength? Trace the map or check in-game; the walkthrough
+  establishes Rock Smash for full traversal, not the earliest encounter.

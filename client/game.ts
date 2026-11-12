@@ -29,6 +29,11 @@ export let EVENTS: Record<string, GameData["events"][number]> = {};
 let LATER: Record<string, GameData["events"][number][]> = {};
 export const METHOD: Record<string, [string, string | null]> = {
   walk: ["Walking", null],
+  seaweed: ["Underwater", "dive"],
+  "feebas-tile-fishing": ["Feebas fishing tiles", "old-rod"],
+  "devon-scope": ["Devon Scope", null],
+  "wailmer-pail": ["Wailmer Pail", "wailmer-pail"],
+  "roaming-water": ["Roaming on water", "surf"],
   "old-rod": ["Old Rod", "old-rod"],
   "good-rod": ["Good Rod", "good-rod"],
   "super-rod": ["Super Rod", "super-rod"],
@@ -50,6 +55,8 @@ export const METHOD: Record<string, [string, string | null]> = {
   "berry-trees": ["Berry tree", null],
 };
 export const ONE_TIME = new Set([
+  "devon-scope",
+  "wailmer-pail",
   "gift",
   "gift-egg",
   "static",
@@ -462,9 +469,11 @@ export const currentChap = () => {
 };
 export function rowStatus(r: Row): { s: string; why?: string; need?: string; kind?: "starter" | "trade" } {
   const run = R();
+  const methodNeed = r.m === "feebas-tile-fishing" &&
+    ["old-rod", "good-rod", "super-rod"].some(has) ? null : METHOD[r.m]?.[1];
   const missing = [
     ...chapterNeeds(r.chap),
-    METHOD[r.m]?.[1],
+    methodNeed,
     ...(r.need || []),
   ].find((k) => k && !has(k));
   if (missing) return { s: "later", why: needText(missing), need: missing };

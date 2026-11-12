@@ -18,6 +18,7 @@ BASE = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/"
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 UA = {"User-Agent": "just-one-more-catch-data-build"}
 ART = {
+    "emerald": "pokemon/versions/generation-iii/emerald/",
     "gs": "pokemon/versions/generation-ii/gold/transparent/",
     "rb": "pokemon/versions/generation-i/red-blue/transparent/",
     "yellow": "pokemon/versions/generation-i/yellow/transparent/",
@@ -26,11 +27,12 @@ ART = {
     "hgss": "pokemon/versions/generation-iv/heartgold-soulsilver/",
     "usum": "pokemon/",
 }
-# PokeAPI numbers badges 1-8 for Kanto and 9-16 for Johto, in gym order
+# PokeAPI badge IDs: Kanto 1–8, Johto 9–16, Hoenn 17–24, in gym order
 BADGES = ["Boulder", "Cascade", "Thunder", "Rainbow", "Soul", "Marsh", "Volcano", "Earth",
-          "Zephyr", "Hive", "Plain", "Fog", "Storm", "Mineral", "Glacier", "Rising"]
+          "Zephyr", "Hive", "Plain", "Fog", "Storm", "Mineral", "Glacier", "Rising",
+          "Stone", "Knuckle", "Dynamo", "Heat", "Balance", "Feather", "Mind", "Rain"]
 # Kit items: rods are their own items; moves use a disc in the move's type colour
-ITEMS = {"old-rod": "old-rod", "good-rod": "good-rod", "super-rod": "super-rod", "headbutt": "tm-normal", "cut-hm": "tm-normal",
+ITEMS = {"flash": "tm-normal", "dive": "tm-water", "mach-bike": "mach-bike", "acro-bike": "acro-bike", "wailmer-pail": "wailmer-pail", "old-rod": "old-rod", "good-rod": "good-rod", "super-rod": "super-rod", "headbutt": "tm-normal", "cut-hm": "tm-normal",
          "yellow-cut": "tm-normal", "rock-smash": "tm-fighting", "surf": "tm-water", "whirlpool": "tm-water", "waterfall": "tm-water", "strength": "tm-normal", "rock-climb": "tm-normal", "bicycle": "bicycle",
          # USUM: Poké Ride moves have no item art, so they use the ride Pokémon; Island Scan uses Rotom
          "fishing-rod": "fishing-rod", "tauros": "../pokemon/128", "mudsdale": "../pokemon/750", "machamp": "../pokemon/68", "island-scan": "../pokemon/479"}

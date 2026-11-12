@@ -236,6 +236,33 @@ const FRLG: Pack = {
   boxes: [14, 30],
 };
 
+const EMERALD: Pack = {
+  load: () => import("./data/emerald").then((m) => m.default),
+  art: "emerald",
+  region: "Hoenn",
+  regional: 202,
+  national: 386,
+  start: "Route 101",
+  starters: [252, 255, 258],
+  badges: [
+    ["Stone", "Roxanne"], ["Knuckle", "Brawly"], ["Dynamo", "Wattson"],
+    ["Heat", "Flannery"], ["Balance", "Norman"], ["Feather", "Winona"],
+    ["Mind", "Tate & Liza"], ["Rain", "Juan"],
+  ],
+  kit: [
+    ["old-rod", "Old Rod"], ["good-rod", "Good Rod"], ["super-rod", "Super Rod"],
+    ["cut-hm", "Cut"], ["flash", "Flash"], ["rock-smash", "Rock Smash"],
+    ["strength", "Strength"], ["surf", "Surf"], ["dive", "Dive"],
+    ["waterfall", "Waterfall"], ["mach-bike", "Mach Bike"],
+    ["acro-bike", "Acro Bike"], ["wailmer-pail", "Wailmer Pail"],
+  ],
+  hm: {
+    "cut-hm": "Stone", flash: "Knuckle", "rock-smash": "Dynamo",
+    strength: "Heat", surf: "Balance", dive: "Mind", waterfall: "Rain",
+  },
+  boxes: [14, 30],
+};
+
 const USUM: Pack = {
   load: () => import("./data/usum").then((m) => m.default),
   art: "usum",
@@ -274,6 +301,10 @@ const USUM: Pack = {
 };
 
 export const VERSIONS: Record<VersionId, Version> = {
+  emerald: {
+    name: "Emerald", short: "E", code: "e", gen: "Gen 3",
+    pack: EMERALD, ring: ["grass", "dragon"],
+  },
   red: {
     name: "Red", short: "R", code: "r", gen: "Gen 1",
     pack: RB, other: "Blue", ring: ["fire", "fighting"],
@@ -388,7 +419,7 @@ export const CONSOLES: { name: string; games: (VersionId | { name: string; short
     { name: "Sapphire", short: "SA", color: "#2f5fb3" },
     "firered",
     "leafgreen",
-    { name: "Emerald", short: "E", color: "#2e9e62" },
+    "emerald",
   ] },
   { name: "Nintendo DS", games: [
     { name: "Diamond", short: "D", color: "#5b8fd6" },
