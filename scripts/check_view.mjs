@@ -12,16 +12,67 @@ for (const [view, expected] of [[undefined, "journey"], ["unknown", "journey"], 
 }
 const app = readFileSync(new URL("../client/app.ts", import.meta.url), "utf8");
 const start = app.match(/if \(start && run\) (ui.tab = .*?);/)[1];
+const IMPORT_PATH = runInNewContext(app.match(/const IMPORT_PATH = (.*);/)[1]);
+const tabAt = (pathname, search, view) => runInNewContext(app.slice(app.indexOf("function tabFromUrl()"), app.indexOf("function render()")) + "\ntabFromUrl", {
+  URLSearchParams, IMPORT_PATH, location: {pathname, search}, run: {view}, VIEWS: {journey: true},
+})();
+for (const pathname of ["/import/", "/import"]) assert.equal(tabAt(pathname, "?tab=journey", "journey"), "import");
+assert.equal(tabAt("/importer/", "", "journey"), "playthroughs");
 for (const view of ["journey", "dex", "dexonly"]) {
   const ui = {};
   runInNewContext(start, {ui, run: {view}});
   assert.equal(ui.tab, view === "journey" ? "journey" : "dex");
-  const fromUrl = runInNewContext(app.slice(app.indexOf("function tabFromUrl()"), app.indexOf("function render()")) + "\ntabFromUrl", {
-    URLSearchParams, location: {search: "?tab=journey"}, run: {view}, VIEWS: {journey: true},
-  });
-  assert.equal(fromUrl(), view === "dexonly" ? "dex" : "journey");
+  assert.equal(tabAt("/", "?tab=journey", view), view === "dexonly" ? "dex" : "journey");
 }
 console.log("playthrough view ok");
+
+for (const destination of ["stay", "dashboard", "fresh-import"]) {
+  const old = {id: "old"}, imported = {id: "imported"}, opened = [];
+  const ui = {tab: "import", avatar: undefined, undo: null};
+  const bridge = {auth: {isLoading: false, isAuthenticated: true}, runs: [old]};
+  const location = {href: "https://example.test/import/", pathname: "/import/", search: ""};
+  const move = (_state, _title, url) => Object.assign(location, {
+    href: new URL(url, location.href).href,
+    pathname: new URL(url, location.href).pathname,
+    search: new URL(url, location.href).search,
+  });
+  const element = {innerHTML: "", open: false, replaceChildren() {}};
+  const importer = {isOpen: true, close() { this.isOpen = false; }, open() { this.isOpen = true; }};
+  const lifecycle = stripTypeScriptTypes(
+    app.slice(app.indexOf("function tabFromUrl()"), app.indexOf("let saveTimer:")) +
+    app.slice(app.indexOf("let pendingRun:"), app.indexOf("export function mount(")),
+  );
+  const page = runInNewContext(lifecycle + `
+    pendingImport = true;
+    pendingRun = "imported";
+    ({render, syncRuns, pending: () => ({pendingRun, pendingImport})});`, {
+    URL, URLSearchParams, IMPORT_PATH, location, ui, bridge, raw: bridge,
+    run: old, opening: null, pendingImport: false, saveImport: importer,
+    importPage: {contains: () => false}, document: {activeElement: null},
+    history: {pushState: move, replaceState: move},
+    root: {classList: {toggle() {}}, querySelector: () => null}, $: () => element,
+    VIEWS: {playthroughs: () => "", dex: () => ""},
+    partner: () => "", esc: value => value, trainerName: () => "Trainer",
+    switcher: () => "", tabButtons: () => "", SETTINGS_ICON: "",
+    fillSheet() {}, moveGuestRuns() {}, moveGuestAvatar() {}, flash() {},
+    store: {get: () => "old"}, closeRun() {}, useRun: row => opened.push(row.id),
+  });
+  if (destination !== "stay") {
+    ui.tab = "playthroughs";
+    page.render();
+    if (destination === "fresh-import") {
+      ui.tab = "import";
+      page.render();
+    }
+  }
+  bridge.runs = [old, imported];
+  page.syncRuns();
+  assert.equal(ui.tab, destination === "stay" ? "dex" : destination === "dashboard" ? "playthroughs" : "import", `${destination}: a delayed account row must respect leaving the import visit`);
+  assert.deepEqual(opened, destination === "stay" ? ["imported"] : []);
+  assert.equal(page.pending().pendingRun, null);
+  assert.equal(page.pending().pendingImport, false);
+}
+console.log("delayed import navigation ok");
 
 const parts = readFileSync(new URL("../client/parts.ts", import.meta.url), "utf8");
 const placeCard = runInNewContext(stripTypeScriptTypes(parts.slice(parts.indexOf("export function placeCard("), parts.indexOf("// Places in a chapter"))).replace("export ", "") + "\nplaceCard", {

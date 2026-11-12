@@ -182,6 +182,9 @@ await run({pathname:'/contact/',cookie:'__client_uat=1731300000',user:{id:'user_
 await run({pathname:'/contact/',cookie:'__client_uat=1731300000',failImport:true});
 await run({pathname:'/contact/',cookie:'__client_uat=1731300000',contactStalled:true});
 await run({search:'?tab=contact'});
+await run({pathname:'/import/'});
+await run({pathname:'/import/',failImport:true});
+await run({pathname:'/import/',cookie:'__client_uat=1731300000',user:{id:'user_1'},signal:true});
 await run();
 await run({failImport:true});
 await run({user:{id:'user_1'},importCheck:true});

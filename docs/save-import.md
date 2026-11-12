@@ -1,8 +1,10 @@
 # Importing caught Pokémon
 
-Players choose an in-game save from the Dashboard. The browser loads the reader
-on demand, reads the save in a dedicated worker, and previews its caught flags.
-Confirming creates a new playthrough. Existing playthroughs stay untouched.
+Players open `/import/` from the Dashboard and choose an in-game save. This is a
+standalone page with normal document scrolling and a direct, refreshable URL.
+The browser loads the reader on demand, reads the save in a dedicated worker,
+and previews its caught flags. Confirming creates a new playthrough. Existing
+playthroughs stay untouched.
 
 The raw save and its file name never leave the browser and are not stored in
 localStorage, Convex or analytics. Only the selected website game and sorted
@@ -56,8 +58,11 @@ manifest, an asset hash mismatch or any asset over 25 MiB. Resource URLs include
 the release revision, and the service worker caches them only when requested.
 They are not part of the initial page load.
 Progress represents completed runtime resources when a total is available;
-reading itself uses an indeterminate bar. Cancel, closing the dialog and account
+reading itself uses an indeterminate bar. Cancel, leaving the page and account
 changes abort the worker. Late results cannot advance a cancelled preview.
+Back and Forward start a fresh import visit. Leaving also clears any pending
+navigation while the account's playthrough list catches up with a successful
+import. A create request already sent can still finish in its original account.
 
 The package contains its GPL license, dependency notices and exact source
 revisions. The built reader directory exposes these files. Keep those files and
@@ -144,9 +149,10 @@ reader package. The fork's upstream push guard must stay installed; push only to
 
 Browser QA should cover actual file selection and drop, preparation failure and
 retry, unknown files, original-versus-hack choice, paired game/platform choice,
-preview counts, cancel/Escape, repeat confirmation and storage failures. Test a
-real player's save separately and compare known caught species. A narrow
-Chromium viewport is layout evidence; it does not establish mobile Safari support.
+preview counts, cancellation, page navigation, repeat confirmation and storage
+failures. Test a real player's save separately and compare known caught species.
+A narrow Chromium viewport is layout evidence; it does not establish mobile
+Safari support.
 
 For release 0.1.0, the built website was exercised in Chromium with synthetic
 saves for all seven current games, an empty caught list, the FRLG platform
