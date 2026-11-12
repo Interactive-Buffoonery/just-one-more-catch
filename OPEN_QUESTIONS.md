@@ -37,6 +37,15 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Yellow implementation handoff
 
+- **S.S. Anne dock timing:** its three Super Rod rows (72, 90, 120) remain
+  timing-dependent. The guard refuses re-entry after the ship leaves, but the
+  review did not settle whether departure can be avoided until the Super Rod
+  is acquired. Do not call the encounters impossible or add an unsupported
+  monotonic gate. Test obtaining the rod while preserving dock access, then
+  confirm the three rows and post-departure refusal. Source:
+  [Vermilion City](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/VermilionCity.asm),
+  `CheckEvent EVENT_SS_ANNE_LEFT` / `.ship_departed`.
+
 - **Safari interior paths:** the full pinned Yellow source has interior maps,
   but the independent reviews did not settle the on-foot collision path to
   Middle and Area 2 North encounter grass. Test both from the entry without
@@ -110,6 +119,14 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
   or save-import UI was changed in this task.
 
 ## Gold and Silver (`gs`)
+
+- **Route 44 alternative approach:** with four badges, Surf and Rock Smash
+  but no Glacier badge, test Dark Cave -> Route 45 -> Blackthorn -> Ice Path
+  -> Route 44, respecting one-way ledges and forced cave warps. Record the
+  first blocker and whether Strength is needed in the reverse Ice Path path.
+  Normal Mahogany access supports the current chapter; neither review proved
+  this alternate route. Source:
+  [Dark Cave warps](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/DarkCaveBlackthornEntrance.asm).
 
 - **Route 8 Cut gate:** first pass proposed Cut for the grass, while the
   second pass could not settle a southern approach across directional-wall

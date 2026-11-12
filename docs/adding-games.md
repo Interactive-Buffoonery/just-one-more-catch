@@ -61,7 +61,9 @@ and `read-guide` for independent access verification and scanned guide evidence.
 8. Audit access independently using `audit-access`. Check all areas and the
    species-specific gifts/statics/trades, including version differences.
    Attach citations and record disagreements and inaccessible sources.
-   Data generation and type checking do not prove game accuracy.
+   Data generation and type checking do not prove game accuracy. The
+   [Game Boy access review](game-boy-access-audit.md) records the initial
+   expansion's coverage, fixes, model limitations and manual checkpoints.
 
 ## Verification and completion
 
