@@ -48,7 +48,7 @@ function deviceItem(d: Device) {
 
 const deviceList = () =>
   ui.devicesError
-    ? `<p class="small" role="alert" style="margin:0;color:var(--coral)">${ui.devicesError}</p>`
+    ? `<p class="small" role="alert" style="margin:0;color:var(--coral)">${ui.devicesError}</p><div class="chips"><button class="chip" data-devretry="1" data-k="devretry">Retry</button></div>`
     : !ui.devices
       ? `<p class="muted" style="margin:0">Loading…</p>`
       : `<ul class="devs">${[...(ui.devices as Device[])]

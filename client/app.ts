@@ -217,7 +217,9 @@ function render() {
   if (!signedIn) ui.devices = ui.devicesError = undefined;
   else if (
     PATHS[ui.tab] &&
-    (!PATHS[shownTab] || (ui.devices === undefined && !ui.devicesError))
+    (!PATHS[shownTab] ||
+      (ui.devicesError && ui.tab !== shownTab) ||
+      (ui.devices === undefined && !ui.devicesError))
   )
     void loadDevices();
   shownTab = ui.tab;
@@ -424,6 +426,11 @@ async function onClick(e: MouseEvent) {
     (root.querySelector(
       d.revokeask ? `[data-revokecancel="${d.revokeask}"]` : `[data-revokeask="${d.revokecancel}"]`,
     ) as HTMLElement | null)?.focus();
+    return;
+  }
+  if (d.devretry) {
+    await loadDevices();
+    if (!ui.devicesError) $("#devs-title")?.focus();
     return;
   }
   if (d.revoke) {
