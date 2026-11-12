@@ -105,9 +105,9 @@ revoked per device. Background is in `auth-options.md`.
 3. The new session appears in `getSessions()` on the phone.
 4. After revoking, the Retroid's queries return empty at once, and it's
    signed out within about a minute.
-5. **Session lifetime:** Check Clerk's maximum session lifetime (7 days by
-   default on new instances) in the dashboard's Sessions settings, and raise
-   it if the plan allows. Otherwise the Retroid needs re-pairing weekly.
+5. **Session lifetime:** Clerk's maximum session lifetime is set to 30 days
+   with no inactivity timeout, so a Retroid signs in again about once a
+   month. Revoking still cuts a device off within about a minute.
 
 ## Checks
 
