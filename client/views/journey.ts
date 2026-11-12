@@ -1,4 +1,3 @@
-import { isGuest } from "../game";
 import { $ } from "../dom";
 import {
   badgeName,
@@ -36,6 +35,7 @@ import {
   unlocked,
   ver,
   visible,
+  isGuest,
 } from "../game";
 import {
   badgeIcon,

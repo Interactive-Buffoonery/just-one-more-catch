@@ -15,7 +15,6 @@ import {
   P,
   pad,
   R,
-  isGuest,
   viewOf,
   regionalCaught,
   rowStatus,

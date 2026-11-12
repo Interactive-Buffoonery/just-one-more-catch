@@ -1,4 +1,3 @@
-import { isGuest } from "./game";
 // Ported from the approved mockup: string-rendered views on one root, event delegation, no framework.
 // main.ts owns auth and server calls and hands them in through the bridge.
 import "./styles.css";
@@ -28,6 +27,7 @@ import {
   ver,
   verOf,
   ymd,
+  isGuest,
 } from "./game";
 import { moveGuestAvatar, moveGuestRuns, withGuest } from "./guest";
 import { SETTINGS_ICON, TAB_ICONS } from "./parts";
