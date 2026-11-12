@@ -517,6 +517,83 @@
       ],
       "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/Route23.asm",
       "quote": "BadgeTextPointers:"
+    },
+    {
+      "place": "Route 12",
+      "n": 16,
+      "m": "walk",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/Route12.asm",
+      "quote": "object_event 10, 62, SPRITE_SNORLAX, STAY, DOWN, TEXT_ROUTE12_SNORLAX",
+      "note": "All original Route12 grass is south of the Snorlax. The northern fishing bank is accessible without clearing it. Route16 Cut reaches only the northern enclosure, not the southern Cycling Road bypass; Surf acquisition also requires Fuchsia access. Gate walking only."
+    },
+    {
+      "place": "Route 12",
+      "n": 17,
+      "m": "walk",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/Route12.asm",
+      "quote": "object_event 10, 62, SPRITE_SNORLAX, STAY, DOWN, TEXT_ROUTE12_SNORLAX",
+      "note": "All original Route12 grass is south of the Snorlax. The northern fishing bank is accessible without clearing it. Route16 Cut reaches only the northern enclosure, not the southern Cycling Road bypass; Surf acquisition also requires Fuchsia access. Gate walking only."
+    },
+    {
+      "place": "Route 12",
+      "n": 43,
+      "m": "walk",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/Route12.asm",
+      "quote": "object_event 10, 62, SPRITE_SNORLAX, STAY, DOWN, TEXT_ROUTE12_SNORLAX",
+      "note": "All original Route12 grass is south of the Snorlax. The northern fishing bank is accessible without clearing it. Route16 Cut reaches only the northern enclosure, not the southern Cycling Road bypass; Surf acquisition also requires Fuchsia access. Gate walking only."
+    },
+    {
+      "place": "Route 12",
+      "n": 44,
+      "m": "walk",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/Route12.asm",
+      "quote": "object_event 10, 62, SPRITE_SNORLAX, STAY, DOWN, TEXT_ROUTE12_SNORLAX",
+      "note": "All original Route12 grass is south of the Snorlax. The northern fishing bank is accessible without clearing it. Route16 Cut reaches only the northern enclosure, not the southern Cycling Road bypass; Surf acquisition also requires Fuchsia access. Gate walking only."
+    },
+    {
+      "place": "Route 12",
+      "n": 69,
+      "m": "walk",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/Route12.asm",
+      "quote": "object_event 10, 62, SPRITE_SNORLAX, STAY, DOWN, TEXT_ROUTE12_SNORLAX",
+      "note": "All original Route12 grass is south of the Snorlax. The northern fishing bank is accessible without clearing it. Route16 Cut reaches only the northern enclosure, not the southern Cycling Road bypass; Surf acquisition also requires Fuchsia access. Gate walking only."
+    },
+    {
+      "place": "Route 12",
+      "n": 70,
+      "m": "walk",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/Route12.asm",
+      "quote": "object_event 10, 62, SPRITE_SNORLAX, STAY, DOWN, TEXT_ROUTE12_SNORLAX",
+      "note": "All original Route12 grass is south of the Snorlax. The northern fishing bank is accessible without clearing it. Route16 Cut reaches only the northern enclosure, not the southern Cycling Road bypass; Surf acquisition also requires Fuchsia access. Gate walking only."
+    },
+    {
+      "place": "Route 12",
+      "n": 83,
+      "m": "walk",
+      "needs": [
+        "flute"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/Route12.asm",
+      "quote": "object_event 10, 62, SPRITE_SNORLAX, STAY, DOWN, TEXT_ROUTE12_SNORLAX",
+      "note": "All original Route12 grass is south of the Snorlax. The northern fishing bank is accessible without clearing it. Route16 Cut reaches only the northern enclosure, not the southern Cycling Road bypass; Surf acquisition also requires Fuchsia access. Gate walking only."
     }
   ],
   "evolution_overrides": {
