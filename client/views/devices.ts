@@ -75,7 +75,7 @@ export const pairErrorText = (r: {
   retryAfterSeconds?: number;
 }) =>
   r.status === "limited"
-    ? `Too many tries. Try again in ${Math.max(1, Math.ceil((r.retryAfterSeconds ?? 60) / 60))} min.`
+    ? `Too many tries · ${Math.max(1, Math.ceil((r.retryAfterSeconds ?? 60) / 60))} min`
     : "Code not found";
 
 export function fillApprove(p: Extract<PairingLookup, { status: "ok" }>) {

@@ -994,7 +994,7 @@ async function loadDevices() {
     ui.devices = await bridge.listDevices();
     ui.devicesError = undefined;
   } catch {
-    ui.devicesError = "Couldn't load devices.";
+    ui.devicesError = "Load failed";
   } finally {
     devicesLoading = false;
     render();
@@ -1011,7 +1011,7 @@ async function revoke(id: string) {
     done = true;
     flash("Device signed out");
   } catch {
-    flash("Couldn't sign out that device. Try again.");
+    flash("Sign-out failed");
   }
   await loadDevices();
   if (!done) return;
@@ -1032,7 +1032,7 @@ async function lookupPair(letters: string) {
       openApprove(r);
     } else ui.pairError = pairErrorText(r);
   } catch {
-    ui.pairError = "Couldn't check the code. Try again.";
+    ui.pairError = "Code check failed";
   } finally {
     pairLooking = false;
   }
@@ -1059,7 +1059,7 @@ async function answerPair(approve: boolean) {
     flash(r.status === "missing" ? "Code expired" : approve ? "Device approved" : "Sign-in denied");
     void loadDevices();
   } catch {
-    if (ui.sheet === s) status.textContent = "Couldn't reach the server. Try again.";
+    if (ui.sheet === s) status.textContent = "Connection failed";
   } finally {
     s.busy = false;
   }
