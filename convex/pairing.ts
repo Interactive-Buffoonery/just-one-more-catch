@@ -117,11 +117,7 @@ export const status = query({
   handler: async (ctx, { id, secret }) => {
     const pairingId = ctx.db.normalizeId("pairings", id);
     const row = pairingId && (await ctx.db.get(pairingId));
-    if (
-      !row ||
-      !sameText(row.secretHash, await sha256(secret)) ||
-      row.expiresAt <= Date.now()
-    )
+    if (!row || !sameText(row.secretHash, await sha256(secret)))
       return { status: "expired" as const };
     if (row.status === "approved" && row.ticket)
       return { status: "approved" as const, ticket: row.ticket };

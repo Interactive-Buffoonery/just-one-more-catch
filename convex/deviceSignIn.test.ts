@@ -96,9 +96,6 @@ describe("pairing", () => {
       await t.run((ctx) => ctx.db.query("pairings").collect()),
     ).toHaveLength(1);
     expect(
-      await t.query(api.pairing.status, { id: p.id, secret: p.secret }),
-    ).toEqual({ status: "expired" });
-    expect(
       await t
         .withIdentity(player)
         .mutation(api.pairing.lookup, { code: p.code }),
@@ -202,6 +199,10 @@ describe("pairing", () => {
     expect(row).toMatchObject({ status: "pending" });
     expect(row.userId).toBeUndefined();
     expect(row.ticket).toBeUndefined();
+    expect(
+      await t.query(api.pairing.status, { id: p.id, secret: p.secret }),
+    ).toEqual({ status: "pending" });
+    await t.finishAllScheduledFunctions(vi.runAllTimers);
     expect(
       await t.query(api.pairing.status, { id: p.id, secret: p.secret }),
     ).toEqual({ status: "expired" });
