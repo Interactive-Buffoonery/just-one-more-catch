@@ -11,7 +11,7 @@ test("a lost response can retry the same import after filling the final slot", a
     innerHTML: "",
     addEventListener: vi.fn(),
     querySelectorAll: () => [],
-    querySelector: (selector: string) => selector === "#sheet-title" ? heading : { textContent: "" },
+    querySelector: (selector: string) => selector === "#import-title" ? heading : { textContent: "" },
   } as unknown as HTMLElement;
   vi.stubGlobal("document", { getElementById: () => null });
   const complete = vi.fn();
@@ -40,5 +40,5 @@ test("a lost response can retry the same import after filling the final slot", a
   await pending.create();
   expect(importRun).toHaveBeenCalledTimes(2);
   expect(importRun.mock.calls[1]).toEqual(importRun.mock.calls[0]);
-  expect(complete).toHaveBeenCalledWith("existing-import");
+  expect(complete).toHaveBeenCalledWith("existing-import", true);
 });

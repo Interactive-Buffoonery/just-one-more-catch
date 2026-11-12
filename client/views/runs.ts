@@ -205,10 +205,10 @@ export function Runs() {
     open = rows.findIndex((x) => x.row.id === run?.id),
     [top, ...rest] = open > 0 ? [rows[open], ...rows.filter((_, i) => i !== open)] : rows;
   if (!top)
-    return `<div class="dash"><div class="dash-heading"><h1 class="lg">Dashboard</h1><button class="chip" data-importsave="1" data-k="import-save">Import a save</button></div>
+    return `<div class="dash"><div class="dash-heading"><h1 class="lg">Dashboard</h1><a class="chip" href="/import/" data-tab="import" data-k="import-save">Import a save</a></div>
   <section class="trainer hello"><div class="tslab"><h2 class="lg">Welcome, Trainer</h2>${partner("partner")}</div></section>
   <section class="card welcome"><h2 id="new-game-heading">Pick your game</h2>${gameChoices("new-game-heading", true)}</section>${signInNote()}</div>`;
-  return `<div class="dash"><div class="dash-heading"><h1 class="lg">Dashboard</h1><button class="chip" data-importsave="1" data-k="import-save">Import a save</button></div>
+  return `<div class="dash"><div class="dash-heading"><h1 class="lg">Dashboard</h1><a class="chip" href="/import/" data-tab="import" data-k="import-save">Import a save</a></div>
   <div class="dash-grid">${resumeCard(top.row, top.r, top.at)}${trainerCard(rows)}
   ${rest.length ? `<section class="sec"><h2 class="lg">Other playthroughs</h2><div class="runs">${rest.map((x) => miniCard(x.row, x.r, x.at)).join("")}</div></section>` : ""}
   <section class="sec wide"><h2 class="lg" id="new-game-heading">Start another playthrough</h2>${rows.length < MAX_RUNS ? gameChoices() : `<p class="muted">You have ${MAX_RUNS} playthroughs. Delete one to start another.</p>`}</section></div>

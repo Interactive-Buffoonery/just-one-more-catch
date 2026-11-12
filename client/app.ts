@@ -53,7 +53,9 @@ let pickOpenedAt = 0;
 let opening: string | null = null;
 let openSeq = 0;
 let saveImport: SaveImport;
+let importPage: HTMLElement;
 let pendingImport = false;
+const IMPORT_PATH = /^\/import\/?$/;
 function useRun(row: RunRow, start = false, customize = false) {
   const v = verOf(row.version);
   closeRun();
@@ -148,6 +150,7 @@ function shell() {
   <div class="sr" aria-live="polite" id="live"></div>`;
 }
 function tabFromUrl() {
+  if (IMPORT_PATH.test(location.pathname)) return "import";
   const t = new URLSearchParams(location.search).get("tab");
   return t === "journey" && run?.view === "dexonly" ? "dex" : t && Object.hasOwn(VIEWS, t) ? t : "playthroughs";
 }
@@ -156,11 +159,13 @@ function render() {
   const a = bridge.auth,
     signedIn = a.isAuthenticated;
   const k = (document.activeElement as HTMLElement)?.dataset?.k;
-  const needsGame = ui.tab !== "playthroughs";
+  const onImport = ui.tab === "import";
+  const needsGame = ui.tab !== "playthroughs" && !onImport;
   const loading = a.isLoading || !bridge.runs || (needsGame && !!opening);
   root.classList.toggle("loading", loading);
   const url = new URL(location.href);
-  if (ui.tab === "playthroughs") url.searchParams.delete("tab");
+  url.pathname = onImport ? "/import/" : IMPORT_PATH.test(url.pathname) ? "/" : url.pathname;
+  if (ui.tab === "playthroughs" || onImport) url.searchParams.delete("tab");
   else url.searchParams.set("tab", ui.tab);
   if (url.href !== location.href)
     history[ui.tab === tabFromUrl() ? "replaceState" : "pushState"](
@@ -168,7 +173,14 @@ function render() {
       "",
       url,
     );
-  $("#view").innerHTML = loading
+  document.title = onImport ? "Import a save | Just One More Catch" : "Just One More Catch";
+  const leftImport = !onImport && saveImport.isOpen && importPage.contains(document.activeElement);
+  if (!onImport) closeImport();
+  const importLive = onImport && saveImport.isOpen;
+  if (onImport && !importLive && !loading) {
+    $("#view").replaceChildren(importPage);
+    saveImport.open();
+  } else if (!importLive) $("#view").innerHTML = loading
     ? `<p class="muted" style="text-align:center;padding-top:40px">Loading…</p>`
     : needsGame && ui.loadError
       ? `<p class="small" role="alert" style="text-align:center;padding-top:40px;color:var(--coral)">This game didn't load. Check your connection and reload the page.</p>`
@@ -200,6 +212,7 @@ function render() {
     $("#sheet").open
   )
     fillSheet(ui.sheet);
+  if (leftImport) root.querySelector<HTMLElement>('[data-k="import-save"]')?.focus({ preventScroll: true });
   if (k)
     (
       root.querySelector(`[data-k="${k}"]`) ||
@@ -308,17 +321,14 @@ async function download(kind: "json" | "csv") {
 }
 async function onClick(e: MouseEvent) {
   const t = (e.target as HTMLElement).closest(
-    "button",
+    "button, a[data-tab]",
   ) as HTMLButtonElement | null;
   if (!t || t.disabled || (t.type === "submit" && t.form)) return;
-  const d = t.dataset;
-  if (d.importsave) {
-    ui.sheet = { kind: "import", k: "import-save" };
-    $("#sheet").classList.remove("wide");
-    $("#sheet").showModal();
-    saveImport.open();
-    return;
+  if (t instanceof HTMLAnchorElement) {
+    if (e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
   }
+  const d = t.dataset;
   if (d.look || d.mode) {
     setLocalTheme(d.look || ui.look, d.mode || ui.mode);
     if (raw.auth.isAuthenticated)
@@ -660,6 +670,13 @@ function flash(msg: string) {
   render();
 }
 let pendingRun: string | null = null;
+function closeImport() {
+  saveImport.close();
+  if (pendingImport) {
+    pendingImport = false;
+    pendingRun = null;
+  }
+}
 function syncRuns() {
   if (bridge.avatar === ui.avatar) ui.avatar = undefined;
   const rows = bridge.runs;
@@ -676,6 +693,7 @@ function syncRuns() {
     pendingRun = null;
     if (pendingImport) {
       pendingImport = false;
+      if (IMPORT_PATH.test(location.pathname)) history.replaceState(null, "", "/?tab=dex");
       ui.tab = "dex";
       useRun(want);
     } else useRun(want, true, true);
@@ -701,24 +719,35 @@ export function mount(el: HTMLElement, b: Bridge) {
     ui.undo = null;
     render();
   });
-  document.title = "Just One More Catch";
   raw = b;
   setBridge(withGuest(b, refresh));
   el.className = "app";
   el.innerHTML = shell();
+  importPage = document.createElement("div");
+  importPage.className = "import-page";
+  importPage.innerHTML = `<a class="import-back" href="/" data-tab="playthroughs" data-k="import-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M5 12l6 6M5 12l6-6"/></svg>Back to Dashboard</a><section class="import-card" aria-labelledby="import-title"></section>`;
   saveImport = new SaveImport({
-    host: $("#sheetbody"),
+    host: importPage.querySelector<HTMLElement>(".import-card")!,
     bridge: () => bridge,
     flush: saveBeforeImport,
-    complete: (id) => {
-      $("#sheet").close();
-      pendingImport = true;
-      pendingRun = id;
-      refresh();
-      flash(bridge.auth.isAuthenticated ? "Caught Pokémon imported. Saved to your account." : "Caught Pokémon imported. Saved only in this browser.");
+    complete: (id, current) => {
+      if (current) {
+        pendingImport = true;
+        pendingRun = id;
+        refresh();
+      }
+      flash(!current ? "Caught Pokémon imported." : bridge.auth.isAuthenticated ? "Caught Pokémon imported. Saved to your account." : "Caught Pokémon imported. Saved only in this browser.");
     },
-    dismiss: () => $("#sheet").close(),
+    dismiss: () => {
+      ui.tab = "playthroughs";
+      ui.undo = null;
+      render();
+      scrollTo(0, 0);
+    },
   });
+  // A page restored from the back/forward cache starts a fresh import; file bytes never persist.
+  addEventListener("pagehide", closeImport);
+  addEventListener("pageshow", (e) => { if (e.persisted) render(); });
   ui.look = PALETTE[store.get("jomc.look") || ""]
     ? store.get("jomc.look")
     : "blossom";
@@ -803,17 +832,12 @@ export function mount(el: HTMLElement, b: Bridge) {
   $("#sheet").addEventListener("click", (e: Event) => {
     if ((e.target as HTMLElement).id === "sheet") {
       if (ui.sheet?.kind === "pick" && performance.now() - pickOpenedAt < 350) return;
-      if (ui.sheet?.kind === "import" && saveImport.busy) return;
       $("#sheet").close();
     }
-  });
-  $("#sheet").addEventListener("cancel", (event: Event) => {
-    if (ui.sheet?.kind === "import" && saveImport.busy) event.preventDefault();
   });
   $("#sheet").addEventListener("close", () => {
     const s = ui.sheet;
     ui.sheet = null;
-    if (s?.kind === "import") saveImport.close();
     if (s?.kind === "signin")
       bridge.unmountSignIn($("#clerk-signin") as HTMLDivElement);
     render();

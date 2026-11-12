@@ -68,6 +68,7 @@ assert.match(choices(), /data-newrun="heartgold"/);
 const app = readFileSync(new URL('../client/app.ts', import.meta.url), 'utf8');
 assert.doesNotMatch(app.slice(app.indexOf('  if (d.newrun) {'), app.indexOf('  if (d.confirmrun) {')), /createRun/);
 assert.match(app, /e\.repeat &&\s*\(e\.key === "Enter" \|\| e\.key === " "\) &&\s*\(e\.target as HTMLElement\)\.closest\("\[data-confirmrun\]"\)\s*\) e\.preventDefault\(\)/);
+assert.equal((source.match(/<a class="chip" href="\/import\/" data-tab="import"/g) || []).length, 2, 'Import a save must be a real link to the /import/ page');
 console.log('dashboard ok');
 
 for (const card of choices().matchAll(/<div class="gb soon"[^>]*>.*?<\/div>/g)) assert.doesNotMatch(card[0], /data-newrun|<button/);
