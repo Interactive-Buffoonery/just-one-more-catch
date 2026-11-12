@@ -3,7 +3,7 @@ import {readFileSync} from 'node:fs';
 import {stripTypeScriptTypes} from 'node:module';
 import {createContext, runInNewContext, SourceTextModule, SyntheticModule} from 'node:vm';
 const source = readFileSync(new URL('../client/main.ts', import.meta.url), 'utf8');
-async function run({failImport = false, cookie = '', search = '', user = null, signal = false, pathname = '/', contactStalled = false, importCheck = false} = {}) {
+async function run({failImport = false, cookie = '', search = '', user = null, signal = false, pathname = '/', contactStalled = false, importCheck = false, idleCallback = false} = {}) {
   let release;
   const loaded = new Promise(r => release = r);
   const mounted = [];
@@ -39,7 +39,8 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
     onUpdate() { return () => {}; }
   }
   let giveUp;
-  const context = createContext({clearTimeout(){},setTimeout:(fn,delay)=>{if(delay===10000)giveUp=fn;else if(delay===4000)idle=fn;},window:{},URLSearchParams,Element,console:{warn(){}},document:{cookie,getElementById:()=>({addEventListener(event, fn){listeners[event]=fn;}})},location:{hash:'',pathname,search,replace:url=>redirects.push(url)},history:{replaceState:(state,title,url)=>replaced.push(url)}});
+  const window = idleCallback ? {requestIdleCallback(fn, options) {assert.equal(options.timeout, 1500); idle = fn;}} : {};
+  const context = createContext({clearTimeout(){},setTimeout:(fn,delay)=>{if(delay===10000)giveUp=fn;else if(delay===1000)idle=fn;},window,URLSearchParams,Element,console:{warn(){}},document:{cookie,getElementById:()=>({addEventListener(event, fn){listeners[event]=fn;}})},location:{hash:'',pathname,search,replace:url=>redirects.push(url)},history:{replaceState:(state,title,url)=>replaced.push(url)}});
   const modules = new Map();
   function makeModule(name, exports) {
     if (!modules.has(name)) modules.set(name,new SyntheticModule(Object.keys(exports), function(){for (const [k,v] of Object.entries(exports)) this.setExport(k,v);},{context}));
@@ -119,7 +120,8 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
   idle();
   await new Promise(setImmediate);
   assert.equal(imports.length, 2, 'idle downloads both Clerk modules');
-  assert.equal(constructed, 0, 'idle must not construct Clerk');
+  assert.equal(constructed, failImport ? 0 : 1, 'idle must initialize Clerk before a sign-in tap');
+  assert.equal(loads, failImport ? 0 : 1, 'idle must start the session requests');
   assert.equal(bridges.length, initialRenders, 'idle must not render');
   assert.equal(mounted.length, 0, 'idle must not mount');
   listeners.pointerover({target:new Element()});
@@ -195,6 +197,8 @@ await run({pathname:'/import/',failImport:true});
 await run({pathname:'/import/',cookie:'__client_uat=1731300000',user:{id:'user_1'},signal:true});
 await run({pathname:'/pair',search:'?code=bcdfghjk'});
 await run();
+await run({idleCallback:true});
+await run({idleCallback:true,failImport:true});
 await run({failImport:true});
 await run({user:{id:'user_1'},importCheck:true});
 await run({cookie:'__client_uat=0; theme=dark'});
@@ -233,4 +237,4 @@ reload();
 assert.equal(reloaded, true);
 recovery = null;
 assert.doesNotThrow(timeout, 'recovery must be harmless after the app mounts');
-console.log('startup ok: idle downloads, intent initialization, retry limits, session signals, delayed/failed sign-in, cancellation, reopening, and recovery');
+console.log('startup ok: idle initialization, intent reuse, retry limits, session signals, delayed/failed sign-in, cancellation, reopening, and recovery');

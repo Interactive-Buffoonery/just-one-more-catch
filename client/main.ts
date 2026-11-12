@@ -446,10 +446,10 @@ async function startTracker() {
       }
     }, { passive: true });
   }
-  const preloadDownload = () => { void downloadClerk().catch(() => {}); };
+  const preloadSignIn = () => { void loadClerk(); };
   if ("requestIdleCallback" in window) {
-    window.requestIdleCallback(preloadDownload, { timeout: 5000 });
+    window.requestIdleCallback(preloadSignIn, { timeout: 1500 });
   } else {
-    setTimeout(preloadDownload, 4000);
+    setTimeout(preloadSignIn, 1000);
   }
 }
