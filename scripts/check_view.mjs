@@ -13,8 +13,9 @@ for (const [view, expected] of [[undefined, "journey"], ["unknown", "journey"], 
 const app = readFileSync(new URL("../client/app.ts", import.meta.url), "utf8");
 const start = app.match(/if \(start && run\) (ui.tab = .*?);/)[1];
 const IMPORT_PATH = runInNewContext(app.match(/const IMPORT_PATH = (.*);/)[1]);
-const tabAt = (pathname, search, view) => runInNewContext(app.slice(app.indexOf("function tabFromUrl()"), app.indexOf("function render()")) + "\ntabFromUrl", {
-  URLSearchParams, IMPORT_PATH, location: {pathname, search}, run: {view}, VIEWS: {journey: true},
+const PATHS = Function(`return ${app.match(/const PATHS[^=]*= (\{[^}]*\});/)[1]}`)();
+const tabAt = (pathname, search, view, VIEWS = {journey: true}) => runInNewContext(app.slice(app.indexOf("function tabFromUrl()"), app.indexOf("function render()")) + "\ntabFromUrl", {
+  URLSearchParams, IMPORT_PATH, PATHS, location: {pathname, search}, run: {view}, VIEWS,
 })();
 for (const pathname of ["/import/", "/import"]) assert.equal(tabAt(pathname, "?tab=journey", "journey"), "import");
 assert.equal(tabAt("/importer/", "", "journey"), "playthroughs");
@@ -23,6 +24,9 @@ for (const view of ["journey", "dex", "dexonly"]) {
   runInNewContext(start, {ui, run: {view}});
   assert.equal(ui.tab, view === "journey" ? "journey" : "dex");
   assert.equal(tabAt("/", "?tab=journey", view), view === "dexonly" ? "dex" : "journey");
+}
+for (const [pathname, search, tab] of [["/settings/", "", "settings"], ["/settings/devices/", "?tab=dex", "devices"], ["/", "?tab=settings", "settings"], ["/", "", "playthroughs"]]) {
+  assert.equal(tabAt(pathname, search, "journey", {settings: true, devices: true}), tab, pathname + search);
 }
 console.log("playthrough view ok");
 
