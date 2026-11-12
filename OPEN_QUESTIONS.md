@@ -37,6 +37,19 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Yellow implementation handoff
 
+- **Cerulean City fishing review disagreement:** first-pass access batch 2
+  called the shore reachable on foot, citing the separate Bulbasaur happiness
+  script. The coordinator independently decoded pinned Yellow Cerulean/Route 4
+  maps, blockset, collisions and ledges and found no reachable fishing land
+  without Surf; Surf reaches the cave-door shore. Fishing itself is refused
+  while surfing. Resolve this discrepancy in the second review before treating
+  the four species' five fishing rows as verified. The Bulbasaur gift remains
+  separate. Source: [original fishing code](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/engine/items/item_effects.asm),
+  `cp 2 ; Surfing?` / `jr z, .cannotFish`; map and collision files at the same
+  revision. Tester check: try all outdoor water edges with a rod before Surf,
+  then reach the cave-door shore with Surf and fish from land. No data change
+  was applied while the two reviews disagree.
+
 - Independent `audit-access` reviewer passes have not run in this implementation
   worktree; the coordinator owns them. In particular, independently confirm the
   Seafoam lower-floor approach from the west before accepting that ordinary
