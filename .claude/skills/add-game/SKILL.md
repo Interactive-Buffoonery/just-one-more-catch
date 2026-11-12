@@ -129,14 +129,18 @@ skill's cache (`scripts/access_audit.py`).
 
 ## Steps
 
+Use `docs/adding-games.md` for the full integration, verification and parallel
+work checklist. These steps describe the data pipeline.
+
 1. Add the pack to `client/packs.ts` (the pack, its `kit` and `hm`, and a
    `VERSIONS` entry) and `shared/versions.ts`. Source each value as listed
    above. Every kit id a need uses must be in the pack's `kit`.
 2. Write `data/<pack>.json`. Copy the shape of an existing pack.
 3. `python3 scripts/fetch_pokeapi.py`, then `python3 scripts/build_data.py <pack>`.
-   `fetch_pokeapi.py` and `pretty()` in `build_data.py` are
-   written for the Johto and Kanto games; a new generation may need them
-   extended. A new encounter method needs a `METHOD` entry in `client/game.ts`.
+   Check the fetcher's Pokédex IDs and the builder's `nice()`,
+   `base_place()`, encounter conditions and evolution text against the new
+   game; existing packs are examples, not proof of matching mechanics. A new
+   encounter method needs a `METHOD` entry in `client/game.ts`.
    The build fails on:
    - an area that no chapter claims, or an area `needs` or `row_needs` that
      matches nothing
@@ -150,10 +154,13 @@ skill's cache (`scripts/access_audit.py`).
    The build doesn't check badge names or `by` values against `packs.ts`, so
    check those by hand: a typo locks content for good.
 4. Add sprites: an `ART` entry in `scripts/fetch_sprites.py` (plus `ITEMS` for
-   a new kit icon and `BADGES` for a new region), then run it.
+   a new kit icon and `BADGES` for a new region), then run it with
+   `uv run scripts/fetch_sprites.py` (requires Pillow).
+   Include the generated `client/data/sprite-fit.ts` changes.
 5. Verify with a second pass that doesn't trust the first: run the
    `audit-access` skill for the pack.
 6. When changing an existing pack, rebuild and compare the old and new
    `client/data/<pack>.ts` row by row (save the old file first). Only the rows
    you meant to move should change chapter or needs.
-7. `pnpm exec tsc --noEmit -p .` and `pnpm build`.
+7. `pnpm check` and `pnpm build`, plus the integration and manual checks in
+   `docs/adding-games.md`. Record missing source or browser evidence explicitly.
