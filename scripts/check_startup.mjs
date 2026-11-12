@@ -94,8 +94,8 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
     return;
   }
   const bridge=bridges[0];
-  if (search.startsWith('?pair=')) {
-    assert.deepEqual(replaced,['/'],'the pairing code must leave the address bar');
+  if (pathname === '/pair') {
+    assert.deepEqual(replaced,['/settings/devices/'],'a pairing link must land on Devices without the code');
     assert.equal(bridge.pairCode,'BCDF-GHJK');
     assert.ok(imports.length>0,'a pairing link must load Clerk at startup');
     assert.equal(bridge.auth.isLoading,false,'a pairing link must not hide guest play');
@@ -193,7 +193,7 @@ await run({search:'?tab=contact'});
 await run({pathname:'/import/'});
 await run({pathname:'/import/',failImport:true});
 await run({pathname:'/import/',cookie:'__client_uat=1731300000',user:{id:'user_1'},signal:true});
-await run({search:'?pair=bcdf-ghjk'});
+await run({pathname:'/pair',search:'?code=bcdfghjk'});
 await run();
 await run({failImport:true});
 await run({user:{id:'user_1'},importCheck:true});

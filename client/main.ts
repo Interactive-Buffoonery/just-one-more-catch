@@ -86,19 +86,15 @@ function storePairCode(code: string | null) {
 }
 
 function takePairCode() {
-  const params = new URLSearchParams(location.search);
-  const raw = params.get("pair");
-  if (raw === null) {
+  if (!/^\/pair\/?$/.test(location.pathname)) {
     try {
       return validPairCode(sessionStorage.getItem(PAIR_KEY));
     } catch {
       return null;
     }
   }
-  params.delete("pair");
-  const search = params.toString();
-  history.replaceState(history.state, "", location.pathname + (search && `?${search}`) + location.hash);
-  const code = validPairCode(raw);
+  const code = validPairCode(new URLSearchParams(location.search).get("code"));
+  history.replaceState(null, "", "/settings/devices/");
   storePairCode(code);
   return code;
 }
@@ -289,7 +285,7 @@ async function startTracker() {
       });
       return {
         code, expiresAt,
-        url: `${location.origin}/?pair=${code}`,
+        url: `${location.origin}/pair?code=${code.replace("-", "")}`,
         cancel: () => {
           if (done) return;
           done = true;

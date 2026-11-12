@@ -35,13 +35,15 @@ self.addEventListener("message", (e) => {
     ),
   );
 });
+const APP_PAGES = new Set(["/", "/settings/", "/settings/devices/", "/pair"]);
+
 self.addEventListener("fetch", (e) => {
   const req = e.request;
   const url = new URL(req.url);
   if (req.method !== "GET" || url.origin !== location.origin) return;
   if (req.mode === "navigate") {
     // The app page: network first so a deploy shows up at once, cached copy when offline.
-    if (url.pathname !== "/") return;
+    if (!APP_PAGES.has(url.pathname)) return;
     e.respondWith(
       fetch(req)
         .then((res) => {
