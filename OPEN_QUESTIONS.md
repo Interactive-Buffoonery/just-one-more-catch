@@ -37,6 +37,18 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Yellow implementation handoff
 
+- **Safari interior paths:** the full pinned Yellow source has interior maps,
+  but the independent reviews did not settle the on-foot collision path to
+  Middle and Area 2 North encounter grass. Test both from the entry without
+  Surf or Strength. The centre warp table links the north map, but a warp
+  alone does not prove access to all encounter tiles. Source:
+  [SafariZoneCenter objects](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/SafariZoneCenter.asm).
+- **Articuno from the west:** retain its Strength requirement until a tester
+  reaches an interaction-adjacent tile without pushing any Seafoam boulder.
+  Both reviews left this unclear: static collision reachability does not
+  reproduce B3F/B4F forced-surf and current scripts. Source:
+  [Seafoam B4F](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/SeafoamIslandsB4F.asm).
+
 - **Cerulean City fishing review disagreement:** first-pass access batch 2
   called the shore reachable on foot, citing the separate Bulbasaur happiness
   script. The coordinator independently decoded pinned Yellow Cerulean/Route 4
@@ -98,6 +110,28 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
   or save-import UI was changed in this task.
 
 ## Gold and Silver (`gs`)
+
+- **Route 8 Cut gate:** first pass proposed Cut for the grass, while the
+  second pass could not settle a southern approach across directional-wall
+  tiles. Test from both Lavender and Saffron without Cut, including the south
+  grass edge. If blocked, gate walking rows only. No data change was applied.
+  Sources: [Route 8 map](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route8.blk)
+  and [movement permissions](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/engine/overworld/player_movement.asm).
+- **Pewter / Route 3 Cut gate:** Diglett's Cave's tree passage is insufficient
+  proof of a whole-area gate. After Snorlax, the east Victory Road Gate guard
+  disappears, opening a Route 22 approach to Viridian. Test every legitimate
+  northbound Route 2 route without Cut, respecting one-way ledges, before
+  adding requirements to the Pewter trade or Route 3 encounters. Source:
+  [VictoryRoadGate](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/VictoryRoadGate.asm).
+- **Blackthorn / Route 45 alternative approach:** their lack of local
+  boulders does not disprove the preceding Ice Path Strength requirement.
+  Separately test whether Dark Cave and northbound Route 45 ledges permit
+  arrival without Strength before seven badges. Neither review established
+  that alternative; retain current gates.
+- **Mt. Mortar upper-floor landing:** with Surf but no Waterfall, trace each
+  legitimate Route 42 entrance to the 1F Inside stairs (9,9), then test upper
+  floor encounters. The raw upper map differs from the B1F pocket and Tyrogue
+  platform; partial or decorative exterior paths do not settle its gate.
 
 - **Route 1 grass access:** batch 4 suggested a Cut requirement, but its
   approach was not independently established. After normal western-Kanto
