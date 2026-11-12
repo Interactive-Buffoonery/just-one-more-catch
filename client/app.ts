@@ -165,10 +165,12 @@ function lockedView(tab: string) {
   return isGuest() ? `<div class="pv">${run ? `<div class="ghost" inert aria-hidden="true">${view()}</div>` : ""}<div class="over"><section class="card" aria-labelledby="${id}"><h2 class="lg" id="${id}">${label}</h2><p class="jl-why">${why}</p><button class="app-primary" data-signinsheet="1" data-k="signin-${tab}">Sign in</button></section></div></div>` : view();
 }
 const tabButtons = (icons: boolean) =>
-  TABS.filter(([t]) => t !== "journey" || isGuest() || run?.view !== "dexonly").map(
-    ([t, l]) =>
-      `<button data-tab="${t}" ${isGuest() && LOCKED[t] ? `aria-label="${l}, sign in required"` : ""} ${ui.tab === t ? `aria-current="page"` : ""}>${icons ? isGuest() && LOCKED[t] ? `<span class="tlock">${TAB_ICONS[t]}<i><svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="5.5" width="8" height="5.5" rx="1.2" fill="currentColor"/><path d="M4 5.5V4a2 2 0 014 0v1.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></i></span>` : TAB_ICONS[t] : ""}<span>${l}</span></button>`,
-  ).join("");
+  TABS.filter(([t]) => t !== "journey" || isGuest() || run?.view !== "dexonly").map(([t, l]) => {
+    const locked = isGuest() && LOCKED[t];
+    const icon = icons ? (locked ? `<span class="tlock">${TAB_ICONS[t]}<i>${LOCK}</i></span>` : TAB_ICONS[t]) : "";
+    return `<button data-tab="${t}" ${locked ? `aria-label="${l}, sign in required"` : ""} ${ui.tab === t ? `aria-current="page"` : ""}>${icon}<span>${l}</span>${!icons && locked ? `<i class="tlock-top">${LOCK}</i>` : ""}</button>`;
+  }).join("");
+const LOCK = `<svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="5.5" width="8" height="5.5" rx="1.2" fill="currentColor"/><path d="M4 5.5V4a2 2 0 014 0v1.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>`;
 const VIEWS: Record<string, () => string> = {
   journey: () => lockedView("journey"),
   dex: Dex,

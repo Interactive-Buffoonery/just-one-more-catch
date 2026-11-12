@@ -756,11 +756,13 @@ button.gb:is(:hover,:focus-visible) .bx{rotate:0deg;translate:0 -10px;box-shadow
 .pv{position:relative;min-height:510px}
 .pv .ghost{opacity:.38;filter:saturate(.6);pointer-events:none;user-select:none;-webkit-mask-image:linear-gradient(#000 55%,transparent 98%);mask-image:linear-gradient(#000 55%,transparent 98%)}
 .pv .over{position:absolute;left:0;right:0;top:250px;display:grid;justify-items:center}
-.pv .over .card{border:0;border-radius:20px;padding:22px 20px;text-align:center;width:100%;box-shadow:0 12px 32px rgba(0,0,0,.16),0 0 0 1px var(--line)}
+.pv .over .card{border:0;max-width:440px;border-radius:20px;padding:22px 20px;text-align:center;width:100%;box-shadow:0 12px 32px rgba(0,0,0,.16),0 0 0 1px var(--line)}
 .pv .over h2.lg{font-size:32px;line-height:1;padding-top:4px;margin:6px 0 10px}
 .pv .over .jl-why{margin:0 0 18px;font-size:15px;line-height:1.45;color:var(--soft);text-wrap:balance}
 .app .pv .over .app-primary{width:100%;min-height:48px}
 .tabbar .tlock{position:relative;display:block}
 .tabbar .tlock i{position:absolute;right:12px;top:-2px;width:16px;height:16px;border-radius:50%;background:var(--surface);box-shadow:0 0 0 1.5px var(--surface);display:grid;place-items:center;color:var(--soft)}
 .tabbar button[aria-current=page] .tlock i{color:var(--teal)}
+.app .toptabs .tlock-top{display:inline-grid;vertical-align:-1px;margin-left:5px;color:var(--soft)}
+.app .toptabs .tlock-top svg{width:12px;height:12px}
 .tabbar .tlock i svg{width:10px;height:10px;padding:0;background:none!important}

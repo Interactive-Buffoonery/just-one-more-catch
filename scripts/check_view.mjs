@@ -108,6 +108,10 @@ const tabs = runInNewContext(stripTypeScriptTypes(app.slice(app.indexOf("const t
   run: {view: "dexonly"}, ui: {tab: "journey"}, isGuest: () => true,
 });
 assert(tabs.includes('aria-label="Journey, sign in required"') && tabs.includes('class="tlock"'));
+const topTabs = runInNewContext(stripTypeScriptTypes(app.slice(app.indexOf("const tabButtons"), app.indexOf("const VIEWS"))) + "\ntabButtons(false)", {
+  LOCKED: {journey: true}, TABS: [["journey", "Journey"]], TAB_ICONS: {}, run: null, ui: {}, isGuest: () => true,
+});
+assert(topTabs.includes('class="tlock-top"'));
 const dex = readFileSync(new URL("../client/views/dex.ts", import.meta.url), "utf8");
 assert(!dex.includes("R().view"));
 assert(dex.includes('k !== "now" || viewOf(R()) !== "dexonly"'));
