@@ -204,11 +204,15 @@ def species(n, johto):
             key = json.dumps(r, sort_keys=True)
             rows[key] = rows.get(key, "") + v
     pre = sp["evolves_from_species"]
+    if GAME["gen"] == "generation-i" and pre and int(pre["url"].rstrip("/").split("/")[-1]) > 151:
+        pre = None
+    evo = None if GAME["gen"] == "generation-i" and not pre else evo_text(chain, sp["name"])
+    evo = GAME.get("evolution_overrides", {}).get(str(n), {}).get("evo", evo)
     return {
         "n": n, "genderRate": sp["gender_rate"], "j": johto.get(n), "name": name(sp), "types": gen4_types(p),
         **({"forms": form_list(n)} if str(n) in GAME.get("obtainable_forms", {}) else {}),
         "from": name(cached(f"pokemon_species_{pre['url'].rstrip('/').split('/')[-1]}")) if pre else None,
-        "evo": evo_text(chain, sp["name"]), "baby": sp["is_baby"],
+        "evo": evo, "baby": sp["is_baby"],
         "rows": sorted(({**json.loads(k), "v": v} for k, v in rows.items()), key=lambda r: (r["chap"], -r["c"])),
     }
 

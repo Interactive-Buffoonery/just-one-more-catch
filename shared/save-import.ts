@@ -1,6 +1,7 @@
 import { VERSION_IDS, type VersionId } from "./versions";
 
 export const IMPORT_SPECIES_LIMITS: Record<VersionId, number> = {
+  yellow: 151,
   crystal: 251,
   firered: 386,
   leafgreen: 386,

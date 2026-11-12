@@ -18,6 +18,7 @@ BASE = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/"
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 UA = {"User-Agent": "just-one-more-catch-data-build"}
 ART = {
+    "yellow": "pokemon/versions/generation-i/yellow/transparent/",
     "crystal": "pokemon/versions/generation-ii/crystal/transparent/",
     "frlg": "pokemon/versions/generation-iii/firered-leafgreen/",
     "hgss": "pokemon/versions/generation-iv/heartgold-soulsilver/",
@@ -28,7 +29,7 @@ BADGES = ["Boulder", "Cascade", "Thunder", "Rainbow", "Soul", "Marsh", "Volcano"
           "Zephyr", "Hive", "Plain", "Fog", "Storm", "Mineral", "Glacier", "Rising"]
 # Kit items: rods are their own items; moves use a disc in the move's type colour
 ITEMS = {"old-rod": "old-rod", "good-rod": "good-rod", "super-rod": "super-rod", "headbutt": "tm-normal",
-         "rock-smash": "tm-fighting", "surf": "tm-water", "whirlpool": "tm-water", "waterfall": "tm-water", "strength": "tm-normal", "rock-climb": "tm-normal", "bicycle": "bicycle",
+         "yellow-cut": "tm-normal", "rock-smash": "tm-fighting", "surf": "tm-water", "whirlpool": "tm-water", "waterfall": "tm-water", "strength": "tm-normal", "rock-climb": "tm-normal", "bicycle": "bicycle",
          # USUM: Poké Ride moves have no item art, so they use the ride Pokémon; Island Scan uses Rotom
          "fishing-rod": "fishing-rod", "tauros": "../pokemon/128", "mudsdale": "../pokemon/750", "machamp": "../pokemon/68", "island-scan": "../pokemon/479"}
 # Alola's trial rewards are Z-Crystals, so its badges use the crystal's bag icon
@@ -112,10 +113,11 @@ if __name__ == "__main__":
     jobs = [(f"{BASE}badges/{i + 1}.png", os.path.join(ROOT, "public", "badges", f"{b.lower()}.png")) for i, b in enumerate(BADGES)]
     jobs += [(f"{BASE}items/{z.lower()}-z--bag.png", os.path.join(ROOT, "public", "badges", f"{z.lower()}.png")) for z in Z_CRYSTALS]
     jobs += [(f"{BASE}items/{src}.png", os.path.join(ROOT, "public", "items", f"{key}.png")) for key, src in ITEMS.items()]
+    # Gen 1 has no shiny palette; retain the original art for the tracker’s shiny paths.
     for pack, path in ART.items():
         game = json.load(open(os.path.join(ROOT, "data", pack + ".json")))
         for shiny in ("", "shiny/"):
-            jobs += [(f"{BASE}{path}{shiny}{form(n, game)}.png", os.path.join(ROOT, "public", "sprites", pack, shiny, f"{n}.png")) for n in range(1, game["species"] + 1)]
+            jobs += [(f"{BASE}{path}{'' if pack == 'yellow' else shiny}{form(n, game)}.png", os.path.join(ROOT, "public", "sprites", pack, shiny, f"{n}.png")) for n in range(1, game["species"] + 1)]
     for pack in ART:
         game = json.load(open(os.path.join(ROOT, "data", pack + ".json")))
         for forms in game.get("obtainable_forms", {}).values():

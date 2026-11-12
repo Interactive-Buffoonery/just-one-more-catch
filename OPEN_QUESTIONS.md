@@ -34,3 +34,25 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 - Poni Breaker Coast: can the fishing spots and Wimpod be reached from shore?
 - Mahalo Trail: Solgaleo and Lunala now open with the Dragonium (the Ultra Megalopolis chapter). In the game they come right after Ultra Necrozma, during Mina's trial.
 - Totem Stickers 70: sticker 70 is on Route 15's large island. If that needs Sharpedo Jet, 70 waits for the Haina Desert chapter (as set). Confirm.
+
+## Yellow implementation handoff
+
+- Independent `audit-access` reviewer passes have not run in this implementation
+  worktree; the coordinator owns them. In particular, independently confirm the
+  Seafoam lower-floor approach from the west before accepting that ordinary
+  floor encounters need Surf but not Strength (Articuno does need Strength).
+  The location article's west-to-east traversal statement is marked citation
+  needed, although the original scripts and accessible walkthrough explain the
+  current/boulder puzzle. Sources are in the Yellow section of SOURCES.md.
+- No Yellow guide PDF was supplied. Bulbapedia Yellow walkthrough parts 7 and
+  11 returned HTTP 403. No access-control bypass was attempted; accessible
+  walkthroughs and original pret/pokeyellow scripts were used instead.
+- The shared tracker can mark shininess/gender even for Generation I. This
+  implementation does not redesign those controls. Yellow supplies identical
+  original sprites at regular/shiny paths because the game has no shiny
+  palette; it supplies no alternate forms. Coordinator should independently
+  verify the desired Gen 1 control behaviour across Red/Blue and Yellow.
+- Manual picker, guest persistence, chapter/HM/story progression, gifts/statics,
+  sprites and generated-page browser QA remain unperformed. No cartridge or
+  emulator gameplay, account sync or save-file import verification was run.
+  Yellow tracking does not enable file import.

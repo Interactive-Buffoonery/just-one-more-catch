@@ -143,6 +143,28 @@ const CRYSTAL: Pack = {
   boxes: [14, 20],
 };
 
+const YELLOW: Pack = {
+  load: () => import("./data/yellow").then((m) => m.default),
+  art: "yellow",
+  region: "Kanto",
+  regional: 151,
+  national: 151,
+  start: "Pallet Town",
+  starters: [25],
+  badges: kantoBadges("Koga", "Giovanni"),
+  kit: [
+    ["old-rod", "Old Rod"],
+    ["good-rod", "Good Rod"],
+    ["super-rod", "Super Rod"],
+    ["yellow-cut", "Cut"],
+    ["surf", "Surf"],
+    ["strength", "Strength"],
+    ["bicycle", "Bicycle"],
+  ],
+  hm: { "yellow-cut": "Cascade", surf: "Soul", strength: "Rainbow" },
+  boxes: [12, 20],
+};
+
 const FRLG: Pack = {
   load: () => import("./data/frlg").then((m) => m.default),
   art: "frlg",
@@ -209,6 +231,14 @@ const USUM: Pack = {
 };
 
 export const VERSIONS: Record<VersionId, Version> = {
+  yellow: {
+    name: "Yellow",
+    short: "Y",
+    code: "y",
+    gen: "Gen 1",
+    pack: YELLOW,
+    ring: ["electric", "normal"],
+  },
   crystal: {
     name: "Crystal",
     short: "C",
@@ -287,7 +317,7 @@ export const CONSOLES: { name: string; games: (VersionId | { name: string; short
   { name: "Game Boy", games: [
     { name: "Red", short: "R", color: "#d8403a" },
     { name: "Blue", short: "B", color: "#3a67c9" },
-    { name: "Yellow", short: "Y", color: "#e0b52c" },
+    "yellow",
   ] },
   { name: "Game Boy Color", games: [
     { name: "Gold", short: "G", color: "#c9a227" },
