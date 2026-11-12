@@ -202,7 +202,8 @@ export function switcher(id?: string | null) {
 }
 export function Runs() {
   const rows = recentRuns(),
-    [top, ...rest] = rows;
+    open = rows.findIndex((x) => x.row.id === run?.id),
+    [top, ...rest] = open > 0 ? [rows[open], ...rows.filter((_, i) => i !== open)] : rows;
   if (!top)
     return `<div class="dash"><h1 class="lg">Dashboard</h1>
   <section class="trainer hello"><div class="tslab"><h2 class="lg">Welcome, Trainer</h2>${partner("partner")}</div></section>

@@ -37,12 +37,22 @@ for (const count of [0, 1, 2]) {
   const render = runInNewContext(stripTypeScriptTypes(source.slice(source.indexOf('export function Runs()'), source.indexOf('function Account()'))).replace('export ', '') + '\nRuns', {
     recentRuns: () => Array.from({length: count}, () => ({row: {}, r: {}, at: ''})),
     partner: () => '<img class="partner" src="/sprites/hgss/25.png" alt="" width="80" height="80">',
-    gameChoices: () => '', signInNote: () => '', resumeCard: () => '', trainerCard: () => '', miniCard: () => '', MAX_RUNS: 10,
+    gameChoices: () => '', signInNote: () => '', resumeCard: () => '', trainerCard: () => '', miniCard: () => '', MAX_RUNS: 10, run: null,
   });
   const dashboard = render();
   assert.equal(dashboard.includes('class="trainer hello"'), count === 0);
   assert.equal(dashboard.includes('Welcome, Trainer'), count === 0);
   assert.equal(dashboard.includes('Pick your game'), count === 0);
+}
+
+{
+  const rows = ['a', 'b', 'c'].map(id => ({row: {id}, r: {}, at: ''}));
+  const render = runInNewContext(stripTypeScriptTypes(source.slice(source.indexOf('export function Runs()'), source.indexOf('function Account()'))).replace('export ', '') + '\nRuns', {
+    recentRuns: () => rows, run: {id: 'b'}, MAX_RUNS: 10,
+    gameChoices: () => '', signInNote: () => '', trainerCard: () => '',
+    resumeCard: row => `[top ${row.id}]`, miniCard: row => `[mini ${row.id}]`,
+  });
+  assert.match(render(), /\[top b\].*\[mini a\].*\[mini c\]/s);
 }
 
 const confirm = runInNewContext(stripTypeScriptTypes(source.slice(source.indexOf('export const confirmGame'), source.indexOf('const gameChoices'))).replace('export ', '') + '\nconfirmGame', {verOf, esc: x => x, cover: () => '<img alt="">'});
