@@ -308,6 +308,7 @@ export let byName: Record<string, Species> = {},
 export const ui: any = {
   tab: "journey",
   boxFilter: "all",
+  boxLayout: "list",
   filter: "now",
   q: "",
   bulk: false,

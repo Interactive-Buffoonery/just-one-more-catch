@@ -392,6 +392,12 @@ async function onClick(e: MouseEvent) {
     e.preventDefault();
   }
   const d = t.dataset;
+  if (d.boxlayout === "list" || d.boxlayout === "grid") {
+    ui.boxLayout = d.boxlayout;
+    store.set("jomc.boxLayout", ui.boxLayout);
+    render();
+    return;
+  }
   if (d.look || d.mode) {
     setLocalTheme(d.look || ui.look, d.mode || ui.mode);
     if (raw.auth.isAuthenticated)
@@ -839,6 +845,7 @@ export function mount(el: HTMLElement, b: Bridge) {
   // A page restored from the back/forward cache starts a fresh import; file bytes never persist.
   addEventListener("pagehide", closeImport);
   addEventListener("pageshow", (e) => { if (e.persisted) render(); });
+  ui.boxLayout = store.get("jomc.boxLayout") === "grid" ? "grid" : "list";
   ui.look = PALETTE[store.get("jomc.look") || ""]
     ? store.get("jomc.look")
     : "blossom";

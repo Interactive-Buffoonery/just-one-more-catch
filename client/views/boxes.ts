@@ -23,26 +23,30 @@ export function monLine(m: Mon, showBox?: boolean) {
 export function Boxes() {
   if (!run) return NoRun();
   const f = ui.boxFilter,
+    grid = ui.boxLayout === "grid",
     keep = (m: Mon) => f === "all" || (f === "items" ? !!m.item : m.shiny);
   const card = (b: Mon["box"]) => {
     const ms = inBox(b).filter(keep);
     if (!ms.length && (f !== "all" || b !== "party")) return "";
-    return `<section class="card boxcard"><div class="boxhead"><h3>${esc(boxLabel(b))}</h3><span class="muted small">${inBox(b).length} / ${boxCap(b)}</span><span class="spacer"></span>${b === "party" ? "" : `<button class="chip" data-renamebox="${b}" data-k="rb${b}">Rename</button>`}</div>${ms.map((m) => monLine(m)).join("") || `<p class="small muted" style="margin:0">Nobody in your party yet.</p>`}</section>`;
+    return `<section class="boxcard"><div class="boxhead"><h2 class="lg">${esc(boxLabel(b))}</h2><span class="muted small">${inBox(b).length} / ${boxCap(b)}</span><span class="spacer"></span>${b === "party" ? "" : `<button class="quietbtn" data-renamebox="${b}" data-k="rb${b}">Rename</button>`}</div><div class="boxmons">${ms.map((m) => monLine(m)).join("") || `<p class="boxempty muted small">Nobody in your party yet.</p>`}</div></section>`;
   };
   const empty = allBoxes().filter((b) => b !== "party" && !inBox(b).length);
-  return `<div style="display:flex;gap:12px;align-items:baseline;flex-wrap:wrap"><h2>Boxes</h2><span class="muted">${R().mons.length} Pokémon</span></div>
-  <div class="chips" style="margin:12px 0">${[
-    ["all", "All"],
-    ["items", "Holding an item"],
-    ["shiny", "Shiny"],
+  const cards = allBoxes().map(card).join("");
+  return `<section class="boxes${grid ? " boxes-tiles" : ""}" aria-labelledby="boxes-title">
+  <div class="dexhead"><h1 class="lg" id="boxes-title">Boxes</h1><div class="dexcount"><b>${R().mons.length}</b> Pokémon</div></div>
+  <div class="boxtools"><div class="filters three" role="group" aria-label="Show Pokémon">${[
+    ["all", "All", R().mons.length],
+    ["items", "Holding an item", R().mons.filter((m) => m.item).length],
+    ["shiny", "Shiny", R().mons.filter((m) => m.shiny).length],
   ]
     .map(
-      ([k, l]) =>
-        `<button class="chip" data-boxfilter="${k}" data-k="bf-${k}" aria-pressed="${f === k}">${l}</button>`,
+      ([k, l, count]) =>
+        `<button data-boxfilter="${k}" data-k="bf-${k}" aria-pressed="${f === k}"><b>${count}</b>${l}</button>`,
     )
     .join("")}</div>
-  <div class="boxgrid">${allBoxes().map(card).join("") || `<p class="muted">Nothing here.</p>`}</div>
-  ${f === "all" && empty.length ? `<details class="card" style="margin-top:12px"><summary><b>${empty.length} empty boxes</b></summary><div class="chips" style="margin-top:10px">${empty.map((b) => `<button class="chip" data-renamebox="${b}" data-k="rb${b}">${esc(boxLabel(b))}</button>`).join("")}</div></details>` : ""}`;
+  <div class="seg3 boxlayout" role="group" aria-label="Boxes layout">${["list", "grid"].map((layout) => `<button data-boxlayout="${layout}" data-k="bl-${layout}" aria-label="${layout === "list" ? "List view" : "Grid view"}" title="${layout === "list" ? "List view" : "Grid view"}" aria-pressed="${(grid ? "grid" : "list") === layout}">${layout === "list" ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>` : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>`}</button>`).join("")}</div></div>
+  ${cards ? `<div class="boxgrid">${cards}</div>` : `<div class="boxmons"><p class="boxempty muted small">${f === "items" ? "No Pokémon holding an item." : "No shiny Pokémon."}</p></div>`}
+  ${f === "all" && empty.length ? `<details class="boxunused"><summary><b>${empty.length} empty boxes</b></summary><div class="chips">${empty.map((b) => `<button class="chip" data-renamebox="${b}" data-k="rb${b}">${esc(boxLabel(b))}</button>`).join("")}</div></details>` : ""}</section>`;
 }
 export function fillMonSheet(s: any) {
   const m = s.id ? R().mons.find((x) => x.id === s.id) : null,

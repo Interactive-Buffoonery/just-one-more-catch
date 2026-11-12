@@ -163,9 +163,34 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .app .monrow{width:100%;text-align:left;cursor:pointer}
 .monrow .grow,.monrow .name{display:block}
 .shiny{color:var(--gold-ink)}
-.boxgrid{display:grid;gap:12px}
-.boxhead{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.boxcard .row:last-child{margin-bottom:0}
+.boxtools{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:20px 0 24px}
+.boxtools .filters{margin:0;flex:1 1 280px;max-width:460px}
+.boxlayout{margin-left:auto;flex:none}
+.app .boxlayout button{display:grid;place-items:center;min-width:44px;min-height:44px;padding:0 12px}
+.boxgrid{display:grid;gap:24px;align-items:start}
+.boxhead{display:flex;align-items:center;gap:8px;min-height:44px;margin-bottom:8px}
+.boxhead h2{font-size:24px;overflow-wrap:anywhere;min-width:0}
+.boxhead .small{white-space:nowrap}
+.boxmons{background:var(--surface);border-radius:16px;padding:0 16px;min-width:0}
+.boxes .monrow{border:0;border-top:1px solid var(--line);border-radius:0;background:none;margin:0;padding:12px 0;min-height:72px}
+.boxes .monrow:first-child{border-top:0}
+.boxes .monrow:hover{background:var(--teal-soft)}
+.boxes .monrow .mon{width:44px;height:44px}
+.boxes .monrow .name,.boxes .monrow .tags{overflow-wrap:anywhere}
+.boxes .monrow .tag{white-space:normal}
+.boxempty{margin:0;padding:16px 0}
+.boxunused{margin-top:24px;padding:0 16px;border-radius:14px;background:var(--surface)}
+.boxunused summary{min-height:52px;align-content:center;cursor:pointer}
+.boxunused .chips{padding-bottom:16px}
+.boxes-tiles .boxgrid{grid-template-columns:1fr}
+.boxes-tiles .boxmons{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;background:none;padding:0}
+.boxes-tiles .monrow{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;gap:8px;min-height:132px;padding:12px 4px;border:0;border-radius:14px;background:var(--surface)}
+.boxes-tiles .monrow .mon{width:50px;height:50px}
+.boxes-tiles .monrow .grow{width:100%;flex:0 1 auto}
+.boxes-tiles .monrow .name{font-size:12.5px}
+.boxes-tiles .monrow .tags{justify-content:center}
+.boxes-tiles .boxmons:has(.boxempty){display:block;background:var(--surface);padding:0 16px}
+@media (max-width:639px){.boxes-tiles .boxmons{grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:6px}}
 .field{display:grid;gap:4px;margin-top:14px;font-size:13px;font-weight:800;color:var(--soft)}
 .app .field input,.app .field select,.app .field textarea{font:inherit;font-size:16px;font-weight:600;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;min-height:46px;padding:0 12px;width:100%;box-sizing:border-box}
 .app .field textarea{min-height:140px;padding:10px 12px;resize:vertical}
