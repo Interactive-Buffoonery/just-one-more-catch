@@ -5,3 +5,4 @@ allowBuilds:
   core-js: false
 minimumReleaseAgeExclude:
   - convex-test@0.0.70
+  - "@serabi/pokemon-save-reader@0.1.1"
