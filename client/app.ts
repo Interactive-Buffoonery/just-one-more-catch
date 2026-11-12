@@ -339,6 +339,10 @@ async function onClick(e: MouseEvent) {
     return;
   }
   if (d.tab) {
+    if (d.tab === "import") {
+      ui.sheet = null;
+      $("#sheet").close();
+    }
     ui.tab = d.tab;
     ui.undo = null;
     render();

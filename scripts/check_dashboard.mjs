@@ -58,7 +58,8 @@ for (const count of [0, 1, 2]) {
 
 const confirm = runInNewContext(stripTypeScriptTypes(source.slice(source.indexOf('export const confirmGame'), source.indexOf('const gameChoices'))).replace('export ', '') + '\nconfirmGame', {verOf, esc: x => x, cover: () => '<img alt="">'});
 assert.match(confirm('heartgold'), /Start HeartGold\?/);
-assert.match(confirm('heartgold'), /Yes please!/);
+assert.match(confirm('heartgold'), /Start a new playthrough/);
+assert.match(confirm('heartgold'), /href="\/import\/" data-tab="import"/);
 assert.match(confirm('heartgold'), /No thank you, just browsing!/);
 
 assert.match(confirm('heartgold'), /data-confirmrun="heartgold"/);
