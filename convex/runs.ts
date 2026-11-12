@@ -135,6 +135,26 @@ export const setAvatar = mutation({
   },
 });
 
+export const theme = query({
+  args: {},
+  handler: async (ctx) => {
+    const me = await ctx.auth.getUserIdentity();
+    const p = me && (await profileOf(ctx, me.tokenIdentifier))[0];
+    return p?.look && p.mode ? { look: p.look, mode: p.mode } : null;
+  },
+});
+
+export const setTheme = mutation({
+  args: { look: v.string(), mode: v.union(v.literal("auto"), v.literal("light"), v.literal("dark")) },
+  handler: async (ctx, { look, mode }) => {
+    if (!/^[a-z-]{1,32}$/.test(look)) throw new Error("Unknown look");
+    const who = await owner(ctx);
+    const [first] = await profileOf(ctx, who);
+    if (first) await ctx.db.patch(first._id, { look, mode });
+    else await ctx.db.insert("profiles", { owner: who, look, mode });
+  },
+});
+
 async function purgeRuns(ctx: MutationCtx, who: string) {
   const runs = await ctx.db
     .query("runs")

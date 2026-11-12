@@ -53,6 +53,8 @@ export type Bridge = {
   runs: RunRow[] | undefined;
   avatar: number | null | undefined;
   setAvatar(n: number): Promise<unknown>;
+  theme: { look: string; mode: string } | null | undefined;
+  setTheme(look: string, mode: string): Promise<unknown>;
   getState(id: string): Promise<string>;
   mountSignIn(el: HTMLDivElement): boolean;
   unmountSignIn(el: HTMLDivElement): void;
