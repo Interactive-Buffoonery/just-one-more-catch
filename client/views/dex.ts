@@ -125,7 +125,7 @@ function spot(place: string, rows: Row[]) {
         : [],
     own = (b: [string, boolean][]) =>
       b.filter((x) => !shared.some((y) => y[0] === x[0]));
-  return `<div class="spot"><div class="pn">${place}${isHere(place) ? `<span class="here-tag">You are here</span>` : ""}</div>${tags(shared)}${bits.map((b) => tags(own(b))).join("")}</div>`;
+  return `<div class="spot"><div class="pn">${place}${isHere(place) ? `<span class="here-tag">Selected</span>` : ""}</div>${tags(shared)}${bits.map((b) => tags(own(b))).join("")}</div>`;
 }
 export function fillSpecies(n: number) {
   const p = byN[n],

@@ -106,12 +106,12 @@ const SECTIONS = [
   ["next", "Next catch", "Disabling this removes the big suggestion card"],
   [
     "near",
-    "You are here",
-    "Disabling this hides the place you're at from Around you",
+    "Selected area",
+    "Disabling this hides the selected area from Nearby areas",
   ],
   [
     "chapter",
-    "Around you",
+    "Nearby areas",
     "Disabling this hides the other places in your current chapter",
   ],
   [
@@ -266,7 +266,7 @@ export function Journey() {
     <div class="where-row">
       <h1 class="lg" id="where-h">${r.here}</h1>
       <span class="where-chev" aria-hidden="true"><svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span>
-      <select id="here" data-k="here" aria-label="Where you are in the game">${picker.includes(`value="${r.here}"`) ? "" : `<option selected disabled>${r.here}</option>`}${picker}</select>
+      <select id="here" data-k="here" aria-label="Selected area">${picker.includes(`value="${r.here}"`) ? "" : `<option selected disabled>${r.here}</option>`}${picker}</select>
     </div>
     <div class="where-tools">
       ${P().nightFrom ? `<button class="quietbtn" data-clock="1" data-k="clock" aria-label="Game clock: ${cap(nowTime())}, ${cap(DAYS[gameNow(r.clock).day])}. Change">${CLOCK_ICON}<b>${cap(nowTime())}</b> · ${cap(DAYS[gameNow(r.clock).day]).slice(0, 3)}</button>` : ""}
@@ -279,7 +279,7 @@ export function Journey() {
   ${
     around && curS.html
       ? `<section class="s-around" aria-labelledby="around-h">
-    <div class="sec-h"><h2 class="lg" id="around-h">Around you</h2></div>
+    <div class="sec-h"><h2 class="lg" id="around-h">Nearby areas</h2></div>
     ${curS.left || curS.later ? "" : `<p class="muted">You've caught everything in this chapter.</p>`}
     <div class="places">${curS.html}</div>
   </section>`
@@ -333,7 +333,6 @@ export function Journey() {
         done = open && !n && !cs.later && !cs.once;
       const label = open
         ? [
-            i === cur && "You are here",
             c.places.length &&
               (n || cs.later || cs.once
                 ? [n && `${n} to catch`, cs.later && `${cs.later} later`, cs.once && `${cs.once} one-time`]
@@ -347,7 +346,7 @@ export function Journey() {
             .filter((k) => !has(k))
             .map(needLabel)
             .join(", ")}${n ? ` · ${n} to catch` : ""}`;
-      return `<details class="chap" ${fold(String(i), wide && i === cur)}><summary><span class="node ${done ? "done" : open ? "wip" : ""}" aria-hidden="true">${done ? "✓" : i + 1}</span><span class="grow"><span class="t">${c.title}<span class="sr">${i === cur ? ", you are here" : ""}${done ? ", everything caught" : open ? ", in progress" : ", not reached yet"}</span></span><span class="c">${label}</span></span>${CHEV}</summary>
+      return `<details class="chap" ${fold(String(i), wide && i === cur)}><summary><span class="node ${done ? "done" : open ? "wip" : ""}" aria-hidden="true">${done ? "✓" : i + 1}</span><span class="grow"><span class="t">${c.title}<span class="sr">${done ? ", everything caught" : open ? ", in progress" : ", not reached yet"}</span></span><span class="c">${label}</span></span>${CHEV}</summary>
         ${beats(i)}${
           i === cur && around
             ? c.places.length
