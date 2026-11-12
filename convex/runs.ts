@@ -6,7 +6,7 @@ import { MAX_RUN_BYTES, MAX_RUNS, runBytes } from "../shared/limits";
 import { summarize } from "../shared/summary";
 import { VERSION_IDS } from "../shared/versions";
 import { isAvatar } from "../shared/avatars";
-import { importCaughtState, validateImportId } from "../shared/save-import";
+import { importCaughtState, validateImportId, validateImportStart } from "../shared/save-import";
 
 import { sendContact } from "./contactSpam";
 // Each run can carry up to MAX_RUN_BYTES, so batches stay well under the 16 MiB per-call read limit
@@ -84,22 +84,23 @@ export const create = mutation({
 });
 
 export const importCaught = mutation({
-  args: { version: v.string(), caught: v.array(v.number()), importId: v.string() },
+  args: { version: v.string(), caught: v.array(v.number()), importId: v.string(), startedAt: v.optional(v.number()) },
   returns: v.string(),
-  handler: async (ctx, { version, caught, importId }) => {
+  handler: async (ctx, { version, caught, importId, startedAt }) => {
     const who = await owner(ctx);
     validateImportId(importId);
+    validateImportStart(startedAt);
     const state = importCaughtState(version, caught);
     const existing = await ctx.db.query("runs")
       .withIndex("by_owner_importId", (q) => q.eq("owner", who).eq("importId", importId))
       .unique();
     if (existing) {
-      if (existing.version !== version || (await stateOf(ctx, existing._id))?.state !== state)
+      if (existing.version !== version || (await stateOf(ctx, existing._id))?.state !== state || existing.startedAt !== startedAt)
         throw new Error("Import ID already used for another playthrough");
       return existing._id as string;
     }
     if ((await ownedBy(ctx, who)).length >= MAX_RUNS) throw new Error("Too many playthroughs");
-    const id = await ctx.db.insert("runs", { owner: who, version, importId, summary: summarize(state) });
+    const id = await ctx.db.insert("runs", { owner: who, version, importId, startedAt, summary: summarize(state) });
     await ctx.db.insert("states", { run: id, state });
     return id as string;
   },

@@ -69,6 +69,7 @@ for (const destination of ["stay", "dashboard", "fresh-import"]) {
   page.syncRuns();
   assert.equal(ui.tab, destination === "stay" ? "dex" : destination === "dashboard" ? "playthroughs" : "import", `${destination}: a delayed account row must respect leaving the import visit`);
   assert.deepEqual(opened, destination === "stay" ? ["imported"] : []);
+  assert.equal(ui.filter, destination === "stay" ? "caught" : undefined);
   assert.equal(page.pending().pendingRun, null);
   assert.equal(page.pending().pendingImport, false);
 }

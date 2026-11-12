@@ -699,6 +699,7 @@ function syncRuns() {
       pendingImport = false;
       if (IMPORT_PATH.test(location.pathname)) history.replaceState(null, "", "/?tab=dex");
       ui.tab = "dex";
+      ui.filter = "caught";
       useRun(want);
     } else useRun(want, true, true);
     return;

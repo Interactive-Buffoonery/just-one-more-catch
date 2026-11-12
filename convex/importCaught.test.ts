@@ -31,6 +31,27 @@ describe("caught-list imports", () => {
     });
   });
 
+  it("creates the chosen start date atomically and binds retries to it", async () => {
+    const t = convexTest(schema, modules);
+    const account = t.withIdentity(identity);
+    const startedAt = new Date(2010, 2, 14).getTime();
+    const input = { importId, version: "heartgold", caught: [25], startedAt };
+    const id = await account.mutation(api.runs.importCaught, input);
+    expect((await account.query(api.runs.list, {}))[0].createdAt).toBe(new Date(startedAt).toISOString());
+    expect(await account.mutation(api.runs.importCaught, input)).toBe(id);
+    for (const changed of [undefined, startedAt + 864e5])
+      await expect(account.mutation(api.runs.importCaught, { ...input, startedAt: changed })).rejects.toThrow("Import ID already used");
+    expect(await account.query(api.runs.list, {})).toHaveLength(1);
+  });
+
+  it.each([NaN, Infinity, -1, 1.5, Date.now() + 3 * 864e5])("rejects invalid start dates before creating anything: %s", async (startedAt) => {
+    const t = convexTest(schema, modules);
+    const account = t.withIdentity(identity);
+    await expect(account.mutation(api.runs.importCaught, { importId, version: "heartgold", caught: [25], startedAt })).rejects.toThrow("Pick a past date");
+    expect(await account.query(api.runs.list, {})).toEqual([]);
+    await t.run(async ctx => { expect(await ctx.db.query("states").take(1)).toEqual([]); });
+  });
+
   it("requires authentication and enforces ownership after import", async () => {
     const t = convexTest(schema, modules);
     await expect(t.mutation(api.runs.importCaught, { importId, version: "crystal", caught: [1] })).rejects.toThrow("Sign in first");

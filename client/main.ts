@@ -164,7 +164,7 @@ async function startTracker() {
     },
     signOut: () => void clerk?.signOut(),
     createRun: (version) => convex.mutation(api.runs.create, { version }),
-    importRun: async (version, caught, importId) => {
+    importRun: async (version, caught, importId, startedAt) => {
       const session = clerk?.session, target = auth.userId;
       if (!session || !target || !auth.isAuthenticated) throw new Error("Sign in first");
       // Keep retries bound to the session that confirmed the import.
@@ -176,7 +176,7 @@ async function startTracker() {
           : Promise.resolve(null));
       try {
         return await Promise.race([
-          importer.mutation(api.runs.importCaught, { version, caught, importId }),
+          importer.mutation(api.runs.importCaught, { version, caught, importId, startedAt }),
           new Promise<never>((_, reject) => {
             timer = setTimeout(() => reject(new Error("Import timed out")), 30000);
           }),

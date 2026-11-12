@@ -8,7 +8,7 @@ playthroughs stay untouched.
 
 The raw save and its file name never leave the browser and are not stored in
 localStorage, Convex or analytics. Only the selected website game and sorted
-National Pokédex IDs are persisted. Story progress, boxes, forms, gender flags,
+National Pokédex IDs and the selected playthrough start date are persisted. Story progress, boxes, forms, gender flags,
 notes, trainer details and play time are not imported. A Pokémon remains caught
 if its Pokédex flag is set, even after evolving, trading or releasing it.
 
@@ -36,6 +36,36 @@ and national limit. Skipped species and partial coverage appear in the preview.
 An unavailable Pokédex never becomes a successful empty list. A valid empty
 caught list is allowed.
 
+## Optional playthrough start date
+
+The ready preview uses a recorded adventure-start date when the reader exposes
+one, otherwise the import day. Change lets the player choose the recorded date,
+import day or another past calendar day using the existing start-date calendar.
+Cancel keeps the previous selection. Recorded dates are calendar dates from the
+console clock, so they can reflect an incorrect clock or save editing. We do not
+infer a date from play time, a Pokémon's met date or the file's timestamps.
+
+Reader schema 1 adds optional top-level `startDate` (`YYYY-MM-DD`). Release 0.1.1
+supports HeartGold/SoulSilver and Sun/Moon/Ultra Sun/Ultra Moon; only the website's
+supported packs can be imported. The source fields are PKHeX's `SecondsToStart`
+with its `DateUtil.GetDateTime2000` conversion. The reader checks each format's
+console calendar bounds and omits uninitialized zero values. Crystal and
+FireRed/LeafGreen provide no recorded date through this reader. Missing, invalid
+or future dates use import day; the preview never invents a recorded date.
+
+The website converts the selected calendar day to local midnight, matching the
+existing Dashboard start-date editor. The optional `startedAt` argument crosses
+the Bridge and is stored atomically with the new run and caught flags, both for
+guests and accounts. Existing clients can omit it. After confirming once, the
+choice stays fixed for retries; players can edit the created run's start date
+later from the Dashboard. A successful import opens Dex with Caught selected.
+
+For future games, verify the actual adventure-start field, epoch, calendar
+bounds and an exported fixture through WASM before extending the reader's
+allowlist. Do not use the virtual default `SecondsToStart` from unsupported
+formats. Add absence, invalid/zero and leap-day cases as well as a real recorded
+date. Preserve the date without applying a timezone shift in the reader.
+
 ## Reader release and assets
 
 The reader comes from the Serabi fork of PKHeX.Everywhere. The website pins a
@@ -44,11 +74,11 @@ local release tarball under `vendor/`; it does not load a CDN parser. It exposes
 The dedicated host exports inspection only. The existing upstream editor APIs,
 submodule revisions and main branch remain intact in the fork.
 
-Release 0.1.0 pins source commit `417b7e2af86112eb6c0ad21fb839a00676a6849b`.
+Release 0.1.1 pins source commit `5263b86e798e9e189c1d71a127b0192ec4828b88`.
 The tarball SHA-256 is
-`2d7ab6d00335255bc32daa6a5dd393f0c7cc2499c0964f57ed353394e80d14b8`.
-Runtime assets total 19,991,966 bytes before compression, 5,591,887 with gzip,
-or 3,678,499 with Brotli. Source archives are separate optional downloads and
+`b276f63177c00ddc2e7d05da19fe6eceef2eb419d20b031e835d26668d63e732`.
+Runtime assets total 19,995,550 bytes before compression, 5,593,094 with gzip,
+or 3,677,655 with Brotli. Source archives are separate optional downloads and
 are not fetched during import. These are transfer sizes, not peak memory.
 
 `vite.config.ts` uses `scripts/save-reader-assets.ts` to copy the package assets
@@ -80,8 +110,9 @@ phantom playthrough. Both paths use `shared/save-import.ts`.
 
 Each confirmed preview has a random import ID. Retrying that same import returns
 the existing playthrough, including when the original response was lost or the
-playthrough limit has since been reached. Reusing an ID for a different game or
-caught list is rejected. The key contains no save-file information.
+playthrough limit has since been reached. Reusing an ID for a different game,
+caught list or start date is rejected. The confirmed date stays fixed during a
+retry, including after a lost response or crossing midnight. The key contains no save-file information.
 
 The current playthrough's pending edits finish before import commits. Preview
 is tied to the current account or guest browser. Changing accounts invalidates
