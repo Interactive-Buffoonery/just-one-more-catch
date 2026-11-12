@@ -15,6 +15,7 @@ const realPacks = runInNewContext(stripTypeScriptTypes(packs).replace(/^import .
 const game = readFileSync(new URL("../client/game.ts", import.meta.url), "utf8");
 const badgesWord = runInNewContext(stripTypeScriptTypes(game.slice(game.indexOf("export const badgesWord"), game.indexOf(";", game.indexOf("export const badgesWord")) + 1)).replace("export ", "") + "\nbadgesWord");
 const verOf = version => realPacks[version];
+for (const v of Object.values(realPacks)) readFileSync(new URL(`../public/covers/${v.cover ?? v.short.toLowerCase()}.jpg`, import.meta.url));
 const badgeCount = runInNewContext(stripTypeScriptTypes(source.slice(source.indexOf("const badgeCount"), source.indexOf("export const cover"))) + "\nbadgeCount", {verOf});
 const trainer = runInNewContext(stripTypeScriptTypes(source.slice(source.indexOf('const trainerCard'), source.indexOf('const signInNote'))) + '\ntrainerCard', {imageUrl: x => x,
   esc: x => x, trainerName: () => 'Trainer', partner: () => '', champion: () => false,

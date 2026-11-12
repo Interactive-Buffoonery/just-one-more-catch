@@ -35,7 +35,7 @@ export const cover = (
   cls = "",
   alt = `${v.name} box art`,
 ) =>
-  `<img class="cover ${cls}" src="${imageUrl(`/covers/${v.short.toLowerCase()}.jpg`)}" alt="${alt}" width="46" height="46">`;
+  `<img class="cover ${cls}" src="${imageUrl(`/covers/${v.cover ?? v.short.toLowerCase()}.jpg`)}" alt="${alt}" width="46" height="46">`;
 export const confirmGame = (id: string, customize = false) => {
   const v = verOf(id);
   if (customize) return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">Customize your ${esc(v.name)}${v.platform ? ` (${esc(v.platform)})` : ""} playthrough?</h2><div class="hv-actions"><button class="app-primary" data-custom="1">Customize</button><button class="app-quiet" data-close="1">Not now</button></div><p class="small muted">You can update your playthrough at any time using Customize on the Journey or Dex tab.</p></div>`;

@@ -42,6 +42,7 @@ export type Pack = {
 };
 export type Version = {
   platform?: string;
+  cover?: string;
   name: string;
   short: string;
   code: string;
@@ -272,12 +273,12 @@ export const VERSIONS: Record<VersionId, Version> = {
   },
   "firered-switch": {
     name: "FireRed", short: "FR", code: "F", gen: "Gen 3",
-    platform: "Switch", pack: FRLG, other: "LeafGreen (Switch)",
+    platform: "Switch", cover: "frs", pack: FRLG, other: "LeafGreen (Switch)",
     ring: ["fire", "fighting"],
   },
   "leafgreen-switch": {
     name: "LeafGreen", short: "LG", code: "L", gen: "Gen 3",
-    platform: "Switch", pack: FRLG, other: "FireRed (Switch)",
+    platform: "Switch", cover: "lgs", pack: FRLG, other: "FireRed (Switch)",
     ring: ["grass", "bug"],
   },
 };
