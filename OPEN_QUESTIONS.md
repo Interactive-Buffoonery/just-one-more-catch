@@ -16,19 +16,15 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 - Route 44: is all the grass reachable on foot?
 - Whirl Islands B3F: does it need Waterfall?
 - Tohjo Falls: is Surf enough for every part?
-- Mt. Silver: how do 1F Top, 2F to 4F and Top map to the cave, which of them need Rock Climb, and when does Moltres appear? (Only Mountainside and Sneasel are gated so far.)
+- Mt. Silver: how do 1F Top, 2F to 4F and Top map to the cave, and which of them need Rock Climb? (Only Mountainside and Sneasel are gated so far.)
 - Fuchsia City: are the headbutt trees behind a Cut tree?
-- Saffron Magnet Train: what triggers the Pikachu trade?
-- Silph Co.: what unlocks Steven's Beldum gift?
 - Safari Zone Desert and Rocky Beach: they need Baoba's second challenge. Model it?
 - Violet City Pokémon Center: Primo's egg codes. Model them?
 
 ## FireRed and LeafGreen
 
-- Cerulean Cave 2F: does it need anything extra?
 - Route 23: do the badge checkpoints block any encounters?
 - S.S. Anne: what can you catch before it leaves?
-- Roaming Kanto: when does the roaming beast start?
 
 ## Ultra Sun and Ultra Moon
 
