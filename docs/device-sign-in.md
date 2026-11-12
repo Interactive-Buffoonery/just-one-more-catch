@@ -28,9 +28,10 @@ revoked per device. Background is in `auth-options.md`.
 2. **Device waits:** It subscribes to `pairing.status({ id, secret })`. The
    status is pending, approved, denied or expired. The ticket is returned
    only to the holder of the secret.
-3. **Phone opens it:** The QR code links to `justonemorecatch.app/?pair=CODE`.
-   A signed-in player can also type the code under "Sign in another device".
-   The app opens an approval sheet showing the code, the device's browser
+3. **Phone opens it:** The QR code links to
+   `justonemorecatch.app/pair?code=CODE`, which lands on `/settings/devices/`.
+   A signed-in player can also type the code there under "Sign in another
+   device". The app opens an approval sheet showing the code, the device's browser
    label and when it was started. The player confirms the code matches the
    device's screen (RFC 8628 section 5.4), then approves or denies. A
    signed-out player signs in first, then lands back on the approval sheet.
@@ -49,7 +50,8 @@ revoked per device. Background is in `auth-options.md`.
 
 ## Devices list and revocation
 
-- **Account sheet:** A "Signed-in devices" list on every signed-in device,
+- **Devices page:** Settings is a page at `/settings/`, with a Devices row
+  linking to `/settings/devices/`. That page has a "Signed-in devices" list,
   from `clerk.user.getSessions()`. It shows the label from Convex (or
   Clerk's browser and OS), last active time and city, and marks this device.
   The current device can't revoke itself; Sign out covers that.
