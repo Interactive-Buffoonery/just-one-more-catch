@@ -10,6 +10,8 @@ export const VERSION_IDS = [
   "leafgreen",
   "heartgold",
   "soulsilver",
+  "sun",
+  "moon",
   "ultrasun",
   "ultramoon",
   "firered-switch",

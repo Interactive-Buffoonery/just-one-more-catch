@@ -770,3 +770,122 @@ Advance game. Ruby and Sapphire remain separate Coming Soon entries.
   attributes and `include/global.fieldmap.h` collision bits. The western
   connection reaches at most x=41; grass begins at x=49, beyond westbound
   ledges. Its encounters therefore stay with the later Route 122 approach.
+
+## Sun and Moon (`sm`)
+
+Original Nintendo 3DS releases only: `sun`/`S`, `moon`/`M`. USUM is a
+structural example, never evidence for this pack. The source/access inventory
+and remaining manual checks are in `docs/sm-access-audit.md` and
+`OPEN_QUESTIONS.md` (Sun/Moon). This is a partial encounter dataset, not a
+claim that every obtainable Pokémon or condition is represented.
+
+- **Generated encounters and numbering:** cached PokeAPI species 1–802,
+  their varieties' encounter responses, generation VII and
+  https://pokeapi.co/api/v2/pokedex/16/ (`original-alola`, 302 entries).
+  https://pokeapi.co/api/v2/version/27/ (Sun) and
+  https://pokeapi.co/api/v2/version/28/ (Moon). `scripts/build_data.py sm`
+  retains the version-specific methods, chances, levels and supplied
+  conditions; it does not supply missing encounters. National bound 802:
+  https://bulbapedia.bulbagarden.net/wiki/Pokémon_Sun_and_Moon
+  identifies 81 new species, bringing the total from 721 to 802.
+- **Story chapters and trial/grand-trial order:**
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon
+  and its `/Part_1` through `/Part_32` pages. Parts 1–4: Iki Town starters,
+  Hau'oli, Ilima/Normalium; 5–6: Route 3, Hala/Fightinium, Ten Carat Hill;
+  7–8: Akala, Paniola, Lana/Waterium; 9–10: Kiawe/Firium,
+  Mallow/Grassium; 11–12: Diglett's Tunnel, Konikoni, Olivia/Rockium,
+  Hano; 14–15: Malie, Sophocles/Electrium; 16–17: Route 12,
+  Acerola/Ghostium; 18–19: Route 15–17, Nanu/Darkinium; 20–22:
+  Aether rescue, Poni, Hapu/Groundium; 23: Vast Poni Canyon/Dragonium;
+  24: Ultra Space rescue and the first Solgaleo (Sun) or Lunala (Moon);
+  25–27: Mount Lanakila, League, Tapus; 28–32: UB missions, Necrozma,
+  Cosmog, postgame Poni. Mina has no trial in these games. Each chapter's
+  `src` identifies its principal part; the inventory links local area pages.
+- **Ride Pager, rather than HMs:**
+  https://bulbapedia.bulbagarden.net/wiki/Poké_Ride and walkthrough Parts
+  6, 8, 16, 18, 21. Hala registers Tauros after his grand trial. Lana
+  registers Lapras on entering Brooklet Hill, before her trial; the Fishing
+  Rod is her completion reward. Hapu registers Mudsdale on Route 12,
+  Grimsley registers Sharpedo on Route 15 after the Aether House detour,
+  and Hapu's grandmother registers Machamp on Ancient Poni Path. The
+  pack's `hm` entries enforce preceding story milestones for manually
+  selected tools, not fictional badge permissions for rides. Sharpedo is
+  an explicit event. Charizard/Stoutland are omitted as catch access tools.
+- **Area gates:** `data/sm.json` includes verbatim source excerpts beside
+  each requirement. Walkthrough Parts 4–6 and location pages establish
+  Verdant Cavern after Ilima, Tauros for Route 1's southern area/Ten Carat
+  Hill, and Lapras for Kala'e Bay/Melemele Sea. Brooklet Hill's Totem's Den
+  permits ordinary encounters after Lana; Lush Jungle opens after Mallow,
+  with its eastern cave behind Machamp. Route 12 requires Mudsdale.
+  Acerola's trial opens ordinary Megamart encounters and the Haina Desert
+  gate. Ruins of Life/Hope/Abundance have Machamp blocks. Sharpedo opens
+  Route 16 and the subsequent Route 17/meadow/lake branch. Vast Poni
+  Canyon's outside area is beyond the first cave's Tauros rock (Part 23);
+  its coarse inside area opens at the first cave. Resolution Cave's
+  encounter approach requires Mudsdale (Part 30); Tauros only guards an
+  optional side path. Champion gates for Poni Grove and its continuation:
+  https://bulbapedia.bulbagarden.net/wiki/Poni_Grove and Parts 29–32.
+- **Species-specific gates and gifts:**
+  https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon (Sun/Moon section)
+  gives Rowlet/Litten/Popplio at Iki Town, Eevee's Nursery egg, Route 8
+  fossil restoration, Aerodactyl at Seafolk, and Hall-of-Fame Type: Null
+  and Porygon. Fossils are purchased at Olivia's Konikoni shop: Sun sells
+  Skull/Cover; Moon sells Armor/Plume. The cache lists all four revival
+  gifts in both versions, so possession events allow a traded fossil;
+  this does not claim that all four can be purchased in one version.
+  https://bulbapedia.bulbagarden.net/wiki/In-game_trade supplies the SM
+  trades (requested species are not encoded in PokeAPI's SM conditions).
+  https://bulbapedia.bulbagarden.net/wiki/SOS_Battle unlocks SOS after
+  Ilima; early SOS rows explicitly need Normalium. Route 5's northern
+  Diglett waits for the Firium route approach:
+  https://bulbapedia.bulbagarden.net/wiki/Alola_Route_5 .
+- **Legendaries and Ultra Beasts:** walkthrough Part 24 gates Nebby's
+  capture behind the Ultra Space rescue, before the League. Part 27 and
+  https://bulbapedia.bulbagarden.net/wiki/Ruins_of_Conflict establish the
+  post-Champion Tapu encounters. Part 31 requires a party Solgaleo at
+  night or Lunala by day and the reverse world for Cosmog. Part 18 and
+  https://www.serebii.net/sunmoon/forms.shtml establish Zygarde assembly
+  with 10/50 Cells/Cores at Route 16. Parts 28–30 establish consecutive
+  missions: Nihilego; Buzzwole (Sun)/Pheromosa (Moon); Xurkitree;
+  Kartana (Sun)/Celesteela (Moon); Guzzlord; then report to Wicke before
+  Necrozma at Ten Carat Hill. Each mission is a separate event and rows
+  additionally require Champion. No USUM Wormhole legends are added.
+- **Clock:** https://bulbapedia.bulbagarden.net/wiki/Time and walkthrough
+  Part 1: Sun follows console time; Moon's day/night cycle is 12 hours
+  ahead. SM morning begins at 06:00 and night at 18:00. Weekday events
+  still follow the console calendar. Device mode offsets Moon's hour
+  only; manual mode already denotes in-game time. This differs from
+  USUM's dawn setting and is tested in `scripts/check_clock.ts`.
+- **Storage:** https://bulbapedia.bulbagarden.net/wiki/Pokémon_Storage_System
+  lists 8/16/24/32 boxes of 30 for SM; the pack uses the maximum 32×30.
+- **Forms:** https://www.serebii.net/sunmoon/alolaforms.shtml independently
+  enumerates all 18 Alolan species (API form names supply types/sprites).
+  Local defaults are Alolan; standard counterparts are trade/transfer
+  forms, including standard Raichu/Exeggutor/Marowak that cannot evolve
+  locally. https://www.serebii.net/sunmoon/forms.shtml establishes
+  persistent Oricorio styles, Midday/Midnight Lycanroc (both wild in the
+  canyon; no Dusk form), Silvally's 18 memories/types, Minior's seven core
+  colours and Zygarde's 10%/50% forms. Battle transformations are excluded.
+  The catalog is deliberately limited; see open questions for other forms.
+- **Historical evolution overrides:**
+  https://www.serebii.net/sunmoon/evolution.shtml supplies Alolan
+  Raticate/Marowak night levels, Sandslash/Ninetales Ice Stone, the
+  Vast Poni Canyon magnetic evolutions (Magnezone/Probopass/Vikavolt),
+  Lush Jungle Moss Rock, Mount Lanakila Icy Rock/Crabominable,
+  version-specific Lycanroc evolution, and Cosmoem's version-specific
+  level 53 evolution. Alolan Persian uses friendship:
+  https://www.serebii.net/pokedex-sm/053.shtml . These overrides avoid
+  importing later-game evolution locations/stones from the modern API.
+- **Excluded artifact:** https://bulbapedia.bulbagarden.net/wiki/New_Mauville
+  places New Mauville in Hoenn, in generations III/VI. Two cached Sun
+  records (Voltorb and Electrode) at `new-mauville-area` are therefore
+  dropped, with no replacement Alola encounters invented. The double-space
+  Verdant Cavern trial-site alias is normalized, preserving both raw
+  Pheromosa method records.
+- **Art:** https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon
+  supplies the generic regular/shiny art fallback used for generation VII
+  and form IDs. Existing identical USUM assets seeded the download cache;
+  `scripts/fetch_sprites.py` verifies/populates the SM paths and sprite-fit
+  metrics. Existing sourced libretro Sun/Moon box covers `su.jpg`/`mo.jpg`
+  are reused (see Coming Soon box art above). No save-file reader mapping
+  is enabled by registering these games.

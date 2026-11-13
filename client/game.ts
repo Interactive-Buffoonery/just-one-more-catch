@@ -1,7 +1,7 @@
 import { badgeName as sharedBadgeName, needLabel as sharedNeedLabel } from "./need-labels.ts";
 import { GameData, Pack, VERSIONS } from "./packs";
 import { Bridge, Mon, Row, RunRow, Species } from "./types";
-import { Clock, gameNow } from "../shared/clock";
+import { Clock, gameNow, encounterTime } from "../shared/clock";
 import { VersionId } from "../shared/versions";
 
 export const TYPE: Record<string, string> = {
@@ -79,6 +79,8 @@ export const DAYS = [
   "saturday",
 ];
 export const OK_COND: Record<string, string> = {
+  "other-captured-all-ultra-beasts": "All Ultra Beasts caught",
+  "story-progress-finished-looker-sidequest": "After the Ultra Beast missions",
   "headbutt-tree-common": "Common tree",
   "headbutt-tree-rare": "Rare tree",
   "story-progress-zephyr-badge": "After Zephyr Badge",
@@ -405,11 +407,8 @@ export const pad = (n: number) => String(n).padStart(3, "0");
 export const regionalCaught = () =>
   [...R().caught].filter((n) => byN[n]?.j).length;
 
-export const gameTime = () => {
-  const h = gameNow(R().clock).hour,
-    night = P().nightFrom ?? 24;
-  return h >= 4 && h < 10 ? "morning" : h >= 10 && h < night ? "day" : "night";
-};
+export const gameClock = (clock = R().clock) => gameNow(clock, Date.now(), ver().clockOffset);
+export const gameTime = () => encounterTime(gameClock().hour, P().morningFrom, P().nightFrom);
 export const nowTime = () => (R().timeAuto ? gameTime() : R().time);
 export const isHere = (pl: string) =>
   pl === R().here || pl.startsWith(R().here + " ");

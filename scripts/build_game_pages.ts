@@ -43,6 +43,7 @@ const games = [
   ["crystal", "crystal", "Johto and Kanto"],
   ["firered-leafgreen", "frlg", "Kanto and Sevii Islands"],
   ["heartgold-soulsilver", "hgss", "Johto and Kanto"],
+  ["sun-moon", "sm", "Alola"],
   ["ultra-sun-ultra-moon", "usum", "Alola"],
 ];
 const replace = (text: string, pattern: string | RegExp, value: string | ((...args: any[]) => string)): string => {

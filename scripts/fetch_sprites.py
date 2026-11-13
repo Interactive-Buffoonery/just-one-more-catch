@@ -25,6 +25,7 @@ ART = {
     "crystal": "pokemon/versions/generation-ii/crystal/transparent/",
     "frlg": "pokemon/versions/generation-iii/firered-leafgreen/",
     "hgss": "pokemon/versions/generation-iv/heartgold-soulsilver/",
+    "sm": "pokemon/",
     "usum": "pokemon/",
 }
 # PokeAPI badge IDs: Kanto 1–8, Johto 9–16, Hoenn 17–24, in gym order

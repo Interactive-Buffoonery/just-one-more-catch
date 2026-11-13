@@ -12,6 +12,8 @@ export const IMPORT_SPECIES_LIMITS: Record<VersionId, number> = {
   leafgreen: 386,
   heartgold: 493,
   soulsilver: 493,
+  sun: 802,
+  moon: 802,
   ultrasun: 807,
   ultramoon: 807,
   "firered-switch": 386,

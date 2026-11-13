@@ -1,0 +1,1162 @@
+{
+  "versions": {
+    "sun": "S",
+    "moon": "M"
+  },
+  "pokedex": 16,
+  "species": 802,
+  "gen": "generation-vii",
+  "forms": [
+    "rattata-alola",
+    "raticate-alola",
+    "raichu-alola",
+    "sandshrew-alola",
+    "sandslash-alola",
+    "vulpix-alola",
+    "ninetales-alola",
+    "diglett-alola",
+    "dugtrio-alola",
+    "meowth-alola",
+    "persian-alola",
+    "geodude-alola",
+    "graveler-alola",
+    "golem-alola",
+    "grimer-alola",
+    "muk-alola",
+    "exeggutor-alola",
+    "marowak-alola"
+  ],
+  "forms_src": {
+    "src": "https://bulbapedia.bulbagarden.net/wiki/Alola",
+    "quote": "The ecology of Alola is described as being diverse. While plenty of the Pokémon who live in Alola has lived with human natives for generations, plenty of new Pokémon from other regions have shown up recently as well.<ref>[https://web.archive.org/web/20161119224622/http://www.pokemon-sunmoon.com/en-us/alola-region/ Pokémon Sun and Moon official website (archive)]</ref> Alola's environmental conditions affect its Pokémon in various ways. To adapt to the unique environmental pressures of their Alolan habitats, a number of Pokémon species originally found in the [[Kanto]] region have developed [[regional form]]s named [[Alolan form]]s. Alolan {{p|Exeggutor}}, for instance, are five times as tall as those in other regions due to Alola's abundant sunlight, and Alolan {{p|Vulpix}}, which moved to snowy mountain peaks to avoid the normal habitats of other Pokémon, adapted to their new environment by becoming {{type|Ice}}. In adition to this, some Pokémon are known to only live on individual islands, due to each island's subclimates. This has also affected some Pokémon, such as {{p|Oricorio}}, who are known to change their form depending on the type of [[nectar]] and flora present on the island its found in. [[Vast Poni Canyon]], [[Blush Mountain]], [[Lush Jungle]] and [[Mount Lanakila]] are locations which can induce certain Pokémon to [[Evolution|evolve]]."
+  },
+  "drop": [
+    "^New Mauville$"
+  ],
+  "rename": {
+    "Verdant Cavern  Trial Site": "Verdant Cavern Trial Site"
+  },
+  "chapters": [
+    {
+      "title": "Melemele: Iki Town to Verdant Cavern",
+      "needs": [],
+      "places": [
+        "Iki Town",
+        "Ruins Of Conflict",
+        "Route 1",
+        "Hauoli City",
+        "Hauoli Cemetery",
+        "Route 2",
+        "Berry Fields",
+        "Verdant Cavern"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_4"
+    },
+    {
+      "title": "Route 3 and Melemele Meadow",
+      "needs": [
+        "Normalium"
+      ],
+      "places": [
+        "Route 3",
+        "Melemele Meadow",
+        "Seaward Cave",
+        "Kalae Bay",
+        "Melemele Sea"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_5"
+    },
+    {
+      "title": "Ten Carat Hill",
+      "needs": [
+        "Fightinium"
+      ],
+      "places": [
+        "Ten Carat Hill"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_6"
+    },
+    {
+      "title": "Akala: Paniola and Brooklet Hill",
+      "needs": [
+        "Fightinium"
+      ],
+      "places": [
+        "Route 4",
+        "Paniola Town",
+        "Paniola Ranch",
+        "Route 5",
+        "Brooklet Hill"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_8"
+    },
+    {
+      "title": "Route 6 to Wela Volcano Park",
+      "needs": [
+        "Waterium"
+      ],
+      "places": [
+        "Route 6",
+        "Route 7",
+        "Wela Volcano Park"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_9"
+    },
+    {
+      "title": "Route 8 and Lush Jungle",
+      "needs": [
+        "Firium"
+      ],
+      "places": [
+        "Route 8",
+        "Lush Jungle"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_10"
+    },
+    {
+      "title": "Diglett's Tunnel to Konikoni",
+      "needs": [
+        "Grassium"
+      ],
+      "places": [
+        "Digletts Tunnel",
+        "Route 9",
+        "Konikoni City",
+        "Memorial Hill",
+        "Akala Outskirts",
+        "Ruins Of Life"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_11"
+    },
+    {
+      "title": "Hano Beach and Ula'ula",
+      "needs": [
+        "Rockium"
+      ],
+      "places": [
+        "Hano Beach",
+        "Malie City",
+        "Malie Garden",
+        "Route 10",
+        "Mount Hokulani",
+        "Poke Pelago Ulaula Island Reached"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_14"
+    },
+    {
+      "title": "Routes 11 to 15",
+      "needs": [
+        "Electrium"
+      ],
+      "places": [
+        "Route 11",
+        "Route 12",
+        "Blush Mountain",
+        "Secluded Shore",
+        "Route 13",
+        "Tapu Village",
+        "Route 14",
+        "Route 15",
+        "Thrifty Megamart Abandoned Site"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_16"
+    },
+    {
+      "title": "Haina Desert to Route 17",
+      "needs": [
+        "Ghostium"
+      ],
+      "places": [
+        "Haina Desert",
+        "Ruins Of Abundance",
+        "Route 16",
+        "Ulaula Meadow",
+        "Lake Of The Sunne",
+        "Lake Of The Moone",
+        "Route 17"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_18"
+    },
+    {
+      "title": "Poni Island",
+      "needs": [
+        "Darkinium",
+        "sm-aether"
+      ],
+      "places": [
+        "Seafolk Village",
+        "Poni Wilds",
+        "Ancient Poni Path",
+        "Poni Breaker Coast",
+        "Ruins Of Hope",
+        "Exeggutor Island",
+        "Poke Pelago Poni Island Reached"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_21"
+    },
+    {
+      "title": "Vast Poni Canyon",
+      "needs": [
+        "Groundium"
+      ],
+      "places": [
+        "Vast Poni Canyon"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_23"
+    },
+    {
+      "title": "The altar and Nebby",
+      "needs": [
+        "Dragonium"
+      ],
+      "places": [
+        "Altar Of The Sunne",
+        "Altar Of The Moone"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_24"
+    },
+    {
+      "title": "Mount Lanakila",
+      "needs": [
+        "Dragonium",
+        "sm-nebby"
+      ],
+      "places": [
+        "Mount Lanakila"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_25"
+    },
+    {
+      "title": "Champion of Alola",
+      "needs": [
+        "Elite Four"
+      ],
+      "places": [
+        "Aether Paradise",
+        "Poni Grove",
+        "Poni Plains",
+        "Poni Meadow",
+        "Resolution Cave",
+        "Poni Coast",
+        "Poni Gauntlet",
+        "Poke Pelago Elite Four Defeated"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_30"
+    }
+  ],
+  "needs": {
+    "Route 1 South": {
+      "needs": [
+        "tauros"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Alola_Route_1",
+      "quote": "An isolated part of this area, which includes a different set of [[wild Pokémon]], is blocked by rocks on its northern edge (near where the paths converge) and by a [[ledge]] on its eastern edge. Once the player has completed [[Hala]]'s grand trial, this part of Route 1 becomes accessible using [[Poké Ride|Tauros Charge]]."
+    },
+    "Verdant Cavern": {
+      "needs": [
+        "Normalium"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Verdant_Cavern",
+      "quote": "Prior to completing the trial, [[wild Pokémon]] do not appear in Verdant Cavern (except trial Pokémon)."
+    },
+    "Kalae Bay": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_5",
+      "quote": "[[Kala'e Bay]] is regarded as one of the most scenic spots on [[Melemele Island]]. Though the area is accessible, it cannot be fully explored at the moment. Trainers with the ability to [[Poké Ride|cross the water]] will be able to explore the small islands and the southwest beach. A [[Fishing Rod]] will be necessary to encounter several of the marine species here."
+    },
+    "Melemele Sea": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Alola_Route_1",
+      "quote": "When the player first exits the house and triggers the conversation with [[Professor Kukui]], the professor brings the player up the western path to Route 1 proper and on to Iki Town. Following the festival in Iki Town, [[Lillie]] will bring the player to Professor Kukui's [[Pokémon Research Lab|laboratory]], which is on the beach in the southernmost part of this area. The entrance to [[Ten Carat Hill]] lies to the west of the professor's lab, though it requires [[Poké Ride|Tauros Charge]] to access. Once the player can use [[Poké Ride|Lapras Paddle]], they can get to the eastern [[Melemele Sea]] from this beach."
+    },
+    "Ten Carat Hill": {
+      "needs": [
+        "tauros"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_6",
+      "quote": "Pick up the [[X Attack]] to the right of the entrance, then head southwest. Use Tauros Charge to crash through the boulders blocking the way, then dismount to fit through the narrow path to the upper ledge. Collect the [[Super Potion]] to the north and [[Ultra Ball]] to the south, then jump down to the lower level. Break through a few more large rocks until you reach a big, heavy-looking boulder; only a [[Poké Ride|powerful Pokémon]] would be able to move it. Instead, turn northward to reach the Farthest Hollow."
+    },
+    "Brooklet Hill Totems Den": {
+      "needs": [
+        "Waterium"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Brooklet_Hill",
+      "quote": "Prior to completing the trial, [[wild Pokémon]] do not appear in Totem's Den (except trial Pokémon)."
+    },
+    "Lush Jungle East Cave": {
+      "needs": [
+        "Grassium",
+        "machamp"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Lush_Jungle",
+      "quote": "*Cave ''(accessible with [[Poké Ride|Machamp Shove]] from the east area)''"
+    },
+    "Lush Jungle": {
+      "needs": [
+        "Grassium"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Lush_Jungle",
+      "quote": "Prior to completing the trial, [[wild Pokémon]] do not appear in Lush Jungle (except trial Pokémon)."
+    },
+    "Route 12": {
+      "needs": [
+        "mudsdale"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_16",
+      "quote": "Upon reaching Route 12, it is difficult not to notice the rugged, uneven ground ahead. Just then, [[Hapu]] and her {{p|Mudsdale}} approach from the north. They have been looking for you, and Hapu says that if you are going to be traveling around [[Ula'ula Island]], then you should do it astride a Mudsdale. She registers Mudsdale Gallop in your [[Poké Ride|Ride Pager]] as thanks for helping her on [[Akala Island]]. Calling Mudsdale allows the user to cross rocky terrain, like that of Route 12. Hapu suggests continuing on to [[Tapu Village]] in the southwest before she and Mudsdale turn and leave."
+    },
+    "Thrifty Megamart Abandoned Site": {
+      "needs": [
+        "Ghostium"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_17",
+      "quote": "After the Totem Pokémon and its allies are defeated, you find yourself outside the building with [[Acerola]]. She inspects your photos and compliments you on your accomplishment, saying that it's very difficult to get a shot of {{p|Mimikyu}}. She rewards you with the [[Ghostium Z]] and teaches you the pose for {{m|Never-Ending Nightmare}}. With the trial complete, the captain gives you permission to catch the wild Pokémon in the old building, and also gives you ten [[Dusk Ball]]s. She chuckles at your recounting of the trial, saying that there is no back room to the building. She gets an uneasy feeling and wanders off, while a pair of Pikachu ears can be seen moving beyond the fence behind you..."
+    },
+    "Haina Desert": {
+      "needs": [
+        "Ghostium"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Ruins_of_Abundance",
+      "quote": "The Ruins of Abundance are located deep inside the [[Haina Desert]], at the desert's northernmost point. As a result, the ruins are completely surrounded by desert sand and rocks. As the Haina Desert is unaccessible until the {{player}} has cleared  [[Acerola]]'s [[Island challenge|trial]] at the [[Thrifty Megamart (Abandoned Site)]], the ruins are also unaccessible until that point. Like all of the other ruins of Alola, the interior consists of a path requiring [[Poké Ride|Machamp]]'s assistance to move the big stone blocks blocking the way to the innermost room, which contains Tapu Bulu's altar."
+    },
+    "Ruins Of Abundance": {
+      "needs": [
+        "Ghostium",
+        "machamp"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Ruins_of_Abundance",
+      "quote": "The Ruins of Abundance are located deep inside the [[Haina Desert]], at the desert's northernmost point. As a result, the ruins are completely surrounded by desert sand and rocks. As the Haina Desert is unaccessible until the {{player}} has cleared  [[Acerola]]'s [[Island challenge|trial]] at the [[Thrifty Megamart (Abandoned Site)]], the ruins are also unaccessible until that point. Like all of the other ruins of Alola, the interior consists of a path requiring [[Poké Ride|Machamp]]'s assistance to move the big stone blocks blocking the way to the innermost room, which contains Tapu Bulu's altar."
+    },
+    "Ruins Of Life": {
+      "needs": [
+        "machamp"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Ruins_of_Life",
+      "quote": "The Ruins of Life are located in the southern part of Akala Island, accessed via [[Memorial Hill]] and the Akala Outskirts. The ruins are surrounded by lush greenery as a result of Alola's tropical environment. Like other ruins of Alola, the interior consists of a path requiring [[Poké Ride|Machamp]]'s assistance to move the big stone blocks blocking the way to the innermost room, which contains Tapu Lele's altar."
+    },
+    "Ruins Of Hope": {
+      "needs": [
+        "machamp"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_22",
+      "quote": "Walk down the coral-encrusted pathway to reach [[Lillie]] and Mudsdale at the bottom. Enter the shrine and use [[Poké Ride|Machamp Shove]] to move the nearest stone all the way northward, then push the stone in the middle to the east. Loop around and push that second stone northward to drop it into a hole in the ground. Walk through the doorway into the second chamber to find [[Hapu]] standing atop the platform."
+    },
+    "Route 16": {
+      "needs": [
+        "sm-sharpedo"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_18",
+      "quote": "Make your way to the beach to find a man in a black-and-white kimono. This is [[Grimsley]], a former [[Elite Four]] member from the distant [[Unova]] region. He tells you that he is about to flip a coin, and asks you if it will be heads or tails. It makes no different which one is chosen, as he accepts his loss and registers [[Poké Ride|Sharpedo Jet]] in your Ride Pager. Sharpedo Jet can be used to cross bodies of water like Lapras Paddle, but can also jet forward to smash through rocks. Use your newfound ability to cross the water and continue north to {{rt|16|Alola}}."
+    },
+    "Route 17": {
+      "needs": [
+        "sm-sharpedo"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_18",
+      "quote": "Make your way to the beach to find a man in a black-and-white kimono. This is [[Grimsley]], a former [[Elite Four]] member from the distant [[Unova]] region. He tells you that he is about to flip a coin, and asks you if it will be heads or tails. It makes no different which one is chosen, as he accepts his loss and registers [[Poké Ride|Sharpedo Jet]] in your Ride Pager. Sharpedo Jet can be used to cross bodies of water like Lapras Paddle, but can also jet forward to smash through rocks. Use your newfound ability to cross the water and continue north to {{rt|16|Alola}}."
+    },
+    "Ulaula Meadow": {
+      "needs": [
+        "sm-sharpedo"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_18",
+      "quote": "Make your way to the beach to find a man in a black-and-white kimono. This is [[Grimsley]], a former [[Elite Four]] member from the distant [[Unova]] region. He tells you that he is about to flip a coin, and asks you if it will be heads or tails. It makes no different which one is chosen, as he accepts his loss and registers [[Poké Ride|Sharpedo Jet]] in your Ride Pager. Sharpedo Jet can be used to cross bodies of water like Lapras Paddle, but can also jet forward to smash through rocks. Use your newfound ability to cross the water and continue north to {{rt|16|Alola}}."
+    },
+    "Lake Of The": {
+      "needs": [
+        "sm-sharpedo"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_18",
+      "quote": "Make your way to the beach to find a man in a black-and-white kimono. This is [[Grimsley]], a former [[Elite Four]] member from the distant [[Unova]] region. He tells you that he is about to flip a coin, and asks you if it will be heads or tails. It makes no different which one is chosen, as he accepts his loss and registers [[Poké Ride|Sharpedo Jet]] in your Ride Pager. Sharpedo Jet can be used to cross bodies of water like Lapras Paddle, but can also jet forward to smash through rocks. Use your newfound ability to cross the water and continue north to {{rt|16|Alola}}."
+    },
+    "Resolution Cave": {
+      "needs": [
+        "mudsdale"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_30",
+      "quote": "Call [[Poké Ride|Mudsdale Gallop]] go west from the rocky intersection to reach an [[Elixir]]. Backtrack and head south from the intersection to fight Backpacker Maria. Collect the nearby [[Terrain Extender]] to the west and {{TM|26|Earthquake}} to the east before continuing southward. Turn east and follow the descending path to reach a large cave entrance. The final [[Ultra Beast]] can be encountered anywhere in this dimly-lit chamber, which is laid out roughly in the shape of an X. Go northward to reach another [[Zygarde Cube|Zygarde Cell]]{{sup/t|N}} along the main path, and another on the raised central platform. After capturing the final beast, report back to the restaurant in [[Seafolk Village]]."
+    },
+    "Poke Pelago Ulaula": {
+      "needs": [
+        "sm-ulaula"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Poké_Pelago",
+      "quote": "The wild Pokémon that may visit Isle Abeens depend on the player's progress through their [[island challenge]], changing when the player visits a new island or finally completes their challenge by becoming {{pkmn|Champion}}. The levels at which they can appear also vary at the same events."
+    },
+    "Vast Poni Canyon Outside": {
+      "needs": [
+        "tauros"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_23",
+      "quote": "Walk eastward to battle Veteran Harry, then continue on to fight Backpacker Perdy. Use [[Poké Ride|Tauros Charge]] to break a nearby boulder; inspect the hole beyond it to crawl through the ramp and find an [[Elixir]]. Jump the ledge and climb up the ramp. Use Tauros Charge again to break the rocks to the east for another [[Max Potion]]. ''Hidden'' [[Nugget]] near a rock atop the ramp. Go west for a [[Double Battle]] with Ace Duo Kent and Aimee. Continue westward up the hill and use Tauros Charge to clear one last rock. Head through the opening to reach the canyon exterior."
+    }
+  },
+  "methods": {
+    "super-rod": "fishing"
+  },
+  "events": [
+    {
+      "id": "sm-aether",
+      "label": "Clear Aether Paradise",
+      "q": "Did you defeat Lusamine at Aether Paradise and sail to Poni Island?",
+      "chap": 9,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_20",
+      "quote": "The next day, leave the mansion to meet up with Lillie. Gladion appears shortly after, and hands Lillie something he found downstairs: the {{key|VII|Moon Flute}}{{sup/7|S}} / {{key|VII|Sun Flute}}{{sup/7|M}}. When played together, these two instruments are said to call the Legendary Pokémon. Gladion gives you a [[Master Ball]], and asks you to help Lillie while he stays to clean up [[Aether Paradise]]. Hau catches up to the group, and Gladion offers to get everyone to the next island."
+    },
+    {
+      "id": "sm-ulaula",
+      "label": "Reach Ula'ula Island",
+      "q": "Have you arrived on Ula'ula Island?",
+      "chap": 7,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Poké_Pelago",
+      "quote": "The wild Pokémon that may visit Isle Abeens depend on the player's progress through their [[island challenge]], changing when the player visits a new island or finally completes their challenge by becoming {{pkmn|Champion}}. The levels at which they can appear also vary at the same events."
+    },
+    {
+      "id": "sm-sharpedo",
+      "label": "Get Sharpedo Jet",
+      "q": "Did Grimsley register Sharpedo Jet on Route 15?",
+      "chap": 9,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_18",
+      "quote": "Make your way to the beach to find a man in a black-and-white kimono. This is [[Grimsley]], a former [[Elite Four]] member from the distant [[Unova]] region. He tells you that he is about to flip a coin, and asks you if it will be heads or tails. It makes no different which one is chosen, as he accepts his loss and registers [[Poké Ride|Sharpedo Jet]] in your Ride Pager. Sharpedo Jet can be used to cross bodies of water like Lapras Paddle, but can also jet forward to smash through rocks. Use your newfound ability to cross the water and continue north to {{rt|16|Alola}}."
+    },
+    {
+      "id": "sm-nebby",
+      "label": "Catch Nebby at the altar",
+      "q": "Did you catch Solgaleo or Lunala at the altar after rescuing Lusamine?",
+      "chap": 12,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_24",
+      "quote": "[[Hapu]] was concerned and came looking for you, only to find a Legendary Pokémon and a strange hole in the sky, and is relieved to see you both unhurt. She believes that Lusamine will recover and tells Guzma to lift her onto Mudsdale's back. The three set off to get the woman some medical attention. Nebby indicates that it wants to continue traveling with you and Lillie, but she can't give it the fierce battles that it wants, she asks that you face it as only a Trainer can."
+    },
+    {
+      "id": "sm-cosmog",
+      "label": "Visit the reverse world with Nebby",
+      "q": "Have you entered the reverse world with Solgaleo or Lunala in your party?",
+      "chap": 14,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_31",
+      "quote": "Return to [[Poni Island]] and visit the [[Altar of the Sunne]]{{sup/7|S}} / [[Altar of the Moone]]{{sup/7|M}}. When traveling with {{p|Solgaleo}} at night, or with {{p|Lunala}} during the day, the Legendary Pokémon's power opens the dimensional distortion into an [[Ultra Wormhole]]. Traveling through the wormhole leads to the Altar of the Moone{{sup/7|S}} / Altar of the Sunne{{sup/7|M}} in an alternate version of [[Alola]] which experiences daytime at the same time as night in the real world, and vice versa. Although there is only one Legendary Pokémon involved in the main story, another {{p|Cosmog}} can be found on [[Ula'ula Island]] that would otherwise be undetectable from the real world."
+    },
+    {
+      "id": "sm-zygarde",
+      "label": "Collect at least 10 Zygarde Cells and Cores",
+      "q": "Have you collected at least 10 Zygarde Cells and Cores for the Reassembly Unit?",
+      "chap": 9,
+      "src": "https://www.serebii.net/sunmoon/forms.shtml",
+      "quote": "When you have collected 10 or 50 of them, go to the building in Route 16 where you can assemble a Zygarde."
+    },
+    {
+      "id": "sm-fossil-408",
+      "label": "Obtain a Skull Fossil",
+      "q": "Have you obtained a Skull Fossil to revive on Route 8?",
+      "chap": 6,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon",
+      "quote": "Fossils purchasable once at [[Olivia]]'s store in [[Konikoni City]]<br>Skull and Cover Fossils only available in Pokémon Sun<br>Armor and Plume Fossils only available in Pokémon Moon"
+    },
+    {
+      "id": "sm-fossil-410",
+      "label": "Obtain an Armor Fossil",
+      "q": "Have you obtained an Armor Fossil to revive on Route 8?",
+      "chap": 6,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon",
+      "quote": "Fossils purchasable once at [[Olivia]]'s store in [[Konikoni City]]<br>Skull and Cover Fossils only available in Pokémon Sun<br>Armor and Plume Fossils only available in Pokémon Moon"
+    },
+    {
+      "id": "sm-fossil-564",
+      "label": "Obtain a Cover Fossil",
+      "q": "Have you obtained a Cover Fossil to revive on Route 8?",
+      "chap": 6,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon",
+      "quote": "Fossils purchasable once at [[Olivia]]'s store in [[Konikoni City]]<br>Skull and Cover Fossils only available in Pokémon Sun<br>Armor and Plume Fossils only available in Pokémon Moon"
+    },
+    {
+      "id": "sm-fossil-566",
+      "label": "Obtain a Plume Fossil",
+      "q": "Have you obtained a Plume Fossil to revive on Route 8?",
+      "chap": 6,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon",
+      "quote": "Fossils purchasable once at [[Olivia]]'s store in [[Konikoni City]]<br>Skull and Cover Fossils only available in Pokémon Sun<br>Armor and Plume Fossils only available in Pokémon Moon"
+    },
+    {
+      "id": "sm-ub01",
+      "label": "Begin the Nihilego mission",
+      "q": "Did you join the UB Task Force and receive the Nihilego mission?",
+      "chap": 14,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_28",
+      "quote": "Two members of the [[International Police]], \"[[Looker]]\" and his boss [[Anabel]], are waiting inside the nearest room. The two are part of a secret division called the UB Task Force. Looker asks if you have encountered UB-01 Symbiont, otherwise known as {{p|Nihilego}}, and Anabel explains that the International Police refers to all Ultra Beasts by codenames. Confirm that you have indeed encountered the creature, and Anabel warns that the following info is highly classified: Symbiont was not the only Ultra Beast to appear from the Ultra Wormhole opened by [[Lusamine]]. They have confirmed the presence of another Symbiont, and have received reports of sightings of several other species of Ultra Beasts. These dangerous beings were suddenly dropped into our world, and should the creatures become combative, their orders are to eliminate them. As they are still living creatures, she and Looker would rather protect them from harm instead, leaving capture as their only option. They do not have the power to do this on their own, which is why they have asked for your assistance. Agree to join the Task Force, and Anabel requests a battle to test your strength."
+    },
+    {
+      "id": "sm-ub02",
+      "label": "Begin the Buzzwole or Pheromosa mission",
+      "q": "Did you catch Nihilego and receive the Buzzwole or Pheromosa mission?",
+      "chap": 14,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_28",
+      "quote": "Speak with [[Anabel]] to learn that she will be meeting a mysterious man with knowledge of the Ultra Beast. [[Nanu]] enters the room, and it is clear that he and Anabel know each other. He has information to suggest that there are multiple specimens involved in this latest sighting. He leaves before [[Looker]] returns and confirms Nanu's intel. Before you leave, Looker gives you another ten [[Beast Ball]]s from [[Wicke]]. Visit [[Melemele Meadow]] to find two individuals codenamed UB-02 Absorption{{sup/7|S}}, or [[Verdant Cavern]] to find four individuals codenamed UB-02 Beauty{{sup/7|M}}. Like with UB-01, each of these creatures respawn immediately if defeated or run from.",
+      "after": [
+        "sm-ub01"
+      ]
+    },
+    {
+      "id": "sm-ub03",
+      "label": "Begin the Xurkitree mission",
+      "q": "Did you catch all Buzzwole or Pheromosa and receive the Xurkitree mission?",
+      "chap": 14,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_29",
+      "quote": "When the battle is over, Mina leaves and Looker gives you ten more [[Beast Ball]]s. He informs you that the latest reports describe two specimens appearing in [[Lush Jungle]] and [[Memorial Hill]].",
+      "after": [
+        "sm-ub02"
+      ]
+    },
+    {
+      "id": "sm-ub04",
+      "label": "Begin the Kartana or Celesteela mission",
+      "q": "Did you catch both Xurkitree and receive the Kartana or Celesteela mission?",
+      "chap": 14,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_29",
+      "quote": "Visit the motel to begin the newest mission. Reports again indicate multiple specimens. Visit [[Malie Garden]] and {{rt|17|Alola}} to find four individuals codenamed UB-04 Blade{{sup/7|S}}, or Malie Garden and [[Haina Desert]] to find two individuals codenamed UB-04 Blaster{{sup/7|M}}. [[Anabel]] is still feeling unwell but leaves to protect the populated areas. [[Looker]] gives you another ten [[Beast Ball]]s to help you on your mission.",
+      "after": [
+        "sm-ub03"
+      ]
+    },
+    {
+      "id": "sm-ub05",
+      "label": "Begin the Guzzlord mission",
+      "q": "Did you catch all Kartana or Celesteela and receive the Guzzlord mission?",
+      "chap": 14,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_29",
+      "quote": "Nanu leaves, and Looker relays his latest intel to you: a single specimen, codenamed UB-05 Glutton, has been sighted near [[Poni Meadow]], and Nanu should be leading it into the nearby [[Resolution Cave]]. The mission begins, and Looker gives you another ten [[Beast Ball]]s. Head to [[Ancient Poni Path]] and go northeast.",
+      "after": [
+        "sm-ub04"
+      ]
+    },
+    {
+      "id": "sm-ub-done",
+      "label": "Complete the Ultra Beast missions",
+      "q": "Did you catch Guzzlord and report back to Wicke with Looker and Anabel?",
+      "chap": 14,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_30",
+      "quote": "Speak to [[Looker]] and he summons [[Anabel]]. Now that all of the [[Ultra Beast]]s have been contained, they must report their success to [[Wicke]] in [[Aether Paradise]]. They suggest that you meet them there as well, in the secret labs on the lower floor.",
+      "after": [
+        "sm-ub05"
+      ]
+    },
+    {
+      "id": "sm-ultra-rescue",
+      "label": "Rescue Lusamine from Ultra Space",
+      "q": "Did you defeat Lusamine in Ultra Space and return to the altar?",
+      "chap": 12,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_24",
+      "quote": "When the battle ends, Lusamine attempts to attack on her own. Lillie calls for Nebby's help, and it uses the power of its third eye to repel Lusamine's assault. She and {{p|Nihilego}} split, and her Pokémon returns to its Beast Ball as she falls to the ground. Lillie runs to her mother's side as a group of Nihilego appears and prepares to attack. The Legendary Pokémon rushes in and teleports everyone, including Lusamine and [[Guzma]], back to the [[Altar of the Sunne]]{{sup/7|S}} / [[Altar of the Moone]]{{sup/7|M}}."
+    }
+  ],
+  "row_needs": [
+    {
+      "place": "Ruins Of Conflict",
+      "n": 785,
+      "m": "static",
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Ruins_of_Conflict",
+      "quote": "In {{g|Sun and Moon}}, after the {{player}} first becomes {{pkmn|Champion}}, they will visit the Ruins with [[Lillie]] during the ending where {{p|Tapu Koko}} will challenge the player to a battle. The player can win against, lose to, catch, or run away from Tapu Koko, and the story will progress regardless of the outcome. Lillie will provide unique [[Lillie/Quotes#Pokémon Sun and Moon|dialogue]] depending on the outcome. If Tapu Koko is not caught, it will respawn on the next visit after the credits roll. If defeated or run from afterward, it will respawn after the player [[Pokémon League (Alola)/Title Defense|defends their title]]. Tapu Koko will drop a [[Tapunium Z]] following its mandatory battle."
+    },
+    {
+      "place": "Ruins Of Life",
+      "n": 786,
+      "m": "static",
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Ruins_of_Life",
+      "quote": "In both Pokémon Sun and Moon and Pokémon Ultra Sun and Ultra Moon, {{p|Tapu Lele}} appears here after becoming {{pkmn|Champion}}. If defeated or run from, it respawns after the player [[Pokémon League (Alola)/Title Defense|defends their title]]. If Tapu Lele is the first of the four [[Guardian deities]] fought, it will drop a [[Tapunium Z]] after the battle."
+    },
+    {
+      "place": "Ruins Of Abundance",
+      "n": 787,
+      "m": "static",
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Ruins_of_Abundance",
+      "quote": "In both Pokémon Sun and Moon and Pokémon Ultra Sun and Ultra Moon, {{p|Tapu Bulu}} appears here after becoming {{pkmn|Champion}}. If defeated or run from, it respawns after the player [[Pokémon League (Alola)/Title Defense|defends their title]]. If Tapu Bulu is the first of the four [[Guardian deities]] fought, it will drop a [[Tapunium Z]] after the battle."
+    },
+    {
+      "place": "Ruins Of Hope",
+      "n": 788,
+      "m": "static",
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Ruins_of_Hope",
+      "quote": "In both Pokémon Sun and Moon and Pokémon Ultra Sun and Ultra Moon, {{p|Tapu Fini}} appears here after becoming {{pkmn|Champion}}. If defeated or run from, it respawns after the player [[Pokémon League (Alola)/Title Defense|defends their title]]. If Tapu Fini is the first of the four [[Guardian deities]] fought, it will drop a [[Tapunium Z]] after the battle."
+    },
+    {
+      "place": "Altar Of The Sunne",
+      "n": 791,
+      "m": "static",
+      "needs": [
+        "sm-ultra-rescue"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_24",
+      "quote": "[[Hapu]] was concerned and came looking for you, only to find a Legendary Pokémon and a strange hole in the sky, and is relieved to see you both unhurt. She believes that Lusamine will recover and tells Guzma to lift her onto Mudsdale's back. The three set off to get the woman some medical attention. Nebby indicates that it wants to continue traveling with you and Lillie, but she can't give it the fierce battles that it wants, she asks that you face it as only a Trainer can."
+    },
+    {
+      "place": "Altar Of The Moone",
+      "n": 792,
+      "m": "static",
+      "needs": [
+        "sm-ultra-rescue"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_24",
+      "quote": "[[Hapu]] was concerned and came looking for you, only to find a Legendary Pokémon and a strange hole in the sky, and is relieved to see you both unhurt. She believes that Lusamine will recover and tells Guzma to lift her onto Mudsdale's back. The three set off to get the woman some medical attention. Nebby indicates that it wants to continue traveling with you and Lillie, but she can't give it the fierce battles that it wants, she asks that you face it as only a Trainer can."
+    },
+    {
+      "place": "Lake Of The Sunne",
+      "n": 789,
+      "m": "gift",
+      "needs": [
+        "Elite Four",
+        "sm-cosmog"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_31",
+      "quote": "Return to [[Poni Island]] and visit the [[Altar of the Sunne]]{{sup/7|S}} / [[Altar of the Moone]]{{sup/7|M}}. When traveling with {{p|Solgaleo}} at night, or with {{p|Lunala}} during the day, the Legendary Pokémon's power opens the dimensional distortion into an [[Ultra Wormhole]]. Traveling through the wormhole leads to the Altar of the Moone{{sup/7|S}} / Altar of the Sunne{{sup/7|M}} in an alternate version of [[Alola]] which experiences daytime at the same time as night in the real world, and vice versa. Although there is only one Legendary Pokémon involved in the main story, another {{p|Cosmog}} can be found on [[Ula'ula Island]] that would otherwise be undetectable from the real world."
+    },
+    {
+      "place": "Lake Of The Moone",
+      "n": 789,
+      "m": "gift",
+      "needs": [
+        "Elite Four",
+        "sm-cosmog"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_31",
+      "quote": "Return to [[Poni Island]] and visit the [[Altar of the Sunne]]{{sup/7|S}} / [[Altar of the Moone]]{{sup/7|M}}. When traveling with {{p|Solgaleo}} at night, or with {{p|Lunala}} during the day, the Legendary Pokémon's power opens the dimensional distortion into an [[Ultra Wormhole]]. Traveling through the wormhole leads to the Altar of the Moone{{sup/7|S}} / Altar of the Sunne{{sup/7|M}} in an alternate version of [[Alola]] which experiences daytime at the same time as night in the real world, and vice versa. Although there is only one Legendary Pokémon involved in the main story, another {{p|Cosmog}} can be found on [[Ula'ula Island]] that would otherwise be undetectable from the real world."
+    },
+    {
+      "place": "Aether Paradise",
+      "n": 772,
+      "m": "gift",
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Aether_Paradise",
+      "quote": "During the player's first visit, [[Lusamine]] is in the garden here. During the player's meeting with Lusamine, {{p|Nihilego|an unidentified Ultra Beast}} appears, which the player must battle. In {{g|Sun and Moon}}, after the player has become the {{pkmn|Champion}}, [[Gladion]] will be here to give the player a {{p|Type: Null}} and all of {{p|Silvally}}'s [[memory]] drives."
+    },
+    {
+      "place": "Route 15 Aether House",
+      "n": 137,
+      "m": "gift",
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon",
+      "quote": "After entering the [[Hall of Fame]]"
+    },
+    {
+      "place": "Route 16",
+      "n": 718,
+      "m": "gift",
+      "needs": [
+        "sm-zygarde"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_18",
+      "quote": "Visit the [[Aether Foundation|Aether Base]] to the east to find what looks like a rock with red, yellow, and blue markings floating in some type of machine. This is the [[Reassembly Unit]], which has two functions: assembly and separation. In conjuction with your [[Zygarde Cube]], this machine can combine [[Zygarde Cell]]s and [[Zygarde Core]]s to form a new {{p|Zygarde}}, or split the Legendary Pokémon into its separate parts. The {{DL|Zygarde|Form data|form}} that an assembled Zygarde will take depends on the number of Cells and Cores in the Zygarde Cube. "
+    },
+    {
+      "place": "Route 8 Fossil Restoration Center",
+      "n": 408,
+      "m": "gift",
+      "needs": [
+        "sm-fossil-408"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon",
+      "quote": "Fossils purchasable once at [[Olivia]]'s store in [[Konikoni City]]"
+    },
+    {
+      "place": "Route 8 Fossil Restoration Center",
+      "n": 410,
+      "m": "gift",
+      "needs": [
+        "sm-fossil-410"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon",
+      "quote": "Fossils purchasable once at [[Olivia]]'s store in [[Konikoni City]]"
+    },
+    {
+      "place": "Route 8 Fossil Restoration Center",
+      "n": 564,
+      "m": "gift",
+      "needs": [
+        "sm-fossil-564"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon",
+      "quote": "Fossils purchasable once at [[Olivia]]'s store in [[Konikoni City]]"
+    },
+    {
+      "place": "Route 8 Fossil Restoration Center",
+      "n": 566,
+      "m": "gift",
+      "needs": [
+        "sm-fossil-566"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon",
+      "quote": "Fossils purchasable once at [[Olivia]]'s store in [[Konikoni City]]"
+    },
+    {
+      "place": "Wela Volcano Park",
+      "n": 793,
+      "needs": [
+        "Elite Four",
+        "sm-ub01"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_28",
+      "quote": "A single specimen has been sighted in [[Wela Volcano Park]] and [[Diglett's Tunnel]]. Fly to either location and travel around until the creature appears in a random encounter. The creature respawns immediately if defeated or run from."
+    },
+    {
+      "place": "Digletts Tunnel",
+      "n": 793,
+      "needs": [
+        "Elite Four",
+        "sm-ub01"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_28",
+      "quote": "A single specimen has been sighted in [[Wela Volcano Park]] and [[Diglett's Tunnel]]. Fly to either location and travel around until the creature appears in a random encounter. The creature respawns immediately if defeated or run from."
+    },
+    {
+      "place": "Melemele Meadow",
+      "n": 794,
+      "needs": [
+        "Elite Four",
+        "sm-ub02"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_28",
+      "quote": "Speak with [[Anabel]] to learn that she will be meeting a mysterious man with knowledge of the Ultra Beast. [[Nanu]] enters the room, and it is clear that he and Anabel know each other. He has information to suggest that there are multiple specimens involved in this latest sighting. He leaves before [[Looker]] returns and confirms Nanu's intel. Before you leave, Looker gives you another ten [[Beast Ball]]s from [[Wicke]]. Visit [[Melemele Meadow]] to find two individuals codenamed UB-02 Absorption{{sup/7|S}}, or [[Verdant Cavern]] to find four individuals codenamed UB-02 Beauty{{sup/7|M}}. Like with UB-01, each of these creatures respawn immediately if defeated or run from."
+    },
+    {
+      "place": "Verdant Cavern",
+      "n": 795,
+      "needs": [
+        "Elite Four",
+        "sm-ub02"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_28",
+      "quote": "Speak with [[Anabel]] to learn that she will be meeting a mysterious man with knowledge of the Ultra Beast. [[Nanu]] enters the room, and it is clear that he and Anabel know each other. He has information to suggest that there are multiple specimens involved in this latest sighting. He leaves before [[Looker]] returns and confirms Nanu's intel. Before you leave, Looker gives you another ten [[Beast Ball]]s from [[Wicke]]. Visit [[Melemele Meadow]] to find two individuals codenamed UB-02 Absorption{{sup/7|S}}, or [[Verdant Cavern]] to find four individuals codenamed UB-02 Beauty{{sup/7|M}}. Like with UB-01, each of these creatures respawn immediately if defeated or run from."
+    },
+    {
+      "place": "Lush Jungle",
+      "n": 796,
+      "needs": [
+        "Elite Four",
+        "sm-ub03"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_29",
+      "quote": "When the battle is over, Mina leaves and Looker gives you ten more [[Beast Ball]]s. He informs you that the latest reports describe two specimens appearing in [[Lush Jungle]] and [[Memorial Hill]]."
+    },
+    {
+      "place": "Memorial Hill",
+      "n": 796,
+      "needs": [
+        "Elite Four",
+        "sm-ub03"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_29",
+      "quote": "When the battle is over, Mina leaves and Looker gives you ten more [[Beast Ball]]s. He informs you that the latest reports describe two specimens appearing in [[Lush Jungle]] and [[Memorial Hill]]."
+    },
+    {
+      "place": "Haina Desert",
+      "n": 797,
+      "needs": [
+        "Elite Four",
+        "sm-ub04"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_29",
+      "quote": "Visit the motel to begin the newest mission. Reports again indicate multiple specimens. Visit [[Malie Garden]] and {{rt|17|Alola}} to find four individuals codenamed UB-04 Blade{{sup/7|S}}, or Malie Garden and [[Haina Desert]] to find two individuals codenamed UB-04 Blaster{{sup/7|M}}. [[Anabel]] is still feeling unwell but leaves to protect the populated areas. [[Looker]] gives you another ten [[Beast Ball]]s to help you on your mission."
+    },
+    {
+      "place": "Malie Garden",
+      "n": 797,
+      "needs": [
+        "Elite Four",
+        "sm-ub04"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_29",
+      "quote": "Visit the motel to begin the newest mission. Reports again indicate multiple specimens. Visit [[Malie Garden]] and {{rt|17|Alola}} to find four individuals codenamed UB-04 Blade{{sup/7|S}}, or Malie Garden and [[Haina Desert]] to find two individuals codenamed UB-04 Blaster{{sup/7|M}}. [[Anabel]] is still feeling unwell but leaves to protect the populated areas. [[Looker]] gives you another ten [[Beast Ball]]s to help you on your mission."
+    },
+    {
+      "place": "Route 17",
+      "n": 798,
+      "needs": [
+        "Elite Four",
+        "sm-ub04"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_29",
+      "quote": "Visit the motel to begin the newest mission. Reports again indicate multiple specimens. Visit [[Malie Garden]] and {{rt|17|Alola}} to find four individuals codenamed UB-04 Blade{{sup/7|S}}, or Malie Garden and [[Haina Desert]] to find two individuals codenamed UB-04 Blaster{{sup/7|M}}. [[Anabel]] is still feeling unwell but leaves to protect the populated areas. [[Looker]] gives you another ten [[Beast Ball]]s to help you on your mission."
+    },
+    {
+      "place": "Malie Garden",
+      "n": 798,
+      "needs": [
+        "Elite Four",
+        "sm-ub04"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_29",
+      "quote": "Visit the motel to begin the newest mission. Reports again indicate multiple specimens. Visit [[Malie Garden]] and {{rt|17|Alola}} to find four individuals codenamed UB-04 Blade{{sup/7|S}}, or Malie Garden and [[Haina Desert]] to find two individuals codenamed UB-04 Blaster{{sup/7|M}}. [[Anabel]] is still feeling unwell but leaves to protect the populated areas. [[Looker]] gives you another ten [[Beast Ball]]s to help you on your mission."
+    },
+    {
+      "place": "Resolution Cave",
+      "n": 799,
+      "needs": [
+        "Elite Four",
+        "sm-ub05"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_29",
+      "quote": "Nanu leaves, and Looker relays his latest intel to you: a single specimen, codenamed UB-05 Glutton, has been sighted near [[Poni Meadow]], and Nanu should be leading it into the nearby [[Resolution Cave]]. The mission begins, and Looker gives you another ten [[Beast Ball]]s. Head to [[Ancient Poni Path]] and go northeast."
+    },
+    {
+      "place": "Ten Carat Hill",
+      "n": 800,
+      "needs": [
+        "Elite Four",
+        "sm-ub-done"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_30",
+      "quote": "The black, reflective object that [[Looker]] saw in the sky has landed somewhere in the Farthest Hollow. It is not immediately visible and must be encountered by moving through the tall grass. Like with the [[Ultra Beast]]s, it will respawn immediately if defeated or run from."
+    },
+    {
+      "place": "Route 1 South",
+      "n": 10,
+      "m": "sos",
+      "needs": [
+        "Normalium"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/SOS_Battle",
+      "quote": "In the [[Generation VII]] [[core series]] games, once the player clears [[Ilima]]'s trial at [[Verdant Cavern]], battles with wild Pokémon can turn into SOS Battles. Trial Pokémon (excluding Totem Pokémon and the Pokémon in Lana's Ultra Sun and Ultra Moon trial), {{DL|QR Scanner|Island Scan}} Pokémon, [[Legendary Pokémon]], and [[Ultra Beast]]s do not call for help. [[Totem Pokémon]] always call for help, but use different mechanics than other wild Pokémon."
+    },
+    {
+      "place": "Route 1 West",
+      "n": 10,
+      "m": "sos",
+      "needs": [
+        "Normalium"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/SOS_Battle",
+      "quote": "In the [[Generation VII]] [[core series]] games, once the player clears [[Ilima]]'s trial at [[Verdant Cavern]], battles with wild Pokémon can turn into SOS Battles. Trial Pokémon (excluding Totem Pokémon and the Pokémon in Lana's Ultra Sun and Ultra Moon trial), {{DL|QR Scanner|Island Scan}} Pokémon, [[Legendary Pokémon]], and [[Ultra Beast]]s do not call for help. [[Totem Pokémon]] always call for help, but use different mechanics than other wild Pokémon."
+    },
+    {
+      "place": "Hauoli City Shopping District",
+      "n": 25,
+      "m": "sos",
+      "needs": [
+        "Normalium"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/SOS_Battle",
+      "quote": "In the [[Generation VII]] [[core series]] games, once the player clears [[Ilima]]'s trial at [[Verdant Cavern]], battles with wild Pokémon can turn into SOS Battles. Trial Pokémon (excluding Totem Pokémon and the Pokémon in Lana's Ultra Sun and Ultra Moon trial), {{DL|QR Scanner|Island Scan}} Pokémon, [[Legendary Pokémon]], and [[Ultra Beast]]s do not call for help. [[Totem Pokémon]] always call for help, but use different mechanics than other wild Pokémon."
+    },
+    {
+      "place": "Route 1 West",
+      "n": 25,
+      "m": "sos",
+      "needs": [
+        "Normalium"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/SOS_Battle",
+      "quote": "In the [[Generation VII]] [[core series]] games, once the player clears [[Ilima]]'s trial at [[Verdant Cavern]], battles with wild Pokémon can turn into SOS Battles. Trial Pokémon (excluding Totem Pokémon and the Pokémon in Lana's Ultra Sun and Ultra Moon trial), {{DL|QR Scanner|Island Scan}} Pokémon, [[Legendary Pokémon]], and [[Ultra Beast]]s do not call for help. [[Totem Pokémon]] always call for help, but use different mechanics than other wild Pokémon."
+    },
+    {
+      "place": "Route 1 South",
+      "n": 143,
+      "m": "sos",
+      "needs": [
+        "Normalium"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/SOS_Battle",
+      "quote": "In the [[Generation VII]] [[core series]] games, once the player clears [[Ilima]]'s trial at [[Verdant Cavern]], battles with wild Pokémon can turn into SOS Battles. Trial Pokémon (excluding Totem Pokémon and the Pokémon in Lana's Ultra Sun and Ultra Moon trial), {{DL|QR Scanner|Island Scan}} Pokémon, [[Legendary Pokémon]], and [[Ultra Beast]]s do not call for help. [[Totem Pokémon]] always call for help, but use different mechanics than other wild Pokémon."
+    },
+    {
+      "place": "Route 1 South",
+      "n": 185,
+      "m": "sos",
+      "needs": [
+        "Normalium"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/SOS_Battle",
+      "quote": "In the [[Generation VII]] [[core series]] games, once the player clears [[Ilima]]'s trial at [[Verdant Cavern]], battles with wild Pokémon can turn into SOS Battles. Trial Pokémon (excluding Totem Pokémon and the Pokémon in Lana's Ultra Sun and Ultra Moon trial), {{DL|QR Scanner|Island Scan}} Pokémon, [[Legendary Pokémon]], and [[Ultra Beast]]s do not call for help. [[Totem Pokémon]] always call for help, but use different mechanics than other wild Pokémon."
+    },
+    {
+      "place": "Hauoli City Shopping District",
+      "n": 440,
+      "m": "sos",
+      "needs": [
+        "Normalium"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/SOS_Battle",
+      "quote": "In the [[Generation VII]] [[core series]] games, once the player clears [[Ilima]]'s trial at [[Verdant Cavern]], battles with wild Pokémon can turn into SOS Battles. Trial Pokémon (excluding Totem Pokémon and the Pokémon in Lana's Ultra Sun and Ultra Moon trial), {{DL|QR Scanner|Island Scan}} Pokémon, [[Legendary Pokémon]], and [[Ultra Beast]]s do not call for help. [[Totem Pokémon]] always call for help, but use different mechanics than other wild Pokémon."
+    },
+    {
+      "place": "Route 1 South",
+      "n": 440,
+      "m": "sos",
+      "needs": [
+        "Normalium"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/SOS_Battle",
+      "quote": "In the [[Generation VII]] [[core series]] games, once the player clears [[Ilima]]'s trial at [[Verdant Cavern]], battles with wild Pokémon can turn into SOS Battles. Trial Pokémon (excluding Totem Pokémon and the Pokémon in Lana's Ultra Sun and Ultra Moon trial), {{DL|QR Scanner|Island Scan}} Pokémon, [[Legendary Pokémon]], and [[Ultra Beast]]s do not call for help. [[Totem Pokémon]] always call for help, but use different mechanics than other wild Pokémon."
+    },
+    {
+      "place": "Route 1 West",
+      "n": 440,
+      "m": "sos",
+      "needs": [
+        "Normalium"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/SOS_Battle",
+      "quote": "In the [[Generation VII]] [[core series]] games, once the player clears [[Ilima]]'s trial at [[Verdant Cavern]], battles with wild Pokémon can turn into SOS Battles. Trial Pokémon (excluding Totem Pokémon and the Pokémon in Lana's Ultra Sun and Ultra Moon trial), {{DL|QR Scanner|Island Scan}} Pokémon, [[Legendary Pokémon]], and [[Ultra Beast]]s do not call for help. [[Totem Pokémon]] always call for help, but use different mechanics than other wild Pokémon."
+    },
+    {
+      "place": "Route 5",
+      "n": 50,
+      "needs": [
+        "Firium"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Alola_Route_5",
+      "quote": "The north part of the route can only be accessed from {{rt|8|Alola}}, or by [[Poké Ride|Charizard Glide]] after entering [[Lush Jungle]]."
+    }
+  ],
+  "obtainable_forms": {
+    "19": [
+      "rattata-alola",
+      "rattata"
+    ],
+    "20": [
+      "raticate-alola",
+      "raticate"
+    ],
+    "26": [
+      "raichu-alola",
+      "raichu"
+    ],
+    "27": [
+      "sandshrew-alola",
+      "sandshrew"
+    ],
+    "28": [
+      "sandslash-alola",
+      "sandslash"
+    ],
+    "37": [
+      "vulpix-alola",
+      "vulpix"
+    ],
+    "38": [
+      "ninetales-alola",
+      "ninetales"
+    ],
+    "50": [
+      "diglett-alola",
+      "diglett"
+    ],
+    "51": [
+      "dugtrio-alola",
+      "dugtrio"
+    ],
+    "52": [
+      "meowth-alola",
+      "meowth"
+    ],
+    "53": [
+      "persian-alola",
+      "persian"
+    ],
+    "74": [
+      "geodude-alola",
+      "geodude"
+    ],
+    "75": [
+      "graveler-alola",
+      "graveler"
+    ],
+    "76": [
+      "golem-alola",
+      "golem"
+    ],
+    "88": [
+      "grimer-alola",
+      "grimer"
+    ],
+    "89": [
+      "muk-alola",
+      "muk"
+    ],
+    "103": [
+      "exeggutor-alola",
+      "exeggutor"
+    ],
+    "105": [
+      "marowak-alola",
+      "marowak"
+    ],
+    "718": [
+      "zygarde-50",
+      "zygarde-10"
+    ],
+    "741": [
+      "oricorio-baile",
+      "oricorio-pom-pom",
+      "oricorio-pau",
+      "oricorio-sensu"
+    ],
+    "745": [
+      "lycanroc-midday",
+      "lycanroc-midnight"
+    ],
+    "773": [
+      "silvally-normal",
+      "silvally-fighting",
+      "silvally-flying",
+      "silvally-poison",
+      "silvally-ground",
+      "silvally-rock",
+      "silvally-bug",
+      "silvally-ghost",
+      "silvally-steel",
+      "silvally-fire",
+      "silvally-water",
+      "silvally-grass",
+      "silvally-electric",
+      "silvally-psychic",
+      "silvally-ice",
+      "silvally-dragon",
+      "silvally-dark",
+      "silvally-fairy"
+    ],
+    "774": [
+      "minior-red",
+      "minior-orange",
+      "minior-yellow",
+      "minior-green",
+      "minior-blue",
+      "minior-indigo",
+      "minior-violet"
+    ]
+  },
+  "traded_forms": {
+    "19": [
+      "rattata"
+    ],
+    "20": [
+      "raticate"
+    ],
+    "26": [
+      "raichu"
+    ],
+    "27": [
+      "sandshrew"
+    ],
+    "28": [
+      "sandslash"
+    ],
+    "37": [
+      "vulpix"
+    ],
+    "38": [
+      "ninetales"
+    ],
+    "50": [
+      "diglett"
+    ],
+    "51": [
+      "dugtrio"
+    ],
+    "52": [
+      "meowth"
+    ],
+    "53": [
+      "persian"
+    ],
+    "74": [
+      "geodude"
+    ],
+    "75": [
+      "graveler"
+    ],
+    "76": [
+      "golem"
+    ],
+    "88": [
+      "grimer"
+    ],
+    "89": [
+      "muk"
+    ],
+    "103": [
+      "exeggutor"
+    ],
+    "105": [
+      "marowak"
+    ]
+  },
+  "evolution_overrides": {
+    "20": {
+      "evo": "Lv 20 + Night",
+      "src": "https://www.serebii.net/sunmoon/evolution.shtml"
+    },
+    "28": {
+      "evo": "Ice Stone",
+      "src": "https://www.serebii.net/sunmoon/evolution.shtml"
+    },
+    "38": {
+      "evo": "Ice Stone",
+      "src": "https://www.serebii.net/sunmoon/evolution.shtml"
+    },
+    "53": {
+      "evo": "High friendship",
+      "src": "https://www.serebii.net/pokedex-sm/053.shtml"
+    },
+    "105": {
+      "evo": "Lv 28 + Night",
+      "src": "https://www.serebii.net/sunmoon/evolution.shtml"
+    },
+    "462": {
+      "evo": "Level up at Vast Poni Canyon",
+      "src": "https://www.serebii.net/sunmoon/evolution.shtml"
+    },
+    "470": {
+      "evo": "Level up near the Moss Rock in Lush Jungle",
+      "src": "https://www.serebii.net/sunmoon/evolution.shtml"
+    },
+    "471": {
+      "evo": "Level up near the Icy Rock in Mount Lanakila",
+      "src": "https://www.serebii.net/sunmoon/evolution.shtml"
+    },
+    "476": {
+      "evo": "Level up at Vast Poni Canyon",
+      "src": "https://www.serebii.net/sunmoon/evolution.shtml"
+    },
+    "738": {
+      "evo": "Level up at Vast Poni Canyon",
+      "src": "https://www.serebii.net/sunmoon/evolution.shtml"
+    },
+    "740": {
+      "evo": "Level up at Mount Lanakila",
+      "src": "https://www.serebii.net/sunmoon/evolution.shtml"
+    },
+    "745": {
+      "evo": "Lv 25 + Day (Sun) / Night (Moon)",
+      "src": "https://www.serebii.net/sunmoon/evolution.shtml"
+    },
+    "791": {
+      "evo": "Lv 53 in Sun",
+      "src": "https://www.serebii.net/sunmoon/evolution.shtml"
+    },
+    "792": {
+      "evo": "Lv 53 in Moon",
+      "src": "https://www.serebii.net/sunmoon/evolution.shtml"
+    }
+  },
+  "form_catalog_src": {
+    "src": "https://www.serebii.net/sunmoon/forms.shtml",
+    "notes": "Alolan forms: https://www.serebii.net/sunmoon/alolaforms.shtml. Persistent Oricorio styles, both Lycanroc forms, Silvally memories, seven Minior core colours and Zygarde 10/50% forms; battle-only forms excluded."
+  }
+}

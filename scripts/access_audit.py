@@ -16,7 +16,7 @@ from urllib.parse import unquote
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 POKEAPI = os.path.join(ROOT, ".cache", "pokeapi")
 WIKI = os.path.join(ROOT, ".cache", "bulbapedia")
-PACKS = ["crystal", "hgss", "frlg", "usum"]
+PACKS = ["crystal", "hgss", "frlg", "usum", "sm"]
 
 
 def nice(slug):
@@ -57,10 +57,15 @@ def candidates(area, pack):
                  ("Bills House", "Bill's House"), ("Groundon", "Groudon"), ("Hauoli", "Hau'oli"), ("Ulaula", "Ula'ula"),
                  ("Kalae", "Kala'e"), ("Team Rockets Castle", "Team Rocket's Castle"), ("Trainers School", "Trainers' School")]:
         a = a.replace(x, y)
+    if pack == "sm":
+        if a.startswith("Poke Pelago"):
+            return ["Poké Pelago"]
+        if a == "Secluded Shore":
+            return ["Ula'ula Beach"]
     route = re.match(r"(?:Sea )?Route (\d+)", a)
     if route:
         n = int(route.group(1))
-        return [f"{'Alola' if pack == 'usum' else 'Johto' if 29 <= n <= 48 else 'Kanto'} Route {n}"]
+        return [f"{'Alola' if pack in ('usum', 'sm') else 'Johto' if 29 <= n <= 48 else 'Kanto'} Route {n}"]
     if a.startswith("Safari Zone"):
         return ["Johto Safari Zone" if pack == "hgss" else "Kanto Safari Zone"]
     if a.endswith(" Chamber"):
@@ -84,6 +89,8 @@ def page_for(area, pack, resolved):
     for t in candidates(area, pack):
         if resolved.get(t):
             return SPECIFIC.get(resolved[t], resolved[t])
+        if pack == "sm" and os.path.exists(wiki_path(t)):
+            return t
     return None
 
 

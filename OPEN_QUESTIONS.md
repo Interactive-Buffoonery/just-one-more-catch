@@ -194,3 +194,67 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 - Victory Road B2F: does the first reachable encounter tile require Rock
   Smash as well as Strength? Trace the map or check in-game; the walkthrough
   establishes Rock Smash for full traversal, not the earliest encounter.
+
+## Sun / Moon (`sm`)
+
+The initial pack is partial. Its sourced access work list is
+`docs/sm-access-audit.md`; independent review and gameplay checks remain.
+
+- **Missing PokeAPI conditions:** nearly every SM encounter-detail record
+  has an empty condition list (Necrozma is the exception). Day/night
+  availability, Island Scan weekdays, weather-dependent SOS allies, and
+  requested in-game trade species therefore cannot be represented reliably
+  from this cache. The pack retains the supplied rows/odds without inventing
+  conditions. Both versions have 28 Island Scan detail records; their
+  weekday schedule is absent. Moon's clock is implemented, but cannot
+  repair missing time-specific encounter tables.
+- **Missing places/gifts:** no SM Trainers' School encounter area, no
+  initial Akala-stage Poké Pelago table, and no Magearna QR gift appear in
+  the cache. Poké Pelago contains only Ula'ula/Poni/Champion-stage areas.
+  Magearna remains in the national/regional dex without a synthetic gift.
+  See https://bulbapedia.bulbagarden.net/wiki/QR_Scanner and
+  https://bulbapedia.bulbagarden.net/wiki/Poké_Pelago . Marshadow is also
+  a distribution-only dex entry without an ordinary encounter row.
+- **Zygarde level/form granularity:** the cache provides a level-50 gift,
+  while walkthrough Part 18 lists level 30 before Champion and 50 after.
+  The 10/50 Cell assembly event is sourced, but the single cache row is
+  retained without changing its level or distinguishing assembly forms.
+- **Fossil/trade granularity:** all four fossil revival species occur in
+  both cached versions; ownership events permit a traded fossil. Only
+  Skull/Cover are sold in Sun and Armor/Plume in Moon. Foreign fossil
+  acquisition and requested trade Pokémon are not inventory-validated.
+- **Coarse area/terrain gates:** independently trace the first reachable
+  encounter tiles inside Vast Poni Canyon's combined `Inside` and
+  `Northwest` records, including later Machamp/Lapras paths. The first
+  cave opens with the Poni grand-trial chapter; the `Outside` record
+  requires Tauros according to walkthrough Part 23. A single cache record
+  can mix later terrain with earlier encounters; no unsourced whole-area
+  Machamp/Surf requirement was added. Also verify whether Route 8's
+  Wimpod chase needs any tool beyond normal route access; the cached
+  location/walkthrough does not establish a compulsory tool gate.
+- **Resolution Cave:** Part 30 establishes Mudsdale for the approach and
+  puts Tauros on an optional item path. Verify the earliest encounter
+  tiles on a map/in-game; the pack requires Mudsdale, not Tauros.
+- **Pelago timing:** the cached Poni-stage table follows the sourced Poni
+  arrival chapter; Ula'ula has an explicit arrival event and the last
+  table requires Champion. Independently confirm stage-change timing and
+  Isle Abeens upgrade/visitation mechanics; these are coarse progression
+  stages rather than a complete Pelago simulation.
+- **Form catalog:** all 18 regional defaults/counterparts plus persistent
+  Zygarde, Oricorio, Lycanroc, Silvally and Minior forms are included.
+  Other transferred/cosmetic forms (for example Shellos, Basculin,
+  Pumpkaboo and cap Pikachu) are not exhaustively catalogued. Battle-only
+  forms are intentionally excluded. Independently audit the remaining
+  generation-VII transfer/form collection before calling it complete.
+- **Evolution text:** the source-backed overrides cover the known regional
+  and Alola-location differences. Independently audit remaining modern
+  API evolution text for any other historical differences; no exhaustive
+  SM evolution-chain/playthrough verification was performed.
+- **Second-source access review:** the cached Bulbapedia walkthrough and
+  local pages cover all 101 retained PokeAPI areas. Most terrain gates do
+  not yet have an independent map/second-source confirmation. No pret SM
+  decompilation or official SM guide was available. This is not a reason
+  to replace sourced gates with remembered USUM mechanics.
+- No browser, physical game, account sync, save-file import, live hosted
+  deployment or visual sprite review was run. Run the manual per-version
+  checklist in the access note before claiming gameplay verification.
