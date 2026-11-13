@@ -22,7 +22,7 @@ See [save-import validation](save-import.md) for verified formats and limits.
 - `scripts/check_emerald.mjs` checks historical pre-evolutions and types,
   desert gates, roaming selection, Beldum/Rayquaza/Bagon requirements,
   special methods, excluded source artifacts, version codes and sprite files.
-- Reader 0.1.2 and the website import harness passed native/raw-bit checks,
+- The vendored reader and the website import harness passed native/raw-bit checks,
   the real WASM worker and 13 guest-browser scenarios: 128 KiB files, valid
   64 KiB caught/empty/rotated files with a recovery warning, five damaged
   64 KiB cases, unsupported Ruby/Sapphire and cancellation. Inputs and an

@@ -1,6 +1,6 @@
 # Ruby/Sapphire save-import fixtures
 
-Opt-in validation of unchanged reader 0.1.2 and the built website. Generated
+Opt-in validation of vendored reader 0.1.3 and the built website. Generated
 saves and JSON receipts stay in ignored `.cache/rs-save-tests/`. No personal
 saves, ROMs or downloaded fixtures are used.
 

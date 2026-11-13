@@ -56,6 +56,21 @@ from PokeAPI and needs no source.
 - https://strategywiki.org/wiki/Pok%C3%A9mon_Ultra_Sun_and_Ultra_Moon
 - The Official Alola Region Strategy Guide (2017): `Pokèmon Ultra Sun & Pokèmon Ultra Moon The Official Alola Region Strategy Guide fix.pdf`
 
+### USUM ambush terrain and Machamp review
+
+The USUM sections of the location pages linked in `data/usum.json`'s
+`area_methods` identify rustling grass/trees/bushes, dirt/sand clouds,
+flying shadows, Dividing Peak Tunnel shadows and water splashes. These
+place/species overrides correct PokeAPI's shared bubbling-spots bucket;
+fishing methods retain their rod requirement. See `docs/usum-access-audit.md`
+for the complete row inventory and cache limitations.
+
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ultra_Sun_and_Ultra_Moon/Part_21
+  sails to Poni after clearing Aether Paradise.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ultra_Sun_and_Ultra_Moon/Part_22
+  registers Machamp Shove at Ancient Poni Path. Machamp areas therefore also
+  require the existing Aether event, including the earlier Lush Jungle cave.
+
 ## Obtainable form catalog
 
 `obtainable_forms` in each pack is an allowlist of PokeAPI pokemon-form

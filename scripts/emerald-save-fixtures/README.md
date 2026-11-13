@@ -41,7 +41,7 @@ Source references at the pinned Core revision:
 - `Saves/Util/SaveUtil.cs`: serialized save detection and 128 KiB requirement.
 - `Saves/Blocks/Gen3/SaveBlock3SmallE.cs`: Emerald security key.
 
-Reader 0.1.2 source is pinned at `8cc08fd58b9b148ecba9c9ef262703559e1979e1`.
+Original fixture-generation source is pinned at `8cc08fd58b9b148ecba9c9ef262703559e1979e1`.
 The fork adds validated half-size Emerald recovery; Core and its pin are unchanged.
 The harness writes `native-results.json`, `wasm-results.json` and
 `website-results.json` locally. Real player saves, signed-in account imports

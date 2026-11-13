@@ -38,6 +38,11 @@ A successful import requires schema version 1, the `national-dex` species
 namespace, a known official format and a website game matching the reader's
 candidate versions. Caught IDs intersect the loaded pack's actual species list
 and national limit. Skipped species, partial coverage and reader warnings appear in the preview.
+Reader 0.1.3 adds this warning when Core reports an invalid checksum for any
+loaded save: "This save's checksum doesn't match. It may have been edited or
+damaged." The save remains importable with the same caught flags and coverage.
+The preview displays this alongside any other reader warnings. Valid half-size
+Emerald saves keep their existing missing-slot warning alone.
 An unavailable Pokédex never becomes a successful empty list. A valid empty
 caught list is allowed.
 
@@ -79,11 +84,11 @@ local release tarball under `vendor/`; it does not load a CDN parser. It exposes
 The dedicated host exports inspection only. The existing upstream editor APIs,
 submodule revisions and main branch remain intact in the fork.
 
-Release 0.1.2 pins source commit `8cc08fd58b9b148ecba9c9ef262703559e1979e1`.
+Release 0.1.3 pins source commit `d666c67dc4d6d11603cdf50b13f4c431c0b95668`.
 The tarball SHA-256 is
-`f7d8d2575ac0552df2d91fa41e7f0fd6d0425bd1ad561a8d6128f30bd0fe0f2d`.
-Runtime assets total 20,149,982 bytes before compression, 5,630,428 with gzip,
-or 3,697,929 with Brotli. Source archives are separate optional downloads and
+`11016383aa45921f63ef7865f5ceb7bb6a0be1a5f49190d20dad929a5694aafe`.
+Runtime assets total 20,149,470 bytes before compression, 5,630,447 with gzip,
+or 3,699,350 with Brotli. Source archives are separate optional downloads and
 are not fetched during import. These are transfer sizes, not peak memory.
 
 `vite.config.ts` uses `scripts/save-reader-assets.ts` to copy the package assets
@@ -153,7 +158,7 @@ finish there. The UI reports that outcome instead of opening it in a new account
    Keep personal saves outside Git and public fixtures. Deploy only through the
    normal manual deployment process.
 
-Emerald uses reader 0.1.2. Its serialized fixtures exercise native detection,
+Emerald uses reader 0.1.3. Its serialized fixtures exercise native detection,
 raw-bit comparison, the published WASM worker and the built website's guest
 import flow. They cover 128 KiB `.sav` files and `.srm` drop, caught history after
 storage removal, an empty Pokédex, rotated sectors and choosing the newer slot.
@@ -167,7 +172,7 @@ Missing/duplicate sections, invalid signatures, mixed counters, bad checksums
 and 64 KiB RS/FRLG layouts are rejected. Reproduction instructions are in
 [the Emerald fixture README](../scripts/emerald-save-fixtures/README.md).
 
-Ruby/Sapphire uses the unchanged reader 0.1.2 and the pack's 386-species National
+Ruby/Sapphire uses the vendored reader 0.1.3 and the pack's 386-species National
 Dex limit. Serialized 128 KiB synthetic fixtures return `RS`, with individual
 candidates `S` and `R`; the existing paired-game choice is required. File names
 do not identify the title. Raw National Dex bits, native Core and the published
