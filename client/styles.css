@@ -836,3 +836,6 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
   .pslot:not([aria-pressed=true],.new) .nm{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .app .pslot:not([aria-pressed=true],.new){padding-right:0}
 }
+
+.dexmarker{position:absolute;right:5px;top:5px;width:15px;height:15px;border:2px solid var(--teal);border-radius:50%;z-index:1;background:var(--surface);display:grid;place-items:center;font-size:11px;font-weight:800;line-height:1;color:var(--teal)}
+.dexmarker.caught{background:var(--teal);color:var(--surface)}

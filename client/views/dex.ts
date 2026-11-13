@@ -39,6 +39,7 @@ const STATUS_TEXT: Record<string, string> = {
   other: "Evolve, breed or trade",
 };
 const SHORT: Record<string, string> = {
+  caught: "Caught",
   now: "Now",
   soon: "Other time",
   later: "Later",
@@ -61,7 +62,7 @@ const tile = (p: Species, s: string) => {
     R().trackForms && available.length > 1 ? `${collectedForms(p).size} of ${available.length} forms` : "",
   ].filter(Boolean).map((text) => `, ${text}`).join("");
   const short = ((ui.q || "").trim() || ["missing", "all"].includes(ui.filter)) && SHORT[s];
-  return `<button type="button" class="dt${s === "now" ? " n" : ""}${s === "now" || s === "caught" ? "" : " dim"}" data-${ui.bulk ? "toggle" : "open"}="${p.n}" data-k="d${p.n}" ${ui.bulk ? `aria-pressed="${s === "caught"}"` : ""} aria-label="${p.name}, number ${num(p)}, ${STATUS_TEXT[s]}${progress}">${mon(p)}<span class="nm">${p.name}</span><span class="no">#${pad(num(p))}${R().trackGenders && hasGenders(p) ? `<span class="gx" aria-hidden="true">${GENDERS.map(([g, symbol]) => `<b class="${genders.has(g) ? "on" : ""}">${symbol}</b>`).join("")}</span>` : ""}${R().trackForms && available.length > 1 ? `<i aria-hidden="true">${collectedForms(p).size}/${available.length}</i>` : short ? `<i aria-hidden="true">${short}</i>` : ""}</span></button>`;
+  return `<button type="button" class="dt${s === "now" ? " n" : ""}${s === "now" || s === "caught" ? "" : " dim"}" data-${ui.bulk ? "toggle" : "open"}="${p.n}" data-k="d${p.n}" ${ui.bulk ? `aria-pressed="${s === "caught"}"` : ""} aria-label="${p.name}, number ${num(p)}, ${STATUS_TEXT[s]}${progress}">${s === "caught" || s === "now" ? `<span class="dexmarker ${s}" aria-hidden="true">${s === "caught" ? "✓" : ""}</span>` : ""}${sprite(p, "mon")} <span class="nm">${p.name}</span><span class="no">#${pad(num(p))}${R().trackGenders && hasGenders(p) ? `<span class="gx" aria-hidden="true">${GENDERS.map(([g, symbol]) => `<b class="${genders.has(g) ? "on" : ""}">${symbol}</b>`).join("")}</span>` : ""}${R().trackForms && available.length > 1 ? `<i aria-hidden="true">${collectedForms(p).size}/${available.length}</i>` : short ? `<i aria-hidden="true">${short}</i>` : ""}</span></button>`;
 };
 const section = (title: string, list: { p: Species; s: string }[]) =>
   list.length
