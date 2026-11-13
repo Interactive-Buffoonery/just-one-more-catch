@@ -1146,10 +1146,11 @@
     },
     {
       "id": "unown-26",
-      "label": "Collect the 26 letter forms of Unown",
-      "q": "Have you collected all 26 letter forms of Unown?",
+      "label": "See all 26 letter forms of Unown",
+      "q": "Have you seen all 26 letter forms of Unown?",
       "chap": 4,
-      "src": "https://bulbapedia.bulbagarden.net/wiki/Solaceon_Ruins"
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Solaceon_Ruins",
+      "quote": "(which occurs after seeing 26 different forms of Unown)"
     },
     {
       "id": "ranger-egg",

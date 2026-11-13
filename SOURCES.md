@@ -1379,6 +1379,30 @@ Each hand-written gate/event also carries its source in `data/dp.json`.
   terrain cloaks, permanent Wormadam cloaks and western/eastern Shellos and
   Gastrodon. These plus Unown are the local form catalogs. Rotom appliances,
   Origin Giratina and Sky Shaymin are not enabled for original D/P.
+- Unown event wording: Solaceon Ruins says the Ruin Maniac finishes
+  Maniac Tunnel "after seeing 26 different forms of Unown" and the Rare Candy
+  ledge needs "encountering 26 different kinds". The game's own code agrees
+  with "seen": the Pokédex records Unown letters when one is seen
+  (`SetSeenUnownLetter`,
+  https://github.com/pret/pokediamond/blob/b623abef1b4dfe204ca50aab42447ac00c134290/arm9/src/pokedex.c#L226-L237)
+  and the only Unown-counting script command is `ScrCmd_CountSeenUnown`
+  (https://github.com/pret/pokediamond/blob/b623abef1b4dfe204ca50aab42447ac00c134290/arm9/src/scrcmd.c#L4419-L4424).
+  The Maniac's own script is a binary file in the decomp, so the exact
+  command it calls is inferred, not read.
+- Cross-checks that changed no data (cite facts only): PokeFinder lists the
+  D/P Great Marsh daily pool as 12 species before the National Dex and a
+  different 14-species list after it
+  (https://github.com/Admiral-Fish/PokeFinder/blob/3624cb7737da247f22d3afa5265a0698f8be8fc1/Core/Gen4/Encounters4.cpp#L194-L195),
+  and swaps the pick into grass slots 6 and 7
+  (same file, `modifyGreatMarsh`, L280-L287); every pool species has a Great
+  Marsh row in the pack. PKHeX lists the D/P Giratina static at Level 70 in
+  Turnback Cave, location 62
+  (https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen4/Encounters4DPPt.cs#L57).
+  pret/pokediamond keeps map collision, scripts and encounter tables as binary
+  NARC files (`files/fielddata/land_data`, `script/scr_seq_release`,
+  `encountdata`, at
+  https://github.com/pret/pokediamond/tree/b623abef1b4dfe204ca50aab42447ac00c134290/files/fielddata),
+  so no map or script text could be read for gate tracing.
 - https://bulbapedia.bulbagarden.net/wiki/Newmoon_Island,
   https://bulbapedia.bulbagarden.net/wiki/Flower_Paradise and
   https://bulbapedia.bulbagarden.net/wiki/Hall_of_Origin establish that the

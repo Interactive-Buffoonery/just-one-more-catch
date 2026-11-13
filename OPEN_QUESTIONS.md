@@ -418,12 +418,14 @@ its successful generation/check/build as verified game access.
   (Route 205 Southwest). The walkthrough lists grass and fishing together
   but does not establish grass access before the bridge opens.
 - **PokeAPI gap:** species 487 (Giratina), including its alternate variety,
-  has no Diamond/Pearl encounter detail, despite the sourced Turnback Cave
-  static. The catalog includes Giratina with zero encounter rows; no static
-  was invented. PokeAPI also supplies no Pal Park transfer encounters; those
-  are not ordinary local catches. The 161 raw areas become 158 after the
-  three never-released native event areas are excluded (Newmoon Island,
-  Flower Paradise and Hall of Origin).
+  has no Diamond/Pearl encounter detail, so it has zero rows. PKHeX agrees
+  with the sourced static: Level 70, Turnback Cave
+  (`Encounters4DPPt.cs` L57, pinned in SOURCES.md). A hand-added row needs
+  a data feature: `extra_encounters` outside an ORAS-style fallback only
+  accepts daily-outbreak rows. PokeAPI also supplies no Pal Park transfer
+  encounters; those are not ordinary local catches. The 161 raw areas become
+  158 after the three never-released native event areas are excluded
+  (Newmoon Island, Flower Paradise and Hall of Origin).
 - **Earliest encounter tiles:** walkthrough traversal requirements support
   the provisional Victory Road floor gates, but an independent collision-map
   trace is still needed for the first encounter tile on 2F/B1F and eastern
@@ -437,28 +439,31 @@ its successful generation/check/build as verified game access.
   the rocks. Independently trace the original D/P map to verify the first
   reachable fishing tile. Route 218 grass/tree Surf and Eterna Forest's Cut
   Honey Tree bypass are separately sourced and modeled at row level.
-- **Ruin Maniac:** reconcile source wording about seeing versus catching all
-  26 letter Unown. The explicit event asks whether the player collected them;
-  independently confirm the exact original D/P flag and whether the 10–25
-  intermediate cave's whole encounter table should wait for that threshold.
-  It currently shares the early cave chapter; only completed Maniac Tunnel
-  and the !/? upper room need the 26-form event.
+- **Ruin Maniac:** the event now says "seen" (Bulbapedia wording plus the
+  decomp's seen-letter Pokédex; see SOURCES.md). Still open: the exact
+  original flag, since the Maniac's script is binary, and whether the
+  10–25 intermediate cave's whole table should wait for the threshold. It
+  currently shares the early cave chapter; only Maniac Tunnel and the !/?
+  upper room need the event.
 - **Conditional encounters:** the app labels GBA dual-slot cartridge, Radar,
   swarm, Honey Tree group, Great Marsh selection, Backlot guest, held fossil,
   NPC trade request and Regigigas party conditions. It does not configure a
   cartridge, daily roll, Honey Tree timer/group or trade-party inventory.
   Honey Tree rates describe the PokeAPI group table, not overall Munchlax
   probability. Great Marsh slot numbers remain in the generated data, while
-  the UI labels them as daily Pokémon; their independent selection odds
-  have not been verified.
+  the UI labels them as daily Pokémon. PokeFinder's daily pool and slots 6–7
+  match the pack, but it takes the pick as input, so the selection odds are
+  still unverified.
 - **Source coverage:** no official guide PDF or emulator/gameplay validation
   was available. The cached walkthrough/location pages supply chapter/gate
   evidence; a second independent source for every gate remains pending.
-  `pret/pokediamond` fossil revival code was checked, but its binary map
-  scripts were not decoded for an independent access audit. Imported form
-  catalogs (for example Deoxys) are not claimed complete by this local-form
-  implementation. No browser, DS hardware, clock transition or Ranger/GBA
-  transfer interaction was exercised.
+  `pret/pokediamond` map collision, scripts and encounter tables are binary
+  NARC files, so access can't be audited from readable source; fossil
+  revival code and the Unown seen-letter code are the readable parts.
+  Imported form catalogs (for example Deoxys) are not claimed complete by
+  this local-form implementation. No browser, DS hardware, clock transition
+  or Ranger/GBA transfer interaction was exercised.
+
 ## Black 2 / White 2 (`b2w2`)
 
 - **Save imports:** synthetic caught/empty BW and B2W2 saves agree through
