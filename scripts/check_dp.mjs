@@ -1,3 +1,4 @@
+import { evaluatePacks } from './check-utils.mjs';
 import { loadGeneratedPack } from './check-utils.mjs';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
@@ -26,7 +27,7 @@ for (const p of game.dex) {
 }
 const source = readFileSync('client/game.ts', 'utf8');
 const packs = readFileSync('client/packs.ts', 'utf8');
-const pack = runInNewContext(stripTypeScriptTypes(readFileSync("shared/milestones.ts", "utf8").split("export const MILESTONES")[0]).replaceAll("export ", "") + stripTypeScriptTypes(packs.slice(packs.indexOf('const DP:'), packs.indexOf('const USUM:'))) + '\nDP');
+const pack = evaluatePacks(packs.slice(packs.indexOf('const DP:'), packs.indexOf('const USUM:')), 'DP');
 const known = new Set([...game.events.map(e => e.id), ...pack.kit.map(k => k[0]), ...pack.badges.map(b => b[0]), 'Elite Four']);
 for (const c of game.chapters) for (const n of c.needs) assert(known.has(n), n);
 for (const p of game.dex) for (const r of p.rows) for (const n of r.need || []) assert(known.has(n), n);

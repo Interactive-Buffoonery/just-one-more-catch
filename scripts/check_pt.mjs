@@ -1,3 +1,4 @@
+import { evaluatePacks } from './check-utils.mjs';
 import { loadGeneratedPack } from './check-utils.mjs';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -35,7 +36,7 @@ for (const place of ['Before Pillar 1', 'Between Pillars 1 And 2', 'Between Pill
 
 const source = readFileSync('client/game.ts', 'utf8');
 const packs = readFileSync('client/packs.ts', 'utf8');
-const platinum = runInNewContext(stripTypeScriptTypes(readFileSync("shared/milestones.ts", "utf8").split("export const MILESTONES")[0]).replaceAll("export ", "") + stripTypeScriptTypes(packs.match(/^const PLATINUM:[\s\S]*?^};/m)[0]) + '\nPLATINUM');
+const platinum = evaluatePacks(packs.match(/^const PLATINUM:[\s\S]*?^};/m)[0], 'PLATINUM');
 const run = { caught: new Set(), badges: new Set(['Elite Four']), kit: new Set(['poke-radar', 'defog', 'surf']), events: new Set() };
 const context = {
   R: () => run, P: () => platinum, EVENTS: Object.fromEntries(game.events.map(e => [e.id, e])),

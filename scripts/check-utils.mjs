@@ -10,7 +10,7 @@ export function loadGameRuntime(name) {
   const game = loadGeneratedPack(name);
   const source = readFileSync('client/game.ts', 'utf8');
   const packs = readFileSync('client/packs.ts', 'utf8');
-  const pack = runInNewContext(stripTypeScriptTypes(packs.slice(packs.indexOf('const ALOLA_KIT'), packs.indexOf('const JOHTO_KIT')) + packs.slice(packs.indexOf(`const ${name.toUpperCase()}:`), packs.indexOf('export const VERSIONS'))) + '\n' + name.toUpperCase());
+  const pack = evaluatePacks(packs.slice(packs.indexOf('const ALOLA_KIT'), packs.indexOf('const JOHTO_KIT')) + packs.slice(packs.indexOf(`const ${name.toUpperCase()}:`), packs.indexOf('export const VERSIONS')), name.toUpperCase());
   const run = { caught: new Set(), badges: new Set(pack.badges.map(b => b[0])), kit: new Set(pack.kit.map(k => k[0])), events: new Set() };
   const context = {
     R: () => run, P: () => pack, EVENTS: Object.fromEntries(game.events.map(e => [e.id, e])),
@@ -24,4 +24,9 @@ export function loadGameRuntime(name) {
   const row = source.slice(source.indexOf('export function rowStatus('), source.indexOf('export function howElse(')).replace('export ', '');
   const status = runInNewContext(stripTypeScriptTypes(has + methods + conditions + row) + '\nrowStatus', context);
   return { game, run, context, status, methods, pack };
+}
+
+export function evaluatePacks(source, expression) {
+  const milestones = readFileSync(new URL('../shared/milestones.ts', import.meta.url), 'utf8').split('export const MILESTONES')[0];
+  return runInNewContext(stripTypeScriptTypes(milestones + source).replace(/^import .*$/gm, '').replace(/^export /gm, '') + '\n' + expression);
 }
