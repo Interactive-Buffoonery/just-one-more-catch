@@ -33,4 +33,16 @@ assert len(build.rows_for(encounters("new-mauville-area"), "sapphire", 101)) == 
 assert len(build.rows_for(encounters("new-mauville-area"), "ruby", 100)) == 2
 assert len(build.rows_for(encounters("team-magma-hideout-area"), "ruby", 101)) == 2
 assert [r["m"] for r in build.rows_for(encounters("new-mauville-entrance"), "ruby", 101)] == ["walk"]
+assert build.drop_hits == {0}
+for place, version, n in [
+    ("new-mauville-area", "sapphire", 101),
+    ("new-mauville-area", "ruby", 100),
+    ("team-magma-hideout-area", "ruby", 101),
+]:
+    build.drop_hits.clear()
+    build.rows_for(encounters(place), version, n)
+    assert not build.drop_hits
+build.GAME["drop_rows"].append({"place": "New Mauville", "n": 101, "m": "static"})
+build.rows_for(encounters("new-mauville-area"), "ruby", 101)
+assert build.drop_hits == {0, 1}, "Overlapping exclusions must each record a hit"
 print("row exclusions: species, method, version and area matching ok")
