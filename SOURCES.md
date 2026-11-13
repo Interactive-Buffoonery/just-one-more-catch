@@ -1579,7 +1579,9 @@ of Diamond/Pearl; none of their chapter or HM assumptions were substituted.
   `62bdaacdca6c56a6a396f3e9911e2f922b79bba8`: each map has its own
   `encounters.json` under `res/field/maps/turnback_cave_*/`. The entrance and
   all six Pillar 1 rooms share the level 15-18 table; the six Pillar 2 rooms
-  use the level 25-28 table; the Pillar 3 rooms and `turnback_cave_pillar_room`
+  use the level 25-28 table, but only `turnback_cave_pillar_2_room_1` has a
+  level 25 Golbat in the 5% slot (as PokeAPI does); rooms 2-6 have level 28
+  there (pillar_2_room_1 encounters.json lines 28-31); the Pillar 3 rooms and `turnback_cave_pillar_room`
   use the level 35-38 table; `turnback_cave_giratina_room` uses the same
   species with level 37 Dusclops and Chimecho. No map in `res/field/maps/`
   has the level 45-48 table, so PokeAPI's After Pillar 3 walk table is
@@ -1587,6 +1589,7 @@ of Diamond/Pearl; none of their chapter or HM assumptions were substituted.
   Pillar 1, Between Pillars 1 And 2, Between Pillars 2 And 3, Pillar 2 and
   Pillar 3) all match an in-game table and stay as they are:
   https://github.com/pret/pokeplatinum/blob/62bdaacdca6c56a6a396f3e9911e2f922b79bba8/res/field/maps/turnback_cave_entrance/encounters.json
+  https://github.com/pret/pokeplatinum/blob/62bdaacdca6c56a6a396f3e9911e2f922b79bba8/res/field/maps/turnback_cave_pillar_2_room_1/encounters.json#L28-L31
   https://github.com/pret/pokeplatinum/blob/62bdaacdca6c56a6a396f3e9911e2f922b79bba8/res/field/maps/turnback_cave_pillar_2_room_2/encounters.json
   https://github.com/pret/pokeplatinum/blob/62bdaacdca6c56a6a396f3e9911e2f922b79bba8/res/field/maps/turnback_cave_pillar_room/encounters.json
   https://github.com/pret/pokeplatinum/blob/62bdaacdca6c56a6a396f3e9911e2f922b79bba8/res/field/maps/turnback_cave_giratina_room/encounters.json

@@ -598,7 +598,8 @@ and the 137-area work list in `docs/b2w2-access.md`.
   check: obtain the Old Rod at the Route 218 gate, then try fishing from the
   south bank before crossing the blocked bridge. The cached Sinnoh Route 205
   page says the grunts block only north of the stream; walkthrough Part 2
-  confirms the early Old Rod. pokeplatinum shows the grunts blocking at one tile
+  confirms the early Old Rod, and Part 3 reaches the bridge before Mars.
+  pokeplatinum shows the grunts blocking at one tile
   (x 217, z 653), pushing the player south while `VAR_VALLEY_WINDWORKS_STATE`
   is 1 ([events.json:540-546](https://github.com/pret/pokeplatinum/blob/62bdaacdca6c56a6a396f3e9911e2f922b79bba8/res/field/maps/route_205_south/events.json#L540-L546),
   [scripts.s:48-66](https://github.com/pret/pokeplatinum/blob/62bdaacdca6c56a6a396f3e9911e2f922b79bba8/res/field/maps/route_205_south/scripts.s#L48-L66)).
@@ -618,7 +619,13 @@ and the 137-area work list in `docs/b2w2-access.md`.
   traced from source. For Coronet, 2F reaches 3F through two plain warps
   ([events.json](https://github.com/pret/pokeplatinum/blob/62bdaacdca6c56a6a396f3e9911e2f922b79bba8/res/field/maps/mt_coronet_2f/events.json)),
   and only the Galactic grunts on 3F hide behind a story flag
-  (`FLAG_HIDE_MT_CORONET_GALACTIC_GRUNTS`, mt_coronet_3f/events.json).
+  (`FLAG_HIDE_MT_CORONET_GALACTIC_GRUNTS`,
+  [mt_coronet_3f/events.json:17](https://github.com/pret/pokeplatinum/blob/62bdaacdca6c56a6a396f3e9911e2f922b79bba8/res/field/maps/mt_coronet_3f/events.json#L17)).
+- Turnback Cave Golbat shows levels 25-27 in Between Pillars 1 And 2. That
+  matches only the first Pillar 2 room; rooms 2-6 give levels 27-28
+  ([pillar_2_room_1](https://github.com/pret/pokeplatinum/blob/62bdaacdca6c56a6a396f3e9911e2f922b79bba8/res/field/maps/turnback_cave_pillar_2_room_1/encounters.json#L28-L31),
+  [pillar_2_room_2](https://github.com/pret/pokeplatinum/blob/62bdaacdca6c56a6a396f3e9911e2f922b79bba8/res/field/maps/turnback_cave_pillar_2_room_2/encounters.json#L28-L31)).
+  Showing both needs a way to override PokeAPI levels in the pack.
 - Drifloon is Friday plus Mars cleared, but cannot appear on the same day
   Mars is defeated. The tracker stores an event checkbox, not its completion
   date, so cannot enforce that exception. Source: Valley Windworks and
