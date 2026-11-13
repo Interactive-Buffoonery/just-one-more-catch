@@ -55,7 +55,7 @@
     {"id": "bill", "label": "Meet Bill in Ecruteak", "q": "Did you meet Bill at the Ecruteak Pokémon Center?", "chap": 3},
     {"id": "beasts", "label": "Wake the three beasts", "q": "Did Raikou, Entei and Suicune run off in the Burned Tower?", "chap": 3, "by": "Fog"},
     {"id": "medicine", "label": "Bring Jasmine the SecretPotion", "q": "Did you give Jasmine the SecretPotion at the lighthouse?", "chap": 5, "by": "Mineral"},
-    {"id": "baoba-second", "label": "Get Baoba’s second challenge", "q": "Did Baoba call you about catching a Sandshrew in the Safari Zone?", "chap": 6},
+    {"id": "baoba-second", "label": "Get Baoba’s second challenge", "q": "Did Baoba ask you to catch a Sandshrew and show you the Area Customizer?", "chap": 6},
     {"id": "lance", "label": "Help Lance at the Rocket hideout", "q": "Did Lance open the hideout under the Mahogany shop?", "chap": 4, "by": "Glacier"},
     {"id": "radio-tower", "label": "Free the Radio Tower", "q": "Did you drive Team Rocket out of the Goldenrod Radio Tower?", "chap": 7, "by": "Rising"},
     {"id": "clair", "label": "Beat Clair", "q": "Did you beat Clair at the Blackthorn Gym?", "chap": 8, "by": "Rising"},
