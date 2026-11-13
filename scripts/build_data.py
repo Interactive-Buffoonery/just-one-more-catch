@@ -140,12 +140,16 @@ def rows_for(encounters, version, n):
                 drop_hits.update(drops)
                 if drops:
                     continue
-                cond = sorted(GAME.get("condition_replacements", {}).get(c["name"], c["name"]) for c in d["condition_values"] if c["name"] not in DEFAULT_COND)
+                raw_cond = [c["name"] for c in d["condition_values"]]
+                condition_needs = GAME.get("condition_needs", {})
+                cond = sorted(GAME.get("condition_replacements", {}).get(c, c) for c in raw_cond
+                              if c not in DEFAULT_COND and c not in GAME.get("drop_conditions", [])
+                              and (c not in condition_needs or c in GAME.get("keep_conditions", [])))
                 m = GAME.get("methods", {}).get(src, src)
                 for override in GAME.get("area_methods", []):
                     if matches(loc, override["place"]) and n in override.get("species", [n]):
                         m = override["methods"].get(src, m)
-                extra = []
+                extra = [need for c in raw_cond for need in condition_needs.get(c, [])]
                 row_place = place
                 for i, g in enumerate(GAME.get("row_needs", [])):
                     if g["n"] == n and (loc == g["place"] if g.get("exact_place") else matches(loc, g["place"])) and g.get("m", m) == m and version in g.get("versions", VERSIONS):

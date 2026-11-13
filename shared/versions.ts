@@ -12,6 +12,8 @@ export const VERSION_IDS = [
   "emerald",
   "firered",
   "leafgreen",
+  "diamond",
+  "pearl",
   "heartgold",
   "soulsilver",
   "black",

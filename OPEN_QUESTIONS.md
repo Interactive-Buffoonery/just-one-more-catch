@@ -398,3 +398,64 @@ its successful generation/check/build as verified game access.
   Night is correctly configured at 21:00. Cached X/Y rows have no ordinary
   time-of-day encounter conditions, so this does not hide a cached daytime
   encounter, but precise clock-period UI remains unverified/out of scope.
+## Diamond and Pearl (`dp`)
+
+- **Save imports:** synthetic DP caught/empty fixtures agree through native
+  Core, independent raw bits and published reader 0.1.3 WASM. The title remains
+  a required Diamond/Pearl choice; tested Platinum and HGSS layouts stay
+  separate. Obtain permitted real cartridge/emulator exports and a legitimate
+  in-game zero-caught save. Live account imports, mobile Safari and physical
+  mobile performance remain unverified. DP adventure-start date import needs
+  separate epoch/bounds, invalid-value, leap-day and exported-date checks;
+  imports use import day until those checks are complete.
+
+- **Route 205 South:** the cached Route 205 description places the first
+  grass and Honey Tree across the bridge blocked until Valley Windworks is
+  freed. Keep the walking/tree rows gated; a blanket move to chapter 1 would
+  open them too early. Independently trace the southern bank's fishing/Surf
+  access before splitting those methods into an earlier chapter. Sources:
+  `Sinnoh_Route_205` (Before the Eterna Forest) and walkthrough Part 5
+  (Route 205 Southwest). The walkthrough lists grass and fishing together
+  but does not establish grass access before the bridge opens.
+- **PokeAPI gap:** species 487 (Giratina), including its alternate variety,
+  has no Diamond/Pearl encounter detail, despite the sourced Turnback Cave
+  static. The catalog includes Giratina with zero encounter rows; no static
+  was invented. PokeAPI also supplies no Pal Park transfer encounters; those
+  are not ordinary local catches. The 161 raw areas become 158 after the
+  three never-released native event areas are excluded (Newmoon Island,
+  Flower Paradise and Hall of Origin).
+- **Earliest encounter tiles:** walkthrough traversal requirements support
+  the provisional Victory Road floor gates, but an independent collision-map
+  trace is still needed for the first encounter tile on 2F/B1F and eastern
+  passage. Check whether Strength/Rock Smash/Rock Climb are required before
+  those earliest tiles, rather than merely for full traversal. Likewise,
+  check Mt. Coronet 2F's earliest tiles before blanket Surf/Rock Climb and
+  Turnback Cave's basin entrance before adding any Rock Climb gate. Turnback
+  Cave currently uses only the sourced Hall of Fame requirement.
+- **Ravaged Path:** the initial cave is available before Rock Smash; its
+  water/fishing rows use Rock Smash provisionally because water lies beyond
+  the rocks. Independently trace the original D/P map to verify the first
+  reachable fishing tile. Route 218 grass/tree Surf and Eterna Forest's Cut
+  Honey Tree bypass are separately sourced and modeled at row level.
+- **Ruin Maniac:** reconcile source wording about seeing versus catching all
+  26 letter Unown. The explicit event asks whether the player collected them;
+  independently confirm the exact original D/P flag and whether the 10–25
+  intermediate cave's whole encounter table should wait for that threshold.
+  It currently shares the early cave chapter; only completed Maniac Tunnel
+  and the !/? upper room need the 26-form event.
+- **Conditional encounters:** the app labels GBA dual-slot cartridge, Radar,
+  swarm, Honey Tree group, Great Marsh selection, Backlot guest, held fossil,
+  NPC trade request and Regigigas party conditions. It does not configure a
+  cartridge, daily roll, Honey Tree timer/group or trade-party inventory.
+  Honey Tree rates describe the PokeAPI group table, not overall Munchlax
+  probability. Great Marsh slot numbers remain in the generated data, while
+  the UI labels them as daily Pokémon; their independent selection odds
+  have not been verified.
+- **Source coverage:** no official guide PDF or emulator/gameplay validation
+  was available. The cached walkthrough/location pages supply chapter/gate
+  evidence; a second independent source for every gate remains pending.
+  `pret/pokediamond` fossil revival code was checked, but its binary map
+  scripts were not decoded for an independent access audit. Imported form
+  catalogs (for example Deoxys) are not claimed complete by this local-form
+  implementation. No browser, DS hardware, clock transition or Ranger/GBA
+  transfer interaction was exercised.
