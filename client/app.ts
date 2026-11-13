@@ -880,7 +880,7 @@ async function onClick(e: MouseEvent) {
     r.view = r.view === "dexonly" ? r.startView : "dexonly";
   } else if (d.startview) {
     r.view = r.startView = d.startview === "dex" ? "dex" : "journey";
-  } else if (d.dexoption === "trackForms" || d.dexoption === "trackGenders" || d.dexoption === "trackTraded") {
+  } else if (d.dexoption === "trackForms" || d.dexoption === "trackGenders" || d.dexoption === "trackTraded" || d.dexoption === "trackShinyHunts") {
     r[d.dexoption] = !r[d.dexoption];
   } else if (d.showlater) r.showLater = !r.showLater;
   else if (d.event) {

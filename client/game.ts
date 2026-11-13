@@ -1,3 +1,4 @@
+import { ONE_TIME as oneTimeMethods } from "./encounter-methods.ts";
 import { badgeName as sharedBadgeName, needLabel as sharedNeedLabel } from "./need-labels.ts";
 import { GameData, Pack, VERSIONS } from "./packs";
 import { Bridge, Mon, Row, RunRow, Species } from "./types";
@@ -83,17 +84,7 @@ export const METHOD: Record<string, [string, string | null]> = {
   "island-scan": ["Island Scan", "island-scan"],
   "berry-trees": ["Berry tree", null],
 };
-export const ONE_TIME = new Set([
-  "pokemon-ranger",
-  "devon-scope",
-  "wailmer-pail",
-  "gift",
-  "gift-egg",
-  "static",
-  "squirt-bottle",
-  "pokeflute",
-  "npc-trade",
-]);
+export const ONE_TIME = oneTimeMethods;
 export const TIME: Record<string, string> = {
   "time-morning": "Morning",
   "time-day": "Day",
@@ -264,6 +255,8 @@ export type Run = {
   forms: Set<string>;
   trackForms: boolean;
   trackTraded: boolean;
+  trackShinyHunts: boolean;
+  hunt?: import("./hunt").Hunt;
   trackGenders: boolean;
   genders: Record<number, Set<string>>;
   skip: Set<number>;
@@ -310,6 +303,14 @@ function loadRun(row: RunRow, state: string): Run {
     forms: new Set((Array.isArray(s.forms) ? s.forms : []).filter((f: unknown) => typeof f === "string")),
     trackForms: s.trackForms !== false,
     trackTraded: s.trackTraded === true,
+    trackShinyHunts: s.trackShinyHunts === true,
+    hunt: s.hunt && Number.isInteger(s.hunt.species) && s.hunt.species > 0
+      && typeof s.hunt.place === "string"
+      && ["encounters", "eggs", "resets"].includes(s.hunt.unit)
+      && ["full", "masuda", "custom"].includes(s.hunt.method)
+      && Number.isFinite(s.hunt.odds) && s.hunt.odds >= 1
+      && Number.isInteger(s.hunt.count) && s.hunt.count >= 0
+      && Number.isFinite(s.hunt.startedAt) ? s.hunt : undefined,
     trackGenders: s.trackGenders === true,
     genders: Object.fromEntries(
       Object.entries(s.genders || {}).filter(([n, gs]) => /^\d+$/.test(n) && Array.isArray(gs)).map(([n, gs]) =>
@@ -344,6 +345,8 @@ export const dumpRun = (r: Run) =>
     forms: [...r.forms],
     trackForms: r.trackForms,
     trackTraded: r.trackTraded,
+    trackShinyHunts: r.trackShinyHunts,
+    hunt: r.hunt,
     trackGenders: r.trackGenders,
     genders: Object.fromEntries(Object.entries(r.genders).map(([n, gs]) => [n, [...gs]])),
     skip: [...r.skip],

@@ -741,3 +741,7 @@ The initial pack is partial. Its sourced access work list is
   and Bulbapedia's Fossil page says the fossils are absent from ORAS but can
   be transferred from X/Y. No rows are added: should the Devon gift rows offer
   "Bring Jaw Fossil / Sail Fossil (from X/Y)"?
+
+- Gen 4 Masuda odds: Serebii gives 1/2048; approximately 1/1638 is reported elsewhere. Unsettled; Masuda is disabled for Gen 4.
+- NPC trades assumed not reset-huntable (unchecked)
+- egg groups taken from current PokeAPI data; per-game changes before Sword/Shield not spot-checked

@@ -324,6 +324,7 @@ def species(n, johto):
         **({"forms": form_list(n)} if str(n) in GAME.get("obtainable_forms", {}) else {}),
         "from": name(cached(f"pokemon_species_{pre['url'].rstrip('/').split('/')[-1]}")) if pre else None,
         "evo": evo, "baby": sp["is_baby"],
+        "canBreed": any(g["name"] != "no-eggs" for g in sp["egg_groups"]),
         "rows": sorted(({**json.loads(k), "v": v} for k, v in rows.items()), key=lambda r: (r["chap"], -r["c"])),
     }
 
