@@ -202,7 +202,7 @@ export class SaveImport {
       <p class="si-privacy">${LOCK}${PRIVACY}</p>
       ${WORKS}
       ${NOT_NOW}
-      <p class="small muted si-credits"><a href="/save-reader/${__SAVE_READER_VERSION__}/README.md" target="_blank" rel="noopener">Importer credits and source</a></p>`, "Import a save");
+      <p class="small muted si-credits"><a href="/about/#save-importer" target="_blank" rel="noopener">Importer credits and source</a></p>`, "Import a save");
   }
   private loading(stage: number, progress?: { loaded: number; total: number }) {
     const keepCancel = this.options.host.querySelector("[data-import-action=cancel]") === document.activeElement;
