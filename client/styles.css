@@ -762,7 +762,7 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
 .vc b{font-size:19px}
 @media (max-width:450px){.pt .nms{font-size:14px}.vc .cover{height:84px}}
 /* Short landscape handhelds (AYN Thor) */
-@media (max-height:420px){
+@media (max-height:480px){
   .app{padding:6px 12px calc(58px + env(safe-area-inset-bottom))}
   .top{margin-bottom:6px}
   .logo,.top:has(.acct) .logo{font-size:15px}
@@ -832,7 +832,7 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
   .duo>:only-child .cover{height:70px}
   .pt .nms{font-size:14px}
 }
-@media (max-height:420px) and (max-width:560px){
+@media (max-height:480px) and (max-width:560px){
   .pslot:not([aria-pressed=true],.new) .nm{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .app .pslot:not([aria-pressed=true],.new){padding-right:0}
 }
