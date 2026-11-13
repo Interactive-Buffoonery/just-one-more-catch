@@ -594,6 +594,56 @@
       "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/Route12.asm",
       "quote": "object_event 10, 62, SPRITE_SNORLAX, STAY, DOWN, TEXT_ROUTE12_SNORLAX",
       "note": "All original Route12 grass is south of the Snorlax. The northern fishing bank is accessible without clearing it. Route16 Cut reaches only the northern enclosure, not the southern Cycling Road bypass; Surf acquisition also requires Fuchsia access. Gate walking only."
+    },
+    {
+      "place": "Cerulean City",
+      "n": 60,
+      "m": "good-rod",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/CeruleanCity.blk",
+      "quote": "Static map trace: no on-foot fishing bank; Surf from Route 24 reaches land at (2,13). See SOURCES.md, Yellow static map trace."
+    },
+    {
+      "place": "Cerulean City",
+      "n": 118,
+      "m": "super-rod",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/CeruleanCity.blk",
+      "quote": "Static map trace: no on-foot fishing bank; Surf from Route 24 reaches land at (2,13). See SOURCES.md, Yellow static map trace."
+    },
+    {
+      "place": "Cerulean City",
+      "n": 118,
+      "m": "good-rod",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/CeruleanCity.blk",
+      "quote": "Static map trace: no on-foot fishing bank; Surf from Route 24 reaches land at (2,13). See SOURCES.md, Yellow static map trace."
+    },
+    {
+      "place": "Cerulean City",
+      "n": 119,
+      "m": "super-rod",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/CeruleanCity.blk",
+      "quote": "Static map trace: no on-foot fishing bank; Surf from Route 24 reaches land at (2,13). See SOURCES.md, Yellow static map trace."
+    },
+    {
+      "place": "Cerulean City",
+      "n": 129,
+      "m": "old-rod",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/CeruleanCity.blk",
+      "quote": "Static map trace: no on-foot fishing bank; Surf from Route 24 reaches land at (2,13). See SOURCES.md, Yellow static map trace."
     }
   ],
   "evolution_overrides": {

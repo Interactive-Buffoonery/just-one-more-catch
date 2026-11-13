@@ -276,6 +276,67 @@ The source was read without building it. Paths below are relative to that tree.
   the departure trigger, not a complete Super Rod acquisition/access route;
   the timing question remains open and encounter data is unchanged.
 
+### Yellow static map trace (PR #122)
+
+A scratch Python BFS decoded the pinned source above, without building the game.
+Coordinates below are zero-based 16-pixel map squares `(x,y)`. It expanded each
+32-pixel `.blk` block through the matching `.bst` blockset and sampled the
+bottom-left tile of each square (block offsets 4, 6, 12, 14). It applied
+passable-tile lists, symmetric land/water tile-pair barriers, directional ledge
+jumps, map-connection offsets and one-based warp destinations. This is static
+map evidence, not gameplay or a reproduction of every movement script.
+
+Decoder references: [constants/map_constants.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/constants/map_constants.asm), [gfx/blocksets/overworld.bst](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/gfx/blocksets/overworld.bst), [gfx/blocksets/forest.bst](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/gfx/blocksets/forest.bst), [gfx/blocksets/cavern.bst](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/gfx/blocksets/cavern.bst), [gfx/blocksets/ship_port.bst](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/gfx/blocksets/ship_port.bst), [data/tilesets/collision_tile_ids.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/tilesets/collision_tile_ids.asm), [data/tilesets/pair_collision_tile_ids.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/tilesets/pair_collision_tile_ids.asm), [data/tilesets/ledge_tiles.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/tilesets/ledge_tiles.asm), [home/overworld.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/home/overworld.asm), [engine/overworld/player_state.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/engine/overworld/player_state.asm).
+The fishing check uses `IsNextTileShoreOrWater` (tiles `$48`, `$32`, `$14`,
+only `$14` at the dock) and `FishingInit` rejects fishing while surfing:
+[data/tilesets/water_tilesets.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/tilesets/water_tilesets.asm), [engine/items/item_effects.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/engine/items/item_effects.asm#L2108-L2138), [engine/items/item_effects.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/engine/items/item_effects.asm#L3118-L3137).
+
+- **Safari grass settled; existing data preserved.** With every object tile
+  blocked, no Surf/Strength/Cut and start Center `(14,24)`, grass `$20` is
+  reachable at Center `(12,23)` in 3 steps and North `(27,31)` in 136 steps.
+  The North witness crosses Center east warp 8 to East `(0,23)`, then East
+  warp 2 to North `(39,31)`. Both fit within the Safari step budget; no rest
+  house, water, item pickup or boulder movement is used. Reachable grass
+  squares: Center 189, East 162, North 229, West 54. Thus neither Middle nor
+  Area 2 North needs an extra HM gate. Files: [maps/SafariZoneCenter.blk](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/SafariZoneCenter.blk), [maps/SafariZoneNorth.blk](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/SafariZoneNorth.blk), [maps/SafariZoneEast.blk](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/SafariZoneEast.blk), [maps/SafariZoneWest.blk](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/SafariZoneWest.blk), [data/maps/objects/SafariZoneCenter.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/SafariZoneCenter.asm#L7-L15), [data/maps/objects/SafariZoneEast.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/SafariZoneEast.asm#L10-L14), [data/maps/objects/SafariZoneNorth.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/SafariZoneNorth.asm#L8-L16), [data/maps/objects/SafariZoneWest.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/SafariZoneWest.asm).
+- **Cerulean fishing settled; add Surf to five fishing rows.** The no-Surf
+  search includes Cerulean, Routes 4/24/25/9/5, connections and ledges, and
+  gives the player the house passages and cleared NPCs as an upper bound.
+  There is no reachable Cerulean land tile facing a fishing tile. Routes 24
+  and 25 do have reachable fishing banks; those are separate encounter maps.
+  With Surf, a second search retaining every object blocker from Route 24
+  `(5,18)` reaches the Cerulean bank `(2,13)`, facing water `(2,14)`; seven
+  Cerulean land positions allow fishing. This independently reproduces the
+  earlier coordinator/Codex traces and resolves the unsupported first-pass
+  claim based on the unrelated Bulbasaur script. Only fishing is gated;
+  Bulbasaur still uses happiness. Files: [maps/CeruleanCity.blk](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/CeruleanCity.blk), [maps/Route4.blk](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/Route4.blk), [maps/Route24.blk](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/Route24.blk), [maps/Route25.blk](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/Route25.blk), [maps/Route9.blk](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/Route9.blk), [maps/Route5.blk](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/Route5.blk), [data/maps/headers/CeruleanCity.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/headers/CeruleanCity.asm#L1-L6), [data/maps/headers/Route4.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/headers/Route4.asm), [data/maps/headers/Route24.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/headers/Route24.asm), [data/maps/headers/Route25.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/headers/Route25.asm), [data/maps/headers/Route9.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/headers/Route9.asm), [data/maps/headers/Route5.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/headers/Route5.asm), [data/maps/objects/CeruleanCity.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/CeruleanCity.asm).
+- **Seafoam ordinary floors settled; existing data preserved.** From the west
+  entrance 1F `(4,16)`, with every boulder/object blocked and no Surf inside,
+  dry floor `$05` is reached at 1F `(6,10)`, B1F `(6,5)`, B2F `(12,7)`,
+  B3F `(4,12)` and B4F `(10,7)`. The B4F witness takes 74 graph edges and
+  uses ladders 1F `(7,5)` -> B1F `(7,5)`, B1F `(13,7)` -> B2F `(13,7)`,
+  B2F `(5,13)` -> B3F `(5,12)`, B3F `(8,6)` -> B4F `(11,7)`.
+  This witness avoids all holes, water and forced-current trigger squares;
+  no Strength is needed for ordinary floor encounters. Surf remains necessary
+  to reach the island outside. The east entrance also reaches B1F/B2F/B3F
+  dry floor but the dry graph does not reach B4F from that side.
+  Files: [maps/SeafoamIslands1F.blk](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/SeafoamIslands1F.blk), [maps/SeafoamIslandsB1F.blk](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/SeafoamIslandsB1F.blk), [maps/SeafoamIslandsB2F.blk](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/SeafoamIslandsB2F.blk), [maps/SeafoamIslandsB3F.blk](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/SeafoamIslandsB3F.blk), [maps/SeafoamIslandsB4F.blk](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/SeafoamIslandsB4F.blk), [data/maps/objects/SeafoamIslands1F.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/SeafoamIslands1F.asm), [data/maps/objects/SeafoamIslandsB1F.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/SeafoamIslandsB1F.asm), [data/maps/objects/SeafoamIslandsB2F.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/SeafoamIslandsB2F.asm), [data/maps/objects/SeafoamIslandsB3F.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/SeafoamIslandsB3F.asm), [data/maps/objects/SeafoamIslandsB4F.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/SeafoamIslandsB4F.asm); cave encounter rule: [engine/battle/wild_encounters.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/engine/battle/wild_encounters.asm#L35-L72), [data/wild/maps/SeafoamIslandsB4F.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/wild/maps/SeafoamIslandsB4F.asm).
+- **Articuno narrowed.** An optimistic Surf graph can reach adjacent squares,
+  even with selected current triggers excluded. That is not a proof of the
+  actual approach: Surf state changes, forced movement and hole landings
+  are not simulated. Retain Strength and the tester question. Files:
+  [data/maps/force_bike_surf.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/force_bike_surf.asm#L11-L14), [scripts/SeafoamIslandsB3F.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/SeafoamIslandsB3F.asm), [scripts/SeafoamIslandsB4F.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/SeafoamIslandsB4F.asm#L86-L137).
+- **Dock narrowed.** Dock land `(14,1)` faces water `(13,1)` without Surf.
+  Route 12's north-gate exit `(10,22)` reaches Super Rod house warp 4 after
+  clearing Snorlax; with blockers present it does not. The house gives the
+  rod without another story check. This does not establish a full route
+  obtaining Cut and the rod while retaining dock admission, so the three
+  Super Rod rows remain unchanged. Files: [maps/VermilionDock.blk](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/VermilionDock.blk), [data/maps/objects/VermilionDock.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/VermilionDock.asm), [maps/Route12.blk](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/Route12.blk), [data/maps/objects/Route12.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/Route12.asm#L16-L30), [scripts/Route12SuperRodHouse.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/Route12SuperRodHouse.asm#L8-L27).
+- **Sanity check.** From Route 10 `(11,20)` by the Pokémon Center, the same
+  search cannot reach Power Plant without Surf; enabling Surf reaches its
+  entrance at Route 10 `(6,39)`. This agrees with the previously cited
+  Power Plant walkthrough requirement. Files: [maps/Route10.blk](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/Route10.blk), [data/maps/objects/Route10.asm](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/Route10.asm#L11-L15), [maps/PowerPlant.blk](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/PowerPlant.blk).
+
 ### Gifts, statics, trades and generation differences
 
 - https://www.serebii.net/yellow/gift.shtml plus `scripts/OaksLab.asm`:
@@ -708,7 +769,7 @@ The second pass inspected original scripts rather than accepting terrain-only sh
 - Gold/Silver Route 27: [map warps](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route27.asm) include `warp_event 26, 5, TOHJO_FALLS, 1` and `warp_event 36, 5, TOHJO_FALLS, 2`; walking behind those cave warps was an invalid shortcut in the terrain model.
 - Gold/Silver Kanto shortcut and western approaches: [Victory Road Gate](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/VictoryRoadGate.asm) keeps its east-door Black Belt until `EVENT_FOUGHT_SNORLAX`. [Route 19](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route19.asm) inserts rock blocks until `EVENT_CINNABAR_ROCKS_CLEARED`; merely reaching Fuchsia does not establish sea access. These checks reject the proposed shortcuts, rather than claiming exhaustive gameplay proof of every alternative.
 
-Yellow Cerulean fishing and Gold/Silver Mt. Mortar / Route 1 uncertainties remain in OPEN_QUESTIONS.md. No gate was removed on the basis of these rejected or unresolved flags.
+Yellow Cerulean fishing was subsequently settled by the static trace above (PR #122). Gold/Silver Mt. Mortar / Route 1 uncertainties remain in OPEN_QUESTIONS.md. No gate was removed on the basis of these rejected or unresolved flags.
 
 ### Gold/Silver: Route 13 grass access
 
