@@ -305,12 +305,13 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .save .hd .cover{grid-area:cv;width:auto;height:104px;border:0;border-radius:6px;background:none;box-shadow:5px 5px 0 var(--g-deep)}
 .save .tt{grid-area:tt;display:grid;gap:7px;min-width:0}
 .save .hd h2{font-size:44px;line-height:.95;margin:0;padding-top:6px;overflow-wrap:break-word}
-.save .hd .sub{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;margin:0;color:rgba(33,27,18,.72);font-size:13px;font-weight:600}
+.save .hd .sub{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;margin:0;color:#211b12;font-size:13px;font-weight:600}
 .dates{display:flex;flex-wrap:wrap;gap:0 12px}
 .dates>span{white-space:nowrap}
 .dates b{color:#211b12;font-weight:800}
 .save .act{grid-area:act;display:flex;align-items:center;gap:2px}
 .save .ptmenu>summary{color:#211b12}
+.app .save .go:focus-visible,.app .save .ptmenu>summary:focus-visible{outline-color:#211b12}
 .save .ptmenu .menu{color:var(--ink)}
 .reg{border:2px solid #211b12;color:#211b12;border-radius:99px;padding:1px 9px 0;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
 .champ{background:#211b12;color:var(--g);border-radius:99px;padding:3px 10px;font-size:12px;font-weight:800}
