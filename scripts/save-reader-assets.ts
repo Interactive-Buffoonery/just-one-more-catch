@@ -33,7 +33,7 @@ export function saveReaderAssets(): { version: string; plugin: Plugin } {
           catch { res.writeHead(400).end(); return; }
           if (!path.startsWith(assets + sep)) { res.writeHead(404).end(); return; }
           const fileName = req.url.slice(prefix.length).split("?")[0];
-          if (fileName === "LICENSE" || fileName === "README.md") path = join(dirname(pkgPath), fileName);
+          if (fileName === "LICENSE") path = join(dirname(pkgPath), fileName);
           const stream = createReadStream(path);
           stream.on("error", () => { if (!res.headersSent) res.writeHead(404); res.end(); });
           res.setHeader("Content-Type", path.endsWith(".wasm") ? "application/wasm" : path.endsWith(".js") ? "text/javascript" : path.endsWith(".json") ? "application/json" : "text/plain");
@@ -45,7 +45,6 @@ export function saveReaderAssets(): { version: string; plugin: Plugin } {
         mkdirSync(target, { recursive: true });
         cpSync(assets, target, { recursive: true });
         cpSync(join(dirname(pkgPath), "LICENSE"), join(target, "LICENSE"));
-        cpSync(join(dirname(pkgPath), "README.md"), join(target, "README.md"));
       },
     },
   };
