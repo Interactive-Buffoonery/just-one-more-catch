@@ -66,7 +66,8 @@ built. Scratch scripts are not included in the pack.
   [ledge and elevation rules](https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/src/event_object_movement.c#L8303-L8412).
 - **Route 23:** [map/guards/warps/connections](https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/maps/Route23/map.json),
   [blocks](https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/layouts/Route23/map.bin),
-  [badge-check scripts](https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/scripts/route23.inc#L120-L245).
+  [trigger badge numbers](https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/maps/Route23/scripts.inc#L70-L123),
+  [badge-check scripts](https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/scripts/route23.inc#L115-L208).
   Entry is (8,153), from [Route 22's north gate](https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/maps/Route22_NorthEntrance/map.json).
   BFS from gate entrance (7,10) reaches its exit (7,1) with Boulder.
   The direct Route 22 map connection has no mutually passable edge tiles;
@@ -75,7 +76,7 @@ built. Scratch scripts are not included in the pack.
   With badges through Thunder there is no reachable encounter terrain or
   fishable shore. Rainbow opens three shore edges at y=118, including
   (12,118) facing (12,117). Soul plus Surf reaches 243 water-encounter tiles
-  before Marsh. Marsh opens 60 grass tiles (y=61–76), including (8,76),
+  before Marsh. Marsh opens 60 grass tiles (y=61–76), including (18,76),
   before Volcano/Earth. With all badges but no Surf there is still no grass.
   Withholding each of Cascade, Thunder, Rainbow or Marsh separately,
   even granting Surf and all other badges, blocks grass; withholding Volcano
