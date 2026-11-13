@@ -1,6 +1,6 @@
 # Black/White save-import fixtures
 
-Opt-in validation of the unchanged published reader 0.1.2 and built website.
+Opt-in validation of the unchanged published reader 0.1.3 and built website.
 Generated saves and receipts stay in ignored `.cache/bw-save-tests/`. These
 fixtures use no personal saves, ROMs or downloaded game data.
 
@@ -52,7 +52,7 @@ Pinned Core source references:
 - `Saves/Util/SaveUtil.cs`: distinct BW/B2W2 footer detection.
 - `Saves/Substructures/Gen5/AdventureInfo5.cs`: 64-bit `SecondsToStart`.
 
-Gen V exposes an adventure-start field, but reader 0.1.2 intentionally omits it.
+Gen V exposes an adventure-start field, but reader 0.1.3 intentionally omits it.
 Caught fixtures populate that field and empty fixtures leave it zero; the worker
 must omit `startDate` for both. Epoch, valid bounds, leap days, invalid-value
 handling and exported recorded-date behavior have not been verified for a Gen V

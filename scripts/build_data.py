@@ -49,6 +49,7 @@ PLACES = [(p, i) for i, c in enumerate(GAME["chapters"]) for p in c["places"]]
 unmatched = set()
 need_hits = set()
 row_hits = set()
+drop_hits = set()
 
 
 def chapter_of(place):
@@ -133,8 +134,17 @@ def rows_for(encounters, version, n):
                 src = d["method"]["name"]
                 if src in GAME.get("drop_methods", []):
                     continue
+                drops = {i for i, g in enumerate(GAME.get("drop_rows", []))
+                         if g["n"] == n and matches(loc, g["place"]) and g.get("m", src) == src
+                         and version in g.get("versions", VERSIONS)}
+                drop_hits.update(drops)
+                if drops:
+                    continue
                 cond = sorted(GAME.get("condition_replacements", {}).get(c["name"], c["name"]) for c in d["condition_values"] if c["name"] not in DEFAULT_COND)
                 m = GAME.get("methods", {}).get(src, src)
+                for override in GAME.get("area_methods", []):
+                    if matches(loc, override["place"]) and n in override.get("species", [n]):
+                        m = override["methods"].get(src, m)
                 extra = []
                 row_place = place
                 for i, g in enumerate(GAME.get("row_needs", [])):
@@ -236,6 +246,7 @@ if __name__ == "__main__":
     ids = {e["id"] for e in events}
     assert len(ids) == len(events), "duplicate event id"
     assert not set(range(len(GAME.get("row_needs", [])))) - row_hits, f"row_needs match no row: {[g for i, g in enumerate(GAME['row_needs']) if i not in row_hits]}"
+    assert not set(range(len(GAME.get("drop_rows", [])))) - drop_hits, f"drop_rows match no row: {[g for i, g in enumerate(GAME['drop_rows']) if i not in drop_hits]}"
     for e in events:
         assert re.fullmatch(r"[a-z][a-z0-9-]*", e["id"]), f"event id must be a lowercase slug: {e['id']}"
         assert 0 <= e["chap"] < len(GAME["chapters"]), f"{e['id']}: no chapter {e['chap']}"

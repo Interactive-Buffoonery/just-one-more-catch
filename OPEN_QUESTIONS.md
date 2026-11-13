@@ -28,6 +28,10 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Ultra Sun and Ultra Moon
 
+- Haina Desert weather SOS: cached PokeAPI rows omit the weather conditions for Castform and Gabite. Their corrected plain SOS rows still need a sourced weather representation.
+- Lush Jungle South/West: PokeAPI duplicates Steenee, Oranguru, Passimian and Trumbeak ambush records in both subareas, while the cached USUM location table places the rustling-grass block in the south. Terrain is corrected in both existing subareas; confirm whether the West duplicates should be removed.
+- Poni Breaker Coast Wailmer: the cached bubbling-spots record combines fishing and water-splash encounters (10–49, 100%). Leave its rod requirement unchanged until those encounters can be split with sourced levels and odds. Wailord, Dragalge and Clawitzer have distinct splash rows and now require Lapras.
+
 - Brooklet Hill Main and North: are these the first lake (open before Lana's trial) or the trial pools (Waterium)? South is gated.
 - Route 13: the guide has Mudsdale given at the start of Route 12, so Gallop is likely in hand. Confirm nothing on Route 13 needs more.
 - Route 15 Main: the guide says more than half the route waits for a Ride Pokémon that breaks the rocks in the water. Which encounter rows are out there?
@@ -195,11 +199,69 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
   Smash as well as Strength? Trace the map or check in-game; the walkthrough
   establishes Rock Smash for full traversal, not the earliest encounter.
 
+## Ruby and Sapphire (`rs`)
+
+- **Save imports:** reader 0.1.3 verifies synthetic 128 KiB RS files through
+  native Core, raw National Dex flags and the published WASM worker. It cannot
+  distinguish Ruby from Sapphire; players choose the title. Obtain permitted
+  real cartridge/emulator exports and a legitimate in-game zero-caught save
+  for comparison. Real 64 KiB RS exports remain unverified and unsupported;
+  the Emerald-only recovery path must not be applied to them.
+
+- **Independent access audit:** coordinator's Opus review remains. The local
+  103-area work list is `.cache/areas-rs.json` (regenerate with
+  `python3 scripts/access_audit.py areas rs`). All areas have cached source
+  pages; Weather Institute uses walkthrough Part 11. No second guide/source
+  confirms every access path. No gate was entered without a source, but the
+  following earliest-tile questions need independent map/gameplay proof.
+- **Victory Road B2F:** the forward route in R/S walkthrough Part 21 uses
+  both Strength and Rock Smash; the pack conservatively requires both.
+  Check whether either legitimate approach reaches any B2F encounter tile
+  with Strength alone. B1F is open before its initial boulders. Do not infer
+  this from Emerald's traversal or layout.
+- **Route 123 western approach:** the location article describes westward
+  ledges and the separate Berry Master terminus; the pack keeps encounter
+  grass behind the Route 122 approach (Surf + Devon Scope). Independently
+  trace the original R/S western entrance to confirm no early grass/water
+  encounter tile can be reached. Route 118 walking rows separately need
+  Surf; fishing stays open from the western beach.
+- **Shoal Cave clock:** cached PokeAPI has no time conditions for its named
+  High Tide / Low Tide or basement areas. The clock changes at 03:00, 09:00,
+  15:00, 21:00; low tide is 03:00–09:00 and 15:00–21:00 (Time page).
+  The pack preserves both sets and gates B3F (ice room) with Strength, but
+  cannot automatically hide low-tide rooms or high-tide fishing. A shared
+  tide model, plus original floor-name mapping verification, remains.
+- **Temporary hideout:** Ruby/Sapphire's Lilycove hideout eventually closes
+  after defeating Tate and Liza (Mind Badge; location articles); the tracker
+  models its opening after submarine theft, not loss of access. Verify a shared temporary-area
+  model before claiming all currently available Electrode rows are exact.
+- **PokeAPI limits/corrections:** New Mauville's spurious level-30 Electrode
+  static is excluded from this pack using the original scripts; Voltorb
+  statics and actual hideout Electrode remain. PokeAPI also incorrectly tags
+  Magma Hideout with Sapphire; the pack limits Magma to Ruby and Aqua to
+  Sapphire using the version-specific location sources. Other R/S encounter
+  areas were present; no missing encounter region was identified. The cache
+  lacked only the Pokédex-4 response (fetched individually). Distribution-only
+  Hoenn Pokecenter Pikachu/Celebi/Jirachi rows are deliberately excluded;
+  they are not ordinary local encounters. Numeric NPC-trade levels are
+  retained upstream examples, not mandatory in-game trade levels.
+- **Choice/state limits:** one desert fossil can be selected; its counterpart
+  sinks. The tracker offers independent possession events for imported or
+  traded fossils and does not enforce mutual exclusion. Mirage Island's
+  event must be kept in sync with today's game. Regi events represent full
+  puzzle completion, including Sealed Chamber, Dig, Relicanth/Wailord and
+  the individual puzzle; they do not automatically prove party composition.
+  Eon Ticket voyages require historical distribution access. These are
+  existing tracker-model limits, not invented encounter rows.
+- **Unverified:** no browser picker/guest persistence/account sync, cartridge
+  or emulator gameplay, clock manipulation, historical ticket distribution,
+  save-file import, or independent form-catalog expansion was tested.
+  No R/S file-import mapping or Works-with claim was enabled.
 ## Black and White (`bw`)
 
 - **Save imports:** synthetic 512 KiB B/W and B2/W2 fixtures verify distinct
   identities and complete National Dex caught flags through native Core, raw
-  bits and published reader 0.1.2 WASM. Obtain permitted real cartridge/emulator
+  bits and published reader 0.1.3 WASM. Obtain permitted real cartridge/emulator
   exports and a legitimate in-game zero-caught save for comparison. Live account
   imports and mobile Safari remain unverified. PKHeX exposes Gen V adventure
   start seconds, but its epoch/bounds, invalid values, leap days and exported

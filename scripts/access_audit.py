@@ -16,7 +16,7 @@ from urllib.parse import unquote
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 POKEAPI = os.path.join(ROOT, ".cache", "pokeapi")
 WIKI = os.path.join(ROOT, ".cache", "bulbapedia")
-PACKS = ["crystal", "hgss", "frlg", "usum", "bw"]
+PACKS = ["rs", "crystal", "hgss", "frlg", "usum", "bw"]
 
 
 def nice(slug):
@@ -44,7 +44,17 @@ def areas(pack):
             for v in a["version_details"]:
                 if v["version"]["name"] not in game["versions"]:
                     continue
+                if any((loc == place or loc.startswith(place + " ")) and v["version"]["name"] not in allowed
+                       for place, allowed in game.get("area_versions", {}).items()):
+                    continue
                 for d in v["encounter_details"]:
+                    method = d["method"]["name"]
+                    if method in game.get("drop_methods", []):
+                        continue
+                    if any(g["n"] == n and (loc == g["place"] or loc.startswith(g["place"] + " "))
+                           and g.get("m", method) == method and v["version"]["name"] in g.get("versions", game["versions"])
+                           for g in game.get("drop_rows", [])):
+                        continue
                     out.setdefault(loc, set()).add((n, name, d["method"]["name"]))
     return game, out
 
@@ -58,6 +68,20 @@ def candidates(area, pack):
                  ("Bills House", "Bill's House"), ("Groundon", "Groudon"), ("Hauoli", "Hau'oli"), ("Ulaula", "Ula'ula"),
                  ("Kalae", "Kala'e"), ("Team Rockets Castle", "Team Rocket's Castle"), ("Trainers School", "Trainers' School")]:
         a = a.replace(x, y)
+    if pack == "rs":
+        a = re.sub(r"^Hoenn ", "", a)
+        if a.startswith("Route 119 Weather Institute"):
+            return ["Weather Institute", "Walkthrough:Pokémon Ruby and Sapphire/Part 11"]
+        if a == "Roaming Hoenn":
+            return ["Roaming Pokémon"]
+        if a == "Mirage Island":
+            return ["Mirage Island (Generation III)"]
+        if a.startswith("Victory Road"):
+            return ["Victory Road (Hoenn)"]
+        if a.startswith("Safari Zone"):
+            return ["Hoenn Safari Zone"]
+        if a.startswith("Route "):
+            return ["Hoenn " + re.match(r"Route \d+", a)[0]]
     if pack == "bw":
         if a.startswith("Victory Road") or a.startswith("Trial Chamber"):
             return ["Victory Road (Black and White)"]
@@ -96,6 +120,8 @@ def page_for(area, pack, resolved):
             return t
         if resolved.get(t):
             return SPECIFIC.get(resolved[t], resolved[t])
+    if pack == "rs":
+        return next((t for t in candidates(area, pack) if os.path.exists(wiki_path(t))), None)
     return None
 
 
