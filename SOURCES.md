@@ -369,6 +369,13 @@ static source tracing, not gameplay or emulator verification.
   still requires passing Route 16 Snorlax. Thus retain the Flute row gates
   and chapter's Cut requirement. North-approach fishing already reaches
   shores without removing Snorlax; keep fishing independent of the grass gate.
+  Southern-approach check: on
+  [Route 16's map](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/maps/Route16.blk),
+  the Celadon edge enters a one-square corridor on row 10 that
+  [Snorlax at (26,10)](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/maps/objects/Route16.asm#L35)
+  closes before the gate warp (24,10). The Cut tree at (34,9) only opens
+  the northern gate and Fly house pocket, which has no path to Route 17.
+  Reaching Route 13 from Fuchsia therefore also needs the Flute.
 - **Route 2 — direct approach confirmed; alternative gate remains open.**
   [Map](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/maps/Route2.blk),
   [objects/warps](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/maps/objects/Route2.asm#L8-L14)
