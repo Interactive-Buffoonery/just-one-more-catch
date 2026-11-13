@@ -1,7 +1,8 @@
+import { loadGeneratedPack } from './check-utils.mjs';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 
-const game = JSON.parse(readFileSync('client/data/yellow.ts', 'utf8').split('export default ')[1].trim().replace(/;$/, ''));
+const game = loadGeneratedPack('yellow');
 const mon = n => game.dex.find(p => p.n === n);
 assert.equal(game.dex.length, 151);
 for (const n of [25, 35, 39, 106, 107, 113, 122, 124, 125, 126, 143]) {

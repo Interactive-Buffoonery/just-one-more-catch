@@ -1,8 +1,9 @@
+import { loadGeneratedPack } from './check-utils.mjs';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import { stripTypeScriptTypes } from 'node:module';
 import { runInNewContext } from 'node:vm';
-const game = JSON.parse(readFileSync('client/data/dp.ts', 'utf8').split('export default ')[1].replace(/;\s*$/, ''));
+const game = loadGeneratedPack('dp');
 const mon = n => game.dex[n - 1];
 assert.equal(game.dex.length, 493);
 assert.equal(game.dex.filter(p => p.j).length, 151);

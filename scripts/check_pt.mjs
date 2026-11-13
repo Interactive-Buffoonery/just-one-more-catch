@@ -1,10 +1,11 @@
+import { loadGeneratedPack } from './check-utils.mjs';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { stripTypeScriptTypes } from 'node:module';
 import { runInNewContext } from 'node:vm';
 import { execFileSync } from 'node:child_process';
 
-const game = JSON.parse(readFileSync('client/data/pt.ts', 'utf8').split('export default ')[1].trim().replace(/;$/, ''));
+const game = loadGeneratedPack('pt');
 const mon = n => game.dex.find(p => p.n === n);
 const needs = r => [...game.chapters[r.chap].needs, ...(r.need || [])];
 assert.equal(game.dex.length, 493);
