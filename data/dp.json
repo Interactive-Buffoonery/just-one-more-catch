@@ -839,6 +839,16 @@
         "surf"
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_218"
+    },
+    {
+      "place": "Turnback Cave",
+      "n": 487,
+      "m": "static",
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/w/index.php?title=Turnback_Cave&oldid=4663925",
+      "quote": "The cave can only be entered after entering the [[Hall of Fame]]."
     }
   ],
   "chapters": [
@@ -1146,10 +1156,11 @@
     },
     {
       "id": "unown-26",
-      "label": "Collect the 26 letter forms of Unown",
-      "q": "Have you collected all 26 letter forms of Unown?",
+      "label": "See all 26 letter forms of Unown",
+      "q": "Have you seen all 26 letter forms of Unown?",
       "chap": 4,
-      "src": "https://bulbapedia.bulbagarden.net/wiki/Solaceon_Ruins"
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Solaceon_Ruins",
+      "quote": "(which occurs after seeing 26 different forms of Unown)"
     },
     {
       "id": "ranger-egg",
@@ -1279,5 +1290,25 @@
       "gastrodon-west",
       "gastrodon-east"
     ]
-  }
+  },
+  "bulbapedia_gap_fill": "data/dp-bulbapedia.json",
+  "extra_encounters": [
+    {
+      "n": 487,
+      "versions": [
+        "diamond",
+        "pearl"
+      ],
+      "area": "Turnback Cave",
+      "method": "static",
+      "lo": 70,
+      "hi": 70,
+      "chance": 100,
+      "conditions": [],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/w/index.php?title=Turnback_Cave&oldid=4663925",
+      "quote": "A {{p|Giratina}} appears here on the first visit. If run from, it respawns upon leaving the area.",
+      "note": "Diamond and Pearl special encounter; the template below the quote gives level=70."
+    }
+  ]
 }

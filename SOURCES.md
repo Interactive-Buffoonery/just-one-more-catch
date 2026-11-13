@@ -1830,8 +1830,8 @@ Encounter rows, species types, levels, rates, version membership, encounter
 conditions and evolution text come from the pre-cached PokeAPI responses,
 processed by `scripts/build_data.py dp`. Regional ordering uses PokeAPI
 Pokédex 5 (`original-sinnoh`, 151 entries); the national catalog ends at 493.
-No encounter rows were transcribed from a guide. The following cached
-Bulbapedia articles were read as raw wikitext; URLs identify the source pages.
+The Giratina static supplements the missing PokeAPI encounter (sources below).
+The following cached Bulbapedia articles were read as raw wikitext; URLs identify the source pages.
 Each hand-written gate/event also carries its source in `data/dp.json`.
 
 - Chapter sequence and starter choice/location:
@@ -1867,7 +1867,7 @@ Each hand-written gate/event also carries its source in `data/dp.json`.
   quest, Rotom's National Dex/night restriction, Snowpoint Temple's Hall of
   Fame/National Dex entrance and Strength to B5F, Regigigas needing all three
   Regis, and the eastern Victory Road/Route 224 opening. Giratina is described
-  here but absent from PokeAPI's D/P encounter responses; no row is invented.
+  here and supplemented from the two agreeing sources below.
 - https://bulbapedia.bulbagarden.net/wiki/Mount_Coronet
   explicitly places the Galactic-HQ mural blocker before 3F.
   https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_206
@@ -1927,6 +1927,40 @@ Each hand-written gate/event also carries its source in `data/dp.json`.
   terrain cloaks, permanent Wormadam cloaks and western/eastern Shellos and
   Gastrodon. These plus Unown are the local form catalogs. Rotom appliances,
   Origin Giratina and Sky Shaymin are not enabled for original D/P.
+- Unown event wording: Solaceon Ruins says the Ruin Maniac finishes
+  Maniac Tunnel "after seeing 26 different forms of Unown". The game's own
+  code agrees with "seen": the Pokédex records Unown letters when one is seen
+  (`SetSeenUnownLetter`,
+  https://github.com/pret/pokediamond/blob/b623abef1b4dfe204ca50aab42447ac00c134290/arm9/src/pokedex.c#L226-L237)
+  and the only Unown-counting script command is `ScrCmd_CountSeenUnown`
+  (https://github.com/pret/pokediamond/blob/b623abef1b4dfe204ca50aab42447ac00c134290/arm9/src/scrcmd.c#L4419-L4424).
+  The Maniac's own script is a binary file in the decomp, so the exact
+  command it calls is inferred, not read.
+- Giratina static supplement: PKHeX's shared D/P static table lists species
+  487, Level 70, location 62 (Turnback Cave), Altered Forme:
+  https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen4/Encounters4DPPt.cs#L57
+  The cached Turnback Cave article agrees under Special encounters → Pokémon
+  Diamond and Pearl (wikitext L154–168): Giratina, level 70. Its introduction
+  (L15) restricts entry to the Hall of Fame; the generated static uses the
+  existing postgame chapter and an explicit Elite Four row requirement.
+  Pinned article revision:
+  https://bulbapedia.bulbagarden.net/w/index.php?title=Turnback_Cave&oldid=4663925
+  An empty gap-fill file opts into the supplement path; only this
+  sourced static is added, with no National Dex or provisional Rock Climb gate.
+- Cross-checks (cite facts only): PokeFinder lists the
+  D/P Great Marsh daily pool as 12 species before the National Dex and a
+  different 14-species list after it
+  (https://github.com/Admiral-Fish/PokeFinder/blob/3624cb7737da247f22d3afa5265a0698f8be8fc1/Core/Gen4/Encounters4.cpp#L194-L195),
+  and swaps the pick into grass slots 6 and 7
+  (same file, `modifyGreatMarsh`, L280-L287); every pool species has a Great
+  Marsh row in the pack. PKHeX lists the D/P Giratina static at Level 70 in
+  Turnback Cave, location 62
+  (https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen4/Encounters4DPPt.cs#L57).
+  pret/pokediamond keeps map collision, scripts and encounter tables as binary
+  NARC files (`files/fielddata/land_data`, `script/scr_seq_release`,
+  `encountdata`, at
+  https://github.com/pret/pokediamond/tree/b623abef1b4dfe204ca50aab42447ac00c134290/files/fielddata),
+  so no map or script text could be read for gate tracing.
 - https://bulbapedia.bulbagarden.net/wiki/Newmoon_Island,
   https://bulbapedia.bulbagarden.net/wiki/Flower_Paradise and
   https://bulbapedia.bulbagarden.net/wiki/Hall_of_Origin establish that the
