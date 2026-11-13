@@ -34,7 +34,7 @@ import { SETTINGS_ICON, TAB_ICONS } from "./parts";
 import { Bridge, PairingHandle, PairingLookup, RunRow } from "./types";
 import { Devices, fillApprove, pairBody, pairErrorText, pairLetters, showCode, ttl } from "./views/devices";
 import { Boxes, fillBoxSheet, fillMonSheet, saveMon, updateMonSprite } from "./views/boxes";
-import { Dex, dexGrid, fillSpecies } from "./views/dex";
+import { DEX_SIZES, Dex, dexGrid, fillSpecies } from "./views/dex";
 import { fillClock, fillCustom, Journey, untick } from "./views/journey";
 import {
   confirmGame,
@@ -430,7 +430,7 @@ async function onClick(e: MouseEvent) {
     e.preventDefault();
   }
   const d = t.dataset;
-  if (d.dexsize && ["compact", "tiles", "large", "list"].includes(d.dexsize)) {
+  if (d.dexsize && Object.hasOwn(DEX_SIZES, d.dexsize)) {
     ui.dexSize = d.dexsize;
     store.set("jomc.dexSize", ui.dexSize);
     render();
@@ -917,7 +917,7 @@ export function mount(el: HTMLElement, b: Bridge) {
   addEventListener("pagehide", closeImport);
   addEventListener("pageshow", (e) => { if (e.persisted) render(); });
   const dexSize = store.get("jomc.dexSize");
-  ui.dexSize = ["compact", "tiles", "large", "list"].includes(dexSize || "") ? dexSize : matchMedia("(max-height:480px)").matches ? "compact" : "tiles";
+  ui.dexSize = Object.hasOwn(DEX_SIZES, dexSize || "") ? dexSize : matchMedia("(max-height:480px)").matches ? "compact" : "tiles";
   ui.boxLayout = store.get("jomc.boxLayout") === "grid" ? "grid" : "list";
   ui.look = PALETTE[store.get("jomc.look") || ""]
     ? store.get("jomc.look")

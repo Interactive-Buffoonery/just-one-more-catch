@@ -20,6 +20,7 @@ import {
   regionalCaught,
   rowStatus,
   run,
+  searching,
   speciesStatus,
   TYPE,
   ui,
@@ -54,6 +55,12 @@ const FILTERS: [string, string, (s: string) => boolean][] = [
   ["all", "All", () => true],
 ];
 const SEARCH_ICON = `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+export const DEX_SIZES: Record<string, [string, string]> = {
+  compact: ["Compact", '<rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/>'],
+  tiles: ["Tiles", '<rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/>'],
+  large: ["Large", '<rect x="4" y="4" width="16" height="16"/>'],
+  list: ["List", '<path d="M4 5h16M4 12h16M4 19h16"/>'],
+};
 const withStatus = () => dexList().map((p) => ({ p, s: speciesStatus(p) }));
 const tile = (p: Species, s: string) => {
   if (viewOf(R()) === "dexonly") s = s === "caught" ? "caught" : "missing";
@@ -63,7 +70,7 @@ const tile = (p: Species, s: string) => {
     R().trackGenders && hasGenders(p) ? `${genders.size} of 2 genders` : "",
     R().trackForms && available.length > 1 ? `${collectedForms(p).size} of ${available.length} forms` : "",
   ].filter(Boolean).map((text) => `, ${text}`).join("");
-  const short = ui.dexSize !== "large" && ((ui.q || "").trim() || ["missing", "all"].includes(ui.filter)) && SHORT[s];
+  const short = ui.dexSize !== "large" && (searching() || ["missing", "all"].includes(ui.filter)) && SHORT[s];
   const attrs = `type="button" class="dt${s === "now" ? " n" : ""}${s === "now" || s === "caught" ? "" : " dim"}" data-${ui.bulk ? "toggle" : "open"}="${p.n}" data-k="d${p.n}" ${ui.bulk ? `aria-pressed="${s === "caught"}"` : ""} aria-label="${p.name}, number ${num(p)}, ${STATUS_TEXT[s]}${progress}"`;
   const gx = R().trackGenders && hasGenders(p) ? `<span class="gx" aria-hidden="true">${GENDERS.map(([g, symbol]) => `<b class="${genders.has(g) ? "on" : ""}">${symbol}</b>`).join("")}</span>` : "";
   const forms = R().trackForms && available.length > 1 ? `<i aria-hidden="true">${collectedForms(p).size}/${available.length}</i>` : "";
@@ -95,7 +102,7 @@ export function searchDex<T extends { p: Species }>(
 }
 export function dexGrid() {
   if (viewOf(R()) === "dexonly" && ui.filter === "now") ui.filter = "missing";
-  const t = (ui.q || "").trim(),
+  const t = searching(),
     keep = FILTERS.find((f) => f[0] === ui.filter)![2];
   const list = searchDex(withStatus().filter((x) => t || keep(x.s)), t, num);
   const here = (p: Species) =>
@@ -127,11 +134,11 @@ export function Dex() {
     <div class="dextop">
       <div class="filters${viewOf(R()) === "dexonly" ? " three" : ""}" role="group" aria-label="Show">${FILTERS.filter(([k]) => k !== "now" || viewOf(R()) !== "dexonly").map(
         ([k, l, f]) =>
-          `<button type="button" data-filter="${k}" data-k="f-${k}" aria-pressed="${!(ui.q || "").trim() && ui.filter === k}"><b>${all.filter((x) => f(x.s)).length}</b>${k === "now" ? '<span class="nowlong">Catchable now</span><span class="nowshort">Now</span>' : l}</button>`,
+          `<button type="button" data-filter="${k}" data-k="f-${k}" aria-pressed="${!searching() && ui.filter === k}"><b>${all.filter((x) => f(x.s)).length}</b>${k === "now" ? '<span class="nowlong">Catchable now</span><span class="nowshort">Now</span>' : l}</button>`,
       ).join("")}</div>
       <div class="dextools">
-        <label class="search"><span class="sr">Search the dex</span>${SEARCH_ICON}<input id="dexq" data-k="dexq" type="search" placeholder="${matchMedia("(max-height:480px)").matches ? "Search" : "Name or number"}" autocomplete="off" value="${esc(ui.q || "")}"><button type="button" class="searchclear" data-clearsearch="1" aria-label="Clear search" ${(ui.q || "").trim() ? "" : "hidden"}>×</button></label>
-        <div class="dexsizes" role="group" aria-label="Grid size">${["compact", "tiles", "large", "list"].map((size, i) => `<button type="button" data-dexsize="${size}" data-k="size-${size}" aria-pressed="${ui.dexSize === size}" aria-label="${cap(size)}"><svg viewBox="0 0 24 24" aria-hidden="true">${i === 3 ? '<path d="M4 5h16M4 12h16M4 19h16"/>' : `<rect x="4" y="4" width="${i === 2 ? 16 : 6}" height="${i === 2 ? 16 : 6}"/>${i < 2 ? '<rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/>' : ""}`}</svg></button>`).join("")}</div>
+        <label class="search"><span class="sr">Search the dex</span>${SEARCH_ICON}<input id="dexq" data-k="dexq" type="search" placeholder="${matchMedia("(max-height:480px)").matches ? "Search" : "Name or number"}" autocomplete="off" value="${esc(ui.q || "")}"><button type="button" class="searchclear" data-clearsearch="1" aria-label="Clear search" ${searching() ? "" : "hidden"}>×</button></label>
+        <div class="dexsizes" role="group" aria-label="Grid size">${Object.entries(DEX_SIZES).map(([size, [label, icon]]) => `<button type="button" data-dexsize="${size}" data-k="size-${size}" aria-pressed="${ui.dexSize === size}" aria-label="${label}"><svg viewBox="0 0 24 24" aria-hidden="true">${icon}</svg></button>`).join("")}</div>
         <button type="button" class="quietbtn" data-bulk="1" data-k="bulk" aria-label="Mark many" aria-pressed="${ui.bulk}"><span class="toolicon" aria-hidden="true">✓</span><span class="tooltext">${ui.bulk ? "Done marking" : "Mark many"}</span></button>
         <button class="quietbtn" data-custom="1" data-k="custom" aria-label="Customize">${SLIDERS_ICON}<span class="tooltext">Customize</span></button>
       </div>
