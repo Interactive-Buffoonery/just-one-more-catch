@@ -913,6 +913,22 @@ export function mount(el: HTMLElement, b: Bridge) {
     },
     true,
   );
+  el.addEventListener("keydown", (e) => {
+    const t = e.target as HTMLInputElement;
+    if (t.id !== "dexq") return;
+    if (e.key === "Escape") {
+      e.preventDefault();
+      t.value = "";
+      ui.q = "";
+      $("#dexgrid").innerHTML = dexGrid();
+    } else if (e.key === "Enter") {
+      const results = el.querySelectorAll<HTMLButtonElement>("#dexgrid button.dt");
+      if (results.length === 1) {
+        e.preventDefault();
+        openSheet(Number(results[0].dataset.open || results[0].dataset.toggle));
+      }
+    }
+  });
   el.addEventListener("input", (e) => {
     const t = e.target as HTMLInputElement;
     if (t.id === "paircode") {

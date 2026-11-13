@@ -63,17 +63,28 @@ const section = (title: string, list: { p: Species; s: string }[]) =>
   list.length
     ? `<section class="dexsec">${title ? `<div class="sec-h"><h2 class="lg">${title}<small>${list.length}</small></h2></div>` : ""}<div class="dgrid${ui.bulk ? " bulk" : ""}">${list.map((x) => tile(x.p, x.s)).join("")}</div></section>`
     : "";
+export function searchDex<T extends { p: Species }>(
+  list: T[], query: string, number: (p: Species) => number,
+): T[] {
+  const q = query.trim().toLowerCase();
+  if (!q) return list;
+  const digits = q.replace(/^#/, "").replace(/^0+(?=\d)/, "");
+  return list.filter(({ p }) =>
+    p.name.toLowerCase().includes(q) ||
+    (/^\d+$/.test(digits) &&
+      [number(p), p.n].some((n) => String(n).startsWith(digits))) ||
+    p.types.some((type) => type.toLowerCase() === q) ||
+    p.forms?.some((form) => form.name.toLowerCase().includes(q)),
+  ).sort((a, b) =>
+    Number(b.p.name.toLowerCase().startsWith(q)) -
+    Number(a.p.name.toLowerCase().startsWith(q)),
+  );
+}
 export function dexGrid() {
   if (viewOf(R()) === "dexonly" && ui.filter === "now") ui.filter = "missing";
-  const t = (ui.q || "").trim().toLowerCase().replace(/^#/, ""),
+  const t = (ui.q || "").trim(),
     keep = FILTERS.find((f) => f[0] === ui.filter)![2];
-  const list = withStatus().filter(
-    (x) =>
-      (t || keep(x.s)) &&
-      (!t ||
-        x.p.name.toLowerCase().includes(t) ||
-        String(num(x.p)) === String(+t)),
-  );
+  const list = searchDex(withStatus().filter((x) => t || keep(x.s)), t, num);
   const here = (p: Species) =>
     p.rows.some((r) => isHere(r.place) && rowStatus(r).s === "now");
   return (
