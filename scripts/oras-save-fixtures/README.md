@@ -1,6 +1,6 @@
 # ORAS save-import fixtures
 
-Opt-in validation of unchanged reader 0.1.2 and the built website. Generated
+Opt-in validation of unchanged reader 0.1.3 and the built website. Generated
 saves and receipts stay in ignored `.cache/oras-save-tests/`. No personal saves,
 ROMs or downloaded fixtures are used.
 
@@ -59,7 +59,7 @@ Pinned Core source references:
 - `Saves/Substructures/Gen6/GameTime6.cs`: adventure-start field at `0x18`.
 - `Saves/Util/SaveUtil.cs`: sizes and BEEF footer detection.
 
-Reader source remains `8cc08fd58b9b148ecba9c9ef262703559e1979e1`. No source,
+Vendored reader source: `d666c67dc4d6d11603cdf50b13f4c431c0b95668` (0.1.3). No source,
 package, lockfile or vendored tarball change is needed. Its regression assets
 and SDK output match the installed vendor package byte for byte.
 Gen VI recorded dates need separate epoch/calendar, invalid-value, leap-day

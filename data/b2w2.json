@@ -1,0 +1,1330 @@
+{
+  "versions": {
+    "black-2": "j",
+    "white-2": "k"
+  },
+  "pokedex": 9,
+  "species": 649,
+  "gen": "generation-v",
+  "historical_pre_evolutions": true,
+  "keep_floors": true,
+  "drop": [],
+  "rename": {
+    "Unova Route 23": "Route 23",
+    "Unova Route 7": "Route 7",
+    "Unova Route 3": "Route 3",
+    "Unova Victory Road 2 Unknown Area 71": "Victory Road 2 Unknown Area 71",
+    "Unova Victory Road 2 Unknown Area 75": "Victory Road 2 Unknown Area 75",
+    "Unova Victory Road 2 Unknown Area 78": "Victory Road 2 Unknown Area 78",
+    "Unova Route 12": "Route 12",
+    "Unova Victory Road 2 Unknown Area 72": "Victory Road 2 Unknown Area 72",
+    "Unova Route 13": "Route 13",
+    "Unova Route 9": "Route 9",
+    "Unova Victory Road 7F": "Victory Road 7F",
+    "Unova Victory Road 2 Unknown Area 74": "Victory Road 2 Unknown Area 74",
+    "Unova Victory Road 2 Unknown Area 77": "Victory Road 2 Unknown Area 77",
+    "Unova Victory Road 2 Unknown Area 80": "Victory Road 2 Unknown Area 80",
+    "Unova Route 5": "Route 5",
+    "Unova Route 16": "Route 16",
+    "Unova Route 4": "Route 4",
+    "Unova Route 3 Hidden Grotto Pond": "Route 3 Hidden Grotto Pond",
+    "Unova Route 20": "Route 20",
+    "Unova Route 8": "Route 8",
+    "Unova Route 6": "Route 6",
+    "Unova Route 11": "Route 11",
+    "Unova Route 9 Hidden Grotto": "Route 9 Hidden Grotto",
+    "Unova Route 14": "Route 14",
+    "Unova Route 22": "Route 22",
+    "Unova Route 22 Hidden Grotto": "Route 22 Hidden Grotto",
+    "Unova Route 13 Hidden Grotto Giant Chasm": "Route 13 Hidden Grotto Giant Chasm",
+    "Unova Route 15": "Route 15",
+    "Unova Route 18": "Route 18",
+    "Unova Victory Road 2 Unknown Area 76": "Victory Road 2 Unknown Area 76",
+    "Unova Route 1": "Route 1",
+    "Unova Route 2": "Route 2",
+    "Unova Route 2 Hidden Grotto": "Route 2 Hidden Grotto",
+    "Unova Route 7 Hidden Grotto": "Route 7 Hidden Grotto",
+    "Unova Victory Road 2 Unknown Area 73": "Victory Road 2 Unknown Area 73",
+    "Unova Victory Road 2 Unknown Area 79": "Victory Road 2 Unknown Area 79",
+    "Unova Route 23 Hidden Grotto": "Route 23 Hidden Grotto",
+    "Unova Route 17": "Route 17",
+    "Unova Route 5 Hidden Grotto": "Route 5 Hidden Grotto",
+    "Unova Route 6 Hidden Grotto Near Pokemon Breeder": "Route 6 Hidden Grotto Near Pokemon Breeder",
+    "Unova Route 6 Hidden Grotto Mistralton Cave": "Route 6 Hidden Grotto Mistralton Cave",
+    "Unova Route 13 Hidden Grotto Stairs": "Route 13 Hidden Grotto Stairs",
+    "Unova Route 19": "Route 19",
+    "Unova Route 21": "Route 21",
+    "Unova Route 18 Hidden Grotto": "Route 18 Hidden Grotto",
+    "Unova Route 3 Hidden Grotto Dark Grass": "Route 3 Hidden Grotto Dark Grass",
+    "Unova Route 6 Weather Institute": "Route 6 Weather Institute",
+    "Nature Sanctuary": "Nature Preserve"
+  },
+  "methods": {},
+  "needs": {
+    "Abundant Shrine": {
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_18",
+      "quote": "Ride down the waterfall and go west to reach the [[Abundant Shrine]]."
+    },
+    "Mistralton Cave": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_9",
+      "quote": "Surf east along the river from here to reach Mistralton Cave."
+    },
+    "Guidance Chamber": {
+      "needs": [
+        "surf",
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_9"
+    },
+    "Unova Route 6 Hidden Grotto Mistralton Cave": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hidden_Grotto"
+    },
+    "Unova Route 3 Hidden Grotto Pond": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hidden_Grotto"
+    },
+    "Relic Passage Relic Castle Entrance": {
+      "needs": [
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_8"
+    },
+    "Relic Castle C": {
+      "needs": [
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_8"
+    },
+    "Relic Castle D": {
+      "needs": [
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_8"
+    },
+    "Seaside Cave B1F": {
+      "needs": [
+        "surf",
+        "opelucid-plasma"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Seaside_Cave"
+    },
+    "Seaside Cave 1F": {
+      "needs": [
+        "surf",
+        "opelucid-plasma"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Seaside_Cave"
+    },
+    "Unova Route 21": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_21"
+    },
+    "Giant Chasm Forest Cave": {
+      "needs": [
+        "frigate-seaside"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_14"
+    },
+    "Giant Chasm Forest": {
+      "needs": [
+        "frigate-seaside"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_14"
+    },
+    "Giant Chasm Hidden Grotto": {
+      "needs": [
+        "frigate-seaside"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_14"
+    },
+    "Underground Ruins": {
+      "needs": [
+        "surf",
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_17"
+    },
+    "Rocky Mountain Room": {
+      "needs": [
+        "surf",
+        "strength",
+        "ruins-switch"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Underground_Ruins"
+    },
+    "Iron Room": {
+      "needs": [
+        "surf",
+        "strength",
+        "iron-key-active"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Underground_Ruins"
+    },
+    "Glacier Room": {
+      "needs": [
+        "surf",
+        "strength",
+        "iceberg-key-active"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Underground_Ruins"
+    },
+    "Dreamyard B1F": {
+      "needs": [],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "The gap in the fence to the right of the cuttable tree leads to the basement."
+    },
+    "Unova Route 17": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_21"
+    },
+    "Unova Route 18": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_21"
+    },
+    "P2 Laboratory": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_21"
+    },
+    "Floccesy Ranch Hidden Grotto": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hidden_Grotto"
+    },
+    "Pinwheel Forest Hidden Grotto Inner": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hidden_Grotto"
+    }
+  },
+  "row_needs": [
+    {
+      "place": "Floccesy Town",
+      "n": 147,
+      "needs": [
+        "Elite Four",
+        "benga-gift"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Floccesy_Town",
+      "m": "gift"
+    },
+    {
+      "place": "Floccesy Town",
+      "n": 443,
+      "needs": [
+        "Elite Four",
+        "benga-gift"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Floccesy_Town",
+      "m": "gift"
+    },
+    {
+      "place": "Castelia City",
+      "n": 133,
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "m": "gift"
+    },
+    {
+      "place": "Unova Route 6 Weather Institute",
+      "n": 585,
+      "needs": [
+        "Quake"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_9",
+      "m": "gift"
+    },
+    {
+      "place": "Unova Route 22",
+      "n": 639,
+      "needs": [
+        "Wave"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_13",
+      "m": "static"
+    },
+    {
+      "place": "Seaside Cave",
+      "n": 558,
+      "needs": [
+        "surf",
+        "opelucid-plasma",
+        "colress-machine"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_14",
+      "m": "static"
+    },
+    {
+      "place": "Nacrene City West Gate",
+      "n": 480,
+      "needs": [
+        "Elite Four",
+        "lake-guardians",
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "m": "static"
+    },
+    {
+      "place": "Celestial Tower",
+      "n": 481,
+      "needs": [
+        "Elite Four",
+        "lake-guardians",
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "m": "static"
+    },
+    {
+      "place": "Unova Route 23",
+      "n": 482,
+      "needs": [
+        "Elite Four",
+        "lake-guardians",
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "m": "static"
+    },
+    {
+      "place": "Dragonspiral Tower",
+      "n": 643,
+      "needs": [
+        "Elite Four",
+        "n-stone"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_19",
+      "m": "static"
+    },
+    {
+      "place": "Dragonspiral Tower",
+      "n": 644,
+      "needs": [
+        "Elite Four",
+        "n-stone"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_19",
+      "m": "static"
+    },
+    {
+      "place": "Giant Chasm",
+      "n": 646,
+      "needs": [
+        "Elite Four",
+        "catch-n-dragon"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_19",
+      "m": "static"
+    },
+    {
+      "place": "Reversal Mountain",
+      "n": 485,
+      "needs": [
+        "Elite Four",
+        "magma-stone"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_22",
+      "m": "static"
+    },
+    {
+      "place": "Marvelous Bridge",
+      "n": 488,
+      "needs": [
+        "Elite Four",
+        "lunar-wing"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_18",
+      "m": "static"
+    },
+    {
+      "place": "Underground Ruins",
+      "n": 377,
+      "needs": [
+        "Elite Four",
+        "ruins-switch"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_17",
+      "m": "static"
+    },
+    {
+      "place": "Underground Ruins",
+      "n": 378,
+      "needs": [
+        "Elite Four",
+        "iceberg-key-active"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_17",
+      "m": "static"
+    },
+    {
+      "place": "Underground Ruins",
+      "n": 379,
+      "needs": [
+        "Elite Four",
+        "iron-key-active"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_17",
+      "m": "static"
+    },
+    {
+      "place": "Twist Mountain",
+      "n": 486,
+      "needs": [
+        "Elite Four",
+        "strength",
+        "giants-party"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_17",
+      "m": "static"
+    },
+    {
+      "place": "Dreamyard",
+      "n": 380,
+      "needs": [
+        "Elite Four",
+        "cut-hm"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_20",
+      "m": "static"
+    },
+    {
+      "place": "Dreamyard",
+      "n": 381,
+      "needs": [
+        "Elite Four",
+        "cut-hm"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_20",
+      "m": "static"
+    },
+    {
+      "place": "Accumula Town",
+      "n": 65,
+      "needs": [
+        "Elite Four",
+        "accumula-first-trade"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_21",
+      "m": "npc-trade"
+    },
+    {
+      "place": "Driftveil City",
+      "n": 570,
+      "m": "gift",
+      "needs": [
+        "rood-zorua"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_7"
+    }
+  ],
+  "chapters": [
+    {
+      "title": "Aspertia and Floccesy",
+      "needs": [],
+      "places": [
+        "Aspertia City",
+        "Route 19",
+        "Floccesy Town",
+        "Route 20",
+        "Floccesy Ranch"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_1"
+    },
+    {
+      "title": "Virbank City",
+      "needs": [
+        "Basic"
+      ],
+      "places": [
+        "Virbank City",
+        "Virbank Complex"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_3"
+    },
+    {
+      "title": "Castelia City",
+      "needs": [
+        "Toxic",
+        "sail-castelia"
+      ],
+      "places": [
+        "Castelia City",
+        "Castelia Sewers",
+        "Relic Passage Castelia Sewers Entrance"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_4"
+    },
+    {
+      "title": "The desert and Nimbasa",
+      "needs": [
+        "Insect",
+        "clear-route-four"
+      ],
+      "places": [
+        "Route 4",
+        "Desert Resort",
+        "Relic Castle A",
+        "Route 16",
+        "Lostlorn Forest",
+        "Route 5"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_5"
+    },
+    {
+      "title": "Driftveil City",
+      "needs": [
+        "Bolt",
+        "cross-drawbridge"
+      ],
+      "places": [
+        "Driftveil Drawbridge",
+        "Driftveil City",
+        "Route 6"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_7"
+    },
+    {
+      "title": "Relic Passage",
+      "needs": [
+        "Quake"
+      ],
+      "places": [
+        "Relic Passage Pwt Entrance",
+        "Relic Passage Relic Castle Entrance",
+        "Relic Castle C",
+        "Relic Castle D"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_8"
+    },
+    {
+      "title": "Chargestone and Mistralton",
+      "needs": [
+        "frigate-driftveil"
+      ],
+      "places": [
+        "Chargestone Cave",
+        "Mistralton Cave",
+        "Guidance Chamber",
+        "Route 7",
+        "Celestial Tower"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_9"
+    },
+    {
+      "title": "Eastern Unova",
+      "needs": [
+        "Jet",
+        "fly-lentimas"
+      ],
+      "places": [
+        "Reversal Mountain",
+        "Strange House",
+        "Undella Town",
+        "Undella Bay",
+        "Route 14",
+        "Route 13",
+        "Route 12",
+        "Village Bridge",
+        "Route 11",
+        "Route 9",
+        "Seaside Cave 1F",
+        "Abundant Shrine"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_11"
+    },
+    {
+      "title": "Humilau City",
+      "needs": [
+        "Legend",
+        "opelucid-plasma"
+      ],
+      "places": [
+        "Humilau City",
+        "Route 21",
+        "Route 22",
+        "Seaside Cave B1F",
+        "Giant Chasm",
+        "Giant Chasm Outside"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_13"
+    },
+    {
+      "title": "The Pokémon League",
+      "needs": [
+        "defeat-ghetsis"
+      ],
+      "places": [
+        "Route 23",
+        "Victory Road"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_15"
+    },
+    {
+      "title": "Postgame Unova",
+      "needs": [
+        "Elite Four"
+      ],
+      "places": [
+        "Clay Tunnel",
+        "Underground Ruins",
+        "Rocky Mountain Room",
+        "Iron Room",
+        "Glacier Room",
+        "Twist Mountain",
+        "Route 8",
+        "Moor Of Icirrus",
+        "Icirrus City",
+        "Dragonspiral Tower",
+        "Route 15",
+        "Marvelous Bridge",
+        "Pinwheel Forest",
+        "Nacrene City",
+        "Route 3",
+        "Wellspring Cave",
+        "Striaton City",
+        "Dreamyard",
+        "Route 2",
+        "Accumula Town",
+        "Route 1",
+        "Route 17",
+        "Route 18",
+        "P2 Laboratory"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16"
+    },
+    {
+      "title": "Nature Preserve",
+      "needs": [
+        "nature-permit"
+      ],
+      "places": [
+        "Nature Preserve"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Nature_Preserve"
+    }
+  ],
+  "events": [
+    {
+      "id": "sail-castelia",
+      "label": "Sail from Virbank to Castelia",
+      "q": "Have you chased Team Plasma on Route 20 and sailed to Castelia?",
+      "chap": 1,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_3"
+    },
+    {
+      "id": "clear-route-four",
+      "label": "Disperse the Route 4 Crustle",
+      "q": "Have you beaten Colress and cleared the Crustle on Route 4?",
+      "chap": 2,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_5"
+    },
+    {
+      "id": "cross-drawbridge",
+      "label": "Beat Charles and cross the drawbridge",
+      "q": "Have you beaten Charles on Route 5 and crossed to Driftveil?",
+      "chap": 3,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_7"
+    },
+    {
+      "id": "frigate-driftveil",
+      "label": "Finish the Driftveil Plasma Frigate visit",
+      "q": "Have you won the Driftveil Tournament and fought Team Plasma aboard the frigate?",
+      "chap": 5,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_8"
+    },
+    {
+      "id": "fly-lentimas",
+      "label": "Fly with Skyla to Lentimas",
+      "q": "Have you flown with Skyla and Juniper to Lentimas Town?",
+      "chap": 6,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_11"
+    },
+    {
+      "id": "opelucid-plasma",
+      "label": "Drive Team Plasma out of Opelucid",
+      "q": "Have you driven Team Plasma out of the frozen Opelucid City?",
+      "chap": 7,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_13"
+    },
+    {
+      "id": "colress-machine",
+      "label": "Get the Colress Machine",
+      "q": "Has Colress given you his machine on Route 22?",
+      "chap": 8,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_13"
+    },
+    {
+      "id": "frigate-seaside",
+      "label": "Finish the seaside Plasma Frigate visit",
+      "q": "Have you boarded the frigate at Seaside Cave and watched it fly to Giant Chasm?",
+      "chap": 8,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_14"
+    },
+    {
+      "id": "defeat-ghetsis",
+      "label": "Defeat Ghetsis at Giant Chasm",
+      "q": "Have you defeated Ghetsis after the fused Kyurem battle?",
+      "chap": 8,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_14"
+    },
+    {
+      "id": "lake-guardians",
+      "label": "Meet the lake guardians in Cave of Being",
+      "q": "Have you met Juniper and the three lake guardians in Cave of Being?",
+      "chap": 10,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16"
+    },
+    {
+      "id": "benga-gift",
+      "label": "Beat Benga in Black Tower or White Treehollow",
+      "q": "Have you beaten Benga on Area 10 of Black Tower or White Treehollow?",
+      "chap": 10,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Floccesy_Town"
+    },
+    {
+      "id": "n-stone",
+      "label": "Receive N’s dragon stone",
+      "q": "Have you beaten N in his castle and received the Dark Stone or Light Stone?",
+      "chap": 10,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_19"
+    },
+    {
+      "id": "catch-n-dragon",
+      "label": "Catch N’s dragon at Dragonspiral Tower",
+      "q": "Have you caught Zekrom or Reshiram at Dragonspiral Tower?",
+      "chap": 10,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_19",
+      "after": [
+        "n-stone"
+      ]
+    },
+    {
+      "id": "lunar-wing",
+      "label": "Collect the Lunar Wing",
+      "q": "Have you collected the Lunar Wing in Strange House?",
+      "chap": 7,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_11"
+    },
+    {
+      "id": "magma-stone",
+      "label": "Collect the Magma Stone",
+      "q": "Have you collected the Magma Stone on Route 18?",
+      "chap": 10,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_21"
+    },
+    {
+      "id": "ruins-switch",
+      "label": "Open the Rock Peak Chamber",
+      "q": "Have you pressed the hidden switch in the Underground Ruins?",
+      "chap": 10,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_17"
+    },
+    {
+      "id": "iron-key-active",
+      "label": "Activate the Iron Key",
+      "q": "Have you activated the Iron Key in Unova Link (including a shared key)?",
+      "chap": 10,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_17"
+    },
+    {
+      "id": "iceberg-key-active",
+      "label": "Activate the Iceberg Key",
+      "q": "Have you activated the Iceberg Key in Unova Link (including a shared key)?",
+      "chap": 10,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_17"
+    },
+    {
+      "id": "giants-party",
+      "label": "Bring all three legendary giants",
+      "q": "Do you have Regirock, Regice and Registeel in your party?",
+      "chap": 10,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_17"
+    },
+    {
+      "id": "nature-permit",
+      "label": "Obtain Juniper’s Permit",
+      "q": "Have you obtained Juniper’s Permit by seeing the Unova Pokédex (excluding Mythical Pokémon)?",
+      "chap": 10,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Nature_Preserve"
+    },
+    {
+      "id": "accumula-first-trade",
+      "label": "Complete the first Accumula trade and battle",
+      "q": "Have you traded Excadrill for Ambipom in Accumula and battled the trader?",
+      "chap": 10,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_21"
+    },
+    {
+      "id": "rood-zorua",
+      "label": "Battle Rood at the former Plasma base",
+      "q": "Have you battled Rood at the former Plasma base in Driftveil?",
+      "chap": 4,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_7"
+    }
+  ],
+  "evolution_overrides": {
+    "462": {
+      "evo": "Level up in Chargestone Cave"
+    },
+    "470": {
+      "evo": "Level up near Pinwheel Forest Moss Rock"
+    },
+    "471": {
+      "evo": "Level up near Twist Mountain Ice Rock"
+    },
+    "476": {
+      "evo": "Level up in Chargestone Cave"
+    }
+  },
+  "extra_encounters": [
+    {
+      "n": 79,
+      "area": "Abundant Shrine",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Abundant Shrine, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Abundant_Shrine",
+      "quote": "{{catch/entry5-2|079|Slowpoke|yes|yes|Grass|40-55|all=40%|type1=Water|type2=Psychic}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 450,
+      "area": "Desert Resort",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Desert Resort, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Desert_Resort",
+      "quote": "{{catch/entry5-2|450|Hippowdon|yes|yes|Sand|40-55|all=40%|type1=Ground}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 97,
+      "area": "Dreamyard",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Dreamyard, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "{{catch/entry5-2|097|Hypno|yes|yes|Grass|40-55|all=40%|type1=Psychic}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 332,
+      "area": "Reversal Mountain",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Reversal Mountain, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Reversal_Mountain",
+      "quote": "{{catch/entry5-2|332|Cacturne|yes|yes|Grass|40-55|all=40%|type1=Grass|type2=Dark}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 83,
+      "area": "Unova Route 1",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 1, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_1",
+      "quote": "{{Catch/entry5-2|083|Farfetch'd|yes|yes|Grass|40-55|all=40%|type1=Normal|type2=Flying}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 313,
+      "area": "Unova Route 3",
+      "versions": [
+        "black-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 3, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_3",
+      "quote": "{{catch/entry5-2|313|Volbeat|yes|no|Grass|40-55|all=40%|type1=Bug}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 314,
+      "area": "Unova Route 3",
+      "versions": [
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 3, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_3",
+      "quote": "{{catch/entry5-2|314|Illumise|no|yes|Grass|40-55|all=40%|type1=Bug}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 177,
+      "area": "Unova Route 5",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 5, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_5",
+      "quote": "{{catch/entry5-2|177|Natu|yes|yes|Grass|40-55|all=40%|type1=Psychic|type2=Flying}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 311,
+      "area": "Unova Route 6",
+      "versions": [
+        "black-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 6, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_6",
+      "quote": "{{catch/entry5-2|311|Plusle|yes|no|Grass|40-55|all=40%|type1=Electric}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 312,
+      "area": "Unova Route 6",
+      "versions": [
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 6, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_6",
+      "quote": "{{catch/entry5-2|312|Minun|no|yes|Grass|40-55|all=40%|type1=Electric}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 162,
+      "area": "Unova Route 7",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 7, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_7",
+      "quote": "{{catch/entry5-2|162|Furret|yes|yes|Grass|40-55|all=40%|type1=Normal}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 195,
+      "area": "Unova Route 8",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak",
+        "season-not-winter"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 8, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_8",
+      "quote": "{{catch/entry5-2|195|Quagsire|yes|yes|Puddle|40-55|40%|40%|40%|-|type1=Water|type2=Ground}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 317,
+      "area": "Unova Route 9",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 9, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_9",
+      "quote": "{{catch/entry5-2|317|Swalot|yes|yes|Grass|40-55|all=40%|type1=Poison}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 284,
+      "area": "Unova Route 11",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 11, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_11",
+      "quote": "{{catch/entry5-2|284|Masquerain|yes|yes|Grass|40-55|all=40%|type1=Bug|type2=Flying}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 84,
+      "area": "Unova Route 12",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 12, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_12",
+      "quote": "{{catch/entry5-2|084|Doduo|yes|yes|Grass|40-55|all=40%|type1=Normal|type2=Flying}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 277,
+      "area": "Unova Route 13",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 13, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_13",
+      "quote": "{{catch/entry5-2|277|Swellow|yes|yes|Grass|40-55|all=40%|type1=Normal|type2=Flying}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 22,
+      "area": "Unova Route 15",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 15, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_15",
+      "quote": "{{Catch/entry5-2|022|Fearow|yes|yes|Grass|40-55|all=40%|type1=Normal|type2=Flying}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 204,
+      "area": "Unova Route 16",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 16, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_16",
+      "quote": "{{catch/entry5-2|204|Pineco|yes|yes|Grass|40-55|all=40%|type1=bug}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 187,
+      "area": "Unova Route 18",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 18, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_18",
+      "quote": "{{catch/entry5-2|187|Hoppip|yes|yes|Grass|40-55|all=40%|type1=Grass|type2=Flying}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 122,
+      "area": "Unova Route 20",
+      "versions": [
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 20, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_20",
+      "quote": "{{catch/entry5-2|122|Mr. Mime|no|yes|Grass|40-55|all=40%|type1=Psychic}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 185,
+      "area": "Unova Route 20",
+      "versions": [
+        "black-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 20, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_20",
+      "quote": "{{catch/entry5-2|185|Sudowoodo|yes|no|Grass|40-55|all=40%|type1=Rock}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 166,
+      "area": "Unova Route 22",
+      "versions": [
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 22, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_22",
+      "quote": "{{catch/entry5-2|166|Ledian|no|yes|Grass|40-55|all=40%|type1=Bug|type2=Flying}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 168,
+      "area": "Unova Route 22",
+      "versions": [
+        "black-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 22, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_22",
+      "quote": "{{catch/entry5-2|168|Ariados|yes|no|Grass|40-55|all=40%|type1=Bug|type2=Poison}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    }
+  ]
+}

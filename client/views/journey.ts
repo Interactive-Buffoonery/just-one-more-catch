@@ -14,6 +14,7 @@ import {
   EVENTS,
   forced,
   gameTime,
+  gameClock,
   has,
   inJourney,
   isBadge,
@@ -60,7 +61,6 @@ import {
   uniq,
 } from "../parts";
 import { NoRun } from "./runs";
-import { gameNow } from "../../shared/clock";
 
 /* ---- Journey (home) ---- */
 const why = (h: Catchable) =>
@@ -86,7 +86,7 @@ function heroCard(h: Catchable) {
 
 export function fillClock(mode: string) {
   const c = R().clock,
-    g = gameNow(c),
+    g = gameClock(c),
     two = (n: number) => String(n).padStart(2, "0"),
     zones: string[] = (Intl as any).supportedValuesOf?.("timeZone") ?? [];
   if (c.tz && !zones.includes(c.tz)) zones.unshift(c.tz);
@@ -270,7 +270,7 @@ export function Journey() {
       <select id="here" data-k="here" aria-label="Selected area">${picker.includes(`value="${r.here}"`) ? "" : `<option selected disabled>${r.here}</option>`}${picker}</select>
     </div>
     <div class="where-tools">
-      ${P().nightFrom ? `<button class="quietbtn" data-clock="1" data-k="clock" aria-label="Game clock: ${cap(nowTime())}, ${cap(DAYS[gameNow(r.clock).day])}. Change">${CLOCK_ICON}<b>${cap(nowTime())}</b> · ${cap(DAYS[gameNow(r.clock).day]).slice(0, 3)}</button>` : ""}
+      ${P().nightFrom ? `<button class="quietbtn" data-clock="1" data-k="clock" aria-label="Game clock: ${cap(nowTime())}, ${cap(DAYS[gameClock(r.clock).day])}. Change">${CLOCK_ICON}<b>${cap(nowTime())}</b> · ${cap(DAYS[gameClock(r.clock).day]).slice(0, 3)}</button>` : ""}
       <button class="quietbtn" data-custom="1" data-k="custom">${SLIDERS_ICON}Customize</button>
     </div>
   </section>

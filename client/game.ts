@@ -1,7 +1,7 @@
 import { badgeName as sharedBadgeName, needLabel as sharedNeedLabel } from "./need-labels.ts";
 import { GameData, Pack, VERSIONS } from "./packs";
 import { Bridge, Mon, Row, RunRow, Species } from "./types";
-import { Clock, gameNow } from "../shared/clock";
+import { Clock, gameNow, encounterTime } from "../shared/clock";
 import { VersionId } from "../shared/versions";
 
 export const TYPE: Record<string, string> = {
@@ -29,7 +29,26 @@ export let EVENTS: Record<string, GameData["events"][number]> = {};
 let LATER: Record<string, GameData["events"][number][]> = {};
 export const METHOD: Record<string, [string, string | null]> = {
   walk: ["Walking", null],
+  "dark-grass": ["Dark grass", null],
+  "grass-spots": ["Rustling grass", null],
+  "cave-spots": ["Dust cloud", null],
+  "bridge-spots": ["Flying shadow", null],
+  "surf-spots": ["Rippling water (Surf)", "surf"],
+  "super-rod-spots": ["Rippling water (fishing)", "super-rod"],
   horde: ["Horde encounter", null],
+  "yellow-flowers": ["Yellow flowers", null],
+  "purple-flowers": ["Purple flowers", null],
+  "red-flowers": ["Red flowers", null],
+  "rough-terrain": ["Rough terrain", null],
+  "ground-ambush": ["Ground ambush", null],
+  "ceiling-ambush": ["Ceiling ambush", null],
+  "sky-ambush": ["Sky ambush", null],
+  "rustling-bush-ambush": ["Rustling bush", null],
+  "trash-can-ambush": ["Shaking trash can", null],
+
+  "honey-tree": ["Honey tree (wait 6 hours)", "honey"],
+  "pokemon-ranger": ["Pokémon Ranger gift", null],
+  "hidden-grotto": ["Hidden Grotto", null],
   flocks: ["Soaring flock", null],
   seaweed: ["Underwater", "dive"],
   "feebas-tile-fishing": ["Feebas fishing tiles", "old-rod"],
@@ -52,11 +71,20 @@ export const METHOD: Record<string, [string, string | null]> = {
   fishing: ["Fishing", "fishing-rod"],
   "bubbling-spots": ["Bubbling fishing spot", "fishing-rod"],
   "sos-from-bubbling-spot": ["SOS at a bubbling spot", "fishing-rod"],
+  "dirt-cloud": ["Dirt cloud ambush", null],
+  "sand-cloud": ["Sand cloud ambush", null],
+  "rustling-grass": ["Rustling grass ambush", null],
+  "rustling-tree": ["Rustling tree ambush", null],
+  "rustling-bush": ["Rustling bush ambush", null],
+  "flying-shadow": ["Flying shadow ambush", null],
+  "water-splash": ["Water splash ambush", "surf"],
+  "cave-shadow": ["Cave shadow ambush", null],
   sos: ["SOS call", null],
   "island-scan": ["Island Scan", "island-scan"],
   "berry-trees": ["Berry tree", null],
 };
 export const ONE_TIME = new Set([
+  "pokemon-ranger",
   "devon-scope",
   "wailmer-pail",
   "gift",
@@ -81,6 +109,8 @@ export const DAYS = [
   "saturday",
 ];
 export const OK_COND: Record<string, string> = {
+  "other-captured-all-ultra-beasts": "All Ultra Beasts caught",
+  "story-progress-finished-looker-sidequest": "After the Ultra Beast missions",
   "headbutt-tree-common": "Common tree",
   "headbutt-tree-rare": "Rare tree",
   "story-progress-zephyr-badge": "After Zephyr Badge",
@@ -88,11 +118,36 @@ export const OK_COND: Record<string, string> = {
   "story-progress-hall-of-fame": "After the Elite Four",
 };
 const STORY: Record<string, string> = {
+  "season-spring": "Spring only",
+  "season-summer": "Summer only",
+  "season-autumn": "Autumn only",
+  "season-winter": "Winter only",
+  "special-encounter-couldnt-capture-before": "After the League, if not caught earlier",
+  "story-progress-juniper-cave-of-being": "Meet the lake guardians in Cave of Being",
+  "story-progress-quake-badge": "After the Quake Badge",
+  "other-captured-reshiram-or-zekrom": "After catching N’s dragon",
+  "item-lunar-wing": "Bring the Lunar Wing",
+  "item-dark-stone": "Bring the Dark Stone",
+  "item-light-stone": "Bring the Light Stone",
+  "item-iron-key": "Activate the Iron Key",
+  "item-ice-key": "Activate the Iceberg Key",
+  "radar-off": "Without Poké Radar",
+  "slot2-none": "No GBA cartridge inserted",
+  "backlot-not-mentioned": "Regular Trophy Garden encounter",
+  "great-marsh-daily-slot-none": "Regular Great Marsh encounter",
+  "other-giratina-not-caught-in-distortion-world": "Only if Giratina was not caught in the Distortion World",
+  "item-adamant-orb": "Carry the Adamant Orb",
+  "item-lustrous-orb": "Carry the Lustrous Orb",
   "story-progress-beat-red": "After beating Red",
   "story-progress-awakened-beasts": "After the Burned Tower beasts wake",
   "story-progress-vermilion-copycat": "After returning Copycat's doll",
   "story-progress-receive-tm-from-claire": "After Clair's TM",
   "story-progress-returned-machine-part": "After returning the Machine Part",
+  "friend-safari-slot-1": "Registered friend’s Safari: slot 1",
+  "friend-safari-slot-2": "Registered friend’s Safari: slot 2",
+  "friend-safari-slot-3": "Friend’s third Safari slot unlocked (Hall of Fame and shared PSS session)",
+  "other-found-11-times-roaming": "After eleven roaming encounters",
+  "trash-can-type-daily": "Daily shaking trash can",
   "other-received-kanto-starter": "After getting a Kanto starter",
   "other-event-arceus-in-party": "Event Arceus in your party",
   "other-snorlax-11-beat-league": "After the Elite Four",
@@ -100,6 +155,8 @@ const STORY: Record<string, string> = {
   "radio-hoenn": "Hoenn Sound on the radio",
   "radio-sinnoh": "Sinnoh Sound on the radio",
   "swarm-yes": "Swarm only",
+  "daily-outbreak": "Daily outbreak only (check gate bulletin boards)",
+  "season-not-winter": "Spring, summer or autumn only",
   "bug-catching-contest-yes": "Bug-Catching Contest",
   "trade-any-pokemon": "Trade any Pokémon",
   "headbutt-tree-secret": "Secret tree",
@@ -109,11 +166,28 @@ const STORY: Record<string, string> = {
   "first-party-pokemon-high-friendship": "Lead Pokémon has high friendship",
   "story-progress-beat-olivias-trial": "After Olivia's grand trial",
   "other-scan-qr-code": "Scan its QR code",
+  "radar-on": "Poké Radar grass",
+  "slot2-ruby": "Ruby in the DS Game Boy Advance slot",
+  "slot2-sapphire": "Sapphire in the DS Game Boy Advance slot",
+  "slot2-emerald": "Emerald in the DS Game Boy Advance slot",
+  "slot2-firered": "FireRed in the DS Game Boy Advance slot",
+  "slot2-leafgreen": "LeafGreen in the DS Game Boy Advance slot",
+  "backlot-mentioned": "Today's or yesterday's Trophy Garden guest",
+  "honey-tree-group-a": "Honey Tree group A (after 6 hours)",
+  "honey-tree-group-b": "Honey Tree group B (after 6 hours)",
+  "honey-tree-group-c": "Munchlax Honey Tree (after 6 hours)",
+  "item-odd-keystone": "Place an Odd Keystone in the Hallowed Tower",
+  "other-talked-to-32-people-underground": "Talk to players 32 times in the Underground",
+  "other-regirock-regice-registeel-in-party": "Regirock, Regice and Registeel in your party",
 };
 export const cap = (s: string) => s[0].toUpperCase() + s.slice(1);
 function specialLabel(c: string) {
   if (STORY[c]) return STORY[c];
-  let m = c.match(/^johto-safari-blocks-(\w+)-min-(\d+)$/);
+  if (c.startsWith("season-")) return `${cap(c.slice(7))} only`;
+  if (c === "special-encounter-couldnt-capture-before") return "If the earlier catch was deferred";
+  let m = c.match(/^great-marsh-daily-slot-(\d+)-of-32$/);
+  if (m) return "Great Marsh daily Pokémon";
+  m = c.match(/^johto-safari-blocks-(\w+)-min-(\d+)$/);
   if (m) return `Safari: ${m[2]}+ ${m[1]} blocks`;
   m = c.match(/^item-(\w+)-fossil$/);
   if (m) return `Bring a ${cap(m[1])} Fossil`;
@@ -397,21 +471,18 @@ export const R = () => run as Run;
 export const ver = () => verOf(R().version);
 export const P = () => ver().pack;
 export const e4 = () => R().badges.has("Elite Four");
-export const visible = (p: Species) => !!p.j || e4();
+export const visible = (p: Species) => p.j != null || e4();
 export const dexList = () =>
   DEX.filter(visible).sort((a, b) =>
     e4() ? a.n - b.n : (a.j as number) - (b.j as number),
   );
-export const num = (p: Species) => (e4() || !p.j ? p.n : p.j);
+export const num = (p: Species) => (e4() || p.j == null ? p.n : p.j);
 export const pad = (n: number) => String(n).padStart(3, "0");
 export const regionalCaught = () =>
-  [...R().caught].filter((n) => byN[n]?.j).length;
+  [...R().caught].filter((n) => byN[n]?.j != null).length;
 
-export const gameTime = () => {
-  const h = gameNow(R().clock).hour,
-    night = P().nightFrom ?? 24;
-  return h >= 4 && h < 10 ? "morning" : h >= 10 && h < night ? "day" : "night";
-};
+export const gameClock = (clock = R().clock) => gameNow(clock, Date.now(), ver().clockOffset);
+export const gameTime = () => encounterTime(gameClock().hour, P().morningFrom, P().nightFrom);
 export const nowTime = () => (R().timeAuto ? gameTime() : R().time);
 export const isHere = (pl: string) =>
   pl === R().here || pl.startsWith(R().here + " ");

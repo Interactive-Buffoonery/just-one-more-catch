@@ -50,6 +50,30 @@ if GAME.get("bulbapedia_gap_fill"):
             "version_details": [{"version": {"name": v}, "encounter_details": [detail]} for v in row["versions"]]})
 
 
+# Retire a sourced supplement when PokeAPI supplies its conditional table.
+if GAME.get("extra_encounters") and not GAME.get("bulbapedia_gap_fill"):
+    covered = set()
+    for filename in os.listdir(CACHE):
+        if not re.fullmatch(r"pokemon_\d+_encounters.json", filename):
+            continue
+        for area in cached(filename[:-5]):
+            for version in area["version_details"]:
+                if version["version"]["name"] not in VERSIONS:
+                    continue
+                for detail in version["encounter_details"]:
+                    if any(c["name"] == "swarm-yes" for c in detail["condition_values"]):
+                        covered.add((version["version"]["name"], nice(area["location_area"]["name"]), detail["method"]["name"]))
+    for row in GAME["extra_encounters"]:
+        assert row["src"] and row["url"] and row["quote"], "Supplement needs provenance"
+        assert "daily-outbreak" in row["conditions"], "Only outbreak supplements are supported"
+        detail = {"method": {"name": row["method"]}, "min_level": row["lo"], "max_level": row["hi"],
+                  "chance": row["chance"], "condition_values": [{"name": c} for c in row["conditions"]],
+                  "needs": row["needs"], "src": row["src"], "url": row["url"]}
+        SUPPLEMENT.setdefault(row["n"], []).append({"area_name": row["area"],
+            "version_details": [{"version": {"name": v}, "encounter_details": [detail]}
+                for v in row["versions"] if (v, row["area"], row["method"]) not in covered]})
+
+
 def pretty(s):
     for a, b in [("Kings Rock", "King's Rock"), ("Dragons Den", "Dragon's Den"), ("Team Rocket Hq", "Team Rocket HQ"),
                  ("Digletts", "Diglett's"), ("Kirks House", "Kirk's House"), ("Bills House", "Bill's House"),
@@ -73,6 +97,7 @@ PLACES = [(p, i) for i, c in enumerate(GAME["chapters"]) for p in c["places"]]
 unmatched = set()
 need_hits = set()
 row_hits = set()
+drop_hits = set()
 
 
 def chapter_of(place):
@@ -155,20 +180,32 @@ def rows_for(encounters, version, n):
                 continue
             for d in v["encounter_details"]:
                 src = d["method"]["name"]
-                if src in GAME.get("drop_methods", []):
+                if any(rule == src if isinstance(rule, str) else matches(loc, rule["place"]) and src in rule["methods"]
+                       for rule in GAME.get("drop_methods", [])):
                     continue
-                if any(g["n"] == n and (loc == g["place"] if g.get("exact") else matches(loc, g["place"])) and g.get("m", src) == src
-                       and version in g.get("versions", VERSIONS) for g in GAME.get("drop_rows", [])):
+                drops = {i for i, g in enumerate(GAME.get("drop_rows", []))
+                         if g["n"] == n and (loc == g["place"] if g.get("exact") else matches(loc, g["place"])) and g.get("m", src) == src
+                         and version in g.get("versions", VERSIONS)}
+                drop_hits.update(drops)
+                if drops:
                     continue
-                cond = sorted(GAME.get("condition_replacements", {}).get(c["name"], c["name"]) for c in d["condition_values"] if c["name"] not in DEFAULT_COND)
+                raw_cond = [c["name"] for c in d["condition_values"]]
+                condition_needs = GAME.get("condition_needs", {})
+                cond = sorted(GAME.get("condition_replacements", {}).get(c, c) for c in raw_cond
+                              if c not in DEFAULT_COND and c not in GAME.get("drop_conditions", [])
+                              and (c not in condition_needs or c in GAME.get("keep_conditions", [])))
                 m = GAME.get("methods", {}).get(src, src)
+                for override in GAME.get("area_methods", []):
+                    if matches(loc, override["place"]) and n in override.get("species", [n]):
+                        m = override["methods"].get(src, m)
                 cond += [c for area, conditions in GAME.get("area_conditions", {}).items() if matches(loc, area) for c in conditions]
-                extra = list(d.get("needs", []))
+                extra = list(d.get("needs", [])) + [need for c in raw_cond for need in condition_needs.get(c, [])]
                 row_place = place
                 for i, g in enumerate(GAME.get("row_needs", [])):
-                    if g["n"] == n and matches(loc, g["place"]) and g.get("m", m) == m and version in g.get("versions", VERSIONS):
+                    if g["n"] == n and (loc == g["place"] if g.get("exact_place") else matches(loc, g["place"])) and g.get("m", m) == m and version in g.get("versions", VERSIONS):
                         row_hits.add(i)
                         extra += g["needs"]
+                        cond = sorted(set(cond + g.get("conditions", [])) - set(g.get("remove_conditions", [])))
                         row_place = g.get("show_as", row_place)
                 need = tuple(dict.fromkeys(area_need + extra)) or None
                 k = (row_place, m, need, tuple(cond), d.get("src"), d.get("url"))
@@ -234,7 +271,7 @@ def species(n, johto):
     name = lambda s: next(x["name"] for x in s["names"] if x["language"]["name"] == "en")
     rows = {}
     for version, v in VERSIONS.items():
-        for r in rows_for(enc, version, n):
+        for r in rows_for(enc + SUPPLEMENT.get(n, []), version, n):
             key = json.dumps(r, sort_keys=True)
             rows[key] = rows.get(key, "") + v
     pre = sp["evolves_from_species"]
@@ -257,17 +294,32 @@ def species(n, johto):
     }
 
 
+def regional_dex(ids):
+    ids = ids if isinstance(ids, list) else [ids]
+    result = {}
+    offset = 0
+    for dex_id in ids:
+        entries = cached(f"pokedex_{dex_id}")["pokemon_entries"]
+        for e in entries:
+            n = int(e["pokemon_species"]["url"].rstrip("/").split("/")[-1])
+            assert n not in result, f"Species {n} appears in multiple regional sections"
+            result[n] = offset + e["entry_number"]
+        offset += len(entries)
+    return result
+
+
 if __name__ == "__main__":
-    johto = {int(e["pokemon_species"]["url"].rstrip("/").split("/")[-1]): e["entry_number"] for e in cached(f"pokedex_{GAME['pokedex']}")["pokemon_entries"]}
+    johto = regional_dex(GAME["pokedex"])
     dex = [species(n, johto) for n in range(1, GAME["species"] + 1)]
     if unmatched:
         sys.exit("No chapter for: " + ", ".join(sorted(unmatched)))
-    assert sum(1 for p in dex if p["j"]) == len(johto)
+    assert sum(1 for p in dex if p["j"] is not None) == len(johto)
     assert not set(GAME["needs"]) - need_hits, f"needs match no area: {set(GAME['needs']) - need_hits}"
     events = GAME.get("events", [])
     ids = {e["id"] for e in events}
     assert len(ids) == len(events), "duplicate event id"
     assert not set(range(len(GAME.get("row_needs", [])))) - row_hits, f"row_needs match no row: {[g for i, g in enumerate(GAME['row_needs']) if i not in row_hits]}"
+    assert not set(range(len(GAME.get("drop_rows", [])))) - drop_hits, f"drop_rows match no row: {[g for i, g in enumerate(GAME['drop_rows']) if i not in drop_hits]}"
     for e in events:
         assert re.fullmatch(r"[a-z][a-z0-9-]*", e["id"]), f"event id must be a lowercase slug: {e['id']}"
         assert 0 <= e["chap"] < len(GAME["chapters"]), f"{e['id']}: no chapter {e['chap']}"

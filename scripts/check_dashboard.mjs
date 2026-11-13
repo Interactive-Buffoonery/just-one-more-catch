@@ -39,9 +39,13 @@ assert.match(view.titleTile(['firered-switch', 'leafgreen-switch'], 'Switch'), /
 
 const row = (id, version, at, r = {}) => ({id, version, createdAt: at, updatedAt: at, summary: {badges: [], caught: 0, party: [], ...r}});
 const shelfNames = () => [...view.picker().matchAll(/data-shelf="(\w+)"/g)].map(m => m[1]);
-assert.deepEqual(shelfNames(), ['Unplayed', 'Soon']);
+const soonShelf = titles.some(t => t.every(g => typeof g !== 'string')) ? ['Soon'] : [];
+assert.deepEqual(shelfNames(), ['Unplayed', ...soonShelf]);
+CONSOLES.push({name: 'Example console', tag: 'Example', titles: [[{name: 'Example game', short: 'EX', color: '#888', region: 'Example'}]]});
+assert.deepEqual(shelfNames(), ['Unplayed', 'Soon'], 'upcoming titles keep the Soon shelf available');
+CONSOLES.pop();
 ctx.bridge.runs = [row('a', 'heartgold', '2026-11-10T00:00:00Z')];
-assert.deepEqual(shelfNames(), ['Unplayed', 'Played', 'Soon']);
+assert.deepEqual(shelfNames(), ['Unplayed', 'Played', ...soonShelf]);
 view.dash.shelf = 'Played';
 assert.match(view.picker(), /data-pair="heartgold,soulsilver"/, 'played title offers its other flavor');
 assert.doesNotMatch(view.picker(), /data-newrun="red"/);

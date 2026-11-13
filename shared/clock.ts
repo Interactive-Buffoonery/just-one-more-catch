@@ -26,8 +26,15 @@ function inZone(now: number, tz?: string): GameNow {
   return { day: WEEKDAYS.indexOf(p.weekday.toLowerCase()), hour: +p.hour % 24, minute: +p.minute };
 }
 
-export function gameNow(c: Clock, now = Date.now()): GameNow {
-  if (c.mode !== "manual" || c.min == null || c.at == null) return inZone(now, c.tz);
+export function gameNow(c: Clock, now = Date.now(), hourOffset = 0): GameNow {
+  if (c.mode !== "manual" || c.min == null || c.at == null) {
+    const g = inZone(now, c.tz);
+    return { ...g, hour: (g.hour + hourOffset) % 24 };
+  }
   const m = (((c.min + Math.floor((now - c.at) / 60000)) % WEEK) + WEEK) % WEEK;
   return { day: Math.floor(m / 1440), hour: Math.floor(m / 60) % 24, minute: m % 60 };
+}
+
+export function encounterTime(hour: number, morning = 4, night = 24) {
+  return hour >= morning && hour < 10 ? "morning" : hour >= 10 && hour < night ? "day" : "night";
 }
