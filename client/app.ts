@@ -958,7 +958,7 @@ export function mount(el: HTMLElement, b: Bridge) {
       const results = el.querySelectorAll<HTMLButtonElement>("#dexgrid button.dt");
       if (results.length === 1) {
         e.preventDefault();
-        openSheet(Number(results[0].dataset.open || results[0].dataset.toggle));
+        results[0].click();
       }
     }
   });
