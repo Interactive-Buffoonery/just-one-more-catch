@@ -265,7 +265,12 @@ The source was read without building it. Paths below are relative to that tree.
 
 - [VermilionDock.asm, lines 1–11 and 39–40](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/VermilionDock.asm#L1-L40):
   `CheckEventReuseHL EVENT_GOT_HM01` followed by `ret z` prevents departure
-  before collecting HM01; the departure routine sets `EVENT_SS_ANNE_LEFT`.
+  before collecting HM01, and lines 7–9 (`cp $1` / `ret nz`) limit it to
+  arriving from the ship; the departure routine sets `EVENT_SS_ANNE_LEFT`.
+  [SSAnne1F objects, lines 9–10](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/SSAnne1F.asm#L9-L10)
+  warp to `VERMILION_DOCK, 2` (zero-based `$1`);
+  [VermilionDock objects, lines 5–6](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/VermilionDock.asm#L5-L6)
+  list the city exit first and the ship second.
   [VermilionCity.asm, lines 177–180](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/VermilionCity.asm#L177-L180)
   checks that departure flag before admitting the player. This establishes
   the departure trigger, not a complete Super Rod acquisition/access route;

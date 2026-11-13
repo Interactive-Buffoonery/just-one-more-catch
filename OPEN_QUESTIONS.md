@@ -41,11 +41,16 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Yellow implementation handoff
 
-- **S.S. Anne dock timing:** departure requires HM01: the pinned
+- **S.S. Anne dock timing:** departure requires HM01 and stepping off the
+  ship: the pinned
   [dock script](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/VermilionDock.asm#L1-L11)
-  returns before departure when `EVENT_GOT_HM01` is unset; departure sets
-  `EVENT_SS_ANNE_LEFT` at line 40. This narrows the remaining question to
-  obtaining the Super Rod while preserving dock access (including how Cut is
+  returns before departure when `EVENT_GOT_HM01` is unset or the arrival warp
+  is not `$1`, which only
+  [SS Anne 1F](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/SSAnne1F.asm#L9-L10)
+  uses (`VERMILION_DOCK, 2`; the city entrance is warp 1 in the
+  [dock objects](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/VermilionDock.asm#L5-L6)).
+  Departure sets `EVENT_SS_ANNE_LEFT` at line 40. This narrows the remaining
+  question to obtaining the Super Rod while preserving dock access (including how Cut is
   supplied). The three Super Rod rows (72, 90, 120) remain unchanged. Verify
   that complete route and fishing positions before settling availability;
   post-departure access remains refused by the
