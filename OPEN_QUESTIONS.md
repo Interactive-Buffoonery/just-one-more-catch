@@ -197,6 +197,14 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Black 2 / White 2 (`b2w2`)
 
+- **Save imports:** synthetic caught/empty BW and B2W2 saves agree through
+  native Core, raw flags and reader 0.1.2 WASM. Obtain permitted real exports
+  and legitimate in-game zero-caught saves. Gen V recorded-date epoch/bounds,
+  invalid values, leap days and exported dates remain unverified; use import
+  day. Regional/corrupt/modified variants, live account imports, mobile Safari
+  and physical mobile performance remain separate checks.
+
+
 This is a sourced first implementation awaiting independent access review,
 not a claim that all earliest encounter tiles are proven. PokeAPI is the main encounter source; cached location tables now fill the
 missing outbreak rows with per-row provenance. See SOURCES.md
