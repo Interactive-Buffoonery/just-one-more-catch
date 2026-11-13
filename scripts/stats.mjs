@@ -19,7 +19,7 @@ const html = `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="v
 ${[["newUsers","New users"],["runsStarted","Playthroughs started"],["activeRuns","Playthroughs played (by last save)"]].map(([key,label]) => "<h2>" + label + "</h2>" + chart(key)).join("")}
 <h2>Playthroughs per game</h2>${table([["Game","Playthroughs"],...Object.entries(data.versions)])}
 <h2>Badge distribution</h2>${table([["Badges","Playthroughs"],...Object.entries(data.badges)])}
-<h2>Events · all time</h2>${table([["Event","Signed in","Guest"],...Object.entries(data.events).map(([name,c]) => [name,c.signedIn,c.guest])])}
+<h2>Events · last 90 days</h2>${table([["Event","Signed in","Guest"],...Object.entries(data.events).map(([name,c]) => [name,c.signedIn,c.guest])])}
 <h2>Events · weekly</h2>${table([["Event","Week (UTC)","Signed in","Guest"],...Object.entries(data.events).flatMap(([name,c]) => c.weekly.filter((w) => w.signedIn + w.guest).map((w) => [name,w.start,w.signedIn,w.guest]))])}</html>`;
 const path = resolve("stats.html");
 writeFileSync(path, html);

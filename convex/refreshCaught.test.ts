@@ -46,6 +46,7 @@ it("undoes a refresh atomically, restoring start date and link", async () => {
   const { added } = await a.mutation(api.runs.refreshCaught, { id, caught: [1, 25], link, startedAt: 1000 });
   await expect(b.mutation(api.runs.undoRefresh, { id, added })).rejects.toThrow();
   await expect(a.mutation(api.runs.undoRefresh, { id, added, link: { ...link, salt: "" } })).rejects.toThrow();
+  await expect(a.mutation(api.runs.undoRefresh, { id, added, expectedUserId: "b" })).rejects.toThrow("Account changed");
   await a.mutation(api.runs.undoRefresh, { id, added, startedAt: 5000 });
   expect(JSON.parse(await a.query(api.runs.get, { id }))).toEqual({ caught: [1], notes: "keep" });
   expect(await a.query(api.runs.saveLinks, { version: "red" })).toEqual([]);

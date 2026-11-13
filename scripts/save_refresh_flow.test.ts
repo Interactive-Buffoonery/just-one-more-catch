@@ -181,9 +181,10 @@ describe("guest refresh undo and move", () => {
     const id = await guest.createRun("red");
     const rows = guestRows().map((r) => (r.id === id ? { ...r, saveLink: { salt: "", fingerprint: "x" } } : r));
     storage.setItem("jomc.guest", JSON.stringify(rows));
-    const raw = { createRun: vi.fn(async () => "acct1"), saveRun: vi.fn(), setStart: vi.fn(), track: vi.fn() } as unknown as Bridge & { createRun: ReturnType<typeof vi.fn> };
+    Object.assign((await import("../client/game")).bridge, { auth: { isAuthenticated: true, userId: "A" }, runs: [] });
+    const raw = { auth: { userId: "A" }, createRun: vi.fn(async () => "acct1"), saveRun: vi.fn(), setStart: vi.fn(), track: vi.fn() } as unknown as Bridge & { createRun: ReturnType<typeof vi.fn> };
     await moveGuestRuns(raw, vi.fn(), vi.fn());
-    expect(raw.createRun).toHaveBeenCalledWith("red", undefined);
+    expect(raw.createRun).toHaveBeenCalledWith("red", "A", undefined);
     expect(guestRows()).toEqual([]);
   });
 });

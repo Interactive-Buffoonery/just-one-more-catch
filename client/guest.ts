@@ -1,12 +1,13 @@
 import { bridge, store } from "./game";
 import { Bridge, RunRow } from "./types";
 import { isAvatar } from "../shared/avatars";
+import { preserveJournal } from "../shared/journal";
 import { MAX_RUNS } from "../shared/limits";
 import { summarize } from "../shared/summary";
 import { importCaughtState, validateImportId, validateImportStart, validateSaveLink, mergeSaveLink, mergeCaughtState, sameSaveLink, unmergeCaughtState, type SaveLink } from "../shared/save-import";
 
 /* ---- Guest runs live in this browser until sign-in ---- */
-type GuestRow = Omit<RunRow, "summary"> & { state: string; saveLink?: SaveLink; movedTo?: string; importStartedAt?: number };
+type GuestRow = Omit<RunRow, "summary"> & { state: string; saveLink?: SaveLink; movedTo?: string; moveOwner?: string; importStartedAt?: number };
 const GUEST = "jomc.guest";
 let guestMem = "[]";
 export const guestRows = (): GuestRow[] => {
@@ -42,7 +43,7 @@ export function withGuest(b: Bridge, refresh: () => void): Bridge {
     async getState(id) {
       return guestRows().find((g) => g.id === id)?.state ?? "{}";
     },
-    async createRun(version, link) {
+    async createRun(version, _expectedUserId, link) {
       if (link) validateSaveLink(link);
       const id = "local-" + Date.now().toString(36);
       setGuestRows([
@@ -116,7 +117,7 @@ export function withGuest(b: Bridge, refresh: () => void): Bridge {
     async saveRun(id, state) {
       const updatedAt = new Date().toISOString();
       setGuestRows(
-        guestRows().map((r) => (r.id === id ? { ...r, state, updatedAt } : r)),
+        guestRows().map((r) => (r.id === id ? { ...r, state: preserveJournal(state, r.state), updatedAt } : r)),
       );
     },
     async setStart(id, startedAt) {
@@ -165,20 +166,32 @@ export async function moveGuestRuns(
   flash: (msg: string) => void,
   moved1: (guestId: string, id: string) => void,
 ) {
-  if (moving || !guestRows().length) return;
+  const target = raw.auth.userId;
+  if (moving || !target || !guestRows().length) return;
+  const current = () => bridge.auth.isAuthenticated && bridge.auth.userId === target;
   moving = true;
+  const owned = new Set(bridge.runs?.map(r => r.id));
+  setGuestRows(guestRows().map((g) => ({
+    ...g,
+    moveOwner: g.moveOwner ?? (!g.movedTo || owned.has(g.movedTo) ? target : undefined),
+  })));
   let moved = 0,
     have = bridge.runs?.length || 0;
   try {
     for (const g of guestRows()) {
+      if (!current()) break;
+      if (g.moveOwner !== target) continue;
       if (!g.movedTo && have >= MAX_RUNS) break;
-      const id = g.movedTo || (await raw.createRun(g.version, validLink(g.saveLink)));
+      const id = g.movedTo || (await raw.createRun(g.version, target, validLink(g.saveLink)));
       if (!g.movedTo) have++;
       setGuestRows(
         guestRows().map((r) => (r.id === g.id ? { ...r, movedTo: id } : r)),
       );
-      await raw.saveRun(id, g.state);
-      await raw.setStart(id, Date.parse(g.createdAt));
+      if (!current()) break;
+      await raw.saveRun(id, g.state, target);
+      if (!current()) break;
+      await raw.setStart(id, Date.parse(g.createdAt), target);
+      if (!current()) break;
       setGuestRows(guestRows().filter((r) => r.id !== g.id));
       raw.track("guest_run_moved", g.version);
       moved1(g.id, id);
@@ -187,7 +200,7 @@ export async function moveGuestRuns(
   } catch {}
   moving = false;
   const left = guestRows().length;
-  if (moved || left !== lastLeft)
+  if (current() && (moved || left !== lastLeft))
     flash(
       left
         ? `${moved ? `Moved ${moved} of ${moved + left} playthroughs to your account. ` : ""}${waitingNote(left)}`

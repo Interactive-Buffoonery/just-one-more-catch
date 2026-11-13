@@ -1,4 +1,4 @@
-import { internalMutation, mutation, query, type MutationCtx, type QueryCtx } from "./_generated/server";
+import { action, internalMutation, mutation, query, type MutationCtx, type QueryCtx } from "./_generated/server";
 import { internal } from "./_generated/api";
 import type { Doc, Id } from "./_generated/dataModel";
 import { ConvexError, v } from "convex/values";
@@ -10,14 +10,17 @@ import { importCaughtState, validateImportId, validateImportStart, validateSaveL
 import { saveLink } from "./schema";
 
 import { sendContact } from "./contactSpam";
+import { verifiedVisitor } from "./verification";
 import { identityOf } from "./auth";
+import { preserveJournal, validateJournal } from "../shared/journal";
 // Each run can carry up to MAX_RUN_BYTES, so batches stay well under the 16 MiB per-call read limit
 const BATCH = 16;
 const linkValidator = v.optional(saveLink);
 
-async function owner(ctx: QueryCtx) {
+async function owner(ctx: QueryCtx, expectedUserId?: string) {
   const me = await identityOf(ctx);
   if (!me) throw new Error("Sign in first");
+  if (expectedUserId !== undefined && me.subject !== expectedUserId) throw new Error("Account changed");
   return me.tokenIdentifier;
 }
 
@@ -35,6 +38,9 @@ const stateOf = (ctx: QueryCtx, run: Id<"runs">) =>
 
 async function putState(ctx: MutationCtx, run: Doc<"runs">, state: string, fields: { updatedAt?: number } = {}) {
   const old = await stateOf(ctx, run._id);
+  state = preserveJournal(state, old?.state ?? "{}");
+  validateJournal(JSON.parse(state));
+  if (runBytes(state) > MAX_RUN_BYTES) throw new Error("Playthrough is too large");
   if (old) await ctx.db.patch(old._id, { state });
   else await ctx.db.insert("states", { run: run._id, state });
   await ctx.db.patch(run._id, { ...fields, summary: summarize(state) });
@@ -46,10 +52,10 @@ async function dropRun(ctx: MutationCtx, run: Id<"runs">) {
   await ctx.db.delete(run);
 }
 
-async function mine(ctx: QueryCtx, id: string) {
+async function mine(ctx: QueryCtx, id: string, expectedUserId?: string) {
   const runId = ctx.db.normalizeId("runs", id);
   const run = runId && (await ctx.db.get(runId));
-  if (!run || run.owner !== (await owner(ctx))) throw new Error("Not your playthrough");
+  if (!run || run.owner !== (await owner(ctx, expectedUserId))) throw new Error("Not your playthrough");
   return run;
 }
 
@@ -77,10 +83,10 @@ export const get = query({
 });
 
 export const create = mutation({
-  args: { version: v.string(), link: linkValidator },
-  handler: async (ctx, { version, link }) => {
+  args: { version: v.string(), expectedUserId: v.optional(v.string()), link: linkValidator },
+  handler: async (ctx, { version, expectedUserId, link }) => {
     if (link) validateSaveLink(link);
-    const who = await owner(ctx);
+    const who = await owner(ctx, expectedUserId);
     if (!(VERSION_IDS as readonly string[]).includes(version)) throw new Error("Unknown game");
     if ((await ownedBy(ctx, who)).length >= MAX_RUNS) throw new Error("Too many playthroughs");
     return (await ctx.db.insert("runs", { owner: who, version, saveLink: link, summary: summarize("{}") })) as string;
@@ -112,20 +118,20 @@ export const importCaught = mutation({
 });
 
 export const save = mutation({
-  args: { id: v.string(), state: v.string() },
-  handler: async (ctx, { id, state }) => {
+  args: { id: v.string(), state: v.string(), expectedUserId: v.optional(v.string()) },
+  handler: async (ctx, { id, state, expectedUserId }) => {
     if (runBytes(state) > MAX_RUN_BYTES) throw new Error("Playthrough is too large");
     JSON.parse(state);
-    const run = await mine(ctx, id);
+    const run = await mine(ctx, id, expectedUserId);
     await putState(ctx, run, state, { updatedAt: Date.now() });
   },
 });
 
 export const setStart = mutation({
-  args: { id: v.string(), startedAt: v.number() },
-  handler: async (ctx, { id, startedAt }) => {
+  args: { id: v.string(), startedAt: v.number(), expectedUserId: v.optional(v.string()) },
+  handler: async (ctx, { id, startedAt, expectedUserId }) => {
     if (!Number.isFinite(startedAt) || startedAt > Date.now() + 864e5) throw new Error("Pick a past date");
-    const run = await mine(ctx, id);
+    const run = await mine(ctx, id, expectedUserId);
     await ctx.db.patch(run._id, { startedAt });
   },
 });
@@ -218,9 +224,20 @@ export const deleteAccount = mutation({
   },
 });
 
-export const contact = mutation({
-  args: { email: v.string(), message: v.string(), website: v.optional(v.string()) },
-  returns: v.object({ ok: v.boolean(), retryAfterSeconds: v.optional(v.number()) }),
+const contactArgs = { email: v.string(), message: v.string(), website: v.optional(v.string()) };
+const contactResult = v.object({ ok: v.boolean(), retryAfterSeconds: v.optional(v.number()) });
+export const contact = action({
+  args: { ...contactArgs, token: v.optional(v.string()) },
+  returns: contactResult,
+  handler: async (ctx, { token, ...input }): Promise<{ ok: boolean; retryAfterSeconds?: number }> => {
+    if (input.website) return { ok: true };
+    const visitor = await verifiedVisitor(ctx, token, "contact");
+    return ctx.runMutation(internal.runs.acceptContact, { ...input, visitor });
+  },
+});
+export const acceptContact = internalMutation({
+  args: { ...contactArgs, visitor: v.optional(v.string()) },
+  returns: contactResult,
   handler: sendContact,
 });
 
@@ -263,10 +280,10 @@ export const refreshCaught = mutation({
 });
 
 export const undoRefresh = mutation({
-  args: { id: v.string(), added: v.array(v.number()), startedAt: v.optional(v.number()), link: linkValidator },
+  args: { id: v.string(), added: v.array(v.number()), startedAt: v.optional(v.number()), link: linkValidator, expectedUserId: v.optional(v.string()) },
   returns: v.null(),
-  handler: async (ctx, { id, added, startedAt, link }) => {
-    const run = await mine(ctx, id);
+  handler: async (ctx, { id, added, startedAt, link, expectedUserId }) => {
+    const run = await mine(ctx, id, expectedUserId);
     validateImportStart(startedAt);
     if (link) validateSaveLink(link);
     const state = unmergeCaughtState((await stateOf(ctx, run._id))?.state ?? "{}", added);

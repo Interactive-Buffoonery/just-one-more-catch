@@ -6,7 +6,7 @@ import { withTimeout } from "./async";
 import { SaveImport } from "./save-import";
 import type { SaveLink } from "../shared/save-import";
 import { $, announce, esc, root, setRoot } from "./dom";
-import { caughtCsv, fetchStates, jsonParts, saveFile } from "./export";
+import { caughtCsv, fetchStates, jsonParts, playthroughCsv, saveFile } from "./export";
 import {
   bridge,
   byN,
@@ -52,6 +52,7 @@ import {
   switcher,
   trainerName,
 } from "./views/runs";
+import { fillJournal, fillJournalNote, saveJournalNote, sheetError } from "./views/journal";
 import { gameNow } from "../shared/clock";
 import { MAX_RUN_BYTES, runBytes } from "../shared/limits";
 
@@ -59,12 +60,13 @@ let creating = false;
 let pickOpenedAt = 0;
 let opening: string | null = null;
 let openSeq = 0;
+let sheetSeq = 0;
 let saveImport: SaveImport;
 let importPage: HTMLElement;
 let pendingImport = false;
 let refreshTarget: string | undefined;
 const IMPORT_PATH = /^\/import\/?$/;
-function useRun(row: RunRow, start = false, customize = false) {
+function useRun(row: RunRow, start = false, customize = false, ready?: () => void) {
   const v = verOf(row.version);
   closeRun();
   ui.q = "";
@@ -82,6 +84,7 @@ function useRun(row: RunRow, start = false, customize = false) {
       if (latest) openRun(latest, d, state);
       if (start && run) ui.tab = !isGuest() && run.view === "journey" ? "journey" : "dex";
       render();
+      ready?.();
       if (customize && run) {
         $("#sheetbody").innerHTML = confirmGame(run.version, true);
       }
@@ -100,6 +103,8 @@ function fillSheet(s: any) {
     $("#sheetbody").innerHTML = s.pair ? confirmPair(s.id.split(",")) : confirmGame(s.id);
     return;
   }
+  if (s.kind === "journal") return fillJournal();
+  if (s.kind === "journalnote") return fillJournalNote(s.id);
   typeof s === "number"
     ? fillSpecies(s)
     : s.kind === "signin"
@@ -120,6 +125,7 @@ function fillSheet(s: any) {
 }
 // A closed dialog fires "close" a task later; finish that sheet before showing the next one.
 function showSheet(s: any, fill?: () => void) {
+  sheetSeq++;
   const open = $("#sheet").open;
   if (!open) finishSheet();
   if (s.hist) pushSheet(s.kind);
@@ -128,8 +134,18 @@ function showSheet(s: any, fill?: () => void) {
   if (!open) $("#sheet").showModal();
 }
 const openSheet = (s: any) => {
-  if (isGuest() && ["mon", "box"].includes(s.kind)) return;
+  if (isGuest() && ["mon", "box", "journal", "journalnote"].includes(s.kind)) return;
+  if (["mon", "journal", "journalnote"].includes(s.kind)) {
+    const previous = ui.sheet;
+    s.personal = true;
+    s.runId = run?.id;
+    s.owner = bridge.auth.userId;
+    s.scroll = previous?.personal ? previous.scroll : [scrollX, scrollY];
+    s.k ||= previous?.personal ? previous.k : document.activeElement?.getAttribute("data-k");
+  }
   showSheet(s, () => fillSheet(s));
+  if (s.personal)
+    root.querySelector<HTMLElement>("#sheetbody input, #sheetbody textarea, #sheetbody select, #sheetbody button")?.focus({ preventScroll: true });
 };
 function pushSheet(kind: string) {
   if (history.state?.sheet !== kind)
@@ -144,6 +160,12 @@ function finishSheet() {
   if (s.kind === "pair") stopPair();
   if (s.hist && history.state?.sheet === s.kind) history.back();
   render();
+  if (s.personal) {
+    scrollTo(...s.scroll as [number, number]);
+    const target = Array.from(root.querySelectorAll<HTMLElement>("[data-k]")).find(el => el.dataset.k === s.k);
+    target?.focus({ preventScroll: true });
+    return;
+  }
   if (s.kind === "pick") {
     (root.querySelector(s.pair ? `[data-pair="${s.id}"]` : `[data-newrun="${s.id}"]`) as HTMLElement | null)?.focus();
     return;
@@ -385,9 +407,9 @@ async function saveBeforeImport() {
   await withTimeout(bridge.saveRun(id, state), 30000, "Saving timed out");
   if (run?.id === id) ui.saved = state;
 }
-async function undoRefresh(id: string, added: number[], previousStart?: number, previousLink?: SaveLink) {
+async function undoRefresh(id: string, added: number[], previousStart?: number, previousLink?: SaveLink, expectedUserId?: string) {
   await saveBeforeImport();
-  await bridge.undoRefresh(id, added, previousStart, previousLink);
+  await bridge.undoRefresh(id, added, previousStart, previousLink, expectedUserId);
   const row = bridge.runs?.find((r) => r.id === id);
   if (row && (run?.id === id || opening === id)) useRun(row);
 }
@@ -402,9 +424,10 @@ function toggleCaught(n: number) {
   undoTimer = setTimeout(hideToast, 5000);
 }
 
-async function download(kind: "json" | "csv") {
-  const rows = bridge.runs || [];
+async function download(kind: "json" | "csv" | "playthrough" | "journal", id?: string) {
+  const rows = (bridge.runs || []).filter(row => !id || row.id === id);
   if (ui.export || !rows.length) return;
+  const owner = bridge.auth.userId;
   ui.export = { kind, done: 0, total: rows.length };
   ui.exportError = "";
   render();
@@ -420,6 +443,11 @@ async function download(kind: "json" | "csv") {
         "application/json",
         jsonParts(rows, states),
       );
+    else if (kind === "playthrough" || kind === "journal") {
+      const contents = await playthroughCsv(rows[0], states[0], kind === "journal");
+      if (owner !== bridge.auth.userId || !bridge.runs?.some(row => row.id === rows[0].id)) return;
+      saveFile(`just-one-more-catch-${rows[0].id}-${kind}.csv`, "text/csv;charset=utf-8", [contents]);
+    }
     else
       saveFile("just-one-more-catch-caught.csv", "text/csv", [
         await caughtCsv(rows, states),
@@ -494,7 +522,8 @@ async function onClick(e: MouseEvent) {
     return;
   }
   if (d.close) {
-    $("#sheet").close();
+    if (ui.sheet?.journal) openSheet({ ...ui.sheet, kind: "journal", id: undefined, journal: false });
+    else $("#sheet").close();
     return;
   }
   if (d.pairstart) {
@@ -535,7 +564,7 @@ async function onClick(e: MouseEvent) {
     return;
   }
   if (d.download) {
-    await download(d.download === "csv" ? "csv" : "json");
+    await download(d.download === "playthrough" || d.download === "journal" ? d.download : d.download === "csv" ? "csv" : "json", d.exportRun);
     return;
   }
   if (d.delaccount) {
@@ -621,6 +650,20 @@ async function onClick(e: MouseEvent) {
     }
     return;
   }
+  if (d.journal) {
+    if (isGuest()) return;
+    const row = bridge.runs?.find(row => row.id === d.journal);
+    if (!row) return;
+    root.querySelectorAll<HTMLDetailsElement>("details.ptmenu[open]").forEach(el => el.open = false);
+    const owner = bridge.auth.userId, tab = ui.tab, intent = sheetSeq;
+    const ready = () => {
+      if (sheetSeq === intent && run?.id === row.id && bridge.auth.userId === owner && ui.tab === tab && !isGuest())
+        openSheet({ kind: "journal", k: tab === "journey" ? "journal" : `run-options-${row.id}` });
+    };
+    if (run?.id === row.id) ready();
+    else { flushSave(); useRun(row, false, false, ready); }
+    return;
+  }
   if (d.startsheet) {
     openSheet({ kind: "started", id: d.startsheet });
     return;
@@ -691,8 +734,33 @@ async function onClick(e: MouseEvent) {
     return;
   }
   if (isGuest() && (d.editmon || d.addmon || d.renamebox || d.savemon || d.savebox || d.delmon)) return;
+  if (d.acquisitionplace) {
+    $("#f-place").value = d.acquisitionplace;
+    return;
+  }
+  if (d.today) {
+    const field = $("#" + d.today);
+    if (field) field.value = ymd(new Date());
+    return;
+  }
+  if (!isGuest() && d.journalnote) {
+    openSheet({ ...ui.sheet, kind: "journalnote", id: d.journalnote === "new" ? undefined : d.journalnote, journal: true });
+    return;
+  }
+  if (!isGuest() && (d.journalback || d.savejournalnote || d.deletejournalnote)) {
+    try {
+      if (d.savejournalnote && !saveJournalNote()) return;
+      if (d.deletejournalnote) {
+        if (!confirm("Delete this journal note?")) return;
+        r.journalEntries = r.journalEntries.filter(entry => entry.id !== d.deletejournalnote);
+      }
+      if (!d.journalback) scheduleSave();
+      openSheet({ ...ui.sheet, kind: "journal", id: undefined, journal: false });
+    } catch (error) { sheetError(error); }
+    return;
+  }
   if (d.editmon) {
-    openSheet({ kind: "mon", id: +d.editmon });
+    openSheet({ ...ui.sheet, kind: "mon", id: +d.editmon, journal: ui.sheet?.kind === "journal" });
     return;
   }
   if (d.addmon) {
@@ -727,9 +795,12 @@ async function onClick(e: MouseEvent) {
     return;
   }
   if (d.savemon) {
-    saveMon();
-    $("#sheet").close();
-    scheduleSave();
+    try {
+      if (!saveMon()) return;
+      scheduleSave();
+      if (ui.sheet.journal) openSheet({ ...ui.sheet, kind: "journal", id: undefined, journal: false });
+      else $("#sheet").close();
+    } catch (error) { sheetError(error); }
     return;
   }
   if (d.savebox) {
@@ -740,9 +811,11 @@ async function onClick(e: MouseEvent) {
     return;
   }
   if (d.delmon) {
+    if (r.mons.find(m => m.id === +d.delmon!)?.acquisition && !confirm("Remove this Pokémon and its journal details? Your separate notes will stay.")) return;
     r.mons = r.mons.filter((m) => m.id !== +(d.delmon as string));
     $("#live").textContent = "Removed from your boxes";
-    $("#sheet").close();
+    if (ui.sheet.journal) openSheet({ ...ui.sheet, kind: "journal", id: undefined, journal: false });
+    else $("#sheet").close();
     scheduleSave();
     return;
   }
@@ -755,7 +828,7 @@ async function onClick(e: MouseEvent) {
   else if (d.undo) {
     const u = ui.undo;
     u.had ? r.caught.add(u.n) : r.caught.delete(u.n);
-    if (u.monId) r.mons = r.mons.filter((m) => m.id !== u.monId);
+    if (u.monId) r.mons = r.mons.filter((m) => m.id !== u.monId || !!m.acquisition);
     ui.undo = null;
     $("#live").textContent = "Undone";
   } else if (d.time) {
@@ -968,7 +1041,8 @@ export function mount(el: HTMLElement, b: Bridge) {
         ui.tab = "playthroughs";
         scrollTo(0, 0);
       }
-      flash(`Added ${added.length} caught Pokémon`, () => undoRefresh(id, added, previousStart, previousLink), id);
+      const refreshedBy = bridge.auth.userId;
+      flash(`Added ${added.length} caught Pokémon`, () => undoRefresh(id, added, previousStart, previousLink, refreshedBy), id);
       $("[data-undo]")?.focus();
     },
     dismiss: () => {
@@ -1064,6 +1138,11 @@ export function mount(el: HTMLElement, b: Bridge) {
   });
   el.addEventListener("change", (e) => {
     const t = e.target as HTMLInputElement;
+    if (t.id === "f-how") {
+      const verb = t.value === "caught" ? "Caught" : "Obtained";
+      $("#acquisition-day-label").textContent = `${verb} on`;
+      $("#acquisition-place-label").textContent = `${verb} at`;
+    }
     if (t.id === "f-form" || t.id === "f-shiny") {
       updateMonSprite();
       return;
@@ -1113,7 +1192,14 @@ export function mount(el: HTMLElement, b: Bridge) {
   $("#sheet").addEventListener("click", (e: Event) => {
     if ((e.target as HTMLElement).id === "sheet") {
       if (ui.sheet?.kind === "pick" && performance.now() - pickOpenedAt < 350) return;
-      $("#sheet").close();
+      if (ui.sheet?.journal) openSheet({ ...ui.sheet, kind: "journal", id: undefined, journal: false });
+      else $("#sheet").close();
+    }
+  });
+  $("#sheet").addEventListener("cancel", (e: Event) => {
+    if (ui.sheet?.journal) {
+      e.preventDefault();
+      openSheet({ ...ui.sheet, kind: "journal", id: undefined, journal: false });
     }
   });
   $("#sheet").addEventListener("close", () => {
@@ -1153,6 +1239,10 @@ export function update(b: Bridge) {
   saveImport.accountChanged();
   syncRuns();
   syncTheme();
+  if (ui.sheet?.personal && (!b.auth.isAuthenticated || b.auth.userId !== ui.sheet.owner || run?.id !== ui.sheet.runId)) {
+    $("#sheetbody").innerHTML = "";
+    $("#sheet").close();
+  }
   if (b.auth.isAuthenticated && ["signin", "pair"].includes(ui.sheet?.kind))
     $("#sheet").close();
   if (!$("#sheet").open) render();

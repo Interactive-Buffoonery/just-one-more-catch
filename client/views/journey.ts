@@ -1,3 +1,4 @@
+import { JOURNAL_ICON } from "./journal";
 import { $ } from "../dom";
 import {
   badgeName,
@@ -271,6 +272,7 @@ export function Journey() {
     </div>
     <div class="where-tools">
       ${P().nightFrom ? `<button class="quietbtn" data-clock="1" data-k="clock" aria-label="Game clock: ${cap(nowTime())}, ${cap(DAYS[gameClock(r.clock).day])}. Change">${CLOCK_ICON}<b>${cap(nowTime())}</b> · ${cap(DAYS[gameClock(r.clock).day]).slice(0, 3)}</button>` : ""}
+      <button class="quietbtn" data-journal="${r.id}" data-k="journal">${JOURNAL_ICON}Journal</button>
       <button class="quietbtn" data-custom="1" data-k="custom">${SLIDERS_ICON}Customize</button>
     </div>
   </section>

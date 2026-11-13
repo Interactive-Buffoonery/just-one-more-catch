@@ -7,6 +7,8 @@ export const eventName = v.union(v.literal("guest_run_created"), v.literal("gues
 export const saveLink = v.object({ salt: v.string(), fingerprint: v.string(), playSeconds: v.optional(v.number()) });
 
 export default defineSchema({
+  quotaKeys: defineTable({ key: v.string(), expiresAt: v.number() })
+    .index("by_key", ["key"]).index("by_expiresAt", ["expiresAt"]),
   events: defineTable({ name: eventName, owner: v.optional(v.string()), version: v.optional(v.string()) })
     .index("by_owner", ["owner"]).index("by_name", ["name"]),
   runs: defineTable({

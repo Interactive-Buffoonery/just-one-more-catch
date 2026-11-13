@@ -1,5 +1,6 @@
 import { internalQuery } from "./_generated/server";
 import { v } from "convex/values";
+import { RETENTION_MS } from "./events";
 
 const WEEK = 7 * 864e5;
 function week(time: number) {
@@ -13,7 +14,7 @@ export const overview = internalQuery({
   handler: async (ctx, { now }) => {
     // ponytail: whole-table reads are fine to a few thousand runs/events; switch to aggregates/@convex-dev/aggregate beyond that.
     const [runs, profiles, events] = await Promise.all([
-      ctx.db.query("runs").collect(), ctx.db.query("profiles").collect(), ctx.db.query("events").collect(),
+      ctx.db.query("runs").collect(), ctx.db.query("profiles").collect(), ctx.db.query("events").withIndex("by_creation_time", q => q.gte("_creationTime", now - RETENTION_MS)).collect(),
     ]);
     const weeks = Array.from({ length: 12 }, (_, i) => {
       const start = week(now) - (11 - i) * WEEK;

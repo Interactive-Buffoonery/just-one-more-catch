@@ -28,6 +28,7 @@ export type Species = {
   all: Row[];
 };
 export type Mon = {
+  acquisition?: import("../shared/journal").Acquisition;
   id: number;
   n: number;
   form?: string;
@@ -71,12 +72,12 @@ export type Bridge = {
   signOut(): void;
   saveLinks(version: string): Promise<({ id: string } & SaveLink)[]>;
   refreshRun(id: string, caught: number[], link?: SaveLink, startedAt?: number): Promise<{ added: number[] }>;
-  undoRefresh(id: string, added: number[], startedAt?: number, link?: SaveLink): Promise<unknown>;
-  createRun(version: string, link?: SaveLink): Promise<string>;
+  undoRefresh(id: string, added: number[], startedAt?: number, link?: SaveLink, expectedUserId?: string): Promise<unknown>;
+  createRun(version: string, expectedUserId?: string, link?: SaveLink): Promise<string>;
   importRun(version: string, caught: number[], importId: string, startedAt?: number, link?: SaveLink): Promise<string>;
-  saveRun(id: string, state: string): Promise<unknown>;
+  saveRun(id: string, state: string, expectedUserId?: string): Promise<unknown>;
   deleteRun(id: string): Promise<unknown>;
-  setStart(id: string, startedAt: number): Promise<unknown>;
+  setStart(id: string, startedAt: number, expectedUserId?: string): Promise<unknown>;
   deleteAccount(): Promise<unknown>;
   contact(input: {
     email: string;
