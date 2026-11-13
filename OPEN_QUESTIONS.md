@@ -269,11 +269,19 @@ its successful generation/check/build as verified game access.
 
 - **Opaque cave areas:** map Glittering Cave IDs 303/304, Reflection Cave
   305–308, Frost Cavern 313–317 and Victory Road 322/324/326/328 to actual
-  rooms/floors. Distinct source areas are retained. In particular, identify
-  the Frost Cavern Ice Rock room behind Surf; check each Victory Road room's
-  first reachable encounter tile, rather than applying all full-traversal HMs
-  everywhere. The main chapters are sourced; finer Surf/Strength/Rock Smash/
-  Waterfall gates are deliberately unverified, not invented.
+  rooms/floors, then check each Victory Road room's first reachable encounter
+  tile and the Frost Cavern Ice Rock room behind Surf. The main chapters are
+  sourced; finer Surf/Strength/Rock Smash/Waterfall gates stay unverified.
+  Checked and not enough: pk3DS
+  ([`6daaca9`](https://github.com/kwsch/pk3DS/blob/6daaca934ca2284a73ab743bf89c848c57cd9de1/pk3DS.Core/Legality/Tables6.cs))
+  has no X/Y zone-name table, and PKHeX's location text
+  ([`d8ab568`](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Resources/text/locations/gen6/text_xy_00000_en.txt))
+  names whole caves by met-location ID, not PokeAPI's numbered areas.
+  Needs X/Y map or encounter-file data that links these numbers to rooms.
+- **Hotel trades:** the Magikarp and Eevee trades are shown at Hotel Ambrette.
+  The Ambrette Town page says the same travelers also rotate through Camphrier
+  Town's hotel, one chapter earlier. Confirm the Hiker and Maid trade there
+  before moving the rows.
 - **Terminus side chambers:** map PokeAPI B1F Left/Right to the small exterior
   entrances versus the main dungeon. The location page says small chamber
   one needs Rock Smash, but does not map its label to these API areas.
@@ -285,19 +293,6 @@ its successful generation/check/build as verified game access.
 - **Route 12 shoreline:** verify the near-Shalour shore supports each rod's
   listed species before Surf. Walking/flower/horde/Rock Smash rows wait for
   Surf, while the Rumble-gated Lapras gift does not need Surf itself.
-- **PokeAPI gaps, not fabricated rows:** the cached X/Y data has no NPC-trade
-  rows. Missing acquisitions are Santalune Farfetch'd (Bunnelby), Cyllage
-  Steelix (Luvdisc), Snowbelle Bisharp (Jigglypuff), Shauna's postgame starter
-  (Chespin after Fennekin, Fennekin after Froakie, Froakie after Chespin),
-  Diantha's postgame Ralts, and the hotel Magikarp/Eevee trades. No encounter
-  rows for those trades were added by hand. Sources: In-game trade X/Y
-  section and walkthrough Parts 2, 5, 13 and 16 in SOURCES.md.
-- **Missing restored-fossil gifts:** PokeAPI supplies Tyrunt/Amaura but not
-  restored Aerodactyl, Omanyte, Kabuto, Lileep, Anorith, Cranidos, Shieldon,
-  Tirtouga or Archen gifts. Older fossils except Old Amber are post-League;
-  Root/Claw are X-only and Helix/Dome Y-only. These missing gift rows were
-  not invented, even when a species may have another acquisition. Tyrunt/
-  Amaura are displayed at Ambrette instead of PokeAPI's Glittering Cave.
 - **Choices and online/friend state:** the shared tracker displays starter
   conditions and Safari slot requirements as special text. It does not
   enforce one Kanto starter, one fossil choice, each individual registered
