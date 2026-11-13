@@ -197,6 +197,14 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Black and White (`bw`)
 
+- **Save imports:** synthetic 512 KiB B/W and B2/W2 fixtures verify distinct
+  identities and complete National Dex caught flags through native Core, raw
+  bits and published reader 0.1.2 WASM. Obtain permitted real cartridge/emulator
+  exports and a legitimate in-game zero-caught save for comparison. Live account
+  imports and mobile Safari remain unverified. PKHeX exposes Gen V adventure
+  start seconds, but its epoch/bounds, invalid values, leap days and exported
+  date behavior are not verified for reader date import; use import day.
+
 This pack is integrated with provisional access details; it is not a certified
 complete representation of all original BW acquisition methods.
 
