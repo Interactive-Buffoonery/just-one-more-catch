@@ -38,4 +38,9 @@ for (const p of data.dex) {
 }
 assert(byN[23].rows.length && byN[23].rows.every(r => r.v === "r"));
 assert(byN[27].rows.length && byN[27].rows.every(r => r.v === "b"));
+const route18 = data.dex.flatMap(p => p.rows.filter(r => r.place === "Route 18"));
+const fishing18 = route18.filter(r => ["old-rod", "good-rod", "super-rod"].includes(r.m));
+assert.equal(fishing18.length, 7);
+assert(fishing18.every(r => r.need?.includes("bicycle")), "Route 18 fishing shore requires the Bicycle gate");
+assert(route18.filter(r => r.m === "walk" || r.m === "npc-trade").every(r => !r.need?.includes("bicycle")), "Fuchsia-side grass and trade remain reachable without Bicycle");
 console.log("Gen I evolution, types, floor odds, exclusives and sprite fallback ok");
