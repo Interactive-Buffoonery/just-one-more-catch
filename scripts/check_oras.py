@@ -67,3 +67,7 @@ for p in game['dex']:
 assert any(r['m'] == 'seaweed' for r in mon(369)['rows'])
 assert any(r['m'] == 'old-rod' and r['src'] == 'bulbapedia' for r in mon(129)['rows'])
 print('ORAS: template parsing, versions, table precedence, provenance and integration ok')
+eon = {(n, r['m']): r['v'] for n in (380, 381) for r in mon(n)['rows']}
+assert eon == {(380, 'static'): 'o', (380, 'gift'): 'a', (381, 'static'): 'a', (381, 'gift'): 'o'}, eon
+assert [r['place'] for r in mon(27)['rows'] if r['m'] == 'horde'] == ['Route 111 Desert']
+assert all(r['chap'] == 2 for p in game['dex'] for r in p['rows'] if r['place'] == 'Route 118')

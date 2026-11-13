@@ -115,7 +115,8 @@
       "needs": [
         "surf"
       ],
-      "src": "https://bulbapedia.bulbagarden.net/wiki/Southern_Island"
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Southern_Island",
+      "quote": "While the player is talking to Steven on the east side of Route 118, Latias/Latios appears before the two"
     },
     "Hoenn Route 107 Underwater": {
       "needs": [
@@ -741,7 +742,8 @@
         "Slateport City",
         "Route 110",
         "Route 117",
-        "Verdanturf Town"
+        "Verdanturf Town",
+        "Route 118"
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_4"
     },
@@ -789,7 +791,6 @@
         "surf"
       ],
       "places": [
-        "Route 118",
         "Southern Island",
         "Route 119",
         "Fortree City",
@@ -1343,5 +1344,35 @@
     "471": "Level up near the Ice Rock in Shoal Cave",
     "476": "Level up at New Mauville",
     "700": "Level up + knows a Fairy move + at least 2 affection hearts"
-  }
+  },
+  "drop_rows": [
+    {
+      "place": "Southern Island",
+      "n": 380,
+      "m": "static",
+      "versions": [
+        "alpha-sapphire"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Southern_Island",
+      "quote": "At the back of the island's forest is Latias (OR)/Latios (AS), who will battle the player if interacted with."
+    },
+    {
+      "place": "Southern Island",
+      "n": 381,
+      "m": "static",
+      "versions": [
+        "omega-ruby"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Southern_Island",
+      "quote": "At the back of the island's forest is Latias (OR)/Latios (AS), who will battle the player if interacted with."
+    },
+    {
+      "place": "Hoenn Route 111",
+      "exact": true,
+      "n": 27,
+      "m": "horde",
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_111",
+      "quote": "The Sandshrew Horde Encounter is only in the desert's sand table, which the Route 111 Desert gap-fill row already covers behind the Go-Goggles."
+    }
+  ]
 }

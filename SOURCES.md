@@ -872,9 +872,21 @@ Advance game. Ruby and Sapphire remain separate Coming Soon entries.
   the crisis; the Scanner requires Dive and the crisis, then Stern exchanges
   it for the version's bell. Both bell legendaries require the exchange.
 - https://bulbapedia.bulbagarden.net/wiki/Southern_Island
-  The main story gift is Latios in OR and Latias in AS. The API's additional
-  static rows remain behind an explicit Eon Ticket event; they do not claim
-  that the historical distribution is available today.
+  The main story gift is Latios in OR and Latias in AS. The Eon Ticket
+  battle is the opposite species: "At the back of the island's forest is
+  Latias (OR)/Latios (AS)". The API lists both statics in both versions, so
+  `drop_rows` keeps one per version. They stay behind an explicit Eon Ticket
+  event and do not claim the historical distribution is available today.
+  The story visit starts with Steven "on the east side of Route 118", past
+  the inlet, so Southern Island keeps its Surf gate.
+- https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_118
+  "From Mauville, the route is straightforward ... The western half of this
+  path is composed of grassy terrain". Route 118 opens with Mauville; its
+  water rows still need Surf or a rod through the encounter method.
+- https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_111
+  The Sandshrew Horde Encounter is only in the desert's sand table. The API
+  files it under Route 111, so that copy is dropped in favour of the gated
+  Route 111 Desert row.
 - https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_19
   Sealed Chamber uses Dig, Relicanth first and Wailord last. Separate puzzle
   confirmations gate Regirock (Strength), Regice (wait) and Registeel (Fly).
