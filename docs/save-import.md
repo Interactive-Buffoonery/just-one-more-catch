@@ -23,6 +23,7 @@ Website game support is an explicit adapter in `client/save-import.ts`:
 | GD / SI | Gold / Silver (paired choice when both are candidates) |
 | C | Crystal |
 | FR / LG | FireRed / LeafGreen, with a GBA or Switch choice |
+| RS (S / R candidates) | Sapphire / Ruby (paired choice) |
 | E | Emerald |
 | HG / SS | HeartGold / SoulSilver |
 | US / UM | Ultra Sun / Ultra Moon |
@@ -54,7 +55,7 @@ supports HeartGold/SoulSilver and Sun/Moon/Ultra Sun/Ultra Moon; only the websit
 supported packs can be imported. The source fields are PKHeX's `SecondsToStart`
 with its `DateUtil.GetDateTime2000` conversion. The reader checks each format's
 console calendar bounds and omits uninitialized zero values. Red/Blue/Yellow, Gold/Silver/Crystal and
-FireRed/LeafGreen and Emerald provide no recorded date through this reader. Missing, invalid
+FireRed/LeafGreen, Ruby/Sapphire and Emerald provide no recorded date through this reader. Missing, invalid
 or future dates use import day; the preview never invents a recorded date.
 
 The website converts the selected calendar day to local midnight, matching the
@@ -163,9 +164,22 @@ is extended with erased bytes only for normal Core and ROM-hack detection. The
 original file is never rewritten or repaired. The preview warns that a newer
 save may be missing; complete flag coverage describes only the surviving slot.
 Missing/duplicate sections, invalid signatures, mixed counters, bad checksums
-and 64 KiB RS/FRLG layouts are rejected. Ruby/Sapphire remain unsupported website
-games. Reproduction instructions are in
+and 64 KiB RS/FRLG layouts are rejected. Reproduction instructions are in
 [the Emerald fixture README](../scripts/emerald-save-fixtures/README.md).
+
+Ruby/Sapphire uses the unchanged reader 0.1.2 and the pack's 386-species National
+Dex limit. Serialized 128 KiB synthetic fixtures return `RS`, with individual
+candidates `S` and `R`; the existing paired-game choice is required. File names
+do not identify the title. Raw National Dex bits, native Core and the published
+WASM worker agree on 14 caught species, seen-only Bulbasaur, empty storage after
+removal, and an empty Pokédex. Rotated sectors exercise the newer second slot.
+The built website imports both choices, preserves existing runs and reloads
+caught state; 64 KiB RS remains rejected. No reader code or package changed.
+Reproduce with [the RS fixture README](../scripts/rs-save-fixtures/README.md).
+These are structural parser fixtures, not in-game cartridge exports. A real
+128 KiB save, a legitimate in-game zero-caught save and real 64 KiB RS cartridge
+or emulator exports remain unverified; do not infer half-size RS support from
+Emerald recovery. Signed-in live imports and mobile Safari remain separate checks.
 
 A real 64 KiB emulator export remains a separate check. Obtain an existing
 65,536-byte in-game `.sav` or `.srm` from its owner with permission to test it.
