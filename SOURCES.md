@@ -1760,6 +1760,27 @@ claim that every obtainable Pokémon or condition is represented.
   Kartana (Sun)/Celesteela (Moon); Guzzlord; then report to Wicke before
   Necrozma at Ten Carat Hill. Each mission is a separate event and rows
   additionally require Champion. No USUM Wormhole legends are added.
+- **Magearna QR gift (both original versions):** level 50, collected at
+  Antiquities of the Ages in Hau'oli City's Shopping District mall after
+  becoming Champion and scanning the regional QR Code. Sources agree:
+  - PKHeX, pinned encounter definition:
+    https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen7/Encounters7SM.cs#L52-L56
+    lists species 801, level 50 for SM. Its location 40001 is the gift's
+    met-location, not its physical pickup site.
+  - Bulbanews, pinned revision 59354, December 6, 2016:
+    https://bulbanews.bulbagarden.net/w/index.php?title=American_region_Magearna_QR_Code_released&oldid=59354
+    confirms both games, level 50, the Champion/QR prerequisite and the
+    deliveryman at Antiquities of the Ages in Hau'oli City mall.
+  - Cached Bulbapedia QR Scanner page:
+    https://bulbapedia.bulbagarden.net/wiki/QR_Scanner#Special_QR_Codes
+    confirms the Champion requirement. Cached Hau'oli City Sun/Moon
+    Shopping District table lists the level-50 gift in both games:
+    https://bulbapedia.bulbagarden.net/wiki/Hau%27oli_City#Shopping_District
+    Serebii independently agrees on level, pickup site and Champion gate:
+    https://www.serebii.net/sunmoon/qrevents.shtml
+  SM opts into an empty gap-fill candidate file plus this explicit gift.
+  The existing Shopping District chapter supplies the place; `row_needs`
+  supplies the Champion gate and the row displays the QR prerequisite.
 - **Clock:** https://bulbapedia.bulbagarden.net/wiki/Time and walkthrough
   Part 1: Sun follows console time; Moon's day/night cycle is 12 hours
   ahead. SM morning begins at 06:00 and night at 18:00. Weekday events

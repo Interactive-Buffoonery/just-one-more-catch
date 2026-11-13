@@ -97,5 +97,17 @@ for (const [n, code] of [[791, 'S'], [792, 'M'], [794, 'S'], [795, 'M'], [797, '
   assert.ok(mon(n).rows.every(r => r.v === code), `Wrong version for #${n}`);
 }
 assert.ok(game.dex.every(p => p.rows.every(r => !r.place.includes('New Mauville'))));
-assert.equal(mon(801).rows.length, 0, 'Do not synthesize a missing Magearna encounter');
+const magearna = mon(801).rows;
+assert.equal(magearna.length, 1);
+assert.equal(magearna[0].v, 'SM');
+assert.equal(magearna[0].place, "Hau'oli City Shopping District");
+assert.equal(magearna[0].m, 'gift');
+assert.equal(magearna[0].lo, 50);
+assert.equal(magearna[0].hi, 50);
+assert.ok(magearna[0].cond.includes('Scan the regional Magearna QR Code'));
+run.badges.delete('Elite Four');
+assert.equal(status(magearna[0]).need, 'Elite Four');
+run.badges.add('Elite Four');
+assert.equal(status(magearna[0]).s, 'special');
+assert.equal(status(magearna[0]).why, 'Scan the regional Magearna QR Code');
 console.log('Sun/Moon: mission availability, rescue, ambush terrain, Machamp and version exclusives ok');

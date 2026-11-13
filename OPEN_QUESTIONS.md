@@ -673,14 +673,12 @@ The initial pack is partial. Its sourced access work list is
   Island Scan detail records; their weekday schedule is absent. Moon's
   clock is implemented, but cannot repair missing time-specific tables.
   (Requested trade species are now sourced; see SOURCES.md.)
-- **Missing places/gifts:** the pack format cannot add rows without a
-  build change, so these stay open: no Trainers' School area, no initial
-  Akala-stage Poké Pelago table, and no Magearna gift row. Magearna is the
-  post-Champion QR Code event (Bulbapedia QR Scanner, "cannot be scanned
-  until the player becomes Champion"); PKHeX lists it as a level-50 gift
-  at https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen7/Encounters7SM.cs#L52-L56 .
-  A hand-added gift row would unblock it. Poké Pelago contains only
-  Ula'ula/Poni/Champion-stage areas (https://bulbapedia.bulbagarden.net/wiki/Poké_Pelago).
+- **Missing places/gifts:** Trainers' School and the initial Akala-stage
+  Poké Pelago table still need two agreeing sources for species, levels,
+  versions and gates before adding supplemental rows. The existing pack
+  format supports these rows; no build change is needed. Poké Pelago
+  currently contains only Ula'ula/Poni/Champion-stage areas
+  (https://bulbapedia.bulbagarden.net/wiki/Poké_Pelago).
   Marshadow is a distribution-only dex entry without an encounter row.
 - **Zygarde level/form granularity:** the single gift row (Lv. 30-50)
   opens at 10 Cells. Walkthrough Part 18 lists Lv. 30 before Champion and

@@ -1011,6 +1011,16 @@
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Poni_Gauntlet",
       "quote": "{{Catch/entry7|663|Talonflame|yes|yes|Trade|59|all=One|tradenum=760|tradename=Bewear|type1=fire|type2=flying|alliesna=N/A}}"
+    },
+    {
+      "place": "Hauoli City Shopping District",
+      "n": 801,
+      "m": "gift",
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "https://bulbanews.bulbagarden.net/w/index.php?title=American_region_Magearna_QR_Code_released&oldid=59354",
+      "quote": "The code can only be scanned by players who have already become Champion."
     }
   ],
   "obtainable_forms": {
@@ -1413,6 +1423,27 @@
       },
       "src": "https://bulbapedia.bulbagarden.net/wiki/Poni_Wilds",
       "quote": "{{Catch/entry7|321|Wailord|yes|yes|Water splashes|40-43|all=10%|type1=Water}}"
+    }
+  ],
+  "bulbapedia_gap_fill": "data/sm-bulbapedia.json",
+  "extra_encounters": [
+    {
+      "n": 801,
+      "versions": [
+        "sun",
+        "moon"
+      ],
+      "area": "Hauoli City Shopping District",
+      "method": "gift",
+      "lo": 50,
+      "hi": 50,
+      "chance": 100,
+      "conditions": [
+        "Scan the regional Magearna QR Code"
+      ],
+      "src": "bulbanews",
+      "url": "https://bulbanews.bulbagarden.net/w/index.php?title=American_region_Magearna_QR_Code_released&oldid=59354",
+      "quote": "Level 50; collect from the deliveryman at Antiquities of the Ages after scanning the QR Code as Champion."
     }
   ]
 }
