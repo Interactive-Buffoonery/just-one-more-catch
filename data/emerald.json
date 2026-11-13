@@ -281,10 +281,11 @@
     },
     "Hoenn Victory Road B2F": {
       "needs": [
-        "strength"
+        "strength",
+        "rock-smash"
       ],
-      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Emerald/Part_18",
-      "quote": "use Strength to move the first boulder westward and the second boulder eastward"
+      "src": "https://github.com/pret/pokeemerald/blob/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881/data/maps/VictoryRoad_B1F/map.json#L43-L145",
+      "quote": "Static map trace: from the southern entrance, push the B1F boulders at (4,7) west and (9,10) east, then clear the rock at (18,12). B2F (30,26) is an encounter tile. Neither external entrance reaches B2F with Strength alone."
     },
     "Hoenn Route 123": {
       "needs": [

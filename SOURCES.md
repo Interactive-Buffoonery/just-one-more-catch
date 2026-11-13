@@ -731,11 +731,44 @@ Advance game. Ruby and Sapphire remain separate Coming Soon entries.
   Sootopolis, Regis, Rayquaza and Victory Road. Parts 20–22 cover postgame
   gifts, weather caves, Battle Frontier and historical distribution islands.
   Each chapter/event/gate in `data/emerald.json` links its relevant part.
-- Victory Road B2F unresolved access evidence: [warp events](https://github.com/pret/pokeemerald/blob/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881/data/maps/VictoryRoad_B2F/map.json#L108-L138)
-  list four entrances at (30,25), (43,2), (19,12), (5,26).
-  [Land encounter table](https://github.com/pret/pokeemerald/blob/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881/src/data/wild_encounters.json#L7394-L7401)
-  has encounter rate 10. Neither establishes collision reachability; retain
-  the existing Strength gate pending a traced path.
+- Victory Road B2F earliest encounter: **Strength and Rock Smash are both
+  required**. Static map BFS at the pinned revision below, not gameplay:
+  - Decoded the little-endian `map.bin` blocks for
+    [1F](https://github.com/pret/pokeemerald/blob/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881/data/layouts/VictoryRoad_1F/map.bin),
+    [B1F](https://github.com/pret/pokeemerald/blob/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881/data/layouts/VictoryRoad_B1F/map.bin), and
+    [B2F](https://github.com/pret/pokeemerald/blob/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881/data/layouts/VictoryRoad_B2F/map.bin).
+    [Block masks](https://github.com/pret/pokeemerald/blob/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881/include/global.fieldmap.h#L7-L46)
+    give metatile ID, collision and elevation; layouts use General/Cave
+    [tilesets](https://github.com/pret/pokeemerald/blob/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881/src/data/tilesets/metatiles.h#L1-L2)
+    ([Cave attributes](https://github.com/pret/pokeemerald/blob/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881/src/data/tilesets/metatiles.h#L58-L59)).
+    Used their metatile behaviours, directional barriers, elevation transitions,
+    one-way ledges, warp destinations and object events; all three maps have
+    no map connections. Water was excluded from this land-entry trace.
+    Movement follows the engine's [collision checks](https://github.com/pret/pokeemerald/blob/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881/src/event_object_movement.c#L4641-L4654)
+    and [ledge/elevation rules](https://github.com/pret/pokeemerald/blob/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881/src/event_object_movement.c#L7631-L7689).
+  - Southern 1F entrance (15,40) reaches ladder (9,14), then B1F (8,3).
+    Push [boulders (4,7) west and (9,10) east](https://github.com/pret/pokeemerald/blob/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881/data/maps/VictoryRoad_B1F/map.json#L43-L68),
+    clear the [rock (18,12), `FLAG_TEMP_1B`](https://github.com/pret/pokeemerald/blob/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881/data/maps/VictoryRoad_B1F/map.json#L134-L145),
+    cross the raised walkway via (21,9) to (32,9), and descend at (32,12).
+    Ladder (30,25) reaches B2F (30,25); stepping south to (30,26) reaches
+    `MB_CAVE`, which [permits land encounters](https://github.com/pret/pokeemerald/blob/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881/src/metatile_behavior.c#L9-L20).
+    The [B2F land table](https://github.com/pret/pokeemerald/blob/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881/src/data/wild_encounters.json#L7394-L7401)
+    has encounter rate 10.
+  - Exhausted both external 1F starts, (15,40) and (39,5), under all four
+    Strength/Rock Smash combinations: neither alone reaches B2F. Negative
+    runs allowed trainers/items/Wally to be absent, kept rocks present without
+    Rock Smash, and searched legal boulder pushes with Strength. A positive
+    southern path also succeeds with all NPC/item positions blocked; Wally's
+    [ordinary battle](https://github.com/pret/pokeemerald/blob/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881/data/maps/VictoryRoad_1F/scripts.inc#L40-L53)
+    does not prevent passage. B1F (42,25) could reach B2F
+    without either tool, but neither external start reaches that B1F arrival
+    without the tools. Thus it is not an earlier alternate entrance.
+  - Each [B2F arrival](https://github.com/pret/pokeemerald/blob/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881/data/maps/VictoryRoad_B2F/map.json#L109-L138)
+    has adjacent land encounters: (30,26), (43,3), (19,13), (6,26), respectively.
+    Sanity check: without Strength, even with rocks removed, the southern
+    trace stops before the initial boulder puzzle; enabling Strength reproduces
+    the existing Part 18 west/east boulder directions. This agrees with the
+    engine's [Strength push rule](https://github.com/pret/pokeemerald/blob/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881/src/field_player_avatar.c#L754-L775).
 - Primary source pinned to pret/pokeemerald
   `731ad5bfd6e6f265508d0efcca0ba42f9dcf5881`:
   https://github.com/pret/pokeemerald/tree/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881
