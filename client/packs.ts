@@ -289,6 +289,28 @@ const EMERALD: Pack = {
   boxes: [14, 30],
 };
 
+const BW: Pack = {
+  load: () => import("./data/bw").then((m) => m.default),
+  art: "bw",
+  region: "Unova",
+  regional: 156,
+  national: 649,
+  start: "Nuvema Town",
+  starters: [495, 498, 501],
+  badges: [
+    ["Trio", "Cilan / Chili / Cress"], ["Basic", "Lenora"],
+    ["Insect", "Burgh"], ["Bolt", "Elesa"], ["Quake", "Clay"],
+    ["Jet", "Skyla"], ["Freeze", "Brycen"], ["Legend", "Drayden / Iris"],
+  ],
+  kit: [
+    ["cut-hm", "Cut"], ["surf", "Surf"], ["strength", "Strength"],
+    ["waterfall", "Waterfall"], ["super-rod", "Super Rod"],
+    ["bicycle", "Bicycle"],
+  ],
+  hm: {},
+  boxes: [24, 30],
+};
+
 const USUM: Pack = {
   load: () => import("./data/usum").then((m) => m.default),
   art: "usum",
@@ -334,6 +356,14 @@ export const VERSIONS: Record<VersionId, Version> = {
   sapphire: {
     name: "Sapphire", short: "SA", code: "S", gen: "Gen 3",
     pack: RS, other: "Ruby", ring: ["water", "ice"],
+  },
+  black: {
+    name: "Black", short: "BL", code: "k", gen: "Gen 5",
+    pack: BW, other: "White", ring: ["dragon", "fire"],
+  },
+  white: {
+    name: "White", short: "W", code: "w", gen: "Gen 5",
+    pack: BW, other: "Black", ring: ["dragon", "electric"],
   },
   emerald: {
     name: "Emerald", short: "E", code: "e", gen: "Gen 3",
@@ -453,10 +483,7 @@ export const CONSOLES: { name: string; tag: string; titles: (VersionId | Soon)[]
     ],
     [{ name: "Platinum", short: "PT", color: "#8d8f9c", region: "Sinnoh" }],
     ["heartgold", "soulsilver"],
-    [
-      { name: "Black", short: "BL", color: "#3a3a40", region: "Unova" },
-      { name: "White", short: "W", color: "#c9c9d0", region: "Unova" },
-    ],
+    ["black", "white"],
     [
       { name: "Black 2", short: "B2", color: "#2f3a4a", region: "Unova" },
       { name: "White 2", short: "W2", color: "#d9c6bb", region: "Unova" },

@@ -923,3 +923,185 @@ were sourced separately from Emerald. Each entry links its relevant source.
   Weather Institute walkthrough fallback. This implementation's source pass
   is not the independent Opus review or cartridge/browser verification.
   No second scanned-guide source was consulted; see OPEN_QUESTIONS.md.
+## Black and White (`bw`)
+
+Original Black (`black`, code `k`) and White (`white`, code `w`), not B2W2.
+The supplied Bulbapedia raw-wikitext cache was read locally. No Bulbapedia
+requests or bulk PokeAPI fetch were made. Individual `src` and `quote` fields
+in `data/bw.json` record chapter, area, event and row evidence.
+
+### Metadata and assets
+
+- https://bulbapedia.bulbagarden.net/wiki/Pokémon_Black_and_White_Versions
+  identifies Nintendo DS, generation V, Unova, 156 introduced Pokémon and
+  the national bound of 649. The original Unova dex includes Victini #000:
+  https://bulbapedia.bulbagarden.net/wiki/List_of_Pokémon_by_Unova_Pokédex_number_in_Pokémon_Black_and_White
+  https://pokeapi.co/api/v2/pokedex/8/
+  The generator and regional visibility/counting now accept zero as a dex
+  number. Existing pack generation was checked byte-for-byte.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_1
+  sources Nuvema Town and Snivy/Tepig/Oshawott starter gifts. The gift choice
+  remains the existing shared starter interaction.
+- https://www.serebii.net/blackwhite/gyms.shtml and walkthrough parts 2–11:
+  Trio/Cilan-Chili-Cress, Basic/Lenora, Insect/Burgh, Bolt/Elesa,
+  Quake/Clay, Jet/Skyla, Freeze/Brycen, Legend/Drayden (Black) or Iris (White).
+  Shared pack leader labels show both version possibilities.
+- https://bulbapedia.bulbagarden.net/wiki/HM#Generation_V
+  and https://bulbapedia.bulbagarden.net/wiki/Badge#Unova_League
+  explicitly say badges are not needed for field HMs in generation V.
+  `hm` is empty. Cut, Surf, Strength and Waterfall remain checklist items;
+  Rock Smash is not a field move here. Fly, Flash and Dive do not open any
+  separately represented encounter area in this dataset and are not kit
+  requirements. Dive's Abyssal Ruins has no wild encounter table.
+- https://bulbapedia.bulbagarden.net/wiki/Pokémon_Storage_System
+  gives 8/16/24 boxes of 30; the tracker uses the maximum 24. This page also
+  sources the full-party/full-720-box-slots exception for the castle dragon.
+- https://bulbapedia.bulbagarden.net/wiki/Time#Generation_V
+  says seasons change monthly, time intervals vary with season, and wild
+  Pokémon no longer vary with time of day. No fixed `nightFrom` is invented.
+  PokeAPI season conditions remain visible as "Spring only", etc.; the
+  tracker does not automatically evaluate seasons against the clock.
+  The supplied `Season` cache page is about the anime, so it was not used
+  as game-mechanic evidence.
+- https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon/versions/generation-v/black-white
+  supplies both regular and shiny sprites 1–649, including the selected
+  cosmetic forms. Downloaded and centred, with ring-fit data regenerated.
+  https://github.com/PokeAPI/sprites/tree/master/sprites/badges supplies
+  Unova badge sprites 33–40. Existing `bl.jpg` and `w.jpg` are reused; their
+  libretro source URLs are recorded in the Box art section above.
+  Cover legendary typings provide the two colour-ring pairs.
+
+### Chapters, physical access and story events
+
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White
+  and its parts 1–18 give the story sequence. Chapter grouping is a tracker
+  convenience, not a claim that all optional visits occur in guide order.
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_8 and
+  https://bulbapedia.bulbagarden.net/wiki/Unova_Route_9 establish that Tubeline
+  Bridge blocks Route 9 until receiving the Light Stone/Dark Stone.
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_10
+  sources Lenora handing over the stone at Nacrene Museum after Relic Castle.
+- https://bulbapedia.bulbagarden.net/wiki/Dreamyard
+  separates the monkey gift outside the ruins from grass behind Cut. The
+  basement and southern dark grass open after N and Ghetsis via the fence
+  gap beside the tree, without Cut. Part 13 says
+  the static Musharna is Friday-only after the main story. PokeAPI's B1F
+  static omits Friday; a sourced row condition adds it and labels the
+  encounter Dreamyard. Both cached static representations remain.
+  Gift Pansage/Pansear/Panpour depend on Tepig/Oshawott/Snivy respectively;
+  sourced per-row conditions add the missing PokeAPI starter qualifiers.
+- https://bulbapedia.bulbagarden.net/wiki/Pinwheel_Forest
+  explicitly permits the exterior before Basic, but blocks the interior
+  until Basic. The east interior opens with the Bicycle; Rumination Field
+  opens after battling Cobalion. The latter is an event, not a badge proxy.
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_5
+  blocks the drawbridge until Elesa; Route 5 itself is listed with Nimbasa.
+  https://bulbapedia.bulbagarden.net/wiki/Unova_Route_16
+  allows the ordinary Lostlorn path immediately from Nimbasa but requires
+  Strength for dark grass. Marvelous Bridge waits for the postgame.
+  Route 6 is grouped with Driftveil before defeating Clay; the web at
+  Chargestone Cave is a separate Clay event, sourced by walkthrough part 7.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_8
+  gives Surf after the Jet-badge Cheren battle, and opens Routes 17/18,
+  P2 Laboratory and Mistralton Cave. Surf side areas use a kit requirement,
+  rather than inventing badge permission for a traded Surf user.
+  https://bulbapedia.bulbagarden.net/wiki/Mistralton_Cave
+  requires Surf to enter; the part-8 boulder path requires Strength for
+  Guidance Chamber and Cobalion. Cobalion's static is displayed there even
+  though PokeAPI places it under the cave-wide area.
+- https://bulbapedia.bulbagarden.net/wiki/Dragonspiral_Tower
+  permits the entrance before Freeze, but the ramp to the interior and
+  outer grassland appears after Freeze. N awakening the dragon is a separate
+  event, sourced by walkthrough part 9.
+- https://bulbapedia.bulbagarden.net/wiki/Relic_Castle
+  and walkthrough parts 5, 10 and 13 distinguish the initial two floors,
+  deeper story floors after N awakens the dragon, and the postgame maze and
+  Volcarona chamber. Cached encounter tables identify A as 1F/B1F (19–22),
+  B as the deeper Krokorok/Cofagrigus table (34–37), C as the postgame maze,
+  D as the Claydol/Volcarona rooms. Lettered areas stay distinct.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_11
+  sources Route 10, the eight badge-check gates, Victory Road and the
+  Strength boulder before Trial Chamber. Ordinary Victory Road rooms are
+  not blanket-gated by optional Surf/Strength. Unknown PokeAPI room labels
+  are retained without pretending to know their floor mapping.
+  https://bulbapedia.bulbagarden.net/wiki/Victory_Road_(Black_and_White)
+  requires the Cobalion encounter before Trial Chamber. PokeAPI's Terrakion
+  in "4F Middle Room" is displayed as Trial Chamber with these prerequisites.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_12
+  places the version-specific Reshiram/Zekrom catch in N's Castle after the
+  Elite Four, before N/Ghetsis and the credits. `Elite Four` alone therefore
+  does not open the postgame: the `ghetsis` event is also required.
+  Dragonspiral Tower's fallback dragon additionally requires confirming
+  that the castle catch was deferred by full storage.
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_11
+  explicitly blocks the eastern circuit until Team Plasma is stopped.
+  Walkthrough parts 16–18 cover Village Bridge, Routes 11–15, Giant Chasm,
+  Undella and Marvelous Bridge. They are not delayed until the Alder rematch
+  merely because the walkthrough visits them afterward. Route 11 dark
+  grass uses Surf/Waterfall, while its initial grass remains accessible.
+- https://bulbapedia.bulbagarden.net/wiki/Challenger's_Cave
+  requires defeating the Elite Four and Team Plasma; the ordinary entrance
+  floors have no blanket Surf gate. Full lowest-floor traversal needs Surf,
+  but the source does not prove that the first encounter tile does.
+- https://bulbapedia.bulbagarden.net/wiki/Abundant_Shrine
+  requires Surf and Waterfall. Landorus also needs both roamers in the
+  party, with the own-version roamer bearing the player's Trainer ID.
+- https://bulbapedia.bulbagarden.net/wiki/Giant_Chasm
+  sources the central-pond snow event that opens Kyurem's cave. This is not
+  B2W2's Plasma Frigate or DNA Splicers quest.
+
+### Gifts, special encounters, forms and missing data
+
+- https://bulbapedia.bulbagarden.net/wiki/Phenomenon
+  says rustling grass, dust clouds, flying shadows and rippling water only
+  appear after the first badge. Early phenomenon rows explicitly need Trio;
+  later chapters already imply it. Fishing ripples need Super Rod, water
+  ripples need Surf. Dark grass is a separate walking method.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_13
+  gives Looker's Super Rod and Cedric's National Mode after the credits.
+  Fishing requires the Super Rod kit item; national visibility follows the
+  shared Elite Four switch, with postgame areas additionally requiring N
+  and Ghetsis. That visibility simplification is listed in open questions.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_5
+  sources Cover/Plume choice and Nacrene revival. Part 14 sources the seven
+  older fossils from the Twist Mountain worker in the postgame. PokeAPI's
+  exact fossil item conditions are retained. Part 8 sources the Route 18
+  Larvesta Egg; part 18 sources the Marvelous Bridge Magikarp seller.
+- https://bulbapedia.bulbagarden.net/wiki/Liberty_Garden
+  requires the discontinued event Liberty Pass for Victini. This is an
+  explicit event checklist, not an assertion that the pass is still issued.
+- https://bulbapedia.bulbagarden.net/wiki/Castelia_City
+  requires a fateful-encounter Celebi and spare Poké Ball for Zorua.
+  https://bulbapedia.bulbagarden.net/wiki/Lostlorn_Forest
+  requires an event Shiny legendary beast to trigger Zoroark.
+- https://www.serebii.net/blackwhite/evolution.shtml
+  sources Chargestone Magnezone/Probopass, Pinwheel Leafeon, Twist Mountain
+  Glaceon, Prism Scale Milotic, and Karrablast/Shelmet trade partners. These
+  are pack-local overrides of modern PokeAPI evolution-chain text.
+- https://www.serebii.net/blackwhite/forms.shtml
+  sources both Basculin stripes (including the opposite stripe in rippling
+  water), all seasonal Deerling/Sawsbuck and Route 9 appliance Rotom.
+  These are collectible persistent forms; battle-only Darmanitan Zen Mode
+  and Meloetta transformations are excluded. No Therian forms or fused
+  Kyurem from B2W2 are added. The older transfer-only cosmetic catalog is
+  not claimed complete; see open questions.
+- https://bulbapedia.bulbagarden.net/wiki/Black_City and
+  https://bulbapedia.bulbagarden.net/wiki/White_Forest
+  distinguish the version-dependent settlements. PokeAPI supplies no White
+  Forest encounters for White in this cache. No Black City wild encounters
+  or fabricated White Forest rows are added.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_11
+  describes releasing Tornadus (Black) or Thundurus (White) at Route 7 after
+  Legend. The cache instead places each at the nonexistent-for-BW "Team
+  Flare Secret HQ" with method `static`. That erroneous location is dropped,
+  and the absent roaming route tables are reported, not reconstructed.
+- No `npc-trade` rows, swarm conditions, White Forest area or Desert Resort
+  Darmanitan statues are supplied for these versions. Cached encounter
+  endpoints for species 1–649 were inspected across all their varieties.
+  Full gap details and remaining physical-access questions are in
+  `OPEN_QUESTIONS.md` and `docs/bw-access-audit.md`.
+
+No save-file mappings or reader-support claims were added. No BW pret source
+was available in the listed pret repositories, and no decompilation or game
+was built. There was one source/terrain review in this implementation; the
+coordinator's independent Opus review and browser/gameplay QA remain pending.

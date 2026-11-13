@@ -148,9 +148,10 @@ def rows_for(encounters, version, n):
                 extra = []
                 row_place = place
                 for i, g in enumerate(GAME.get("row_needs", [])):
-                    if g["n"] == n and matches(loc, g["place"]) and g.get("m", m) == m and version in g.get("versions", VERSIONS):
+                    if g["n"] == n and (loc == g["place"] if g.get("exact_place") else matches(loc, g["place"])) and g.get("m", m) == m and version in g.get("versions", VERSIONS):
                         row_hits.add(i)
                         extra += g["needs"]
+                        cond = sorted(set(cond + g.get("conditions", [])) - set(g.get("remove_conditions", [])))
                         row_place = g.get("show_as", row_place)
                 need = tuple(dict.fromkeys(area_need + extra)) or None
                 k = (row_place, m, need, tuple(cond))
@@ -239,7 +240,7 @@ if __name__ == "__main__":
     dex = [species(n, johto) for n in range(1, GAME["species"] + 1)]
     if unmatched:
         sys.exit("No chapter for: " + ", ".join(sorted(unmatched)))
-    assert sum(1 for p in dex if p["j"]) == len(johto)
+    assert sum(1 for p in dex if p["j"] is not None) == len(johto)
     assert not set(GAME["needs"]) - need_hits, f"needs match no area: {set(GAME['needs']) - need_hits}"
     events = GAME.get("events", [])
     ids = {e["id"] for e in events}

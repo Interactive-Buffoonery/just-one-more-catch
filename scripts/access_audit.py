@@ -16,7 +16,7 @@ from urllib.parse import unquote
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 POKEAPI = os.path.join(ROOT, ".cache", "pokeapi")
 WIKI = os.path.join(ROOT, ".cache", "bulbapedia")
-PACKS = ["rs", "crystal", "hgss", "frlg", "usum"]
+PACKS = ["rs", "crystal", "hgss", "frlg", "usum", "bw"]
 
 
 def nice(slug):
@@ -61,6 +61,7 @@ def areas(pack):
 
 def candidates(area, pack):
     """Bulbapedia titles to try for an area, most specific first."""
+    area = area.removeprefix("Unova ") if pack == "bw" else area
     a = area.replace(" Of ", " of ").replace(" The ", " the ").replace("Pokemon", "Pokémon")
     for x, y in [("Ss Anne", "S.S. Anne"), ("Dragons Den", "Dragon's Den"), ("Digletts", "Diglett's"),
                  ("Team Rocket Hq", "Team Rocket HQ"), ("Silph Co", "Silph Co."), ("Kirks House", "Kirk's House"),
@@ -81,10 +82,19 @@ def candidates(area, pack):
             return ["Hoenn Safari Zone"]
         if a.startswith("Route "):
             return ["Hoenn " + re.match(r"Route \d+", a)[0]]
+    if pack == "bw":
+        if a.startswith("Victory Road") or a.startswith("Trial Chamber"):
+            return ["Victory Road (Black and White)"]
+        if a.startswith("Challengers Cave"):
+            return ["Challenger's Cave"]
+        if a.startswith("Guidance Chamber"):
+            return ["Mistralton Cave"]
+        if a.startswith("Ns Castle"):
+            return ["N's Castle"]
     route = re.match(r"(?:Sea )?Route (\d+)", a)
     if route:
         n = int(route.group(1))
-        return [f"{'Alola' if pack == 'usum' else 'Johto' if 29 <= n <= 48 else 'Kanto'} Route {n}"]
+        return [f"{'Unova' if pack == 'bw' else 'Alola' if pack == 'usum' else 'Johto' if 29 <= n <= 48 else 'Kanto'} Route {n}"]
     if a.startswith("Safari Zone"):
         return ["Johto Safari Zone" if pack == "hgss" else "Kanto Safari Zone"]
     if a.endswith(" Chamber"):
@@ -106,6 +116,8 @@ SPECIFIC = {"Pokémon Mansion": "Pokémon Mansion (Kanto)", "Underground Path": 
 
 def page_for(area, pack, resolved):
     for t in candidates(area, pack):
+        if pack == "bw" and os.path.exists(wiki_path(t)):
+            return t
         if resolved.get(t):
             return SPECIFIC.get(resolved[t], resolved[t])
     if pack == "rs":
