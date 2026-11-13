@@ -777,7 +777,8 @@ The initial pack is partial. Its sourced access work list is
   check against the Surf/Strength route; the entrance area only needs Waterfall.
   Neither PKHeX nor pk3DS can settle this: PKHeX's ORAS location list has one
   ID per cave ([Seafloor Cavern 294, Victory Road 298, Shoal Cave 300](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Resources/text/locations/gen6/text_xy_00000_en.txt#L295)),
-  and pk3DS ships no ORAS zone-name table (it reads names from the ROM).
+  and pk3DS labels each ORAS encounter file with the ROM's met-location name
+  ([RSWE.cs L318-L329](https://github.com/kwsch/pk3DS/blob/6daaca934ca2284a73ab743bf89c848c57cd9de1/pk3DS.WinForms/Subforms/Gen6/RSWE.cs#L318-L329)), so every floor shares that one name.
 - **Safari grass/bike alternatives:** the northern-area confirmation models
   either bike plus Surf. Specific long-grass access may need the other bike;
   the condition is retained, but individual grass patches have not been traced.

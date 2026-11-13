@@ -1979,9 +1979,11 @@ area also requires the existing Aether event.
   listed as Rustboro revivals (L66-L67) while the Fossil page says Jaw/Sail Fossils
   are absent from ORAS and only transferable. The same file has one location ID per
   cave (Seafloor Cavern 294, Victory Road 298, Shoal Cave 300), so it does not
-  separate floors or rooms. pk3DS (https://github.com/kwsch/pk3DS/tree/6daaca934ca2284a73ab743bf89c848c57cd9de1)
-  has no ORAS zone-name table (area names come from the ROM's text), so it cannot
-  map PokeAPI's numbered cave areas either.
+  separate floors or rooms. pk3DS
+  https://github.com/kwsch/pk3DS/blob/6daaca934ca2284a73ab743bf89c848c57cd9de1/pk3DS.WinForms/Subforms/Gen6/RSWE.cs#L318-L329
+  labels each ORAS encounter file with the ROM's met-location name for its zone,
+  so floors of one cave share a name and it cannot map PokeAPI's numbered cave
+  areas either.
 - Sprites: https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon
   ORAS uses the same supplied static regular/shiny national artwork fallback
   as USUM. The Gen VI folders primarily supply animated artwork, whereas the
