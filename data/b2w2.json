@@ -849,6 +849,9 @@
     }
   ],
   "evolution_overrides": {
+    "350": {
+      "evo": "High beauty or Trade holding Prism Scale"
+    },
     "462": {
       "evo": "Level up in Chargestone Cave"
     },
