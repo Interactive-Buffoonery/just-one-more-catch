@@ -73,12 +73,15 @@ const tile = (p: Species, s: string) => {
     R().trackForms && available.length > 1 ? `${collectedForms(p).size} of ${available.length} forms` : "",
   ].filter(Boolean).map((text) => `, ${text}`).join("");
   const short = ui.dexSize !== "large" && (searching() || (s !== "caught" && ["missing", "all"].includes(ui.filter))) && SHORT[s];
-  const attrs = `type="button" class="dt${s === "now" ? " n" : ""}${s === "now" || s === "caught" ? "" : " dim"}" data-${ui.bulk ? "toggle" : "open"}="${p.n}" data-k="d${p.n}" ${ui.bulk ? `aria-pressed="${s === "caught"}"` : ""} aria-label="${p.name}, number ${num(p)}, ${STATUS_TEXT[s]}${progress}"`;
+  const typeText = p.types.map(cap).join(" "),
+    place = s === "now" ? p.rows.find((r) => rowStatus(r).s === "now")?.place || "" : "";
+  const extra = ui.dexSize === "list" ? `, ${typeText} type${place ? `, ${esc(place)}` : ""}` : ui.dexSize === "large" ? `, ${typeText} type` : "";
+  const attrs = `type="button" class="dt${s === "now" ? " n" : ""}${s === "now" || s === "caught" ? "" : " dim"}" data-${ui.bulk ? "toggle" : "open"}="${p.n}" data-k="d${p.n}" ${ui.bulk ? `aria-pressed="${s === "caught"}"` : ""} aria-label="${p.name}, number ${num(p)}, ${STATUS_TEXT[s]}${extra}${progress}"`;
   const gx = R().trackGenders && hasGenders(p) ? `<span class="gx" aria-hidden="true">${GENDERS.map(([g, symbol]) => `<b class="${genders.has(g) ? "on" : ""}">${symbol}</b>`).join("")}</span>` : "";
   const forms = R().trackForms && available.length > 1 ? `<i class="fx" aria-hidden="true">${collectedForms(p).size}/${available.length}</i>` : "";
   const types = p.types.map((t) => `<span class="type" style="--tc:${TYPE[t]}">${cap(t)}</span>`).join(" ");
   if (ui.dexSize === "list")
-    return `<button ${attrs}>${mon(p)}<span class="mid"><span class="nm">${p.name}<small>#${pad(num(p))}</small></span><span class="dmeta">${types}${gx}${forms}</span></span><span class="end"><b>${SHORT[s]}</b>${s === "now" ? `<span>${esc(p.rows.find((r) => rowStatus(r).s === "now")?.place || "")}</span>` : ""}</span></button>`;
+    return `<button ${attrs}>${mon(p)}<span class="mid"><span class="nm">${p.name}<small>#${pad(num(p))}</small></span><span class="dmeta">${types}${gx}${forms}</span></span><span class="end"><b>${SHORT[s]}</b>${s === "now" ? `<span>${esc(place)}</span>` : ""}</span></button>`;
   return `<button ${attrs}>${s === "caught" || s === "now" ? `<span class="dexmarker ${s}" aria-hidden="true">${s === "caught" ? "✓" : ""}</span>` : ""}${mon(p)} <span class="nm">${p.name}</span><span class="no">#${pad(num(p))}${gx}${forms}${short ? `<i aria-hidden="true">${short}</i>` : ""}</span>${ui.dexSize === "large" ? `<span class="dextypes">${types}</span><span class="dexstatus">${SHORT[s]}</span>` : ""}</button>`;
 };
 const section = (title: string, list: { p: Species; s: string }[]) =>
