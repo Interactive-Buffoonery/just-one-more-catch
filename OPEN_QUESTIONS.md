@@ -4,10 +4,10 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Crystal
 
-- Ruins of Alph Outside: is the Natu and Smeargle grass only reachable through Union Cave (Surf and Strength)?
-- Ice Path B2F: can you catch anything there before the B1F boulder puzzle?
-- Whirl Islands: does any floor need Waterfall?
-- Mt. Silver: which floors need Surf or Waterfall?
+- Ruins of Alph Outside: trace the Natu/Smeargle grass to the two Union Cave exits versus the Route 32/36 gates; the [warp list](https://github.com/pret/pokecrystal/blob/3c813b0b4d82b39bf62185aceffb76fd6026c70b/maps/RuinsOfAlphOutside.asm#L284-L295) establishes the entrances, but not which grass is reachable without Surf/Strength.
+- Ice Path B2F: the [Mahogany-side script](https://github.com/pret/pokecrystal/blob/3c813b0b4d82b39bf62185aceffb76fd6026c70b/maps/IcePathB2FMahoganySide.asm#L26-L51) has a B1F ladder at (17,1), a B3F ladder at (9,11), and four event-controlled boulders described as “immovably imbedded in ice.” Trace reachable encounter tiles before the boulders fall; the warp list alone does not justify a Strength gate for the whole floor.
+- Whirl Islands: [B2F warps](https://github.com/pret/pokecrystal/blob/3c813b0b4d82b39bf62185aceffb76fd6026c70b/maps/WhirlIslandB2F.asm#L23-L28) connect two B1F entrances, Lugia's chamber and SW. Trace directed waterfall/ledge traversal for each entrance before adding any Waterfall gate; floor connectivity alone does not prove a required ascent.
+- Mt. Silver: [Room 2 warps](https://github.com/pret/pokecrystal/blob/3c813b0b4d82b39bf62185aceffb76fd6026c70b/maps/SilverCaveRoom2.asm#L26-L33) separate the Room 1 entrance, Room 3 and two item-room entrances. Trace collision paths to encounter tiles in each room; do not infer a whole-floor Surf/Waterfall gate from access to the item rooms.
 
 ## HeartGold and SoulSilver
 

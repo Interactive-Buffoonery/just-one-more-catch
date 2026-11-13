@@ -33,6 +33,12 @@ from PokeAPI and needs no source.
 - https://strategywiki.org/wiki/Pok%C3%A9mon_Crystal
 - Nintendo Power Pokemon Crystal guide (2001): `(Nintendo Power 2001) - Pokemon Crystal_text.pdf`
 
+- Crystal access investigation, pret/pokecrystal commit `3c813b0b4d82b39bf62185aceffb76fd6026c70b` (entrance evidence only; collision-path verification remains open):
+  - https://github.com/pret/pokecrystal/blob/3c813b0b4d82b39bf62185aceffb76fd6026c70b/maps/RuinsOfAlphOutside.asm#L284-L295 — Union Cave exits (6,19)/(6,27), Route 36 gate and Route 32 gate.
+  - https://github.com/pret/pokecrystal/blob/3c813b0b4d82b39bf62185aceffb76fd6026c70b/maps/IcePathB2FMahoganySide.asm#L26-L51 — “immovably” / “imbedded in ice”; ladder and event-controlled boulder coordinates.
+  - https://github.com/pret/pokecrystal/blob/3c813b0b4d82b39bf62185aceffb76fd6026c70b/maps/WhirlIslandB2F.asm#L23-L28 — B1F, Lugia chamber and SW warp destinations.
+  - https://github.com/pret/pokecrystal/blob/3c813b0b4d82b39bf62185aceffb76fd6026c70b/maps/SilverCaveRoom2.asm#L26-L33 — Room 1, Room 3 and separate item-room warp destinations.
+
 ## HeartGold and SoulSilver
 
 - https://bulbapedia.bulbagarden.net/wiki/Appendix:HeartGold_and_SoulSilver_walkthrough
