@@ -792,6 +792,17 @@ Original Game Boy Advance versions `ruby` / `sapphire`, encounter codes `R` /
 `S`. The 13 chapters, 19 events and area/row requirements in `data/rs.json`
 were sourced separately from Emerald. Each entry links its relevant source.
 
+- Open-question source verification (original R/S, no ROM/build):
+  https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/src/time_events.c#L54-L91
+  `UpdateShoalTideFlag`: hourly table is clear at 03–08 and 15–20;
+  lines 84–90 check the last warp map type before calculating local time
+  and setting/clearing `FLAG_SYS_SHOAL_TIDE`. This narrows the missing tide
+  model: wall-clock time alone does not continuously update the cave.
+  https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/LilycoveCity/scripts.inc#L30-L56
+  Line 31 calls `RemoveEvilTeamBaseEntrance` when `FLAG_BADGE07_GET` is set;
+  lines 49–56 replace entrance tiles with rock walls with collision enabled.
+  This independently confirms closure; no shared access-expiry feature is
+  added by this pack-only investigation.
 - PokeAPI cached encounters, original Hoenn numbering (202), national bound
   (386), generation-III types and species:
   https://pokeapi.co/api/v2/pokedex/4/ and cached Pokémon encounter endpoints.
