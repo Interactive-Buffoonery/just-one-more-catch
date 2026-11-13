@@ -5,7 +5,7 @@ import {runInNewContext} from "node:vm";
 
 const game = readFileSync(new URL("../client/game.ts", import.meta.url), "utf8");
 const load = runInNewContext(stripTypeScriptTypes(game.slice(game.indexOf("function loadRun("), game.indexOf("export const dumpRun"))) + "\nloadRun", {
-  verOf: () => ({pack: {start: "Start", boxes: [1]}}), MON_DEFAULTS: {},
+  verOf: () => ({pack: {start: "Start", boxes: [1]}}), MON_DEFAULTS: {}, parseHunt: () => undefined,
 });
 for (const [view, expected] of [[undefined, "journey"], ["unknown", "journey"], ["journey", "journey"], ["dex", "dex"], ["dexonly", "dexonly"]]) {
   assert.equal(load({id: "guest", version: "example"}, JSON.stringify({view})).view, expected);

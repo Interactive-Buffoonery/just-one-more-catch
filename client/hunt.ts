@@ -14,12 +14,18 @@ export const fiftyAt = (odds: number) => odds === 1 ? 1 : Math.ceil(Math.log(0.5
 export const unitFor = (method: string): Hunt["unit"] | null =>
   method === "npc-trade" ? null : method === "eggs" ? "eggs" : ONE_TIME.has(method) ? "resets" : "encounters";
 export const baseOdds = (gen: number) => gen < 2 || gen > 9 ? null : gen < 6 ? 8192 : 4096;
-export const masudaOdds = (gen: number) => gen === 5 ? 1365.3 : gen >= 6 && gen <= 9 ? 682.7 : null;
+export const masudaOdds = (gen: number) => gen === 5 ? 8192 / 6 : gen >= 6 && gen <= 9 ? 4096 / 6 : null;
+export function parseHunt(h: any): Hunt | undefined {
+  if (!h || !Number.isSafeInteger(h.species) || h.species < 1 || typeof h.place !== "string"
+    || !["encounters", "eggs", "resets"].includes(h.unit) || !["full", "masuda", "custom"].includes(h.method)
+    || !Number.isFinite(h.odds) || h.odds < 1 || !Number.isSafeInteger(h.count) || h.count < 0
+    || !Number.isFinite(h.startedAt)) return undefined;
+  return { species: h.species, place: h.place, unit: h.unit, method: h.method, odds: h.odds, count: h.count, startedAt: h.startedAt };
+}
 
 // The game's dex already excludes species introduced in later generations.
-export function eggTarget(speciesId: number, game: { dex: { n: number; name: string; from: string | null; canBreed?: boolean }[] }): number | null {
-  const dex = game.dex;
-  if (dex.length <= 151) return null;
+export function eggTarget(speciesId: number, dex: { n: number; name: string; from: string | null; canBreed?: boolean }[], gen: number): number | null {
+  if (gen < 2) return null;
   const asked = dex.find((p) => p.n === speciesId);
   if (!asked || [132, 489, 490].includes(speciesId)) return null;
   const root = (p: typeof asked): typeof asked => {

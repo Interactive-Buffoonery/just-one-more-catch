@@ -31,6 +31,7 @@ import {
 import { mon, sprite, tagBits, SLIDERS_ICON } from "../parts";
 import { Row, Species } from "../types";
 import { monLine } from "./boxes";
+import { huntButton } from "./hunt";
 import { NoRun } from "./runs";
 
 /* ---- Dex ---- */
@@ -201,7 +202,7 @@ export function fillSpecies(n: number) {
     <div class="grab" aria-hidden="true"></div>
     <section class="next" style="--t1:${a};--t2:${b}">
       <div class="band">${sprite(p, "hv-sprite")}<div class="k">#${pad(num(p))}</div><h2 class="lg" id="sheet-title">${p.name}</h2>${p.types.map((t) => `<span class="type" style="--tc:${TYPE[t]}">${cap(t)}</span>`).join(" ")}</div>
-      <div class="hv-actions">${R().trackShinyHunts ? `<button class="app-quiet shiny" data-hunt="${R().hunt?.species === n ? "open" : n}">✦ ${R().hunt?.species === n ? R().hunt!.count.toLocaleString("en-US") : "Hunt"}</button>` : ""}<button type="button" class="app-primary grow" data-toggle="${n}" data-k="t${n}" aria-pressed="${caught}" aria-label="${p.name} caught">${caught ? "✓ Caught" : "Caught it"}</button></div>
+      <div class="hv-actions"><button type="button" class="app-primary grow" data-toggle="${n}" data-k="t${n}" aria-pressed="${caught}" aria-label="${p.name} caught">${caught ? "✓ Caught" : "Caught it"}</button>${huntButton(n)}</div>
     </section>
     ${R().trackForms && available.length > 1 ? `<h3>Forms · ${forms.size} / ${available.length}</h3><div class="forms form-tiles" style="--fz:${FORM_ZOOM[P().art]?.[available[0].id.split("-")[0]] || 100}%">${available.map((f) => `<button type="button" class="form" data-form="${f.id}" data-species="${n}" data-k="form-${f.id}" aria-pressed="${forms.has(f.id)}" aria-label="${esc(p.name + " " + f.name)}" ${mine.some((m) => (m.form || p.forms![0].id) === f.id) ? "disabled" : ""}><b class="crop">${sprite(p, "", false, f.id)}</b><span${f.name.split(" ").some((w) => w.length > 8) ? ' class="long"' : ""}>${esc(f.name)}</span></button>`).join("")}</div>` : ""}
     ${R().trackGenders && hasGenders(p) ? `<h3>Genders · ${genders.size} / 2</h3><div class="forms genders">${GENDERS.map(([g, symbol, label]) => `<button type="button" class="form" data-gender="${g}" data-species="${n}" data-k="gender-${n}-${g}" aria-pressed="${genders.has(g)}" aria-label="${esc(p.name + " " + label)}" ${mine.some((m) => m.g === g) ? "disabled" : ""}><span class="gsym" aria-hidden="true">${symbol}</span><span>${label}</span></button>`).join("")}</div>` : ""}

@@ -102,8 +102,13 @@ export const monRow = (
 ) => {
   const t = r ? tagBits(r, place) : [],
     side = t.filter((x) => x[1]).map((x) => x[0]);
-  return `<div class="row">${mon(p, redGyarados(p, r))}<div class="grow"><div class="name">${p.name}${redGyarados(p, r) ? ` <span class="shiny small">✦ ${RED_NOTE}</span>` : ""}${side.length ? ` ${side.join(" ")}` : ""}</div>${r ? tagRow(t.filter((x) => !x[1])) : `<div class="small muted">${howElse(p)}</div>`}</div>${R().trackShinyHunts && R().hunt?.species === p.n ? `<button class="tag shiny" data-hunt="open">✦ ${R().hunt!.count.toLocaleString("en-US")}</button>` : ""}${gotBtn(p, evo)}</div>`;
+  return `<div class="row">${mon(p, redGyarados(p, r))}<div class="grow"><div class="name">${p.name}${redGyarados(p, r) ? ` <span class="shiny small">✦ ${RED_NOTE}</span>` : ""}${side.length ? ` ${side.join(" ")}` : ""}${huntTag(p.n)}</div>${r ? tagRow(t.filter((x) => !x[1])) : `<div class="small muted">${howElse(p)}</div>`}</div>${gotBtn(p, evo)}</div>`;
 };
+export const activeHunt = () => (R().trackShinyHunts ? R().hunt : undefined);
+const huntTag = (n: number) =>
+  activeHunt()?.species === n
+    ? ` <button type="button" class="tag goto hunt-tag" data-hunt="open"><span class="sr">Shiny hunt </span>✦ <b class="hunt-cnt">${R().hunt!.count.toLocaleString("en-US")}</b></button>`
+    : "";
 export type Catchable = { p: Species; r: Row };
 const pref = (a: Catchable, b: Catchable) =>
   +isHere(b.r.place) - +isHere(a.r.place) ||

@@ -1,4 +1,5 @@
 import { ONE_TIME as oneTimeMethods } from "./encounter-methods.ts";
+import { parseHunt } from "./hunt.ts";
 import { badgeName as sharedBadgeName, needLabel as sharedNeedLabel } from "./need-labels.ts";
 import { GameData, Pack, VERSIONS } from "./packs";
 import { Bridge, Mon, Row, RunRow, Species } from "./types";
@@ -304,13 +305,7 @@ function loadRun(row: RunRow, state: string): Run {
     trackForms: s.trackForms !== false,
     trackTraded: s.trackTraded === true,
     trackShinyHunts: s.trackShinyHunts === true,
-    hunt: s.hunt && Number.isInteger(s.hunt.species) && s.hunt.species > 0
-      && typeof s.hunt.place === "string"
-      && ["encounters", "eggs", "resets"].includes(s.hunt.unit)
-      && ["full", "masuda", "custom"].includes(s.hunt.method)
-      && Number.isFinite(s.hunt.odds) && s.hunt.odds >= 1
-      && Number.isInteger(s.hunt.count) && s.hunt.count >= 0
-      && Number.isFinite(s.hunt.startedAt) ? s.hunt : undefined,
+    hunt: parseHunt(s.hunt),
     trackGenders: s.trackGenders === true,
     genders: Object.fromEntries(
       Object.entries(s.genders || {}).filter(([n, gs]) => /^\d+$/.test(n) && Array.isArray(gs)).map(([n, gs]) =>
@@ -461,6 +456,7 @@ export function openRun(row: RunRow, data: GameData, state: string) {
   }));
   byName = Object.fromEntries(DEX.map((p) => [p.name, p]));
   byN = Object.fromEntries(DEX.map((p) => [p.n, p]));
+  if (run.hunt && !byN[run.hunt.species]) run.hunt = undefined;
   for (const m of run.mons) {
     const p = byN[m.n],
       form = p?.forms?.find((f) => f.id === m.form) || p?.forms?.[0];
