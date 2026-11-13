@@ -162,7 +162,7 @@ async function startTracker() {
   };
 
   // Keep retries bound to the session that confirmed the import.
-  async function pinned<T>(call: (c: ConvexClient) => Promise<T>, timeout: string) {
+  async function pinned<T>(call: (c: InstanceType<typeof ConvexClient>) => Promise<T>, timeout: string) {
     const session = clerk?.session, target = auth.userId;
     if (!session || !target || !auth.isAuthenticated) throw new Error("Sign in first");
     const client = new ConvexClient(import.meta.env.VITE_CONVEX_URL);
