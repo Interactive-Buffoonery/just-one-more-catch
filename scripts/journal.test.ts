@@ -18,6 +18,10 @@ describe("personal journal", () => {
     expect(journalItems([], [])).toEqual([]);
     expect(JSON.parse(importCaughtState("yellow", [25]))).toEqual({ caught: [25] });
   });
+  it("orders numeric Pokémon IDs naturally within the same date", () => {
+    const mons = [10, 2].map(id => ({ id, acquisition: { day: "2024-03-01" } }));
+    expect(journalItems(mons, []).map(row => row.key)).toEqual(["mon-2", "mon-10"]);
+  });
   it("preserves omitted journal data from older clients but honors explicit clearing", () => {
     const previous = JSON.stringify({ journalEntries: notes });
     expect(JSON.parse(preserveJournal('{"caught":[1]}', previous))).toEqual({ caught: [1], journalEntries: notes });

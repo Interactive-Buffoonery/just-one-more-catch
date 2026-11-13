@@ -60,5 +60,5 @@ export function journalItems(mons: { id: number; acquisition?: Acquisition }[], 
   return [
     ...mons.filter(m => m.acquisition && Object.values(m.acquisition).some(Boolean)).map(m => ({ key: `mon-${m.id}`, kind: "mon" as const, id: m.id, day: m.acquisition?.day })),
     ...entries.map(entry => ({ key: `note-${entry.id}`, kind: "note" as const, entry, day: entry.day })),
-  ].sort((a, b) => (b.day || "").localeCompare(a.day || "") || a.key.localeCompare(b.key, "en"));
+  ].sort((a, b) => (b.day || "").localeCompare(a.day || "") || a.key.localeCompare(b.key, "en", { numeric: true }));
 }

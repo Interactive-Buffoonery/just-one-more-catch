@@ -70,6 +70,12 @@ for (const width of [390,1280]) for (const colorScheme of ['light','dark']) {
  await page.locator('details.acquisition summary').click();
  assert.equal(await page.locator('#f-day').inputValue(),'');
  assert.equal(await page.locator('#f-place').inputValue(),'');
+ await page.locator('#f-day').fill('2999-01-01');
+ await page.locator('details.acquisition summary').click();
+ await page.locator('[data-savemon]').click();
+ assert.match(await page.locator('#personal-error').textContent(), /valid calendar date/);
+ assert.equal(await page.evaluate(()=>qa.game.R().mons.find(m=>m.id===2).acquisition?.day), undefined);
+ await page.locator('details.acquisition summary').click();
  await page.locator('#f-day').fill('2024-01-01');
  await page.locator('#f-how').selectOption('caught');
  assert.equal(await page.locator('#acquisition-day-label').textContent(),'Caught on');
