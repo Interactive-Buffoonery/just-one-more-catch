@@ -43,9 +43,8 @@ Website checks cover both ORAS titles and empty previews at 390px, selection,
 a misleading `.srm` drop, counts, import-day dates, creation/reload,
 cancellation, storage failure/retry, duplicate confirmation, navigation and
 preparation failure/retry/cancellation. Existing runs stay unchanged and no
-uploads occur. All four XY fixtures parse as X/Y and create nothing here.
-After integrating PR #111, set `XY_IMPORTS=1` to require creation/reload as
-exact `x`/`y` runs instead. Mapping tests reject XY, original RS, Emerald,
+uploads occur. All four XY fixtures create and reload as exact `x`/`y` runs.
+Mapping tests reject XY, original RS, Emerald,
 combined identities and the other ORAS title as the selected ORAS game.
 Receipts are `native-results.json`, `wasm-results.json` and
 `website-results.json`.
