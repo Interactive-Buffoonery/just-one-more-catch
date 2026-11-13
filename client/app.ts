@@ -390,8 +390,8 @@ function scheduleSave(delay = 800) {
   if (!run) return;
   const id = run.id,
     state = dumpRun(run);
-  if (state === ui.saved) return;
   clearTimeout(saveTimer);
+  if (state === ui.saved) return;
   if (bridge.auth.isAuthenticated && runBytes(state) > MAX_RUN_BYTES)
     return showSaveError(
       "This playthrough is too big to save. Try shortening some notes.",
