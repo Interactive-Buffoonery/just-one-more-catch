@@ -38,11 +38,13 @@ export type Pack = {
   hm: Record<string, string>;
   safari?: string[];
   nightFrom?: number;
+  morningFrom?: number;
   boxes: [count: number, size: number];
 };
 export type Version = {
   platform?: string;
   cover?: string;
+  clockOffset?: number;
   name: string;
   short: string;
   code: string;
@@ -447,6 +449,44 @@ const PLATINUM: Pack = {
   boxes: [18, 30],
 };
 
+const SM: Pack = {
+  load: () => import("./data/sm").then((m) => m.default),
+  art: "sm",
+  region: "Alola",
+  regional: 302,
+  national: 802,
+  start: "Iki Town",
+  starters: [722, 725, 728],
+  // trial and grand trial Z-Crystals, in island challenge order
+  badges: [
+    ["Normalium", "Ilima"],
+    ["Fightinium", "Hala"],
+    ["Waterium", "Lana"],
+    ["Firium", "Kiawe"],
+    ["Grassium", "Mallow"],
+    ["Rockium", "Olivia"],
+    ["Electrium", "Sophocles"],
+    ["Ghostium", "Acerola"],
+    ["Darkinium", "Nanu"],
+    ["Groundium", "Hapu"],
+    ["Dragonium", "Vast Poni Canyon"],
+  ],
+  badgeWord: "Z",
+  badgesWord: "trials",
+  kit: [
+    ["fishing-rod", "Fishing Rod"],
+    ["tauros", "Tauros Charge"],
+    ["surf", "Lapras Paddle"],
+    ["mudsdale", "Mudsdale Gallop"],
+    ["machamp", "Machamp Shove"],
+    ["island-scan", "Island Scan"],
+  ],
+  hm: { tauros: "Fightinium", "fishing-rod": "Waterium", mudsdale: "Electrium", machamp: "Darkinium" },
+  nightFrom: 18,
+  morningFrom: 6,
+  boxes: [32, 30],
+};
+
 export const VERSIONS: Record<VersionId, Version> = {
   platinum: {
     name: "Platinum", short: "PT", code: "t", gen: "Gen 4",
@@ -564,6 +604,14 @@ export const VERSIONS: Record<VersionId, Version> = {
     other: "HeartGold",
     ring: ["steel", "water"],
   },
+  sun: {
+    name: "Sun", short: "SU", code: "S", gen: "Gen 7",
+    pack: SM, other: "Moon", ring: ["fire", "psychic"],
+  },
+  moon: {
+    name: "Moon", short: "MO", code: "M", gen: "Gen 7",
+    clockOffset: 12, pack: SM, other: "Sun", ring: ["ghost", "dragon"],
+  },
   ultrasun: {
     name: "Ultra Sun",
     short: "US",
@@ -616,10 +664,7 @@ export const CONSOLES: { name: string; tag: string; titles: (VersionId | Soon)[]
       { name: "Omega Ruby", short: "OR", color: "#c8323c", region: "Hoenn" },
       { name: "Alpha Sapphire", short: "AS", color: "#2f5fb3", region: "Hoenn" },
     ],
-    [
-      { name: "Sun", short: "SU", color: "#e8892a", region: "Alola" },
-      { name: "Moon", short: "MO", color: "#6a4fc9", region: "Alola" },
-    ],
+    ["sun", "moon"],
     ["ultrasun", "ultramoon"],
   ] },
   { name: "Nintendo Switch", tag: "Switch", titles: [["firered-switch", "leafgreen-switch"]] },

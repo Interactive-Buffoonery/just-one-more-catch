@@ -43,7 +43,7 @@ describe("guest caught-list imports", () => {
     expect(track).toHaveBeenCalledWith("guest_run_created", "heartgold");
   });
 
-  it.each(["red", "blue", "yellow", "gold", "silver", "ruby", "sapphire", "black", "white", "x", "y", "diamond", "pearl", "black-2", "white-2", "platinum"] as const)("keeps %s caught history and empty guest imports", async (version) => {
+  it.each(["red", "blue", "yellow", "gold", "silver", "ruby", "sapphire", "black", "white", "x", "y", "diamond", "pearl", "black-2", "white-2", "platinum", "sun", "moon", "ultrasun", "ultramoon"] as const)("keeps %s caught history and empty guest imports", async (version) => {
     const { values, guest, guestRows } = await setup();
     const existing = { id: "local-existing", version: "crystal", state: '{"caught":[1],"notes":"Keep me"}', createdAt: "2026-01-01T00:00:00.000Z" };
     values.set("jomc.guest", JSON.stringify([existing]));

@@ -31,6 +31,7 @@ Website game support is an explicit adapter in `client/save-import.ts`:
 | B / W | Black / White (individual stored title; excludes B2 / W2) |
 | X / Y | X / Y (individual stored title) |
 | B2 / W2 | Black 2 / White 2 (individual stored title; excludes B / W) |
+| SN / MN | Sun / Moon (individual stored title) |
 | US / UM | Ultra Sun / Ultra Moon |
 
 The parser can read more games than the website offers. A readable unsupported
@@ -387,6 +388,50 @@ checks. Its browser harness currently rejects Pt; change that case to import
 only Platinum with no title choice. This Platinum harness already permits DP
 under its own paired titles once #112 lands and forbids DP-to-Pt substitution.
 Neither harness should require the sibling pack to stay unsupported.
+## Sun/Moon verification
+
+Sun/Moon uses vendored reader 0.1.3. The pack branch already provides the
+802-species limits in `IMPORT_SPECIES_LIMITS`; Ultra Sun/Ultra Moon retains 807.
+Main already imports USUM. Exact `SN`, `MN`, `US`, `UM` mappings keep all four
+identities separate; mapping tests reject every sibling and combined identity.
+
+Eight serialized synthetic fixtures cover caught and empty saves for all four
+titles. Native Core, independent raw caught/seen/title/date reads and published
+WASM agree. SM retains 20 caught species, including starter stages and 721/722
+and 802 boundaries, after removal from storage. USUM additionally retains
+803–807. Three seen-only species exercise female/shiny regions without becoming
+caught. All fixtures have valid checksums and empty party/boxes. Caught fixtures
+record 2020-02-29; empty fixtures omit the uninitialized date and use import day.
+The existing reader date matrix covers calendar bounds and invalid values.
+
+Reproduce with [the SM fixture README](../scripts/sm-save-fixtures/README.md).
+Guest browser checks cover all four titles, file selection/drop, empty previews
+at 390px, exact counts, recorded/import dates, creation/reload, cancellation,
+storage failure/retry, duplicate confirmation, navigation and preparation
+failure/retry/cancellation. Invalid and truncated saves create nothing. Existing
+runs, input buffers and file digests remain unchanged; no save uploads occur.
+No reader source, package, lockfile or tarball changes are required.
+
+Validation passed: `pnpm check`, `pnpm build`,
+`pnpm exec tsc --noEmit -p convex/tsconfig.json`, `pnpm test:convex` (96 tests),
+the SM matrix (16 guest scenarios), Emerald regression (13 guest scenarios),
+44 native reader tests, SDK types, five SDK tests and the existing reader
+browser matrix. Reader regression assets and SDK output matched the installed
+vendor package byte for byte.
+
+These are structural fixtures, not in-game exports. Permitted real SM/USUM
+cartridge/emulator exports, a legitimate in-game zero-caught save, regional,
+modified and corrupt variants beyond the fixtures, live signed-in imports,
+encrypted backup extraction, mobile Safari and physical mobile performance
+remain unverified.
+
+Integration with X/Y import PR #111 is expected to overlap the Works with list
+and `VERSION_MAP` line in `client/save-import.ts`, the guest test parameter list
+in `scripts/check_save_import.test.ts`, appended mapping tests in
+`scripts/save_import_data.test.ts`, and nearby documentation insertions here
+and in `OPEN_QUESTIONS.md`. Keep both sets of adapters, tests and verification
+notes. The fixture directories are separate. Neither import needs a reader or
+vendor change.
 
 ## Adding a ROM hack
 

@@ -185,3 +185,19 @@ test("Platinum imports only its own Gen IV National Dex history", async () => {
     expect(() => caughtForPack(s, version, otherData)).toThrow();
   }
 });
+
+test.each([["SN", "sun", 802], ["MN", "moon", 802], ["US", "ultrasun", 807], ["UM", "ultramoon", 807]] as const)("%s imports only its own Alola title", async (identity, version, limit) => {
+  const data = await VERSIONS[version].pack.load();
+  const s = snapshot([identity]);
+  expect(importVersions(s)).toEqual([version]);
+  expect(IMPORT_SPECIES_LIMITS[version]).toBe(limit);
+  expect(IMPORT_SPECIES_LIMITS[version]).toBe(VERSIONS[version].pack.national);
+  s.pokedex.caughtSpecies = [limit, 722, 25, 722, limit + 1];
+  expect(caughtForPack(s, version, data)).toEqual({ caught: [25, 722, limit], skipped: 1, partial: false });
+  s.pokedex.caughtSpecies = [];
+  expect(caughtForPack(s, version, data).caught).toEqual([]);
+  for (const other of ["SN", "MN", "US", "UM", "SM", "USUM"].filter(other => other !== identity)) {
+    expect(importVersions(snapshot([other]))).not.toContain(version);
+    expect(() => caughtForPack(snapshot([other]), version, data)).toThrow();
+  }
+});

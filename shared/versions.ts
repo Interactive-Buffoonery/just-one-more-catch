@@ -21,6 +21,8 @@ export const VERSION_IDS = [
   "soulsilver",
   "black",
   "white",
+  "sun",
+  "moon",
   "ultrasun",
   "ultramoon",
   "firered-switch",

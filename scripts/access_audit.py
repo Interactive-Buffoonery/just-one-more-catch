@@ -16,7 +16,7 @@ from urllib.parse import unquote
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 POKEAPI = os.path.join(ROOT, ".cache", "pokeapi")
 WIKI = os.path.join(ROOT, ".cache", "bulbapedia")
-PACKS = ["rs", "crystal", "hgss", "frlg", "usum", "bw", "xy", "dp", "b2w2", "pt"]
+PACKS = ["rs", "crystal", "hgss", "frlg", "usum", "bw", "xy", "dp", "b2w2", "pt", "sm"]
 
 
 def nice(slug):
@@ -138,10 +138,15 @@ def candidates(area, pack):
                               ("Roaming Sinnoh", "Roaming Pokémon")]:
             if a.startswith(prefix):
                 return [title]
+    if pack == "sm":
+        if a.startswith("Poke Pelago"):
+            return ["Poké Pelago"]
+        if a == "Secluded Shore":
+            return ["Ula'ula Beach"]
     route = re.match(r"(?:Sea )?Route (\d+)", a)
     if route:
         n = int(route.group(1))
-        return [f"{'Sinnoh' if pack in ('dp', 'pt') else 'Unova' if pack == 'bw' else 'Kalos' if pack == 'xy' else 'Alola' if pack == 'usum' else 'Johto' if 29 <= n <= 48 else 'Kanto'} Route {n}"]
+        return [f"{'Sinnoh' if pack in ('dp', 'pt') else 'Unova' if pack == 'bw' else 'Kalos' if pack == 'xy' else 'Alola' if pack in ('usum', 'sm') else 'Johto' if 29 <= n <= 48 else 'Kanto'} Route {n}"]
     if a.startswith("Safari Zone"):
         return ["Johto Safari Zone" if pack == "hgss" else "Kanto Safari Zone"]
     if a.endswith(" Chamber"):
@@ -167,6 +172,8 @@ def page_for(area, pack, resolved):
             return t
         if resolved.get(t):
             return SPECIFIC.get(resolved[t], resolved[t])
+        if pack == "sm" and os.path.exists(wiki_path(t)):
+            return t
     if pack == "rs":
         return next((t for t in candidates(area, pack) if os.path.exists(wiki_path(t))), None)
     return None

@@ -23,6 +23,8 @@ export const IMPORT_SPECIES_LIMITS: Record<VersionId, number> = {
   soulsilver: 493,
   black: 649,
   white: 649,
+  sun: 802,
+  moon: 802,
   ultrasun: 807,
   ultramoon: 807,
   "firered-switch": 386,
