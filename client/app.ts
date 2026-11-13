@@ -297,6 +297,7 @@ function render() {
     void loadDevices();
   shownTab = ui.tab;
   const leftImport = !onImport && saveImport.isOpen && importPage.contains(document.activeElement);
+  const leftRefresh = leftImport && saveImport.refreshing;
   if (!onImport) closeImport();
   const importLive = onImport && saveImport.isOpen;
   if (onImport && !importLive && !loading) {
@@ -328,7 +329,7 @@ function render() {
     ? `<nav class="tabbar${!isGuest() && run?.view === "dexonly" ? " four" : ""}" aria-label="Sections">${tabButtons(true)}<button class="tab-settings" data-tab="settings" data-k="tab-settings"${here}>${SETTINGS_ICON}<span>Settings</span></button></nav>`
     : "";
   $("#toast").innerHTML = ui.undo
-    ? `<div class="toast">${ui.undo.msg}${ui.undo.restore ? `<button data-undo="1" data-k="toast-undo">Undo</button>` : ui.undo.n ? `<button data-undo="1">Undo</button>` : ""}</div>`
+    ? `<div class="toast"><span id="toast-msg">${ui.undo.msg}</span>${ui.undo.restore || ui.undo.n ? `<button data-undo="1" data-k="toast-undo" aria-describedby="toast-msg">Undo</button>` : ""}</div>`
     : "";
   if (
     (typeof ui.sheet === "number" ||
@@ -336,7 +337,8 @@ function render() {
     $("#sheet").open
   )
     fillSheet(ui.sheet);
-  if (leftImport) root.querySelector<HTMLElement>('[data-k="import-save"]')?.focus({ preventScroll: true });
+  if (leftRefresh) focusCard(leftRefresh);
+  else if (leftImport) root.querySelector<HTMLElement>('[data-k="import-save"]')?.focus({ preventScroll: true });
   if (k)
     (
       root.querySelector(`[data-k="${k}"]`) ||
@@ -344,7 +346,7 @@ function render() {
     )?.focus();
 }
 
-let saveTimer: any, undoTimer: any;
+let saveTimer: any, undoTimer: any, undoing = false;
 function hideToast() {
   const n = ui.undo?.n,
     refreshed = ui.undo?.run,
@@ -637,16 +639,18 @@ async function onClick(e: MouseEvent) {
     return;
   }
   if (d.undo && ui.undo?.restore) {
+    if (undoing) return;
     const { restore, run: id } = ui.undo;
+    undoing = true;
     clearTimeout(undoTimer);
-    ui.undo = null;
-    render();
-    focusCard(id);
     try {
       await restore();
+      if (ui.undo?.restore === restore) hideToast();
       announce("Undone");
     } catch {
-      showSaveError("Couldn't undo the refresh.");
+      flash("Couldn't undo the refresh.", restore, id);
+    } finally {
+      undoing = false;
     }
     return;
   }
@@ -1038,12 +1042,13 @@ export function mount(el: HTMLElement, b: Bridge) {
         scheduleSave(0);
       } else if (row && (current || opening === id)) useRun(row);
       if (current) {
+        if (IMPORT_PATH.test(location.pathname)) history.replaceState(null, "", "/");
         ui.tab = "playthroughs";
         scrollTo(0, 0);
       }
       const refreshedBy = bridge.auth.userId;
-      flash(`Added ${added.length} caught Pokémon`, () => undoRefresh(id, added, previousStart, previousLink, refreshedBy), id);
-      $("[data-undo]")?.focus();
+      flash(added.length ? `Added ${added.length} caught Pokémon` : "Start date updated", () => undoRefresh(id, added, previousStart, previousLink, refreshedBy), id);
+      if (current) $("[data-undo]")?.focus();
     },
     dismiss: () => {
       ui.tab = "playthroughs";
@@ -1070,7 +1075,7 @@ export function mount(el: HTMLElement, b: Bridge) {
   const toast = $("#toast") as HTMLElement;
   const holdToast = () => ui.undo?.restore && clearTimeout(undoTimer);
   const releaseToast = (e: Event) => {
-    if (!ui.undo?.restore || toast.matches(":hover") ||
+    if (!ui.undo?.restore || undoing || toast.matches(":hover") ||
       toast.contains(e.type === "focusout" ? ((e as FocusEvent).relatedTarget as Node) : document.activeElement)) return;
     clearTimeout(undoTimer);
     undoTimer = setTimeout(hideToast, 8000);
