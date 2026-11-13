@@ -29,6 +29,7 @@ export let EVENTS: Record<string, GameData["events"][number]> = {};
 let LATER: Record<string, GameData["events"][number][]> = {};
 export const METHOD: Record<string, [string, string | null]> = {
   walk: ["Walking", null],
+  "honey-tree": ["Honey tree (wait 6 hours)", "honey"],
   seaweed: ["Underwater", "dive"],
   "feebas-tile-fishing": ["Feebas fishing tiles", "old-rod"],
   "devon-scope": ["Devon Scope", null],
@@ -86,6 +87,26 @@ export const OK_COND: Record<string, string> = {
   "story-progress-hall-of-fame": "After the Elite Four",
 };
 const STORY: Record<string, string> = {
+  "radar-on": "Use the Poké Radar in grass",
+  "radar-off": "Without Poké Radar",
+  "slot2-none": "No GBA cartridge inserted",
+  "slot2-ruby": "Ruby in the DS GBA slot",
+  "slot2-sapphire": "Sapphire in the DS GBA slot",
+  "slot2-emerald": "Emerald in the DS GBA slot",
+  "slot2-firered": "FireRed in the DS GBA slot",
+  "slot2-leafgreen": "LeafGreen in the DS GBA slot",
+  "honey-tree-group-a": "Honey table A (70% on ordinary trees)",
+  "honey-tree-group-b": "Honey table B (20% on ordinary trees)",
+  "honey-tree-group-c": "Munchlax tree, rare table (1%)",
+  "backlot-mentioned": "One of Backlot’s last two daily Pokémon",
+  "backlot-not-mentioned": "Regular Trophy Garden encounter",
+  "great-marsh-daily-slot-none": "Regular Great Marsh encounter",
+  "other-regirock-regice-registeel-in-party": "Regirock, Regice and Registeel in your party",
+  "other-giratina-not-caught-in-distortion-world": "Only if Giratina was not caught in the Distortion World",
+  "item-odd-keystone": "Place an Odd Keystone in the Hallowed Tower",
+  "other-talked-to-32-people-underground": "Speak to 32 people in the Underground",
+  "item-adamant-orb": "Carry the Adamant Orb",
+  "item-lustrous-orb": "Carry the Lustrous Orb",
   "story-progress-beat-red": "After beating Red",
   "story-progress-awakened-beasts": "After the Burned Tower beasts wake",
   "story-progress-vermilion-copycat": "After returning Copycat's doll",
@@ -111,6 +132,7 @@ const STORY: Record<string, string> = {
 export const cap = (s: string) => s[0].toUpperCase() + s.slice(1);
 function specialLabel(c: string) {
   if (STORY[c]) return STORY[c];
+  if (/^great-marsh-daily-slot-\d+-of-32$/.test(c)) return "Daily Great Marsh Pokémon (check the binoculars)";
   let m = c.match(/^johto-safari-blocks-(\w+)-min-(\d+)$/);
   if (m) return `Safari: ${m[2]}+ ${m[1]} blocks`;
   m = c.match(/^item-(\w+)-fossil$/);

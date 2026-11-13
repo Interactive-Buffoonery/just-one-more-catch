@@ -18,6 +18,7 @@ BASE = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/"
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 UA = {"User-Agent": "just-one-more-catch-data-build"}
 ART = {
+    "pt": "pokemon/versions/generation-iv/platinum/",
     "emerald": "pokemon/versions/generation-iii/emerald/",
     "gs": "pokemon/versions/generation-ii/gold/transparent/",
     "rb": "pokemon/versions/generation-i/red-blue/transparent/",
@@ -30,9 +31,10 @@ ART = {
 # PokeAPI badge IDs: Kanto 1–8, Johto 9–16, Hoenn 17–24, in gym order
 BADGES = ["Boulder", "Cascade", "Thunder", "Rainbow", "Soul", "Marsh", "Volcano", "Earth",
           "Zephyr", "Hive", "Plain", "Fog", "Storm", "Mineral", "Glacier", "Rising",
-          "Stone", "Knuckle", "Dynamo", "Heat", "Balance", "Feather", "Mind", "Rain"]
+          "Stone", "Knuckle", "Dynamo", "Heat", "Balance", "Feather", "Mind", "Rain",
+          "Coal", "Forest", "Cobble", "Fen", "Relic", "Mine", "Icicle", "Beacon"]
 # Kit items: rods are their own items; moves use a disc in the move's type colour
-ITEMS = {"flash": "tm-normal", "dive": "tm-water", "mach-bike": "mach-bike", "acro-bike": "acro-bike", "wailmer-pail": "wailmer-pail", "old-rod": "old-rod", "good-rod": "good-rod", "super-rod": "super-rod", "headbutt": "tm-normal", "cut-hm": "tm-normal",
+ITEMS = {"defog": "tm-flying", "honey": "honey", "underground-kit": "explorer-kit", "poke-radar": "poke-radar", "flash": "tm-normal", "dive": "tm-water", "mach-bike": "mach-bike", "acro-bike": "acro-bike", "wailmer-pail": "wailmer-pail", "old-rod": "old-rod", "good-rod": "good-rod", "super-rod": "super-rod", "headbutt": "tm-normal", "cut-hm": "tm-normal",
          "yellow-cut": "tm-normal", "rock-smash": "tm-fighting", "surf": "tm-water", "whirlpool": "tm-water", "waterfall": "tm-water", "strength": "tm-normal", "rock-climb": "tm-normal", "bicycle": "bicycle",
          # USUM: Poké Ride moves have no item art, so they use the ride Pokémon; Island Scan uses Rotom
          "fishing-rod": "fishing-rod", "tauros": "../pokemon/128", "mudsdale": "../pokemon/750", "machamp": "../pokemon/68", "island-scan": "../pokemon/479"}
@@ -74,6 +76,9 @@ def centre(path):
     """Centre the artwork on its canvas. Returns the largest ring zoom, in percent, that keeps it inside the circle."""
     from PIL import Image
     im = Image.open(path)
+    if im.mode not in ("P", "RGBA"):
+        im = im.convert("RGBA")
+        im.save(path, optimize=True)
     w, h = im.size
     alpha = im.convert("RGBA").getchannel("A")
     x0, y0, x1, y1 = box = alpha.getbbox()

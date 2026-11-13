@@ -194,3 +194,48 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 - Victory Road B2F: does the first reachable encounter tile require Rock
   Smash as well as Strength? Trace the map or check in-game; the walkthrough
   establishes Rock Smash for full traversal, not the earliest encounter.
+
+## Platinum (`pt`)
+
+- Independent terrain/access review remains outstanding. The cached
+  walkthrough and location pages source the gates, but no emulator or
+  collision-map traversal was performed. Specifically review Mt. Coronet's
+  2F-to-3F story passage (2F is available with Surf/Rock Climb; 3F and higher
+  conservatively retain the Galactic HQ rescue), Victory Road's individual
+  floor paths, and alternative eastern Battle Zone approaches to Route 227
+  and Stark Mountain. Route 228 grass is not blanket-gated on Bicycle or
+  Rock Smash: its northern/southern entrances need a terrain cross-check.
+- Drifloon is Friday plus Mars cleared, but cannot appear on the same day
+  Mars is defeated. The tracker stores an event checkbox, not its completion
+  date, so cannot enforce that exception. Source: Valley Windworks and
+  Platinum walkthrough Part 4 in SOURCES.md.
+- Great Marsh pre-National-Dex exclusive table entries remain visible after
+  the National Dex upgrade: the current positive-requirement model cannot
+  expire a row. Daily slot labels, National Dex requirements on later rows,
+  area distinctions and PokeAPI rates are retained. Do not interpret all
+  listed daily possibilities as simultaneously present.
+- PokeAPI describes conditional encounter slots rather than a complete
+  encounter-table simulator. Radar-off, no-dual-slot, daily Marsh/Backlot,
+  Honey groups and morning/day/night are retained as condition-labelled
+  rows. Their percentages are not combined into a whole-context probability.
+  Honey odds are conditional on the selected group; trainer-ID Munchlax
+  tree selection and fossil parity are not calculated by the tracker.
+- The cache contains 163 Platinum areas; 159 are included. Flower Paradise,
+  Newmoon Island, Hall of Origin and the Sinnoh Pokemart distribution area
+  are excluded, together with the Pokémon Ranger transfer method. No event
+  distribution is claimed available today. PokeAPI has no ordinary Platinum
+  encounter rows for the Regirock/Regice/Registeel event-unlocked rooms;
+  those rows were not fabricated. Regigigas consequently still requires
+  obtaining its prerequisite trio externally.
+- PokeAPI has no catch encounter table for Pal Park's imported Pokémon,
+  Battle Frontier rental/battle opponents or historical gift distributions
+  beyond its supplied rows. The 493-species catalog includes species with
+  evolution/trade-only or unavailable local acquisition; it does not claim
+  all 493 can be caught in one Platinum save.
+- Most access facts have one cached Bulbapedia source; selected script
+  cross-checks are pinned in SOURCES.md. A second independent source for
+  every area remains outstanding. No official Platinum guide was consulted.
+- No browser/mobile visual QA, emulator playthrough, live account/guest
+  interaction, save-file import or deployment was performed. Save import
+  remains disabled for Platinum. Independent Opus review belongs to the
+  coordinator.

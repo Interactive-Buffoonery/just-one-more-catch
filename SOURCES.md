@@ -770,3 +770,136 @@ Advance game. Ruby and Sapphire remain separate Coming Soon entries.
   attributes and `include/global.fieldmap.h` collision bits. The western
   connection reaches at most x=41; grass begins at x=49, beyond westbound
   ledges. Its encounters therefore stay with the later Route 122 approach.
+
+## Platinum
+
+Pack ID `pt`, version `platinum`, encounter code `t`. Platinum is independent
+of Diamond/Pearl; none of their chapter or HM assumptions were substituted.
+
+- Species, encounter areas, methods, levels, rates, conditions, regional
+  numbering and historical evolution/type records come from the supplied
+  PokeAPI cache, through `scripts/build_data.py`:
+  https://pokeapi.co/api/v2/version/14/
+  https://pokeapi.co/api/v2/pokedex/6/
+  The extended Sinnoh dex has 210 entries; national tracking is bounded at
+  493. This species bound does not enable save-file import.
+- All chapter, area and per-species gates carry `src` URLs in `data/pt.json`.
+  The locally cached Platinum walkthrough is the main access source:
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Platinum
+  Parts 1–3 cover Route 201 starters, opening routes, Oreburgh and the Coal
+  Rock Smash barrier to Floaroma. Parts 4–5 cover Mars/Route 205, Eterna,
+  Explorer Kit, Jupiter/Bicycle, Cut/Route 206/Old Chateau, and Wayward Cave.
+  Parts 6–10 cover Hearthome's third gym, eastern routes, Solaceon ruins,
+  Veilstone, Pastoria, Trophy Garden and the SecretPotion. Parts 11–15 cover
+  Celestic, Surf, Canalave/Iron Island/Riley, Mine/Strength, the lakes,
+  Snowpoint/Icicle/Rock Climb and the Galactic HQ rescue. Parts 16–19 cover
+  the Coronet summit, Distortion World, Rowan's return conversation,
+  Sunyshore/Beacon/Waterfall and Victory Road. Parts 21–26 cover National
+  Dex mechanics, postgame caves/legendaries, Battle Zone and Stark Mountain.
+  `src` links use the canonical `/Part_N` URL for the cached `_Part N` file.
+- Additional area-specific access evidence (not merely route order):
+  https://bulbapedia.bulbagarden.net/wiki/Wayward_Cave
+  https://bulbapedia.bulbagarden.net/wiki/Lost_Tower
+  https://bulbapedia.bulbagarden.net/wiki/Maniac_Tunnel
+  https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_207
+  https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_212
+  https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_218
+  https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_226
+  Wayward B1F does not need Strength in Platinum. Lost Tower's fog blocks
+  the reward, not catching. Route 207's initial grass precedes the Bicycle,
+  but its Honey tree is above the bike slope. Route 218's grass/Honey tree
+  need Surf; its starting shore's rods do not. Route 212's reporters clear
+  after reaching Pastoria. Route 226 has an eastern approach from Route 228;
+  its trade house needs Surf, and Rock Climb is not a blanket route gate.
+  The alternative eastern approach also avoids adding Rock Climb to all
+  Route 227/Stark encounters. Mt. Coronet 2F is reached using Surf/Rock
+  Climb before the later summit story passage; see the unresolved boundary
+  question for 3F in OPEN_QUESTIONS.md.
+- National Dex is a separate event: see all 210 Sinnoh species, visit Eterna
+  and speak to Rowan. It can precede the League through trading. Radar,
+  swarms, older fossils and dual-slot encounters use that event rather than
+  the generator's historical generic “After the Elite Four” condition:
+  https://bulbapedia.bulbagarden.net/wiki/National_Pokédex
+  https://bulbapedia.bulbagarden.net/wiki/Poké_Radar
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Platinum/Part_21
+  https://bulbapedia.bulbagarden.net/wiki/Dual-slot_mode
+  Radar requires grass, recharges after 50 steps and cannot be used on a
+  Bicycle. Dual-slot requires the matching GBA cartridge in a DS/DS Lite
+  when starting the game; this is not a DSi/3DS feature. The pack preserves
+  PokeAPI's radar/slot condition labels rather than inventing extra rows.
+- Great Marsh daily tables change after National Dex and vary by area/day;
+  the binoculars reveal daily visitors. Backlot's Trophy Garden additions
+  occupy the last two announced daily slots. Honey takes six hours and
+  expires after 24; four trainer-ID-dependent trees can select Munchlax.
+  Ordinary trees select A/B/C/no encounter at 70/20/0/10 percent; Munchlax
+  trees use 20/70/1/9 percent. Displayed Honey row odds are conditional on
+  the named table, not the total probability of a slathering:
+  https://bulbapedia.bulbagarden.net/wiki/Great_Marsh
+  https://bulbapedia.bulbagarden.net/wiki/Trophy_Garden
+  https://bulbapedia.bulbagarden.net/wiki/Honey_Tree
+- Drifloon appears on Fridays after Mars, but not on the day Mars is beaten:
+  https://bulbapedia.bulbagarden.net/wiki/Valley_Windworks
+  The Friday and Mars requirements are modeled; the same-day exception is
+  documented as a tracker limitation in OPEN_QUESTIONS.md.
+- Gift/static/trade checks: walkthrough Parts 1 (starter trio), 5 (Togepi),
+  6 (Bebe's Eevee before National Dex; Spiritomb's Keystone/32 people),
+  8 (Porygon before gym), 13 (Riley's Riolu Egg), 17 (Giratina), 18 (lake
+  guardians), 22 (Cresselia/Oak birds/Regigigas/Dialga/Palkia), 25–26
+  (Heatran). Fossil revival requires Explorer Kit and the fossil item;
+  Skull/Armor availability depends on trainer ID, older fossils on National
+  Dex. Trade requests/levels and fossil item conditions stay from PokeAPI.
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Platinum/Part_4
+  https://bulbapedia.bulbagarden.net/wiki/In-game_trade
+  https://bulbapedia.bulbagarden.net/wiki/Snowpoint_Temple
+  https://bulbapedia.bulbagarden.net/wiki/Turnback_Cave
+  Regigigas requires the three Regis in the party; Turnback Giratina only
+  appears if it was not caught in the Distortion World. Event Regigigas
+  rooms, distribution islands, the unreleased Azure Flute and Ranger
+  transfer are not presented as ordinary local encounter access.
+- Primary-source cross-checks use pret/pokeplatinum pinned at
+  `62bdaacdca6c56a6a396f3e9911e2f922b79bba8` (source only; no ROM built):
+  https://github.com/pret/pokeplatinum/tree/62bdaacdca6c56a6a396f3e9911e2f922b79bba8
+  Under `res/field/maps/`, `sandgem_town_pokemon_research_lab/scripts.s`
+  confirms the Eterna/seen-dex National Dex checks and Rowan's lake/Sunyshore
+  story flags. `celestic_town_north_house/scripts.s` requires game completion
+  to unlock the Dialga/Palkia legend (therefore both rows require Elite Four,
+  plus their orb conditions). `stark_mountain_room_3/scripts.s` checks game
+  completion, National Dex and the Buck follow-up for Heatran.
+  `mining_museum/scripts.s`,
+  `hearthome_city_northwest_house/scripts.s`,
+  `iron_island_b2f_left_room/scripts.s`, `route_209/scripts.s`,
+  `eterna_city_south_house/scripts.s`, `fullmoon_island_forest/scripts.s`
+  and `snowpoint_temple_b5f/scripts.s` cross-check the gifts, fossils,
+  Spiritomb, bird release, Cresselia release and Regigigas conditions.
+- Gym order/leaders and field badges are Platinum-specific: Coal/Roark
+  (Rock Smash), Forest/Gardenia (Cut), Relic/Fantina (Defog),
+  Cobble/Maylene (Fly), Fen/Crasher Wake (Surf), Mine/Byron (Strength),
+  Icicle/Candice (Rock Climb), Beacon/Volkner (Waterfall):
+  https://bulbapedia.bulbagarden.net/wiki/Badge
+  Fly is omitted from catch-access kit. Defog is optional for visibility,
+  not a blanket gate on foggy encounter areas. Generation IV has 18 boxes
+  of 30 and morning 04:00–09:59, day 10:00–19:59, night 20:00–03:59:
+  https://bulbapedia.bulbagarden.net/wiki/Pokémon_Storage_System
+  https://bulbapedia.bulbagarden.net/wiki/Time
+- Local form catalog: Unown A–Z/!/? (upper room via 26 forms seen), three
+  Burmy/Wormadam cloaks, east/west Shellos/Gastrodon and Giratina's
+  Altered/Origin formes. Origin uses the Griseous Orb obtained through
+  postgame Turnback/Distortion World. Rotom appliances require the historical
+  Secret Key distribution and are excluded from ordinary obtainable forms:
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Platinum/Part_7
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Platinum/Part_23
+  https://bulbapedia.bulbagarden.net/wiki/Pokémon_Platinum_Version
+  https://github.com/pret/pokeplatinum/blob/62bdaacdca6c56a6a396f3e9911e2f922b79bba8/src/pokemon.c
+  The form catalog describes eventual availability, not per-form story state.
+- Art uses Platinum's regular/shiny PokeAPI sprites, Sinnoh badge IDs 25–32
+  and item sprites (Defog uses a Flying TM). The existing Platinum cover is
+  reused from the Coming Soon cover set cited above:
+  https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon/versions/generation-iv/platinum
+  https://github.com/PokeAPI/sprites/tree/master/sprites/badges
+  https://github.com/PokeAPI/sprites/tree/master/sprites/items
+
+The supplied cache was used without automated Bulbapedia requests or a bulk
+PokeAPI fetch. All 159 retained encounter areas resolve to cached source
+pages in `scripts/access_audit.py areas pt`; this is a reviewer work list,
+not an independent certification of all terrain paths. Remaining source,
+probability and game/runtime limitations are recorded in OPEN_QUESTIONS.md.

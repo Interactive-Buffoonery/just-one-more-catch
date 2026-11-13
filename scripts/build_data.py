@@ -135,7 +135,9 @@ def rows_for(encounters, version, n):
                     continue
                 cond = sorted(GAME.get("condition_replacements", {}).get(c["name"], c["name"]) for c in d["condition_values"] if c["name"] not in DEFAULT_COND)
                 m = GAME.get("methods", {}).get(src, src)
-                extra = []
+                condition_needs = GAME.get("condition_needs", {})
+                extra = [need for c in cond for need in condition_needs.get(c, [])]
+                cond = [c for c in cond if c not in condition_needs or c in GAME.get("keep_conditions", [])]
                 row_place = place
                 for i, g in enumerate(GAME.get("row_needs", [])):
                     if g["n"] == n and matches(loc, g["place"]) and g.get("m", m) == m and version in g.get("versions", VERSIONS):

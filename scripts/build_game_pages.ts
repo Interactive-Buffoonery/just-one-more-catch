@@ -6,6 +6,7 @@ import { needLabel } from "../client/need-labels.ts";
 import { readFileSync, writeFileSync, mkdirSync, accessSync, readdirSync } from "node:fs";
 const METHOD: Record<string, [string, string | null]> = {
   walk: ["Walking", null],
+  "honey-tree": ["Honey tree (wait 6 hours)", "honey"],
   seaweed: ["Underwater", "dive"],
   "feebas-tile-fishing": ["Feebas fishing tiles", "old-rod"],
   "devon-scope": ["Devon Scope", null],
@@ -36,6 +37,7 @@ import { VERSIONS } from "../client/packs.ts";
 
 const esc = (s: unknown) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
 const games = [
+  ["platinum", "pt", "Sinnoh"],
   ["emerald", "emerald", "Hoenn"],
   ["red-blue", "rb", "Kanto"],
   ["yellow", "yellow", "Kanto"],

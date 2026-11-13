@@ -263,6 +263,34 @@ const EMERALD: Pack = {
   boxes: [14, 30],
 };
 
+const PLATINUM: Pack = {
+  load: () => import("./data/pt").then((m) => m.default),
+  art: "pt",
+  region: "Sinnoh",
+  regional: 210,
+  national: 493,
+  start: "Route 201",
+  starters: [387, 390, 393],
+  badges: [
+    ["Coal", "Roark"], ["Forest", "Gardenia"], ["Relic", "Fantina"],
+    ["Cobble", "Maylene"], ["Fen", "Crasher Wake"], ["Mine", "Byron"],
+    ["Icicle", "Candice"], ["Beacon", "Volkner"],
+  ],
+  kit: [
+    ["old-rod", "Old Rod"], ["good-rod", "Good Rod"], ["super-rod", "Super Rod"],
+    ["rock-smash", "Rock Smash"], ["cut-hm", "Cut"], ["defog", "Defog"],
+    ["surf", "Surf"], ["strength", "Strength"], ["rock-climb", "Rock Climb"],
+    ["waterfall", "Waterfall"], ["bicycle", "Bicycle"], ["honey", "Honey"],
+    ["underground-kit", "Explorer Kit"], ["poke-radar", "Poké Radar"],
+  ],
+  hm: {
+    "rock-smash": "Coal", "cut-hm": "Forest", defog: "Relic", surf: "Fen",
+    strength: "Mine", "rock-climb": "Icicle", waterfall: "Beacon",
+  },
+  nightFrom: 20,
+  boxes: [18, 30],
+};
+
 const USUM: Pack = {
   load: () => import("./data/usum").then((m) => m.default),
   art: "usum",
@@ -301,6 +329,10 @@ const USUM: Pack = {
 };
 
 export const VERSIONS: Record<VersionId, Version> = {
+  platinum: {
+    name: "Platinum", short: "PT", code: "t", gen: "Gen 4",
+    pack: PLATINUM, ring: ["ghost", "dragon"],
+  },
   emerald: {
     name: "Emerald", short: "E", code: "e", gen: "Gen 3",
     pack: EMERALD, ring: ["grass", "dragon"],
@@ -420,7 +452,7 @@ export const CONSOLES: { name: string; tag: string; titles: (VersionId | Soon)[]
       { name: "Diamond", short: "D", color: "#5b8fd6", region: "Sinnoh" },
       { name: "Pearl", short: "P", color: "#c98aa8", region: "Sinnoh" },
     ],
-    [{ name: "Platinum", short: "PT", color: "#8d8f9c", region: "Sinnoh" }],
+    ["platinum"],
     ["heartgold", "soulsilver"],
     [
       { name: "Black", short: "BL", color: "#3a3a40", region: "Unova" },
