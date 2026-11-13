@@ -39,6 +39,13 @@ from PokeAPI and needs no source.
 - https://strategywiki.org/wiki/Pok%C3%A9mon_HeartGold_and_SoulSilver
 - Prima HeartGold and SoulSilver Johto guide (2010): `(Prima 2010) - Pokemon HeartGold & SoulSilver - Johto.pdf`
 - Prima HeartGold and SoulSilver Kanto guide: `Pokemon HeartGold & SoulSilver Kanto Prima Official Guide_text.pdf`
+- Route 44 grass needs Surf: https://bulbapedia.bulbagarden.net/wiki/Johto_Route_44 ("the only patch of straight grass is surrounded by a pair of calm ponds"; Max Revive "in the patch of grass in the middle of the lake (requires Surf)"), Prima p154 ("Between its two lakes, you'll find a patch of tall grass").
+- Whirl Islands need no Waterfall: https://bulbapedia.bulbagarden.net/wiki/Whirl_Islands ("doesn't require going through any waterfalls in the first place"), Prima p167 field moves (Whirlpool, Flash, Surf, Strength).
+- Route 42 grass needs no field move: Prima p134 walks east from Ecruteak to the Hiker before any Cut or Surf step, and its map shows grass at the west end; https://bulbapedia.bulbagarden.net/wiki/Johto_Route_42 gates only the way past the lakes.
+- Tohjo Falls needs only Surf: Prima p170 map shows the entrance floor with land and water; https://bulbapedia.bulbagarden.net/wiki/Tohjo_Falls gates only the Moon Stone ledge ("requires Surf").
+- Pupitar on Mt. Silver needs Surf and Waterfall: https://bulbapedia.bulbagarden.net/wiki/Mt._Silver_Cave (Pupitar only in the Expert Belt chamber; Expert Belt "requires Surf and Waterfall").
+- Safari Zone Desert and Rocky Beach need Baoba's second challenge: https://bulbapedia.bulbagarden.net/wiki/Johto_Safari_Zone ("Six more areas can be added once Baoba's second challenge is assigned"; the default layouts leave out Desert and Rocky Beach).
+- Primo's egg codes are already rows with the password condition: https://bulbapedia.bulbagarden.net/wiki/Violet_City ("Egg received from Primo, requires individual code").
 
 ## FireRed and LeafGreen
 

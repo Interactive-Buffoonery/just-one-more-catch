@@ -11,15 +11,9 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## HeartGold and SoulSilver
 
-- Ruins of Alph Outside: same grass question as Crystal.
-- Route 42: do any grass patches need Surf or Strength?
-- Route 44: is all the grass reachable on foot?
-- Whirl Islands B3F: does it need Waterfall?
-- Tohjo Falls: is Surf enough for every part?
-- Mt. Silver: how do 1F Top, 2F to 4F and Top map to the cave, and which of them need Rock Climb? (Only Mountainside and Sneasel are gated so far.)
-- Fuchsia City: are the headbutt trees behind a Cut tree?
-- Safari Zone Desert and Rocky Beach: they need Baoba's second challenge. Model it?
-- Violet City Pokémon Center: Primo's egg codes. Model them?
+- Ruins of Alph Outside: is the Natu and Smeargle grass reachable on foot? Prima p82 lists only Rock Smash and Surf as field moves and Bulbapedia gates only Union Cave entrance 1 and the Hyper Potion, but neither places the grass itself.
+- Mt. Silver: which PokeAPI areas are Bulbapedia's 1F, chambers, 2F, 3F, mountainside and summit? Lower mountainside, 2F, upper mountainside, 3F and summit need Rock Climb; the Expert Belt chamber needs Surf and Waterfall (https://bulbapedia.bulbagarden.net/wiki/Mt._Silver_Cave). Golduck, Quagsire and Misdreavus appear only in those floors, so they need an either-or gate that the pack cannot express.
+- Fuchsia City: are the headbutt trees behind the Cut tree? Bulbapedia says the northern half needs Cut, and the zone has one Cut tree (https://github.com/pret/pokeheartgold/blob/6bf138d6035aa6b43d6f8f4132a12df70f86dcec/files/fielddata/eventdata/zone_event/053_T08.json#L98-L103), but tree positions and collision are not in the decompilation.
 
 ## FireRed and LeafGreen
 
