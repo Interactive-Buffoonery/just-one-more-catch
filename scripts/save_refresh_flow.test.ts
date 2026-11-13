@@ -12,6 +12,7 @@ vi.mock("../client/game", () => ({
   },
 }));
 const { SaveImport, refreshCheck, matchingRun, newSaveLink } = await import("../client/save-import");
+const { DIFFERENT_SAVE, RUN_MOVED } = await import("../shared/save-import");
 
 type Snap = Parameters<typeof refreshCheck>[0];
 const snap = (extra: Partial<Snap> = {}) => ({
@@ -75,7 +76,7 @@ describe("refresh flow", () => {
     } as unknown as Bridge & { refreshRun: ReturnType<typeof vi.fn> };
     const refreshed = vi.fn();
     const importer = new SaveImport({ host, bridge: () => bridge, flush: async () => { calls.push("flush"); }, complete: vi.fn(), refreshed, dismiss: vi.fn() });
-    const pending = importer as unknown as { snapshot: Snap; retry?: () => void; refresh?: { added: number[] }; inspect(f: File): Promise<void>; prepareRefresh(r: RunRow): Promise<void>; commitRefresh(): Promise<void> };
+    const pending = importer as unknown as { snapshot: Snap; retry?: () => void; refresh?: { added: number[]; useDate: boolean }; inspect(f: File): Promise<void>; selectVersion(v: string): Promise<void>; prepareRefresh(r: RunRow): Promise<void>; commitRefresh(): Promise<void> };
     return { host, bridge, importer, pending, refreshed, calls, row };
   };
   const preview = async (s: ReturnType<typeof setup>) => {
@@ -125,14 +126,48 @@ describe("refresh flow", () => {
   it("maps commit errors to the matching screen", async () => {
     const s = setup("heartgold");
     await preview(s);
-    s.bridge.refreshRun.mockRejectedValueOnce(Object.assign(new Error("Server Error"), { data: "Different save" }));
+    s.bridge.refreshRun.mockRejectedValueOnce(Object.assign(new Error("Server Error"), { data: DIFFERENT_SAVE }));
     await s.pending.commitRefresh();
     expect(s.host.innerHTML).toContain("This is a different save");
     expect(s.host.innerHTML).toContain("Choose another file");
     await preview(s);
-    s.bridge.refreshRun.mockRejectedValueOnce(new Error("Uncaught ConvexError: This playthrough moved"));
+    s.bridge.refreshRun.mockRejectedValueOnce(Object.assign(new Error("Server Error"), { data: RUN_MOVED }));
     await s.pending.commitRefresh();
     expect(s.host.innerHTML).toContain("This playthrough isn't here anymore. Nothing was added.");
+    await preview(s);
+    s.bridge.refreshRun.mockRejectedValueOnce(new Error("Sign in first"));
+    await s.pending.commitRefresh();
+    expect(s.host.innerHTML).toContain("Back to preview");
+    expect(s.host.innerHTML).not.toContain("isn't here anymore");
+  });
+  it("keeps the start date choice when going back to the preview", async () => {
+    const s = setup("heartgold");
+    await preview(s);
+    Object.assign(s.pending.refresh!, { recordedDay: "2026-05-03", useDate: true });
+    s.bridge.refreshRun.mockRejectedValueOnce(new Error("offline"));
+    await s.pending.commitRefresh();
+    s.pending.retry!();
+    await vi.waitFor(() => expect(s.host.innerHTML).toContain("Add 1 caught Pokémon"));
+    expect(s.pending.refresh!.useDate).toBe(true);
+  });
+  it("reports a date-only refresh so the toast can offer Undo", async () => {
+    const s = setup("heartgold");
+    await preview(s);
+    Object.assign(s.pending.refresh!, { recordedDay: "2026-05-03", useDate: true });
+    s.bridge.refreshRun.mockImplementationOnce(async () => ({ added: [] }));
+    await s.pending.commitRefresh();
+    expect(s.refreshed).toHaveBeenCalledWith("run1", [], Date.parse(s.row.createdAt), undefined, true);
+  });
+  it("shows a retryable error when save links fail to load", async () => {
+    const s = setup("heartgold");
+    s.importer.open();
+    s.pending.snapshot = snap({ trainer });
+    (s.bridge.saveLinks as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error("offline"));
+    await s.pending.selectVersion("heartgold");
+    expect(s.host.innerHTML).toContain("Couldn't prepare the preview");
+    expect(s.host.innerHTML).not.toContain("Create new playthrough");
+    s.pending.retry!();
+    await vi.waitFor(() => expect(s.host.innerHTML).toContain("Create new playthrough"));
   });
 });
 
@@ -174,7 +209,16 @@ describe("guest refresh undo and move", () => {
     storage.setItem.mockImplementationOnce(() => { throw new Error("QuotaExceededError"); });
     await expect(guest.undoRefresh(id, [1], undefined, undefined)).rejects.toThrow();
     expect(JSON.stringify(guestRows())).toBe(kept);
-    await expect(guest.undoRefresh("local-missing", [1])).rejects.toThrow("This playthrough moved");
+    await expect(guest.undoRefresh("local-missing", [1])).rejects.toThrow(RUN_MOVED);
+  });
+  it("ignores a corrupt link in storage", async () => {
+    const { guest, guestRows, storage } = await setup();
+    const [bad, good] = ["local-bad", "local-good"];
+    const row = { version: "red", state: "{}", createdAt: "2026-06-01T00:00:00.000Z" };
+    storage.setItem("jomc.guest", JSON.stringify([{ ...row, id: bad, saveLink: { salt: "", fingerprint: "x" } }, { ...row, id: good, saveLink: link }]));
+    expect(await guest.saveLinks("red")).toEqual([{ id: good, ...link }]);
+    expect(await guest.refreshRun(bad, [4], link)).toEqual({ added: [4] });
+    expect(guestRows().find((r) => r.id === bad)?.saveLink).toEqual(link);
   });
   it("moves a guest playthrough without its link when the link is invalid", async () => {
     const { guest, guestRows, moveGuestRuns, storage } = await setup();

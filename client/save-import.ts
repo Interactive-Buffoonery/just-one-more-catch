@@ -4,7 +4,7 @@ import { VERSIONS, type GameData } from "./packs";
 import type { Bridge, RunRow } from "./types";
 import type { VersionId } from "../shared/versions";
 import { MAX_RUNS } from "../shared/limits";
-import { caughtOf, newSaveSalt, saveFingerprint, validateImportStart, type SaveLink } from "../shared/save-import";
+import { caughtOf, newSaveSalt, saveFingerprint, validateImportStart, validLink, DIFFERENT_SAVE, RUN_MOVED, type SaveLink } from "../shared/save-import";
 import type { InspectSuccess } from "@serabi/pokemon-save-reader";
 declare const __SAVE_READER_VERSION__: string;
 
@@ -89,8 +89,8 @@ export async function refreshCheck(snapshot: Snapshot, version: VersionId, curre
   return { status: older ? "older" : "same", link };
 }
 export async function matchingRun(snapshot: Snapshot, version: VersionId, links: ({ id: string } & SaveLink)[]) {
-  for (const current of links)
-    if ((await newSaveLink(snapshot, version, current.salt))?.fingerprint === current.fingerprint) return current.id;
+  const prints = await Promise.all(links.map((l) => newSaveLink(snapshot, version, l.salt)));
+  return links.find((l, i) => prints[i]?.fingerprint === l.fingerprint)?.id;
 }
 const dayOf = (date: Date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 export function importDate(day: string): number | undefined {
@@ -129,6 +129,7 @@ export class SaveImport {
   private committing = false;
   private retry?: () => void;
   private refreshId?: string;
+  private updating = false;
   private refresh?: RefreshCheck & { row: RunRow; previous?: SaveLink; version: VersionId; caught: number[]; added: number[]; have: number; skipped: number; partial: boolean; recordedDay?: string; useDate: boolean };
   private match?: RunRow;
   private importLink?: SaveLink;
@@ -149,6 +150,8 @@ export class SaveImport {
         case "update": if (this.match) void this.prepareRefresh(this.match); break;
         case "as-new":
           this.refreshId = undefined;
+          this.updating = false;
+          document.title = "Import a save | Just One More Catch";
           if ((options.bridge().runs?.length ?? 0) >= MAX_RUNS) this.full();
           else void this.route();
           break;
@@ -190,7 +193,7 @@ export class SaveImport {
     });
   }
   get isOpen() { return this.active; }
-  get refreshing() { return !!this.refreshId; }
+  get refreshing() { return this.refreshId; }
   open(refreshId?: string) {
     this.refreshId = refreshId;
     this.active = true;
@@ -210,7 +213,10 @@ export class SaveImport {
     if (!this.active || importTarget(this.options.bridge()) === this.target) return;
     this.stop();
     this.file = this.snapshot = this.preview = undefined;
-    if (!this.committing) this.problem("Your account changed", "Choose your save again to import into your current account or browser.", () => this.open(), "Start again");
+    if (!this.committing) this.problem("Your account changed", "Choose your save again to import into your current account or browser.", ...this.startAgain());
+  }
+  private startAgain(): [() => void, string] {
+    return this.refreshId ? [() => this.options.dismiss(), "Back to Dashboard"] : [() => this.open(), "Start again"];
   }
   private stop() {
     this.seq++;
@@ -240,6 +246,7 @@ export class SaveImport {
     if (this.committing) return;
     this.stop();
     this.file = this.snapshot = this.preview = this.refresh = this.match = undefined;
+    this.updating = false;
     if (!this.refreshId && (this.options.bridge().runs?.length ?? 0) >= MAX_RUNS) return this.full();
     const title = this.refreshId ? "Refresh from a save" : "Import a save";
     this.show(`<h1 class="lg" id="import-title">${title}</h1>
@@ -355,7 +362,7 @@ export class SaveImport {
       this.selectedDay = this.recordedDay ?? this.importDay;
       this.dateSource = this.recordedDay ? "recorded" : "today";
       this.importLink = await newSaveLink(snapshot, version);
-      const links = this.importLink ? await this.options.bridge().saveLinks(version).catch(() => []) : [];
+      const links = this.importLink ? await this.options.bridge().saveLinks(version) : [];
       const matched = await matchingRun(snapshot, version, links);
       if (!this.valid(seq)) return;
       this.match = this.options.bridge().runs?.find((r) => r.id === matched);
@@ -405,7 +412,7 @@ export class SaveImport {
       ${this.party(p.version, p.caught)}
       ${m ? `<section class="si-start" aria-labelledby="si-match-label"><h2 class="eyebrow" id="si-match-label">Your playthrough</h2><div class="si-start-row"><img class="cover" src="${coverOf(p.version)}" alt="" width="32" height="32"><div class="val">This looks like your ${esc(v.name)} playthrough<small>Started ${longDate(dayOf(new Date(m.createdAt)))} · ${m.summary.caught} caught</small></div></div></section>` : ""}
       ${m ? "" : this.dateBlock(editing)}
-      <ul class="si-facts"><li>${LOCK}${PRIVACY}</li><li>${TICK}This tool imports your caught Pokémon${this.dateSource === "recorded" ? " and start date" : ""} only. Story progress and notes aren't imported.</li>${m ? "" : `<li>${TICK}We create a new playthrough with your caught Pokémon marked.</li>`}${this.warnings(p)}</ul>
+      <ul class="si-facts"><li>${LOCK}${PRIVACY}</li><li>${TICK}This tool imports your caught Pokémon${this.dateSource === "recorded" && !m ? " and start date" : ""} only. Story progress and notes aren't imported.</li>${m ? "" : `<li>${TICK}We create a new playthrough with your caught Pokémon marked.</li>`}${this.warnings(p)}</ul>
       ${editing ? "" : m ? `<div class="hv-actions"><button class="app-primary" data-import-action="update">Update it</button><button class="app-quiet" data-import-action="create">Create new playthrough</button></div>` : this.actions("Create new playthrough", "create")}`, "Ready to import");
     if (editing) {
       void import("cally");
@@ -427,7 +434,7 @@ export class SaveImport {
   private async prepareRefresh(stale: RunRow) {
     if (!this.snapshot || this.committing) return;
     const row = this.options.bridge().runs?.find((r) => r.id === stale.id) ?? stale;
-    this.refreshId = row.id;
+    this.updating = true;
     const seq = ++this.seq, snapshot = this.snapshot, version = row.version as VersionId;
     try {
       const data = await VERSIONS[version].pack.load();
@@ -446,17 +453,19 @@ export class SaveImport {
       const bridge = this.options.bridge();
       const [state, links] = await Promise.all([bridge.getState(row.id), bridge.saveLinks(version)]);
       const found = links.find((l) => l.id === row.id);
-      const current: SaveLink | undefined = found && { salt: found.salt, fingerprint: found.fingerprint, ...(found.playSeconds !== undefined ? { playSeconds: found.playSeconds } : {}) };
+      const current = validLink(found && { salt: found.salt, fingerprint: found.fingerprint, ...(found.playSeconds !== undefined ? { playSeconds: found.playSeconds } : {}) });
       const check = await refreshCheck(snapshot, version, current);
       if (!this.valid(seq)) return;
       if (check.status === "different") return this.different("This is a different save");
       const have = new Set(caughtOf(JSON.parse(state)));
       const recorded = recordedStart(snapshot, dayOf(new Date()));
       const recordedDay = recorded !== dayOf(new Date(row.createdAt)) ? recorded : undefined;
-      this.refresh = { ...check, ...fromSave, row, previous: current, version, added: fromSave.caught.filter((n) => !have.has(n)), have: have.size, recordedDay, useDate: false };
+      this.refresh = { ...check, ...fromSave, row, previous: current, version, added: fromSave.caught.filter((n) => !have.has(n)), have: have.size, recordedDay, useDate: this.refresh?.row.id === row.id && this.refresh.useDate };
       this.refreshReady();
     } catch {
-      if (this.valid(seq)) this.problem("Couldn't prepare the preview", "The game data may not have loaded. Nothing was imported.", () => void this.prepareRefresh(row));
+      if (!this.valid(seq)) return;
+      if (!this.options.bridge().runs?.some((r) => r.id === row.id)) this.problem("Couldn't prepare the preview", "This playthrough isn't here anymore. Nothing was imported.");
+      else this.problem("Couldn't prepare the preview", "The game data may not have loaded. Nothing was imported.", () => void this.prepareRefresh(row));
     }
   }
   private refreshReady() {
@@ -468,7 +477,7 @@ export class SaveImport {
     this.show(`${this.head(p.version, "Refresh from a save")}
       <div class="si-count"><p class="lead"><b>${n}</b> new caught</p></div>${this.party(p.version, p.added)}
       ${p.recordedDay ? `<section class="si-start" aria-labelledby="si-start-label"><h2 class="eyebrow" id="si-start-label">Start date</h2><label class="si-start-row"><input type="checkbox" data-import-date${p.useDate ? " checked" : ""}><span class="val">Use the date in your save: ${longDate(p.recordedDay)}<small>Current: ${longDate(dayOf(new Date(p.row.createdAt)))}</small></span></label></section>` : ""}
-      ${facts(`${p.status === "older" ? `<li class="warn">${WARN}This save is older than your last refresh.</li>` : ""}${this.warnings(p)}`)}
+      ${facts(`${p.status === "older" ? `<li class="warn">${WARN}This save has less play time than the one you used last time.</li>` : ""}${this.warnings(p)}`)}
       ${this.actions(`Add ${n} caught Pokémon`, "refresh")}`, "Refresh from a save");
   }
   private async commitRefresh() {
@@ -493,17 +502,17 @@ export class SaveImport {
       this.options.refreshed(p.row.id, added, startedAt === undefined ? undefined : Date.parse(p.row.createdAt), p.previous, here);
     } catch (error) {
       if (!current()) return;
-      const reason = String((error as { data?: unknown })?.data ?? (error as Error)?.message ?? "");
+      const reason = (error as { data?: unknown })?.data ?? (error as Error)?.message;
       if (importTarget(this.options.bridge()) !== target)
-        this.problem("Your account changed", "Choose your save again before importing into your current account or browser.", () => this.open(), "Start again");
-      else if (reason.includes("Different save")) this.different("This is a different save");
-      else if (reason.includes("This playthrough moved")) this.problem("Couldn't add your caught Pokémon", "This playthrough isn't here anymore. Nothing was imported.");
+        this.problem("Your account changed", "Choose your save again before importing into your current account or browser.", ...this.startAgain());
+      else if (reason === DIFFERENT_SAVE) this.different("This is a different save");
+      else if (reason === RUN_MOVED) this.problem("Couldn't add your caught Pokémon", "This playthrough isn't here anymore. Nothing was imported.");
       else this.problem("Couldn't add your caught Pokémon", "Your preview is still here. Check your connection or browser storage and try again.", () => void this.prepareRefresh(p.row), "Back to preview");
     } finally { if (session === this.session) this.committing = false; }
   }
   private problem(title: string, body: string, retry?: () => void, label = "Try again", file = label === "Choose another file") {
     this.retry = retry;
-    if (this.refreshId) body = body.replace("Nothing was imported.", "Nothing was added.");
+    if (this.refreshId || this.updating) body = body.replace("Nothing was imported.", "Nothing was added.");
     this.show(`<span class="si-oops" aria-hidden="true">!</span><h1 class="lg" id="import-title">${esc(title)}</h1><p class="muted">${esc(body)}</p>${file ? WORKS : ""}
       ${retry ? this.actions(label, "retry") : NOT_NOW}
       ${file ? `<p class="small muted si-help">Having trouble with a save file? <a href="/contact/">Contact us</a> with more information and we'll try to help.</p>` : ""}`, title);

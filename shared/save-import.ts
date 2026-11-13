@@ -56,6 +56,8 @@ export function importCaughtState(version: string, caught: readonly number[]): s
 }
 
 export type SaveLink = { salt: string; fingerprint: string; playSeconds?: number };
+export const DIFFERENT_SAVE = "Different save";
+export const RUN_MOVED = "This playthrough moved";
 
 export function validateSaveLink(link: SaveLink): void {
   if (!link || !/^[0-9a-f]{32}$/.test(link.salt) ||
@@ -63,6 +65,13 @@ export function validateSaveLink(link: SaveLink): void {
       (link.playSeconds !== undefined && (!Number.isSafeInteger(link.playSeconds) || link.playSeconds < 0)))
     throw new Error("Invalid save link");
 }
+
+export const validLink = (link?: SaveLink) => {
+  try {
+    if (link) validateSaveLink(link);
+    return link;
+  } catch {}
+};
 
 export const sameSaveLink = (a?: SaveLink, b?: SaveLink) =>
   a?.salt === b?.salt && a?.fingerprint === b?.fingerprint && a?.playSeconds === b?.playSeconds;
@@ -83,7 +92,7 @@ export function mergeSaveLink(old: SaveLink | undefined, link: SaveLink | undefi
   if (link) validateSaveLink(link);
   if (!link) return old;
   if (!old) return link;
-  if (old.salt !== link.salt || old.fingerprint !== link.fingerprint) throw new Error("Different save");
+  if (old.salt !== link.salt || old.fingerprint !== link.fingerprint) throw new Error(DIFFERENT_SAVE);
   const times = [old.playSeconds, link.playSeconds].filter((n): n is number => n !== undefined);
   return { salt: old.salt, fingerprint: old.fingerprint, ...(times.length ? { playSeconds: Math.max(...times) } : {}) };
 }

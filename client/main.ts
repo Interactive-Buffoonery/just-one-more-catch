@@ -145,7 +145,7 @@ async function startTracker() {
     try {
       return await withTimeout(call(client), 30000, timeout);
     } finally {
-      await client.close();
+      void client.close().catch(() => {});
     }
   }
 

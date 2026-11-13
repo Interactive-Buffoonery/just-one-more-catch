@@ -4,7 +4,7 @@ import { isAvatar } from "../shared/avatars";
 import { preserveJournal } from "../shared/journal";
 import { MAX_RUNS } from "../shared/limits";
 import { summarize } from "../shared/summary";
-import { importCaughtState, validateImportId, validateImportStart, validateSaveLink, mergeSaveLink, mergeCaughtState, sameSaveLink, unmergeCaughtState, type SaveLink } from "../shared/save-import";
+import { importCaughtState, validateImportId, validateImportStart, validateSaveLink, mergeSaveLink, mergeCaughtState, sameSaveLink, unmergeCaughtState, validLink, RUN_MOVED, type SaveLink } from "../shared/save-import";
 
 /* ---- Guest runs live in this browser until sign-in ---- */
 type GuestRow = Omit<RunRow, "summary"> & { state: string; saveLink?: SaveLink; movedTo?: string; moveOwner?: string; importStartedAt?: number };
@@ -80,15 +80,15 @@ export function withGuest(b: Bridge, refresh: () => void): Bridge {
       return id;
     },
     async saveLinks(version) {
-      return guestRows().filter((r) => r.version === version && r.saveLink && !r.movedTo)
+      return guestRows().filter((r) => r.version === version && validLink(r.saveLink) && !r.movedTo)
         .map((r) => ({ id: r.id, ...r.saveLink! }));
     },
     async refreshRun(id, caught, link, startedAt) {
       const rows = guestRows();
       const row = rows.find((r) => r.id === id);
-      if (!row || row.movedTo) throw new Error("This playthrough moved");
+      if (!row || row.movedTo) throw new Error(RUN_MOVED);
       validateImportStart(startedAt);
-      const saveLink = mergeSaveLink(row.saveLink, link);
+      const saveLink = mergeSaveLink(validLink(row.saveLink), link);
       const result = mergeCaughtState(row.state, row.version, caught);
       const next = JSON.stringify(rows.map((r) => r.id === id ? {
         ...r, saveLink, ...(result.added.length ? { state: result.state, updatedAt: new Date().toISOString() } : {}),
@@ -102,7 +102,7 @@ export function withGuest(b: Bridge, refresh: () => void): Bridge {
     async undoRefresh(id, added, startedAt, link) {
       const rows = guestRows();
       const row = rows.find((r) => r.id === id);
-      if (!row || row.movedTo) throw new Error("This playthrough moved");
+      if (!row || row.movedTo) throw new Error(RUN_MOVED);
       validateImportStart(startedAt);
       if (link) validateSaveLink(link);
       const state = unmergeCaughtState(row.state, added);
@@ -155,12 +155,6 @@ export function moveGuestAvatar(raw: Bridge) {
 export let moving = false;
 let lastLeft = 0;
 const plural = (n: number) => `${n} playthrough${n === 1 ? "" : "s"}`;
-const validLink = (link?: SaveLink) => {
-  try {
-    if (link) validateSaveLink(link);
-    return link;
-  } catch {}
-};
 export async function moveGuestRuns(
   raw: Bridge,
   flash: (msg: string) => void,

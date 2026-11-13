@@ -11,7 +11,10 @@ it("refreshes owned runs atomically with additive state and link history", async
   const b = t.withIdentity({ sid: "sess_b", subject: "b", tokenIdentifier: "issuer|b" });
   const id = await a.mutation(api.runs.create, { version: "red", link });
   await a.mutation(api.runs.save, { id, state: '{"caught":[1],"notes":"keep"}' });
-  await expect(b.mutation(api.runs.refreshCaught, { id, caught: [2] })).rejects.toThrow();
+  await expect(b.mutation(api.runs.refreshCaught, { id, caught: [2] })).rejects.toThrow("This playthrough moved");
+  const signedOut = t.mutation(api.runs.refreshCaught, { id, caught: [2] });
+  await expect(signedOut).rejects.toThrow("Sign in first");
+  await expect(signedOut).rejects.not.toThrow("This playthrough moved");
   await expect(a.mutation(api.runs.refreshCaught, { id, caught: [152] })).rejects.toThrow();
   expect(await a.mutation(api.runs.refreshCaught, { id, caught: [25], link: { ...link, playSeconds: 50 }, startedAt: 1000 })).toEqual({ added: [25] });
   const updatedAt = await t.run(async ctx => (await ctx.db.get(ctx.db.normalizeId("runs", id)!))?.updatedAt);

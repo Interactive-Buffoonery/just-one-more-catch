@@ -6,7 +6,7 @@ import { MAX_RUN_BYTES, MAX_RUNS, runBytes } from "../shared/limits";
 import { summarize } from "../shared/summary";
 import { VERSION_IDS } from "../shared/versions";
 import { isAvatar } from "../shared/avatars";
-import { importCaughtState, validateImportId, validateImportStart, validateSaveLink, mergeSaveLink, mergeCaughtState, sameSaveLink, unmergeCaughtState } from "../shared/save-import";
+import { importCaughtState, validateImportId, validateImportStart, validateSaveLink, mergeSaveLink, mergeCaughtState, sameSaveLink, unmergeCaughtState, DIFFERENT_SAVE, RUN_MOVED } from "../shared/save-import";
 import { saveLink } from "./schema";
 
 import { sendContact } from "./contactSpam";
@@ -52,10 +52,11 @@ async function dropRun(ctx: MutationCtx, run: Id<"runs">) {
   await ctx.db.delete(run);
 }
 
-async function mine(ctx: QueryCtx, id: string, expectedUserId?: string) {
+async function mine(ctx: QueryCtx, id: string, expectedUserId?: string, missing = new Error("Not your playthrough")) {
+  const who = await owner(ctx, expectedUserId);
   const runId = ctx.db.normalizeId("runs", id);
   const run = runId && (await ctx.db.get(runId));
-  if (!run || run.owner !== (await owner(ctx, expectedUserId))) throw new Error("Not your playthrough");
+  if (!run || run.owner !== who) throw missing;
   return run;
 }
 
@@ -267,14 +268,15 @@ export const refreshCaught = mutation({
   args: { id: v.string(), caught: v.array(v.number()), link: linkValidator, startedAt: v.optional(v.number()) },
   returns: v.object({ added: v.array(v.number()) }),
   handler: async (ctx, { id, caught, link, startedAt }) => {
-    const run = await mine(ctx, id).catch(() => { throw new ConvexError("This playthrough moved"); });
+    const run = await mine(ctx, id, undefined, new ConvexError(RUN_MOVED));
     validateImportStart(startedAt);
-    if (link && run.saveLink && (link.salt !== run.saveLink.salt || link.fingerprint !== run.saveLink.fingerprint))
-      throw new ConvexError("Different save");
-    const saveLink = mergeSaveLink(run.saveLink, link);
+    let merged;
+    try { merged = mergeSaveLink(run.saveLink, link); }
+    catch (error) { throw (error as Error).message === DIFFERENT_SAVE ? new ConvexError(DIFFERENT_SAVE) : error; }
     const result = mergeCaughtState((await stateOf(ctx, run._id))?.state ?? "{}", run.version, caught);
     if (result.added.length) await putState(ctx, run, result.state, { updatedAt: Date.now() });
-    await ctx.db.patch(run._id, { saveLink, ...(startedAt !== undefined ? { startedAt } : {}) });
+    if (!sameSaveLink(merged, run.saveLink) || (startedAt !== undefined && startedAt !== run.startedAt))
+      await ctx.db.patch(run._id, { saveLink: merged, ...(startedAt !== undefined ? { startedAt } : {}) });
     return { added: result.added };
   },
 });
