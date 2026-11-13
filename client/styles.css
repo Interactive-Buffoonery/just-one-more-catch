@@ -268,20 +268,20 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .stat{display:inline-flex;align-items:baseline;gap:6px;background:var(--surface);border-radius:999px;padding:9px 16px;font-size:13px;color:var(--soft);font-weight:700}
 .stat b{font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-weight:400;font-size:19px;line-height:1;color:var(--ink)}
 .slots{display:grid;grid-template-columns:290px minmax(0,1fr);gap:18px;align-items:start}
-.rail{display:grid;gap:8px;max-height:max(420px,calc(100dvh - 220px));overflow-y:auto;padding:4px;margin:-4px;scrollbar-width:thin}
-.app .pslot{display:flex;gap:12px;align-items:center;width:100%;min-height:84px;border:0;border-radius:18px;padding:10px 14px 10px 10px;text-align:left;color:var(--ink);background:linear-gradient(90deg,var(--g) 0 40px,var(--surface) 40px)}
-.pslot .cover{width:60px;height:60px;border:0;border-radius:0;background:none;filter:drop-shadow(3px 3px 0 var(--g-deep))}
-.pslot .nm{flex:1;min-width:0;display:grid}
+.rail{display:grid;gap:16px;max-height:max(420px,calc(100dvh - 220px));overflow-y:auto;padding:4px 4px 12px;margin:-4px;scrollbar-width:thin}
+.app .pslot{display:grid;grid-template-columns:76px minmax(0,1fr);align-items:stretch;width:100%;border:0;border-radius:12px 12px 4px 4px;padding:8px 8px 8px 0;text-align:left;color:var(--ink);background:var(--g);box-shadow:0 6px 0 var(--g-deep);transition:translate .2s,box-shadow .2s}
+.pslot .cv{display:grid;justify-items:center;align-content:center;gap:9px}
+.pslot .cv::before,.pslot .cv::after{content:"";width:38px;height:9px;background:repeating-linear-gradient(var(--g-deep) 0 2px,transparent 2px 7px)}
+.pslot .cover{width:50px;height:46px;border:0;border-radius:0;background:none;box-shadow:3px 3px 0 var(--g-deep)}
+.pslot .nm{min-width:0;display:grid;padding:10px 12px 11px;background:var(--surface);border-radius:4px;box-shadow:0 0 0 2px var(--g-deep),inset 0 3px 0 rgba(0,0,0,.12)}
 .pslot b{font-size:17px;line-height:1.05;padding-top:3px;overflow-wrap:anywhere}
 .pslot .sub{color:var(--soft);font-size:13px;font-weight:600}
-.pslot .meter{height:6px;margin-top:7px;background:var(--line)}
+.pslot .meter{height:6px;margin-top:7px;border-radius:2px;background:var(--line)}
+.pslot .meter i{border-radius:2px}
 .pslot .meter i,.save .meter i{background:var(--g-deep)}
-.app .pslot[aria-pressed=true]{background:var(--g);color:#211b12}
-.pslot[aria-pressed=true] .sub{color:rgba(33,27,18,.72)}
-.pslot[aria-pressed=true] .meter{background:rgba(255,255,255,.6)}
-.pslot[aria-pressed=true] .meter i{background:#211b12}
-.app .pslot.new{position:sticky;bottom:0;justify-content:center;min-height:64px;background:var(--bg);box-shadow:inset 0 0 0 2px var(--line);color:var(--teal);font-size:18px;padding-top:14px}
-.app .pslot.new[aria-pressed=true]{background:var(--teal);color:var(--bg);box-shadow:none}
+.app .pslot[aria-pressed=true]{translate:0 -3px;box-shadow:0 9px 0 var(--g-deep),0 0 0 3px var(--ink)}
+.app .pslot.new{position:sticky;bottom:0;display:flex;justify-content:center;align-items:center;min-height:64px;padding:14px 0 0;border:2px dashed color-mix(in srgb,var(--teal) 45%,var(--line));background:var(--bg);box-shadow:0 6px 0 var(--line);color:var(--teal);font-size:18px}
+.app .pslot.new[aria-pressed=true]{border-color:var(--teal);background:var(--teal);color:var(--bg);box-shadow:0 9px 0 var(--ink)}
 .pslot .tag.plain,.save .tag.plain{border-color:currentColor;color:inherit;vertical-align:middle}
 .pane{background:var(--surface);border-radius:22px;padding:26px;min-width:0}
 .pane.save{--tint:color-mix(in srgb,var(--g) 34%,#fff);background:var(--tint);color:#211b12;padding:0;container-type:inline-size}
@@ -362,12 +362,17 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
   .dash>.chip{grid-column:2}
   .app .dash>.stats{grid-column:1/-1;grid-row:3;margin-top:12px}
   .slots{grid-template-columns:minmax(0,1fr);gap:12px}
-  .rail{display:flex;max-height:none;overflow-x:auto;scroll-snap-type:x proximity}
-  .app .pslot{flex:none;width:auto;min-height:64px;padding:6px 14px 6px 6px;border-radius:16px;background:linear-gradient(90deg,var(--g) 0 30px,var(--surface) 30px);scroll-snap-align:start}
-  .pslot .cover{width:48px;height:48px}
+  .rail{display:flex;gap:10px;max-height:none;padding:4px 4px 10px;overflow-x:auto;scroll-snap-type:x proximity}
+  .app .pslot{flex:none;width:auto;grid-template-columns:52px auto;padding:5px 5px 5px 0;box-shadow:0 4px 0 var(--g-deep);scroll-snap-align:start}
+  .pslot .cv{gap:5px}
+  .pslot .cv::before,.pslot .cv::after{width:26px;height:6px;background:repeating-linear-gradient(var(--g-deep) 0 2px,transparent 2px 4px)}
+  .pslot .cover{width:36px;height:34px;box-shadow:2px 2px 0 var(--g-deep)}
+  .pslot .nm{padding:7px 10px 5px;align-content:center}
   .pslot .sub,.pslot .meter{display:none}
   .pslot b{font-size:15px;white-space:nowrap}
-  .app .pslot.new{bottom:auto;right:0;padding:4px 14px 0;box-shadow:inset 0 0 0 2px var(--line),-14px 0 10px -4px var(--bg)}
+  .app .pslot[aria-pressed=true]{translate:0 -2px;box-shadow:0 6px 0 var(--g-deep),0 0 0 3px var(--ink)}
+  .app .pslot.new{bottom:auto;right:0;padding:4px 14px 0;box-shadow:0 4px 0 var(--line),-14px 0 10px -4px var(--bg)}
+  .app .pslot.new[aria-pressed=true]{box-shadow:0 6px 0 var(--ink)}
   .pane{padding:18px}
   .duo{height:92px}.duo .cover{height:74px}.duo>:only-child .cover{height:86px}
 }
@@ -376,7 +381,7 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
   .app .pill{font-size:13px;padding:4px 12px 0}
   .shelves button{padding:9px 11px;font-size:13px}
   .pslot:not([aria-pressed=true],.new) .nm{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-  .app .pslot:not([aria-pressed=true],.new){padding:6px}
+  .app .pslot:not([aria-pressed=true],.new){padding-right:0}
 }
 .lead{color:var(--soft);display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 6px;margin:0 0 10px}
 .lead b{font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif;font-weight:400;font-size:26px;line-height:1;color:var(--ink);position:relative;top:2px}
