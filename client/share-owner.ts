@@ -27,7 +27,7 @@ export function loadShareStatuses(changed: () => void) {
   }
 }
 
-export function shareSheet(id: string, save: () => Promise<void>, changed: () => void) {
+export function shareSheet(id: string, save: () => Promise<void>, changed: () => void, notify: (message: string) => void) {
   const sheet = ui.sheet, user = bridge.auth.userId;
   const valid = () => ui.sheet === sheet && bridge.auth.userId === user;
   let status: ShareStatus = { token: null, projection: null, revision: 0 };
@@ -35,7 +35,7 @@ export function shareSheet(id: string, save: () => Promise<void>, changed: () =>
   let mode = "preview", action = "create", busy = false;
   const button = (act: string, label: string, cls = "app-quiet") => `<button class="${cls}" data-shareaction="${act}"${busy ? " disabled" : ""}>${label}</button>`;
   const url = () => `${location.origin}/share/#s=${status.token}`;
-  const summary = (p: ShareProjection) => `${p.caught.length} caught, ${p.badges.length} ${verOf(p.game).pack.badgesWord ?? (p.badges.length === 1 ? "badge" : "badges")}`;
+  const summary = (p: ShareProjection) => `${p.caught.length} caught, ${p.badges.length} ${(verOf(p.game).pack.badgesWord ?? "badges").slice(0, p.badges.length === 1 ? -1 : undefined)}`;
   const paint = (error = "") => {
     if (!valid()) return;
     let html: string;
@@ -82,18 +82,21 @@ export function shareSheet(id: string, save: () => Promise<void>, changed: () =>
     try {
       if (act === "copy") {
         await navigator.clipboard.writeText(url());
+        notify("Link copied");
       } else if (act === "native") {
         await navigator.share({ url: url() });
-      } else if (act === "update" || act === "replace") {
+      } else if (act === "update") {
         await current();
         action = act;
         mode = "preview";
-      } else if (act === "publish" || act === "stopconfirm") {
+      } else if (act === "publish" || act === "replace" || act === "stopconfirm") {
+        if (act === "replace") action = "replace";
         if (!bridge.auth.isAuthenticated) return;
         status = act === "stopconfirm" ? await bridge.stopShare(id, status.revision) : action === "replace" ? await bridge.replaceShare(id, preview, status.revision) : await bridge.publishShare(id, preview, status.revision);
         if (!valid()) return;
         statuses.set(id, status);
         changed();
+        notify(act === "stopconfirm" ? "Sharing stopped" : action === "update" ? "Link updated" : action === "replace" ? "New link ready. The old one stopped working." : "Link created");
         if (!status.token) { $("#sheet").close(); return; }
         mode = "live";
       }

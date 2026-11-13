@@ -59,3 +59,26 @@
 .share-sheet>h2.lg{font-size:30px;line-height:1;margin:0 0 14px}
 .share-sheet .soft{color:var(--soft);font-size:14px}
 .share-sheet .hv-actions{margin-top:16px}
+.pane.save .sharebtn{grid-area:sh;justify-self:start;position:relative;display:inline-flex;align-items:center;gap:7px;min-height:34px;border:1.5px solid rgba(33,27,18,.6);border-radius:999px;background:transparent;color:#211b12;font-weight:800;font-size:13px;padding:0 13px 0 11px}
+.pane.save .sharebtn::after{content:"";position:absolute;inset:-5px}
+.pane.save .sharebtn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.pane.save .sharebtn i{font-style:normal;font-size:10px;font-weight:800;color:var(--g);background:#211b12;border-radius:99px;padding:2px 7px;letter-spacing:.04em;text-transform:uppercase}
+.ptmenu .menu .shared{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.ptmenu .menu .shared i{font-style:normal;font-size:11px;font-weight:800;color:var(--teal);background:var(--teal-soft);border-radius:99px;padding:3px 8px;letter-spacing:.04em;text-transform:uppercase}
+.app .sharei{position:relative;display:inline-grid;place-items:center;width:44px;height:44px;flex:none;border:1px solid var(--line);border-radius:12px;background:transparent;color:var(--soft);padding:0}
+.app .sharei svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.app .sharei:hover{background:var(--teal-soft);color:var(--ink)}
+.app .sharei.on::after{content:"";position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 2px var(--bg)}
+
+
+.boxright{display:flex;gap:8px;align-items:center;margin-left:auto}
+@container (max-width:450px){.save .hd{grid-template-areas:"cv tt menu" "go go go" "sh sh sh"}}
+
+.share,.share *{box-sizing:border-box}
+.share{font-family:ui-rounded,"SF Pro Rounded",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.4;color:var(--ink)}
+.share .app-primary{border:0;border-radius:12px;min-height:46px;padding:0 20px;font-weight:800;background:var(--fill);color:var(--on-fill);display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.share .reg{display:inline-block}
+.share-sheet .notice{margin:14px 0 0;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.share-sheet .notice b{white-space:nowrap}
+.share-sheet .hv-actions{flex-wrap:wrap}
+.share-sheet .hv-actions>*{flex:1}

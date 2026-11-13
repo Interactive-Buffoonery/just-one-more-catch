@@ -498,6 +498,7 @@ async function onClick(e: MouseEvent) {
   }
   const d = t.dataset;
   if (d.act === "share" && d.run) {
+    root.querySelectorAll<HTMLDetailsElement>("details.ptmenu[open]").forEach(el => el.open = false);
     showSheet({ kind: "share", id: d.run, owner: bridge.auth.userId, k: d.k }, () => {
       $("#sheetbody").innerHTML = `<h2 class="lg" id="sheet-title">Share progress</h2>`;
     });
@@ -508,7 +509,7 @@ async function onClick(e: MouseEvent) {
         await withTimeout(saveState(id, state), 30000, "Saving timed out");
         if (run?.id === id) ui.saved = state;
       } else await pendingSave;
-    }, render);
+    }, render, flash);
     return;
   }
   if (d.shareaction) {

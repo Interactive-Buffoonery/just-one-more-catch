@@ -36,7 +36,7 @@ async function startShare() {
     if (!projection) throw new Error("Unavailable");
     target.className = "snap";
     target.dataset.game = projection.game;
-    target.innerHTML = renderSnapshot(projection);
+    target.innerHTML = renderSnapshot(projection, "h1");
   } catch {
     target.className = "gone";
     target.innerHTML = `<div class="ball" aria-hidden="true"></div><h1 class="lg">This link isn't available</h1><p>It may have been turned off.</p>`;

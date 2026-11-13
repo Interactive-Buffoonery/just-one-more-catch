@@ -1,3 +1,4 @@
+import { shareButton } from "../share-controls";
 import FORM_ZOOM from "../data/form-zoom";
 import { $, esc } from "../dom";
 import {
@@ -148,7 +149,7 @@ export function Dex() {
         <div class="search"><label><span class="sr">Search the dex</span>${SEARCH_ICON}<input id="dexq" data-k="dexq" type="search" placeholder="${matchMedia("(max-height:480px)").matches ? "Search" : "Name or number"}" autocomplete="off" value="${esc(ui.q || "")}"></label><button type="button" class="searchclear" data-clearsearch="1" aria-label="Clear search" ${searching() ? "" : "hidden"}>×</button></div>
         <div class="dexsizes" role="group" aria-label="Grid size">${Object.entries(DEX_SIZES).map(([size, [label, icon]]) => `<button type="button" data-dexsize="${size}" data-k="size-${size}" aria-pressed="${ui.dexSize === size}" aria-label="${label}"><svg viewBox="0 0 24 24" aria-hidden="true">${icon}</svg></button>`).join("")}</div>
         <button type="button" class="quietbtn" data-bulk="1" data-k="bulk" aria-label="${ui.bulk ? "Done marking" : "Mark many"}" aria-pressed="${ui.bulk}"><span class="toolicon" aria-hidden="true">✓</span><span class="tooltext">${ui.bulk ? "Done marking" : "Mark many"}</span></button>
-        <button class="quietbtn" data-custom="1" data-k="custom" aria-label="Customize">${SLIDERS_ICON}<span class="tooltext">Customize</span></button>
+        <button class="quietbtn" data-custom="1" data-k="custom" aria-label="Customize">${SLIDERS_ICON}<span class="tooltext">Customize</span></button>${shareButton(run.id, ver().name)}
       </div>
     </div>
     <div id="dexgrid">${dexGrid()}</div>

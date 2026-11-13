@@ -1,3 +1,4 @@
+import { SHARE_ICON, shareLabel } from "../share-controls";
 import { imageUrl } from "../image-url.ts";
 import { $, esc } from "../dom";
 import { devicesRow, HANDHELD } from "./devices";
@@ -124,7 +125,7 @@ const lastPlayed = (iso: string) => {
 };
 const champion = (s: Summary) => s.badges.includes("Elite Four");
 const ptMenu = (row: RunRow, v: (typeof VERSIONS)[VersionId]) =>
-  `<details class="ptmenu"><summary data-k="run-options-${row.id}" aria-label="More options for ${v.name}">···</summary><div class="menu">${!isGuest() ? `<button data-journal="${row.id}" data-k="journal-${row.id}">Journal</button>` : ""}<button data-download="playthrough" data-export-run="${row.id}" ${ui.export ? "disabled" : ""}>Download playthrough (CSV)</button><button data-download="journal" data-export-run="${row.id}" ${ui.export ? "disabled" : ""}>Download journal (CSV)</button><button data-refresh="${row.id}">Refresh from a save</button><button data-startsheet="${row.id}">Change start date</button><button data-delrun="${row.id}">Delete playthrough</button></div></details>`;
+  `<details class="ptmenu"><summary data-k="run-options-${row.id}" aria-label="More options for ${v.name}">···</summary><div class="menu">${!isGuest() ? `<button data-journal="${row.id}" data-k="journal-${row.id}">Journal</button>` : ""}<button data-download="playthrough" data-export-run="${row.id}" ${ui.export ? "disabled" : ""}>Download playthrough (CSV)</button><button data-download="journal" data-export-run="${row.id}" ${ui.export ? "disabled" : ""}>Download journal (CSV)</button><button data-act="share" data-run="${row.id}" data-k="share-menu-${row.id}" aria-haspopup="dialog"><span class="shared">${shareLabel(row.id)}</span></button><button data-refresh="${row.id}">Refresh from a save</button><button data-startsheet="${row.id}">Change start date</button><button data-delrun="${row.id}">Delete playthrough</button></div></details>`;
 const meter = (n: number, of: number) =>
   `<span class="meter" aria-hidden="true"><i style="width:${(n / of) * 100}%"></i></span>`;
 const badgeGroups = (p: Pack): [string, string[][]][] => [
@@ -163,7 +164,7 @@ function resumeCard(row: RunRow, r: Summary, at: string) {
     groups = badgeGroups(p),
     next = groups.flatMap(([, list]) => list).find((b) => !has.has(b[0]));
   return `<article class="pane save" data-game="${row.version}" aria-labelledby="pane-title">
-    <div class="hd">${cover(v, "box", "")}<div class="tt"><h2 class="lg" id="pane-title">${v.name}${plat(v)}</h2><p class="sub"><span class="reg">${p.region}</span>${champion(r) ? `<span class="champ">Champion</span>` : ""}<span class="dates"><span>Started <b>${longDay(startDay(row))}</b></span><span>Last played <b>${lastPlayed(at).replace(/^on /, "")}</b></span></span></p></div><div class="act"><button class="go lg" data-switch="${row.id}" data-k="continue" aria-label="Continue ${v.name}">Continue</button>${ptMenu(row, v)}</div></div>
+    <div class="hd">${cover(v, "box", "")}<div class="tt"><h2 class="lg" id="pane-title">${v.name}${plat(v)}</h2><p class="sub"><span class="reg">${p.region}</span>${champion(r) ? `<span class="champ">Champion</span>` : ""}<span class="dates"><span>Started <b>${longDay(startDay(row))}</b></span><span>Last played <b>${lastPlayed(at).replace(/^on /, "")}</b></span></span></p></div><div class="act"><button class="sharebtn" type="button" data-act="share" data-run="${row.id}" data-k="share-${row.id}" aria-haspopup="dialog">${SHARE_ICON}<span>${shareLabel(row.id)}</span></button><button class="go lg" data-switch="${row.id}" data-k="continue" aria-label="Continue ${v.name}">Continue</button>${ptMenu(row, v)}</div></div>
     ${r.party.length ? `<div class="pty">${r.party.map((m) => `<img src="${imageUrl(`/sprites/${p.art}/${m.shiny ? "shiny/" : ""}${m.n}.png`)}" alt="${esc(m.nick || byN[m.n]?.name || "")}" width="96" height="96">`).join("")}</div>` : ""}
     <div class="bl"><div><p class="num"><span><b>${badgeCount(row.version, r)}</b> / ${groups.flatMap(([, l]) => l).length} ${badgesWord(p)}</span></p>${groups
       .map(
