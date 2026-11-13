@@ -276,13 +276,15 @@ complete representation of all original BW acquisition methods.
   [trades](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5BW.cs#L197-L214)
   (Emolga L30, Rotom L60, Munchlax L60, Petilil L15 B, Cottonee L15 W,
   Basculin L25) and [Darmanitan L35](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5BW.cs#L166), plus Bulbapedia's
-  Desert Resort and swarm tables. They stay open because the BW pack has no
-  way to add hand-written encounter rows (only ORAS uses `bulbapedia_gap_fill`
-  with a candidates file). Do not add rows to Black City for White Forest.
+  Desert Resort and swarm tables. Trades, statics and White Forest stay open
+  because the BW pack has no way to add hand-written encounter rows (only ORAS
+  uses `bulbapedia_gap_fill` with a candidates file). Swarms could reuse the
+  B2W2 `extra_encounters` outbreak path (`daily-outbreak` only) once each
+  route's swarm is sourced. Do not add rows to Black City for White Forest.
 - **Roamers:** the cache places Tornadus (Black) and Thundurus (White) at
   `team-flare-secret-hq-area`, method `static`. That location is excluded.
-  PKHeX lists them as [L40 roamers](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5BW.cs#L186) (Thundurus at
-  [L192](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5BW.cs#L192)); Bulbapedia's Roaming Pokemon page gives a time-of-day
+  PKHeX lists [Tornadus](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5BW.cs#L186) and
+  [Thundurus](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5BW.cs#L192) as level 40 roamers; Bulbapedia's Roaming Pokemon page gives a time-of-day
   route schedule. Adding them needs a hand-written row feature for BW.
   Walkthrough part 11 sources their Route 7 release after Legend. Landorus
   remains represented with the both-roamers/own-Trainer-ID party gate, but
