@@ -179,12 +179,6 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
   species encounter, not all letter groups in the actual game. The original
   puzzle scripts are linked in SOURCES.md if finer tracking is later wanted.
 
-## Emerald
-
-- Victory Road B2F: does the first reachable encounter tile require Rock
-  Smash as well as Strength? Trace the map or check in-game; the walkthrough
-  establishes Rock Smash for full traversal, not the earliest encounter.
-
 ## Ruby and Sapphire (`rs`)
 
 - **Save imports:** reader 0.1.3 verifies synthetic 128 KiB RS files through
