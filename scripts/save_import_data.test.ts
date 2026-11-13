@@ -23,7 +23,7 @@ test("game caps match the pack data", () => {
     expect(VERSIONS[id as keyof typeof VERSIONS].pack.national).toBe(limit);
 });
 
-test("Emerald imports National Dex flags and keeps other Hoenn games unsupported", async () => {
+test("Emerald imports National Dex flags separately from RS", async () => {
   const data = await VERSIONS.emerald.pack.load();
   const s = snapshot(["E"]);
   expect(importVersions(s)).toEqual(["emerald"]);
@@ -31,7 +31,8 @@ test("Emerald imports National Dex flags and keeps other Hoenn games unsupported
   expect(caughtForPack(s, "emerald", data)).toEqual({ caught: [25, 252, 386], skipped: 1, partial: false });
   s.pokedex.caughtSpecies = [];
   expect(caughtForPack(s, "emerald", data).caught).toEqual([]);
-  expect(importVersions(snapshot(["R", "S", "RS"]))).toEqual([]);
+  expect(importVersions(snapshot(["S", "R"]))).toEqual(["sapphire", "ruby"]);
+  expect(importVersions(snapshot(["RS"]))).toEqual([]);
   expect(() => caughtForPack(snapshot(["R", "S"]), "emerald", data)).toThrow();
 });
 
@@ -78,4 +79,14 @@ test("GB identities retain paired choices and exclude unsupported Green", async 
     s.pokedex.caughtSpecies = [];
     expect(caughtForPack(s, version, data).caught).toEqual([]);
   }
+});
+
+test.each(["ruby", "sapphire"] as const)("%s imports bounded National Dex history", async version => {
+  const data = await VERSIONS[version].pack.load();
+  const s = snapshot(["S", "R"]);
+  s.pokedex.caughtSpecies = [386, 252, 25, 252, 387];
+  expect(caughtForPack(s, version, data)).toEqual({ caught: [25, 252, 386], skipped: 1, partial: false });
+  s.pokedex.caughtSpecies = [];
+  expect(caughtForPack(s, version, data).caught).toEqual([]);
+  expect(() => caughtForPack(snapshot(["E"]), version, data)).toThrow();
 });

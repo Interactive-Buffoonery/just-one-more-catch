@@ -197,6 +197,13 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Ruby and Sapphire (`rs`)
 
+- **Save imports:** reader 0.1.2 verifies synthetic 128 KiB RS files through
+  native Core, raw National Dex flags and the published WASM worker. It cannot
+  distinguish Ruby from Sapphire; players choose the title. Obtain permitted
+  real cartridge/emulator exports and a legitimate in-game zero-caught save
+  for comparison. Real 64 KiB RS exports remain unverified and unsupported;
+  the Emerald-only recovery path must not be applied to them.
+
 - **Independent access audit:** coordinator's Opus review remains. The local
   103-area work list is `.cache/areas-rs.json` (regenerate with
   `python3 scripts/access_audit.py areas rs`). All areas have cached source

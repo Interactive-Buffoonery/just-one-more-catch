@@ -31,7 +31,7 @@ the preview, creation, reload, cancellation and preserving an existing run.
 They include empty Pokédex previews at a 390px viewport, valid 64 KiB saves
 with ordered or rotated sections, their recovery warning, and rejected damaged
 64 KiB files (bad checksum, missing/duplicate section, bad signature and mixed
-counters). Readable Ruby/Sapphire cannot create an unsupported website playthrough.
+counters). Readable Ruby/Sapphire requires a paired game choice before creating a playthrough.
 They assert unchanged input files/buffers and no upload requests.
 
 Source references at the pinned Core revision:
