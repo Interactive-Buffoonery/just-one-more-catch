@@ -61,7 +61,9 @@ export const DEX_SIZES: Record<string, [string, string]> = {
   large: ["Large", '<rect x="4" y="4" width="16" height="16"/>'],
   list: ["List", '<path d="M4 5h16M4 12h16M4 19h16"/>'],
 };
-const withStatus = () => dexList().map((p) => ({ p, s: speciesStatus(p) }));
+let statusCache: { p: Species; s: string }[] | null = null;
+export const resetDexCache = () => (statusCache = null);
+const withStatus = () => (statusCache ||= dexList().map((p) => ({ p, s: speciesStatus(p) })));
 const tile = (p: Species, s: string) => {
   if (viewOf(R()) === "dexonly") s = s === "caught" ? "caught" : "missing";
   const genders = collectedGenders(p),

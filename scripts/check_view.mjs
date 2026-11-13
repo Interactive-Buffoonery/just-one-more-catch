@@ -61,6 +61,7 @@ for (const destination of ["stay", "dashboard", "fresh-import"]) {
     partner: () => "", esc: value => value, trainerName: () => "Trainer",
     switcher: () => "", tabButtons: () => "", SETTINGS_ICON: "",
     fillSheet() {}, moveGuestRuns() {}, moveGuestAvatar() {}, flash() {},
+    clearTimeout() {}, resetDexCache() {}, resultsTimer: undefined, typingTimer: undefined,
     store: {get: () => "old"}, closeRun() {}, useRun: row => opened.push(row.id),
   });
   if (destination !== "stay") {
