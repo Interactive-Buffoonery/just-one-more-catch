@@ -197,6 +197,14 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## X and Y (`xy`) implementation handoff
 
+- **Save imports:** synthetic X/Y caught/empty files verify individual titles and
+  complete National Dex flags through native Core, independent raw bits and
+  published reader 0.1.2 WASM. Obtain permitted real cartridge/emulator exports
+  and a legitimate in-game zero-caught save. Live account imports, encrypted
+  backup extraction, mobile Safari and physical mobile performance remain
+  unverified. Gen VI adventure-start date import needs separate epoch/bounds,
+  invalid-value, leap-day and exported-date checks; use import day for now.
+
 This is a partial, integrated pack pending independent review. Do not interpret
 its successful generation/check/build as verified game access.
 
