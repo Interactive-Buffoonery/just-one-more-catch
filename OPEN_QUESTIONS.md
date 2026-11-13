@@ -124,71 +124,30 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Gold and Silver (`gs`)
 
-- **Route 44 alternative approach:** with four badges, Surf and Rock Smash
-  but no Glacier badge, test Dark Cave -> Route 45 -> Blackthorn -> Ice Path
-  -> Route 44, respecting one-way ledges and forced cave warps. Record the
-  first blocker and whether Strength is needed in the reverse Ice Path path.
-  Normal Mahogany access supports the current chapter; neither review proved
-  this alternate route. Source:
-  [Dark Cave warps](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/DarkCaveBlackthornEntrance.asm).
+- **Dark Cave aquatic access:** Surf alone reaches the Blackthorn room's
+  southern encounter pocket (25 FLOOR cells), without Rock Smash. Its ledge
+  prevents reaching Route 45 at (23,3), and no water or fishing shore is
+  reachable from that pocket. Walking rows now need only Surf; aquatic rows
+  retain their previous provisional Rock Smash requirement. Establish their
+  earliest full route from Route 45 and replace that provisional requirement.
+  Source: SOURCES.md, Gold/Silver static map traces.
+- **Earlier audit exclusions:** Route 27's mandatory Tohjo Falls warps and
+  western Kanto's Victory Road Gate guard / Route 19 construction rocks
+  still invalidate the earlier terrain-only shortcuts. Existing gates remain;
+  those source checks were not gameplay verification. SOURCES.md records
+  the original exclusions. Mt. Mortar's Tyrogue platform is now independently
+  traced in the Gold/Silver static map traces section there.
+- **Ice Path floors:** from B1F arrival (3,15), the no-Strength trace reaches
+  B2F Mahogany-side floor (37 FLOOR cells), including falling through the
+  four holes. It does not reach B3F's ladder (9,11) with fallen boulders
+  initially hidden. The 1F sliding trace did not reproduce the known first
+  puzzle solution, so it cannot certify the complete approach or reverse
+  traversal. Keep existing Strength gates; independently validate sliding
+  and one-way hole arrivals before closing this question.
+  Sources: [B1F warps and boulders](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/IcePathB1F.asm),
+  [B2F warps and hidden boulders](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/IcePathB2FMahoganySide.asm),
+  [initial flags](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/engine/events/std_scripts.asm).
 
-- **Route 8 Cut gate:** first pass proposed Cut for the grass, while the
-  second pass could not settle a southern approach across directional-wall
-  tiles. Test from both Lavender and Saffron without Cut, including the south
-  grass edge. If blocked, gate walking rows only. No data change was applied.
-  Sources: [Route 8 map](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route8.blk)
-  and [movement permissions](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/engine/overworld/player_movement.asm).
-- **Pewter / Route 3 Cut gate:** Diglett's Cave's tree passage is insufficient
-  proof of a whole-area gate. After Snorlax, the east Victory Road Gate guard
-  disappears, opening a Route 22 approach to Viridian. Test every legitimate
-  northbound Route 2 route without Cut, respecting one-way ledges, before
-  adding requirements to the Pewter trade or Route 3 encounters. Source:
-  [VictoryRoadGate](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/VictoryRoadGate.asm).
-- **Blackthorn / Route 45 alternative approach:** their lack of local
-  boulders does not disprove the preceding Ice Path Strength requirement.
-  Separately test whether Dark Cave and northbound Route 45 ledges permit
-  arrival without Strength before seven badges. Neither review established
-  that alternative; retain current gates.
-- **Mt. Mortar upper-floor landing:** with Surf but no Waterfall, trace each
-  legitimate Route 42 entrance to the 1F Inside stairs (9,9), then test upper
-  floor encounters. The raw upper map differs from the B1F pocket and Tyrogue
-  platform; partial or decorative exterior paths do not settle its gate.
-
-- **Route 1 grass access:** batch 4 suggested a Cut requirement, but its
-  approach was not independently established. After normal western-Kanto
-  access, test both Viridian and Pallet approaches without Cut. Keep current
-  data until the grass requirement is resolved. The suggested early Kanto
-  shortcut is blocked by the east-door Black Belt in
-  [VictoryRoadGate.asm](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/VictoryRoadGate.asm),
-  whose object remains until `EVENT_FOUGHT_SNORLAX`.
-- **Audit terrain-model limitations:** a second review rejected proposed
-  earlier access to Ice Path B3F (fallen B2F boulders initially hidden),
-  Route 27 grass (mandatory Tohjo Falls cave warps), and western Kanto via
-  Victory Road Gate or Route 19 (Black Belt and construction rocks).
-  Existing gates remain. Mt. Mortar's Tyrogue platform still needs complete
-  independent proof: the no-Surf path in batch 4 walked behind an exterior
-  cave warp, which is not a valid path. These source/model checks were not
-  emulator or gameplay verification.
-
-- **Dark Cave Blackthorn-room earliest entrance:** trace Violet-room warp
-  (17,1) from Route 31's arrival (3,15), accounting for water, ledges and
-  smashable rocks at (16,14), (27,6), (7,14) and (36,31). The destination is
-  Blackthorn-room warp (3,25); reaching Route 45 instead requires its separate
-  exit at (23,3). These script coordinates narrow the required terrain trace
-  but do not prove either move necessary; retain Surf + Rock Smash.
-  Sources: [Violet warps and rocks](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/DarkCaveVioletEntrance.asm#L33-L48),
-  [Blackthorn-room exits](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/DarkCaveBlackthornEntrance.asm#L65-L67).
-- **Mt. Mortar basement and Ice Path floors:** independently map PokeAPI's
-  basement to the lower Surf entrance versus the raised Tyrogue platform;
-  the basement currently needs Surf, Tyrogue also needs Waterfall. Confirm
-  whether Ice Path B2F encounters are accessible before solving the boulder
-  puzzle (only B3F/Blackthorn are currently Strength-gated).
-- **Mt. Silver:** map PokeAPI's 1F/2F/Top rooms to original GS collision maps.
-  The main cave is open after Oak, but confirm whether any complete encounter
-  area waits for Surf/Waterfall. Do not use HGSS's Rock Climb layout.
-- **Route 42 grass:** the Mt. Mortar walking bypass reaches Mahogany without
-  Surf; independently verify the encounter grass's earliest path rather
-  than extending the route's lack of a blanket gate to every patch.
 - Unown A–Z lists eventual local forms. The app does not track the four
   puzzles' individual letter groups; one `alph-puzzle` event opens the
   species encounter, not all letter groups in the actual game. The original
