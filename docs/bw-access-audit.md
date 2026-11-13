@@ -15,8 +15,8 @@ Review corrections: Route 9 additionally requires Lenora's Light Stone/Dark
 Stone (Route 8 bridge blocker; walkthrough part 10). Black Landorus drops the
 incorrect deferred-catch condition and retains the party/Surf/Waterfall gates.
 Dreamyard dark grass and B1F require the postgame without Cut; the fence gap
-bypasses the tree. Cut remains on the aboveground ruins rows, including the
-aboveground Musharna static. Regression checks cover all three corrections.
+bypasses the tree. Cut remains on the aboveground ruins grass rows. The duplicate
+aboveground Musharna static is dropped. Regression checks cover all three corrections.
 
 The chapter and exception evidence is in `data/bw.json` and `SOURCES.md`.
 Unresolved Victory Road labels, combined cave tables and missing acquisition

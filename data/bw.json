@@ -844,19 +844,6 @@
       "quote": "'''Phenomena''' are a method for encountering [[wild Pokémon]] in [[Generation V]]. [[Item]]s can also be obtained from certain phenomena. There are four types of phenomena: rustling grass, dust clouds, flying Pokémon's shadows, and rippling water. Some {{OBP|Pokémon|species}} can only be obtained via this method. Phenomena will only appear after the {{player}} receives their first [[Badge]]."
     },
     {
-      "place": "Dreamyard",
-      "n": 518,
-      "m": "static",
-      "needs": [
-        "cut-hm",
-        "Elite Four",
-        "ghetsis"
-      ],
-      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
-      "quote": "In {{game|Black and White|s}}, the {{player}} encounters some {{tc|Team Plasma Grunt}}s here who are kicking a {{p|Munna}} to get its [[Dream Mist]]. {{m|Cut}} is required to access the building area. After beating [[Ghetsis]] and [[N]], the orange traffic cone is removed. This allows access to the basement and the other portion of the area, where [[Gorm]] of the [[Seven Sages]] can be found and arrested.",
-      "exact_place": true
-    },
-    {
       "place": "Unova Route 11",
       "n": 207,
       "m": "dark-grass",
@@ -1089,6 +1076,16 @@
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
       "quote": "{{catch/entry5|515|Panpour|yes|yes|yes|Gift|10|all={{tt|One|From a girl if the player started with Snivy}}|type1=Water}}"
+    }
+  ],
+  "drop_rows": [
+    {
+      "place": "Dreamyard",
+      "n": 518,
+      "m": "static",
+      "exact": true,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "A {{p|Musharna}} appears in the basement every Friday after defeating [[Ghetsis]]. It has its [[Hidden Ability]], {{a|Telepathy}}."
     }
   ],
   "condition_replacements": {

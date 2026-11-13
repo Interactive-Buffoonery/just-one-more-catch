@@ -987,7 +987,13 @@ in `data/bw.json` record chapter, area, event and row evidence.
   gap beside the tree, without Cut. Part 13 says
   the static Musharna is Friday-only after the main story. PokeAPI's B1F
   static omits Friday; a sourced row condition adds it and labels the
-  encounter Dreamyard. Both cached static representations remain.
+  encounter Dreamyard. PokeAPI also lists a second, aboveground Musharna
+  static; `drop_rows` removes it. Dreamyard: "A Musharna appears in the
+  basement every Friday after defeating Ghetsis." Part 13: "On Fridays only,
+  a Musharna will appear in the eastern patch of grass" in the basement.
+  PKHeX `Encounters5BW.cs` line 162 lists one Musharna static at Dreamyard:
+  https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5BW.cs#L162
+  ("Musharna @ Dreamyard Friday Only", hidden ability).
   Gift Pansage/Pansear/Panpour depend on Tepig/Oshawott/Snivy respectively;
   sourced per-row conditions add the missing PokeAPI starter qualifiers.
 - https://bulbapedia.bulbagarden.net/wiki/Pinwheel_Forest
