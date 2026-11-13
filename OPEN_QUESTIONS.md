@@ -28,6 +28,10 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Ultra Sun and Ultra Moon
 
+- Haina Desert weather SOS: cached PokeAPI rows omit the weather conditions for Castform and Gabite. Their corrected plain SOS rows still need a sourced weather representation.
+- Lush Jungle South/West: PokeAPI duplicates Steenee, Oranguru, Passimian and Trumbeak ambush records in both subareas, while the cached USUM location table places the rustling-grass block in the south. Terrain is corrected in both existing subareas; confirm whether the West duplicates should be removed.
+- Poni Breaker Coast Wailmer: the cached bubbling-spots record combines fishing and water-splash encounters (10–49, 100%). Leave its rod requirement unchanged until those encounters can be split with sourced levels and odds. Wailord, Dragalge and Clawitzer have distinct splash rows and now require Lapras.
+
 - Brooklet Hill Main and North: are these the first lake (open before Lana's trial) or the trial pools (Waterium)? South is gated.
 - Route 13: the guide has Mudsdale given at the start of Route 12, so Gallop is likely in hand. Confirm nothing on Route 13 needs more.
 - Route 15 Main: the guide says more than half the route waits for a Ride Pokémon that breaks the rocks in the water. Which encounter rows are out there?
