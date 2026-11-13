@@ -858,11 +858,20 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
 .large .dt .nm{font-size:16px}
 .large .dexmarker{width:20px;height:20px;font-size:14px}
 .dgrid.list{grid-template-columns:1fr}
-.app .list .dt{grid-template-columns:56px 1fr;justify-items:start;text-align:left;padding:10px;gap:4px 10px;min-height:80px}
-.list .dt .mon{grid-row:1/6;align-self:center}
-.list .dt .no{justify-content:start}
+.app .list .dt{display:flex;align-items:center;gap:10px;padding:6px 12px 6px 10px;min-height:60px;text-align:left}
+.list .dt .mon{width:44px;height:44px}
+.list .mid{flex:1;min-width:0}
+.list .dt .nm{display:block;font-size:14px;line-height:1.2;margin:0;padding:0}
+.list .nm small{font-weight:700;font-size:12px;color:var(--soft);margin-left:6px}
+.list .dmeta{display:flex;align-items:center;gap:4px;margin-top:3px;font-size:11.5px;font-weight:700;color:var(--soft);white-space:nowrap}
+.list .dmeta i{font-style:normal}
+.list .dmeta .type{margin:0;padding:0 7px;font-size:11px;line-height:17px}
+.list .end{flex:none;max-width:42%;text-align:right;font-size:12px;line-height:1.3;color:var(--soft);min-width:0}
+.list .end b{display:block;font-weight:800;font-size:12.5px}
+.list .dt.n .end b{color:var(--teal)}
+.list .end span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dextypes{display:flex;gap:3px;flex-wrap:wrap}
-.dexstatus,.dexplace{font-size:12px;color:var(--soft)}
+.dexstatus{font-size:12px;color:var(--soft)}
 @media(min-width:560px){.dgrid.list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(min-width:640px){.dgrid.large{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:959px){.dextools .search{flex-basis:calc(100% - 160px)}}
