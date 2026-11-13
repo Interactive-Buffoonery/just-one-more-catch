@@ -71,6 +71,4 @@ Match the approved A mockup; keep the existing quick catch action unchanged.
 No new route, tab, mandatory form, photos, tags, GPS, or public journal in v1.
 What's New wording requires Sarah's approval before deployment.
 
-Proposed release wording (not yet approved): “Keep a private journal for each
-playthrough, with optional dates and places for your Pokémon and notes for the
-moments you want to remember.”
+Approved release wording: “Added the ability to keep a private journal for each playthrough”
