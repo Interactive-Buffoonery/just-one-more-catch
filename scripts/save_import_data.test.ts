@@ -141,7 +141,8 @@ test.each(["diamond", "pearl"] as const)("%s imports paired DP National Dex hist
 });
 
 test("Gen IV identities keep DP, Platinum and HGSS separate", async () => {
-  expect(importVersions(snapshot(["Pt", "DP", "HGSS"]))).toEqual([]);
+  expect(importVersions(snapshot(["Pt"]))).toEqual(["platinum"]);
+  expect(importVersions(snapshot(["DP", "HGSS"]))).toEqual([]);
   expect(importVersions(snapshot(["D"]))).toEqual(["diamond"]);
   expect(importVersions(snapshot(["P"]))).toEqual(["pearl"]);
   expect(importVersions(snapshot(["HG", "SS"]))).toEqual(["heartgold", "soulsilver"]);
@@ -162,5 +163,25 @@ test.each([["B2", "black-2"], ["W2", "white-2"]] as const)("%s imports only its 
   expect(IMPORT_SPECIES_LIMITS[version]).toBe(VERSIONS[version].pack.national);
   for (const other of ["B", "W", "BW", "B2W2", identity === "B2" ? "W2" : "B2"]) {
     expect(() => caughtForPack(snapshot([other]), version, data)).toThrow();
+  }
+});
+
+test("Platinum imports only its own Gen IV National Dex history", async () => {
+  const data = await VERSIONS.platinum.pack.load();
+  const s = snapshot(["Pt"]);
+  expect(importVersions(s)).toEqual(["platinum"]);
+  expect(IMPORT_SPECIES_LIMITS.platinum).toBe(493);
+  expect(IMPORT_SPECIES_LIMITS.platinum).toBe(VERSIONS.platinum.pack.national);
+  s.pokedex.caughtSpecies = [493, 387, 25, 387, 494];
+  expect(caughtForPack(s, "platinum", data)).toEqual({ caught: [25, 387, 493], skipped: 1, partial: false });
+  s.pokedex.caughtSpecies = [];
+  expect(caughtForPack(s, "platinum", data).caught).toEqual([]);
+  for (const other of ["D", "P", "DP", "HG", "SS", "HGSS"]) {
+    expect(importVersions(snapshot([other]))).not.toContain("platinum");
+    expect(() => caughtForPack(snapshot([other]), "platinum", data)).toThrow();
+  }
+  for (const version of importVersions(snapshot(["D", "P", "HG", "SS"]))) {
+    const otherData = await VERSIONS[version].pack.load();
+    expect(() => caughtForPack(s, version, otherData)).toThrow();
   }
 });

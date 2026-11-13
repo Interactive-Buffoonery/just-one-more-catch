@@ -419,7 +419,39 @@ const B2W2: Pack = {
   boxes: [24, 30],
 };
 
+const PLATINUM: Pack = {
+  load: () => import("./data/pt").then((m) => m.default),
+  art: "pt",
+  region: "Sinnoh",
+  regional: 210,
+  national: 493,
+  start: "Route 201",
+  starters: [387, 390, 393],
+  badges: [
+    ["Coal", "Roark"], ["Forest", "Gardenia"], ["Relic", "Fantina"],
+    ["Cobble", "Maylene"], ["Fen", "Crasher Wake"], ["Mine", "Byron"],
+    ["Icicle", "Candice"], ["Beacon", "Volkner"],
+  ],
+  kit: [
+    ["old-rod", "Old Rod"], ["good-rod", "Good Rod"], ["super-rod", "Super Rod"],
+    ["rock-smash", "Rock Smash"], ["cut-hm", "Cut"], ["defog", "Defog"],
+    ["surf", "Surf"], ["strength", "Strength"], ["rock-climb", "Rock Climb"],
+    ["waterfall", "Waterfall"], ["bicycle", "Bicycle"], ["honey", "Honey"],
+    ["underground-kit", "Explorer Kit"], ["poke-radar", "Poké Radar"],
+  ],
+  hm: {
+    "rock-smash": "Coal", "cut-hm": "Forest", defog: "Relic", surf: "Fen",
+    strength: "Mine", "rock-climb": "Icicle", waterfall: "Beacon",
+  },
+  nightFrom: 20,
+  boxes: [18, 30],
+};
+
 export const VERSIONS: Record<VersionId, Version> = {
+  platinum: {
+    name: "Platinum", short: "PT", code: "t", gen: "Gen 4",
+    pack: PLATINUM, ring: ["ghost", "dragon"],
+  },
   "black-2": {
     name: "Black 2", short: "B2", code: "j", gen: "Gen 5",
     pack: B2W2, other: "White 2", ring: ["dragon", "ice"],
@@ -573,7 +605,7 @@ export const CONSOLES: { name: string; tag: string; titles: (VersionId | Soon)[]
   ] },
   { name: "Nintendo DS", tag: "DS", titles: [
     ["diamond", "pearl"],
-    [{ name: "Platinum", short: "PT", color: "#8d8f9c", region: "Sinnoh" }],
+    ["platinum"],
     ["heartgold", "soulsilver"],
     ["black", "white"],
     ["black-2", "white-2"],

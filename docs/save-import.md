@@ -26,6 +26,7 @@ Website game support is an explicit adapter in `client/save-import.ts`:
 | RS (S / R candidates) | Sapphire / Ruby (paired choice) |
 | E | Emerald |
 | DP (D / P candidates) | Diamond / Pearl (paired choice; excludes Platinum) |
+| Pt | Platinum (single title; excludes Diamond/Pearl) |
 | HG / SS | HeartGold / SoulSilver |
 | B / W | Black / White (individual stored title; excludes B2 / W2) |
 | X / Y | X / Y (individual stored title) |
@@ -64,7 +65,7 @@ supports HeartGold/SoulSilver and Sun/Moon/Ultra Sun/Ultra Moon; only the websit
 supported packs can be imported. The source fields are PKHeX's `SecondsToStart`
 with its `DateUtil.GetDateTime2000` conversion. The reader checks each format's
 console calendar bounds and omits uninitialized zero values. Red/Blue/Yellow, Gold/Silver/Crystal and
-FireRed/LeafGreen, Ruby/Sapphire, Emerald, Black/White, X/Y, Diamond/Pearl and Black 2/White 2 provide no recorded date through this reader. Missing, invalid
+FireRed/LeafGreen, Ruby/Sapphire, Emerald, Black/White, X/Y, Diamond/Pearl, Black 2/White 2 and Platinum provide no recorded date through this reader. Missing, invalid
 or future dates use import day; the preview never invents a recorded date.
 
 The website converts the selected calendar day to local midnight, matching the
@@ -269,8 +270,7 @@ File names do not determine that choice.
 
 Gen IV shares a save family, but Core detects distinct general-block footer
 sizes: DP `0xC100`, Platinum `0xCF2C`, HGSS `0xF628`. The worker returns `DP`,
-`Pt`, `HG` and `SS` respectively. Both Platinum fixtures remain unsupported by
-the website and create nothing. HGSS imports retain their existing identities
+`Pt`, `HG` and `SS` respectively. Platinum fixtures map only to Platinum; they never offer DP choices. HGSS imports retain their existing identities
 and never offer DP choices. Zero-filled and truncated files create nothing.
 These checks establish separation for the tested structural layouts, not every
 corrupt, modified or regional save.
@@ -334,6 +334,59 @@ unsupported; after combining, verify their own sequel titles instead. This
 harness accepts BW as its own original title once #108 lands, while
 continuing to forbid BW-to-B2W2 identity substitution. Neither harness should
 require the other pack to stay unsupported.
+## Platinum verification
+
+Platinum uses vendored reader 0.1.3 and the pack's existing 493-species import
+limit. Eight serialized synthetic 512 KiB fixtures cover caught and empty saves
+for Platinum, DP, HeartGold and SoulSilver. Native Core, independent raw flags
+and the published WASM worker agree on exact caught/seen arrays, complete
+National Dex coverage and distinct identities. Nineteen caught species survive
+removal from storage; seen-only Bulbasaur stays uncaught. Platinum returns only
+`Pt`, so it goes directly to preview without DP's title choice. Filenames do
+not select the title. Zero-filled and truncated saves create nothing.
+
+Gen IV layout detection uses different general-block footer sizes: DP `0xC100`,
+Pt `0xCF2C`, HGSS `0xF628`. Tested DP saves cannot create Platinum playthroughs;
+HGSS retains its own titles. This proves separation for tested structural
+layouts, not every corrupt, modified or regional save.
+
+`SAV4.SecondsToStart` exposes adventure info + `0x34`, but reader 0.1.3's Gen IV
+date allowlist includes only HGSS. Populated and zero Pt fields both omit
+`startDate` through WASM; imports use import day. Pt epoch/calendar bounds,
+invalid values, leap days and exported recorded-date behavior need separate
+verification before extending that allowlist. No reader source, package,
+lockfile or vendored tarball change is needed.
+
+Reproduce with [the Platinum fixture README](../scripts/pt-save-fixtures/README.md).
+The guest browser matrix covers selection/drop, empty dex at 390px, exact
+counts, creation/reload, cancellation, storage failure/retry, duplicate
+confirmation, navigation and preparation failure/retry/cancellation. Application
+tests cover caps, limits and account changes. Input files/buffers and existing
+runs stay unchanged; no uploads occur. These fixtures are not cartridge exports
+or proof of legitimate in-game zero-caught saves. Permitted real exports,
+legitimate zero-caught saves, live signed-in imports, mobile Safari and physical
+mobile performance remain unverified.
+
+### Combining with Diamond/Pearl import PR #112
+
+Keep separate `D`/`P` and `Pt` adapters, supported-game labels, documentation
+rows/verification sections and mapping/guest tests. Both packs already carry
+493-species limits. Shared edits in `client/save-import.ts`,
+`docs/save-import.md`, `scripts/check_save_import.test.ts` and
+`scripts/save_import_data.test.ts` may need text conflict resolution, alongside
+the pack branches' shared files. A `git merge-tree` check also reports existing
+pack conflicts in `OPEN_QUESTIONS.md`, `SOURCES.md`, `client/data/sprite-fit.ts`,
+`client/game.ts`, `client/packs.ts`, `package.json`, `public/sitemap.xml`,
+`scripts/access_audit.py`, `scripts/build_data.py`, `scripts/build_game_pages.ts`,
+`scripts/fetch_pokeapi.py` and `scripts/fetch_sprites.py`. Preserve both packs'
+entries when resolving them. `shared/save-import.ts` and `shared/versions.ts`
+merge automatically in that check. Fixture directories are separate.
+#112's final mapping test currently requires `Pt` to map to no website game;
+change that assertion to require exactly `platinum`, retaining its DP rejection
+checks. Its browser harness currently rejects Pt; change that case to import
+only Platinum with no title choice. This Platinum harness already permits DP
+under its own paired titles once #112 lands and forbids DP-to-Pt substitution.
+Neither harness should require the sibling pack to stay unsupported.
 
 ## Adding a ROM hack
 

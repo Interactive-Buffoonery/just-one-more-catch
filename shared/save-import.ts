@@ -5,6 +5,7 @@ export const IMPORT_SPECIES_LIMITS: Record<VersionId, number> = {
   y: 721,
   "black-2": 649,
   "white-2": 649,
+  platinum: 493,
   red: 151,
   blue: 151,
   yellow: 151,

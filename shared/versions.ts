@@ -3,6 +3,7 @@ export const VERSION_IDS = [
   "y",
   "black-2",
   "white-2",
+  "platinum",
   "red",
   "blue",
   "yellow",

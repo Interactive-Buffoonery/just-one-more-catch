@@ -15,7 +15,7 @@ const native = JSON.parse(fs.readFileSync(path.join(cache, 'native-results.json'
 const names = [...native.map(row => row.name), ...invalid];
 const isEmpty = name => name.endsWith('-empty');
 const expected = [25, 133, 252, 386, 387, 388, 389, 390, 393, 412, 422, 479, 483, 484, 487, 490, 491, 492, 493];
-const versionFor = name => name.startsWith('HG-') ? 'heartgold' : name.startsWith('SS-') ? 'soulsilver' : name === 'DP-empty' ? 'pearl' : 'diamond';
+const versionFor = name => name.startsWith('HG-') ? 'heartgold' : name.startsWith('SS-') ? 'soulsilver' : name.startsWith('Pt-') ? 'platinum' : name === 'DP-empty' ? 'pearl' : 'diamond';
 const digest = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
 const before = new Map(names.map(name => [name, digest(fs.readFileSync(path.join(cache, name + '.sav')))]));
 for (const row of native) {
@@ -127,7 +127,7 @@ try {
     const { context, page, errors, writes } = await setup(isEmpty(name));
     try {
       await choose(page, name === 'cancel' ? 'DP-caught' : name, name === 'DP-empty');
-      if (invalid.includes(name) || name.startsWith('Pt-')) {
+      if (invalid.includes(name)) {
         await page.locator('.si-oops').waitFor();
         assert.equal(await page.locator('[data-import-action=create]').count(), 0);
       } else {
@@ -159,7 +159,7 @@ try {
           assert.deepEqual(await readRows(page), rows);
         }
       }
-      if ([...invalid, 'cancel'].includes(name) || name.startsWith('Pt-')) assert.deepEqual(await readRows(page), [old]);
+      if ([...invalid, 'cancel'].includes(name)) assert.deepEqual(await readRows(page), [old]);
       assert.deepEqual(errors, []);
       assert.deepEqual(writes, []);
       results.push({ name, passed: true });

@@ -23,6 +23,7 @@ ART = {
     "xy": "pokemon/",
     "dp": "pokemon/versions/generation-iv/diamond-pearl/",
     "b2w2": "pokemon/versions/generation-v/black-white/",
+    "pt": "pokemon/versions/generation-iv/platinum/",
     "emerald": "pokemon/versions/generation-iii/emerald/",
     "gs": "pokemon/versions/generation-ii/gold/transparent/",
     "rb": "pokemon/versions/generation-i/red-blue/transparent/",
@@ -40,7 +41,7 @@ BADGES = ["Boulder", "Cascade", "Thunder", "Rainbow", "Soul", "Marsh", "Volcano"
 UNOVA_BADGES = {"Basic": 34, "Toxic": 41, "Insect": 35, "Bolt": 36,
                 "Quake": 37, "Jet": 38, "Legend": 40, "Wave": 42}
 # Kit items: rods are their own items; moves use a disc in the move's type colour
-ITEMS = {"defog": "tm-flying", "fly": "tm-flying", "flash": "tm-normal", "dive": "tm-water", "mach-bike": "mach-bike", "acro-bike": "acro-bike", "wailmer-pail": "wailmer-pail", "old-rod": "old-rod", "good-rod": "good-rod", "super-rod": "super-rod", "headbutt": "tm-normal", "cut-hm": "tm-normal",
+ITEMS = {"honey": "honey", "underground-kit": "explorer-kit", "poke-radar": "poke-radar", "defog": "tm-flying", "fly": "tm-flying", "flash": "tm-normal", "dive": "tm-water", "mach-bike": "mach-bike", "acro-bike": "acro-bike", "wailmer-pail": "wailmer-pail", "old-rod": "old-rod", "good-rod": "good-rod", "super-rod": "super-rod", "headbutt": "tm-normal", "cut-hm": "tm-normal",
          "yellow-cut": "tm-normal", "rock-smash": "tm-fighting", "surf": "tm-water", "whirlpool": "tm-water", "waterfall": "tm-water", "strength": "tm-normal", "rock-climb": "tm-normal", "bicycle": "bicycle",
          # USUM: Poké Ride moves have no item art, so they use the ride Pokémon; Island Scan uses Rotom
          "fishing-rod": "fishing-rod", "tauros": "../pokemon/128", "mudsdale": "../pokemon/750", "machamp": "../pokemon/68", "island-scan": "../pokemon/479"}
@@ -84,6 +85,9 @@ def centre(path):
     """Centre the artwork on its canvas. Returns the largest ring zoom, in percent, that keeps it inside the circle."""
     from PIL import Image
     im = Image.open(path)
+    if im.mode not in ("P", "RGBA"):
+        im = im.convert("RGBA")
+        im.save(path, optimize=True)
     w, h = im.size
     alpha = im.convert("RGBA").getchannel("A")
     x0, y0, x1, y1 = box = alpha.getbbox()

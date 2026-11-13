@@ -157,7 +157,8 @@ def rows_for(encounters, version, n):
                 continue
             for d in v["encounter_details"]:
                 src = d["method"]["name"]
-                if src in GAME.get("drop_methods", []):
+                if any(rule == src if isinstance(rule, str) else matches(loc, rule["place"]) and src in rule["methods"]
+                       for rule in GAME.get("drop_methods", [])):
                     continue
                 drops = {i for i, g in enumerate(GAME.get("drop_rows", []))
                          if g["n"] == n and matches(loc, g["place"]) and g.get("m", src) == src

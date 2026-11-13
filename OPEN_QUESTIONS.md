@@ -585,3 +585,70 @@ and the 137-area work list in `docs/b2w2-access.md`.
   The access inventory now matches all area/chapter requirements in the data.
   Gigalith stays on Route 7: Part 10’s “Trade with a Hiker” is under Route 7,
   not Mistralton City (headings at cached lines 50 and 241; trade at 142–143).
+## Platinum (`pt`)
+
+- **Save imports:** synthetic Pt/DP/HGSS caught/empty fixtures agree through
+  native Core, raw flags and reader 0.1.3 WASM. Obtain permitted real exports
+  and legitimate in-game zero-caught saves. Pt recorded-date epoch/bounds,
+  invalid values, leap days and exported dates need separate verification;
+  imports use import day. Regional/corrupt/modified variants, live account
+  imports, mobile Safari and physical mobile performance remain unverified.
+
+- Route 205 South fishing before clearing the Windworks needs a gameplay
+  check: obtain the Old Rod at the Route 218 gate, then try fishing from the
+  south bank before crossing the blocked bridge. The cached Sinnoh Route
+  205 page says the grunts block only north of the stream; walkthrough Part
+  2 confirms the early Old Rod, and Part 3 reaches the bridge before Mars.
+  None explicitly confirms a usable fishing tile on the south bank. Rod
+  rows remain in chapter 2 with the grass and Honey tree pending that check.
+- Turnback Cave's unused fourth wild table (After Pillar 3, levels 45–48)
+  is excluded; its level-47 Giratina static is retained. The cached Turnback
+  Cave page explicitly says the fourth table is never used in regular play.
+  The separate pillar-room tables still need a room/script cross-check:
+  PokeAPI's Pillar 1 exactly duplicates Before Pillar 1; Pillar 2 exactly
+  duplicates Between Pillars 2 And 3; Pillar 3 has similar species/rates to
+  that latter table but differs in several levels. The page does not settle
+  whether those pillar-room encounters are used, so all three are retained.
+
+- Independent terrain/access review remains outstanding. The cached
+  walkthrough and location pages source the gates, but no emulator or
+  collision-map traversal was performed. Specifically review Mt. Coronet's
+  2F-to-3F story passage (2F is available with Surf/Rock Climb; 3F and higher
+  conservatively retain the Galactic HQ rescue), Victory Road's individual
+  floor paths, and alternative eastern Battle Zone approaches to Route 227
+  and Stark Mountain. Route 228 grass is not blanket-gated on Bicycle or
+  Rock Smash: its northern/southern entrances need a terrain cross-check.
+- Drifloon is Friday plus Mars cleared, but cannot appear on the same day
+  Mars is defeated. The tracker stores an event checkbox, not its completion
+  date, so cannot enforce that exception. Source: Valley Windworks and
+  Platinum walkthrough Part 4 in SOURCES.md.
+- Great Marsh pre-National-Dex exclusive table entries remain visible after
+  the National Dex upgrade: the current positive-requirement model cannot
+  expire a row. Daily slot labels, National Dex requirements on later rows,
+  area distinctions and PokeAPI rates are retained. Do not interpret all
+  listed daily possibilities as simultaneously present.
+- PokeAPI describes conditional encounter slots rather than a complete
+  encounter-table simulator. Radar-off, no-dual-slot, daily Marsh/Backlot,
+  Honey groups and morning/day/night are retained as condition-labelled
+  rows. Their percentages are not combined into a whole-context probability.
+  Honey odds are conditional on the selected group; trainer-ID Munchlax
+  tree selection and fossil parity are not calculated by the tracker.
+- The cache contains 163 Platinum areas; 159 are included. Flower Paradise,
+  Newmoon Island, Hall of Origin and the Sinnoh Pokemart distribution area
+  are excluded, together with the Pokémon Ranger transfer method. No event
+  distribution is claimed available today. PokeAPI has no ordinary Platinum
+  encounter rows for the Regirock/Regice/Registeel event-unlocked rooms;
+  those rows were not fabricated. Regigigas consequently still requires
+  obtaining its prerequisite trio externally.
+- PokeAPI has no catch encounter table for Pal Park's imported Pokémon,
+  Battle Frontier rental/battle opponents or historical gift distributions
+  beyond its supplied rows. The 493-species catalog includes species with
+  evolution/trade-only or unavailable local acquisition; it does not claim
+  all 493 can be caught in one Platinum save.
+- Most access facts have one cached Bulbapedia source; selected script
+  cross-checks are pinned in SOURCES.md. A second independent source for
+  every area remains outstanding. No official Platinum guide was consulted.
+- No browser/mobile visual QA, emulator playthrough, live account/guest
+  interaction, save-file import or deployment was performed. Save import
+  remains disabled for Platinum. Independent Opus review belongs to the
+  coordinator.
