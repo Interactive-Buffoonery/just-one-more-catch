@@ -2,13 +2,19 @@
 // image fingerprints replace older copies of the same path when stored.
 const CACHE = "jomc-v2";
 const STATIC = /^\/(assets|sprites|badges|items|covers|fonts|icons|save-reader)\//;
+// Unhashed files the app page needs before first paint: network first, like the page.
+const SHELL = ["/theme.js", "/tokens.css"];
 
 const put = (key, res) => caches.open(CACHE).then(async (c) => {
   await c.delete(key, { ignoreSearch: true });
   await c.put(key, res);
 }).catch(() => {});
 
-self.addEventListener("install", () => self.skipWaiting());
+// Returning visitors never send the first-visit list, so store the theme files here.
+self.addEventListener("install", (e) => {
+  self.skipWaiting();
+  e.waitUntil(Promise.all(SHELL.map((p) => fetch(p).then((r) => r.ok && put(p, r)).catch(() => {}))));
+});
 self.addEventListener("activate", (e) =>
   e.waitUntil(
     caches
@@ -27,7 +33,7 @@ self.addEventListener("message", (e) => {
     .map((u) => u.pathname + u.search);
   e.waitUntil(
     Promise.all(
-      ["/", ...mine].map((path) =>
+      ["/", ...SHELL, ...mine].map((path) =>
         fetch(path)
           .then((res) => res.status === 200 && put(path, res))
           .catch(() => {}),
@@ -51,6 +57,15 @@ self.addEventListener("fetch", (e) => {
           return res;
         })
         .catch(() => caches.match("/").then((hit) => hit || Response.error())),
+    );
+  } else if (SHELL.includes(url.pathname)) {
+    e.respondWith(
+      fetch(req)
+        .then((res) => {
+          if (res.ok) put(url.pathname, res.clone());
+          return res;
+        })
+        .catch(() => caches.match(url.pathname).then((hit) => hit || Response.error())),
     );
   } else if (STATIC.test(url.pathname)) {
     e.respondWith(

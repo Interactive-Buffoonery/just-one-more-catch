@@ -37,6 +37,11 @@ const get = async (path, mode = 'no-cors', method = 'GET') => {
   return res;
 };
 
+let activated;
+handlers.install({waitUntil: p => (activated = p)});
+await activated;
+assert.deepEqual([...store.keys()].sort(), ['/theme.js', '/tokens.css'], 'a new worker stores the theme files for returning visitors');
+store.clear();
 assert.equal(await get('https://api.example/x'), undefined, 'other origins are left alone');
 assert.equal(await get('/sprites/a.png', 'no-cors', 'POST'), undefined, 'only GET is handled');
 assert.equal(await get('/about/', 'navigate'), undefined, 'About goes straight to the network');
@@ -44,18 +49,23 @@ assert.equal(await get('/terms/', 'navigate'), undefined, 'Terms goes straight t
 assert.equal(await get('/privacy/', 'navigate'), undefined, 'legal pages go straight to the network');
 
 assert.match((await get('/pokedex/', 'navigate')).body, /^net /, 'the app page comes from the network when online');
+const themeFetches = fetched.length;
+for (const file of ['/theme.js', '/tokens.css', '/theme.js', '/tokens.css']) await get(file);
+assert.equal(fetched.length, themeFetches + 4, 'online, theme files always come from the network so a deploy shows up at once');
 assert.match((await get('/assets/app-abc.js')).body, /^net /);
 const before = fetched.length;
 assert.match((await get('/assets/app-abc.js')).body, /^net /, 'a cached file is served again');
 assert.equal(fetched.length, before, 'without another request');
 
 let stored;
+store.delete('/theme.js');
+store.delete('/tokens.css');
 handlers.message({
   data: ['https://app.example/assets/first-visit.js', 'https://api.example/x', 'https://app.example/privacy/'],
   waitUntil: p => (stored = p),
 });
 await stored;
-assert.deepEqual([...store.keys()].sort(), ['/', '/assets/app-abc.js', '/assets/first-visit.js'], 'a first visit stores the app page and only its own static files');
+assert.deepEqual([...store.keys()].sort(), ['/', '/assets/app-abc.js', '/assets/first-visit.js', '/theme.js', '/tokens.css'], 'a first visit stores the app page, its theme files and only its own static files');
 
 await get('/covers/red.jpg?v=aaaaaaaa');
 await get('/covers/red.jpg?v=bbbbbbbb');
@@ -70,6 +80,8 @@ assert.match((await get('/journey/', 'navigate')).body, /^net /, 'offline, the a
 for (const route of ['/journey/', '/pokedex/', '/boxes/', '/settings/', '/settings/devices/', '/pair?code=ABCDEFGH'])
   assert.match((await get(route, 'navigate')).body, /^net /, `offline, ${route} gets the cached app page`);
 assert.match((await get('/assets/app-abc.js')).body, /^net /, 'offline, cached files still load');
+for (const file of ['/theme.js', '/tokens.css'])
+  assert.match((await get(file)).body, /^net /, `offline, ${file} comes from the cache so the page paints in its theme`);
 assert.match((await get('/assets/first-visit.js')).body, /^net /, 'offline, first-visit files load');
 await assert.rejects(get('/sprites/never-seen.png'), 'offline, uncached files fail as usual');
 console.log('service worker ok: offline app page, cache-first static files, everything else untouched');

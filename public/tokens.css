@@ -58,3 +58,6 @@
   --pink:#eb6f92; --on-pink:#191724;
   --fill:var(--teal); --on-fill:var(--bg); --meter:var(--teal);
 }}
+:root,[data-theme=sakura],[data-theme=alucard],[data-theme=blissey],[data-theme=venusaur],[data-theme=snorlax]{color-scheme:light}
+[data-theme=rosepine],[data-theme=dracula],[data-theme$=-dark]{color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme]){color-scheme:dark}}
