@@ -141,9 +141,9 @@ export function Dex() {
           `<button type="button" data-filter="${k}" data-k="f-${k}" aria-pressed="${!searching() && ui.filter === k}"><b>${all.filter((x) => f(x.s)).length}</b>${k === "now" ? '<span class="nowlong">Catchable now</span><span class="nowshort">Now</span>' : l}</button>`,
       ).join("")}</div>
       <div class="dextools">
-        <label class="search"><span class="sr">Search the dex</span>${SEARCH_ICON}<input id="dexq" data-k="dexq" type="search" placeholder="${matchMedia("(max-height:480px)").matches ? "Search" : "Name or number"}" autocomplete="off" value="${esc(ui.q || "")}"><button type="button" class="searchclear" data-clearsearch="1" aria-label="Clear search" ${searching() ? "" : "hidden"}>×</button></label>
+        <div class="search"><label><span class="sr">Search the dex</span>${SEARCH_ICON}<input id="dexq" data-k="dexq" type="search" placeholder="${matchMedia("(max-height:480px)").matches ? "Search" : "Name or number"}" autocomplete="off" value="${esc(ui.q || "")}"></label><button type="button" class="searchclear" data-clearsearch="1" aria-label="Clear search" ${searching() ? "" : "hidden"}>×</button></div>
         <div class="dexsizes" role="group" aria-label="Grid size">${Object.entries(DEX_SIZES).map(([size, [label, icon]]) => `<button type="button" data-dexsize="${size}" data-k="size-${size}" aria-pressed="${ui.dexSize === size}" aria-label="${label}"><svg viewBox="0 0 24 24" aria-hidden="true">${icon}</svg></button>`).join("")}</div>
-        <button type="button" class="quietbtn" data-bulk="1" data-k="bulk" aria-label="Mark many" aria-pressed="${ui.bulk}"><span class="toolicon" aria-hidden="true">✓</span><span class="tooltext">${ui.bulk ? "Done marking" : "Mark many"}</span></button>
+        <button type="button" class="quietbtn" data-bulk="1" data-k="bulk" aria-label="${ui.bulk ? "Done marking" : "Mark many"}" aria-pressed="${ui.bulk}"><span class="toolicon" aria-hidden="true">✓</span><span class="tooltext">${ui.bulk ? "Done marking" : "Mark many"}</span></button>
         <button class="quietbtn" data-custom="1" data-k="custom" aria-label="Customize">${SLIDERS_ICON}<span class="tooltext">Customize</span></button>
       </div>
     </div>
