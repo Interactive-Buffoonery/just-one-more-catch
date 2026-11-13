@@ -319,8 +319,11 @@ function render() {
 
 let saveTimer: any, undoTimer: any;
 function hideToast() {
+  const n = ui.undo?.n,
+    inToast = $("#toast").contains(document.activeElement);
   ui.undo = null;
   $("#toast").innerHTML = "";
+  if (inToast) ($(`[data-k="d${n}"]`) || $("#dexq"))?.focus();
 }
 function showSaveError(msg: string) {
   ui.saveError = msg;
