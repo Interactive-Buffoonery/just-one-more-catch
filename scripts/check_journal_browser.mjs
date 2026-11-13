@@ -1,6 +1,6 @@
 import { chromium } from 'playwright-core';
 import assert from 'node:assert/strict';
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, readFileSync } from 'node:fs';
 // Start pnpm dev --host 127.0.0.1 --port 5187 first. No cloud data is used.
 const origin = process.argv[2] || 'http://127.0.0.1:5187';
 mkdirSync('.cache/journal-screenshots', { recursive: true });
@@ -15,6 +15,18 @@ for (const width of [390,1280]) for (const colorScheme of ['light','dark']) {
  page.on('dialog', d=>d.accept());
  await page.goto(`${origin}/scripts/fixtures/journal.html`);
  console.log('Page loaded',await page.title()); await page.locator('[data-slot="qa"]').click();
+ for (const kind of ['playthrough', 'journal']) {
+   await page.locator('.ptmenu summary').click();
+   const downloadPromise = page.waitForEvent('download');
+   await page.locator(`[data-download="${kind}"][data-export-run="qa"]`).click();
+   const download = await downloadPromise;
+   assert.equal(download.suggestedFilename(), `just-one-more-catch-qa-${kind}.csv`);
+   const contents = readFileSync(await download.path(), "utf8");
+   assert.ok(contents.includes("Pikachu"));
+   assert.ok(!contents.includes("Other run only"));
+   assert.equal(contents.includes("A memory"), kind === "journal");
+   await page.waitForFunction(()=>!qa.game.ui.export);
+ }
  await page.locator('[data-switch="qa"]').filter({visible:true}).waitFor();
  await page.locator('[data-switch="qa"]').filter({visible:true}).click();
  await page.locator('[data-journal="qa"]').filter({visible:true}).waitFor();

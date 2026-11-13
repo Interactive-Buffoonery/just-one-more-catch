@@ -5,7 +5,7 @@ import "./save-import.css";
 import { withTimeout } from "./async";
 import { SaveImport } from "./save-import";
 import { $, announce, esc, root, setRoot } from "./dom";
-import { caughtCsv, fetchStates, jsonParts, saveFile } from "./export";
+import { caughtCsv, fetchStates, jsonParts, playthroughCsv, saveFile } from "./export";
 import {
   bridge,
   byN,
@@ -406,9 +406,10 @@ function toggleCaught(n: number) {
   undoTimer = setTimeout(hideToast, 5000);
 }
 
-async function download(kind: "json" | "csv") {
-  const rows = bridge.runs || [];
+async function download(kind: "json" | "csv" | "playthrough" | "journal", id?: string) {
+  const rows = (bridge.runs || []).filter(row => !id || row.id === id);
   if (ui.export || !rows.length) return;
+  const owner = bridge.auth.userId;
   ui.export = { kind, done: 0, total: rows.length };
   ui.exportError = "";
   render();
@@ -424,6 +425,11 @@ async function download(kind: "json" | "csv") {
         "application/json",
         jsonParts(rows, states),
       );
+    else if (kind === "playthrough" || kind === "journal") {
+      const contents = await playthroughCsv(rows[0], states[0], kind === "journal");
+      if (owner !== bridge.auth.userId || !bridge.runs?.some(row => row.id === rows[0].id)) return;
+      saveFile(`just-one-more-catch-${rows[0].id}-${kind}.csv`, "text/csv;charset=utf-8", [contents]);
+    }
     else
       saveFile("just-one-more-catch-caught.csv", "text/csv", [
         await caughtCsv(rows, states),
@@ -540,7 +546,7 @@ async function onClick(e: MouseEvent) {
     return;
   }
   if (d.download) {
-    await download(d.download === "csv" ? "csv" : "json");
+    await download(d.download === "playthrough" || d.download === "journal" ? d.download : d.download === "csv" ? "csv" : "json", d.exportRun);
     return;
   }
   if (d.delaccount) {

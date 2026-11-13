@@ -124,7 +124,7 @@ const lastPlayed = (iso: string) => {
 };
 const champion = (s: Summary) => s.badges.includes("Elite Four");
 const ptMenu = (row: RunRow, v: (typeof VERSIONS)[VersionId]) =>
-  `<details class="ptmenu"><summary data-k="run-options-${row.id}" aria-label="More options for ${v.name}">···</summary><div class="menu">${!isGuest() ? `<button data-journal="${row.id}" data-k="journal-${row.id}">Journal</button>` : ""}<button data-startsheet="${row.id}">Change start date</button><button data-delrun="${row.id}">Delete playthrough</button></div></details>`;
+  `<details class="ptmenu"><summary data-k="run-options-${row.id}" aria-label="More options for ${v.name}">···</summary><div class="menu">${!isGuest() ? `<button data-journal="${row.id}" data-k="journal-${row.id}">Journal</button>` : ""}<button data-download="playthrough" data-export-run="${row.id}" ${ui.export ? "disabled" : ""}>Download playthrough (CSV)</button><button data-download="journal" data-export-run="${row.id}" ${ui.export ? "disabled" : ""}>Download journal (CSV)</button><button data-startsheet="${row.id}">Change start date</button><button data-delrun="${row.id}">Delete playthrough</button></div></details>`;
 const meter = (n: number, of: number) =>
   `<span class="meter" aria-hidden="true"><i style="width:${(n / of) * 100}%"></i></span>`;
 const badgeGroups = (p: Pack): [string, string[][]][] => [
@@ -228,7 +228,7 @@ export function Runs() {
     head = `<h1 class="lg">Dashboard</h1><a class="chip" href="/import/" data-tab="import" data-k="import-save">Import a save</a>`;
   if (!rows.length)
     return `<div class="dash fresh">${head}<section class="pane pick" aria-labelledby="new-game-heading"><h2 class="sr" id="new-game-heading">Pick a game</h2>${picker()}</section>${signInNote()}</div>`;
-  return `<div class="dash">${head}${stats(rows)}<div class="slots"><div class="rail">${rows.map((x) => slotButton(x.row, x.r, x.at, x === top)).join("")}<button class="pslot new lg" data-slot="new" data-k="slot-new" aria-pressed="${!top}" aria-label="New playthrough">+ New</button></div>${
+  return `<div class="dash">${head}${stats(rows)}${exportError()}<div class="slots"><div class="rail">${rows.map((x) => slotButton(x.row, x.r, x.at, x === top)).join("")}<button class="pslot new lg" data-slot="new" data-k="slot-new" aria-pressed="${!top}" aria-label="New playthrough">+ New</button></div>${
     top
       ? resumeCard(top.row, top.r, top.at)
       : `<section class="pane pick" aria-labelledby="new-game-heading"><h2 class="sr" id="new-game-heading">Pick a game</h2>${rows.length < MAX_RUNS ? picker() : `<p class="muted">You have ${MAX_RUNS} playthroughs. Delete one to start another.</p>`}</section>`

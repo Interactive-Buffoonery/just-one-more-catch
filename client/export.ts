@@ -1,7 +1,8 @@
 import { withTimeout } from "./async";
 import { bridge, dumpRun, loaded, R, run, startDay, verOf } from "./game";
 import { Pack } from "./packs";
-import { RunRow, Species } from "./types";
+import { Mon, RunRow, Species } from "./types";
+import { journalItems, type JournalEntry } from "../shared/journal";
 import { csv } from "../shared/csv";
 
 const tick = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -109,4 +110,38 @@ export async function caughtCsv(rows: RunRow[], states: string[]) {
     }
   }
   return csv(lines);
+}
+
+// User-entered text must remain text when opened in a spreadsheet.
+const spreadsheetText = (value: unknown) => {
+  const text = String(value ?? "");
+  return /^[\s]*[=+@-]/.test(text) || /^[\t\r\n]/.test(text) ? "'" + text : text;
+};
+
+export async function playthroughCsv(row: RunRow, state: string, journal = false) {
+  const v = verOf(row.version), data = loaded.get(v.pack) || await v.pack.load();
+  loaded.set(v.pack, data);
+  const dex = new Map<number, Species>(data.dex.map((p: Species) => [p.n, p]));
+  const s = JSON.parse(state || "{}"), mons: Mon[] = s.mons || [], notes: JournalEntry[] = s.journalEntries || [];
+  const prefix = [v.platform ? `${v.name} (${v.platform})` : v.name, startDay(row), row.id];
+  const name = (n: number) => dex.get(n)?.name ?? `#${n}`;
+  const lines: unknown[][] = [];
+  if (journal) {
+    lines.push(["Game", "Started", "Playthrough ID", "Entry type", "Entry ID", "Date", "Method", "Location", "National No.", "Species", "Nickname", "Text"]);
+    const byId = new Map(mons.map(m => [m.id, m]));
+    for (const item of journalItems(mons, notes)) {
+      if (item.kind === "note") lines.push([...prefix, "Note", item.entry.id, item.day, "", "", "", "", "", item.entry.text]);
+      else {
+        const m = byId.get(item.id)!;
+        lines.push([...prefix, "Pokémon", m.id, item.day, m.acquisition?.method, m.acquisition?.place, m.n, name(m.n), m.nick, m.note]);
+      }
+    }
+  } else {
+    lines.push(["Game", "Started", "Playthrough ID", "Record type", "Pokémon ID", "National No.", "Species", "Caught", "Form", "Nickname", "Level", "Gender", "Shiny", "Held item", "Note", "Party or box", "Method", "Date", "Location"]);
+    const caught = new Set<number>(s.caught || []);
+    for (const m of mons) lines.push([...prefix, "Individual", m.id, m.n, name(m.n), caught.has(m.n) ? "yes" : "", m.form, m.nick, m.lvl, m.g, m.shiny ? "yes" : "", m.item, m.note, m.box, m.acquisition?.method, m.acquisition?.day, m.acquisition?.place]);
+    const individuals = new Set(mons.map(m => m.n));
+    for (const n of [...caught].sort((a, b) => a - b)) if (!individuals.has(n)) lines.push([...prefix, "Species completion", "", n, name(n), "yes", "", "", "", "", "", "", "", "", "", "", ""]);
+  }
+  return csv(lines.map(line => line.map(spreadsheetText)));
 }
