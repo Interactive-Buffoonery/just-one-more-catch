@@ -1,0 +1,1267 @@
+{
+  "versions": {
+    "diamond": "d",
+    "pearl": "p"
+  },
+  "pokedex": 5,
+  "species": 493,
+  "gen": "generation-iv",
+  "historical_pre_evolutions": true,
+  "keep_floors": true,
+  "drop": [
+    "^Newmoon Island$",
+    "^Flower Paradise$",
+    "^Sinnoh Hall Of Origin"
+  ],
+  "rename": {
+    "Sinnoh Route 204 South Towards Jubilife City": "Route 204 South Towards Jubilife City",
+    "Sinnoh Route 229": "Route 229",
+    "Sinnoh Route 225": "Route 225",
+    "Sinnoh Sea Route 226": "Sea Route 226",
+    "Sinnoh Route 227": "Route 227",
+    "Sinnoh Route 212 East Towards Pastoria City": "Route 212 East Towards Pastoria City",
+    "Sinnoh Route 228": "Route 228",
+    "Sinnoh Route 201": "Route 201",
+    "Sinnoh Route 221": "Route 221",
+    "Sinnoh Route 209": "Route 209",
+    "Sinnoh Route 214": "Route 214",
+    "Sinnoh Route 203": "Route 203",
+    "Sinnoh Route 204 North Towards Floaroma Town": "Route 204 North Towards Floaroma Town",
+    "Sinnoh Route 206": "Route 206",
+    "Sinnoh Route 207": "Route 207",
+    "Sinnoh Route 208": "Route 208",
+    "Sinnoh Route 211 West Towards Eterna City": "Route 211 West Towards Eterna City",
+    "Sinnoh Route 211 East Towards Celestic Town": "Route 211 East Towards Celestic Town",
+    "Sinnoh Route 216": "Route 216",
+    "Sinnoh Route 217": "Route 217",
+    "Sinnoh Victory Road 1F": "Victory Road 1F",
+    "Sinnoh Victory Road 2F": "Victory Road 2F",
+    "Sinnoh Victory Road B1F": "Victory Road B1F",
+    "Sinnoh Victory Road Inside B1F": "Victory Road Inside B1F",
+    "Sinnoh Victory Road Inside": "Victory Road Inside",
+    "Sinnoh Victory Road Inside Exit": "Victory Road Inside Exit",
+    "Sinnoh Sea Route 230": "Sea Route 230",
+    "Sinnoh Route 224": "Route 224",
+    "Sinnoh Route 205 East Towards Eterna City": "Route 205 East Towards Eterna City",
+    "Sinnoh Route 210 West Towards Celestic Town": "Route 210 West Towards Celestic Town",
+    "Sinnoh Route 212 North Towards Hearthome City": "Route 212 North Towards Hearthome City",
+    "Sinnoh Route 202": "Route 202",
+    "Sinnoh Route 215": "Route 215",
+    "Sinnoh Route 205 South Towards Floaroma Town": "Route 205 South Towards Floaroma Town",
+    "Sinnoh Route 213": "Route 213",
+    "Sinnoh Route 218": "Route 218",
+    "Sinnoh Route 219": "Route 219",
+    "Sinnoh Route 222": "Route 222",
+    "Sinnoh Sea Route 220": "Sea Route 220",
+    "Sinnoh Pokemon League": "Pokemon League",
+    "Sinnoh Sea Route 223": "Sea Route 223",
+    "Sinnoh Route 210 South Towards Solaceon Town": "Route 210 South Towards Solaceon Town",
+    "Sinnoh Sea Route 226 Island House": "Sea Route 226 Island House",
+    "Sinnoh Pokemart": "Poké Mart",
+    "Sinnoh Hall Of Origin 1": "Hall Of Origin 1",
+    "Lake Verity Before Galactic Intervention": "Lake Verity",
+    "Lake Verity After Galactic Intervention": "Lake Verity (after Galactic intervention)"
+  },
+  "methods": {},
+  "needs": {
+    "Oreburgh Gate B1F": {
+      "needs": [
+        "rock-smash"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_3"
+    },
+    "Old Chateau": {
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_6"
+    },
+    "Sinnoh Route 206": {
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_206",
+      "quote": "This area requires {{m|Cut}} to be accessed."
+    },
+    "Wayward Cave B1F": {
+      "needs": [
+        "cut-hm",
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_7"
+    },
+    "Wayward Cave 1F": {
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_7"
+    },
+    "Sinnoh Route 210 West": {
+      "needs": [
+        "psyduck"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_13"
+    },
+    "Mt. Coronet B1F": {
+      "needs": [
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_15"
+    },
+    "Mt. Coronet 1F Route 216": {
+      "needs": [
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_15"
+    },
+    "Maniac Tunnel": {
+      "needs": [
+        "unown-26"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Solaceon_Ruins"
+    },
+    "Solaceon Ruins 2F": {
+      "needs": [
+        "unown-26"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Solaceon_Ruins"
+    },
+    "Fuego Ironworks": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_29"
+    },
+    "Lake Acuity Cavern": {
+      "needs": [
+        "surf",
+        "galactic"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_28"
+    },
+    "Lake Acuity": {
+      "needs": [
+        "Icicle"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_17"
+    },
+    "Lake Valor": {
+      "needs": [
+        "galactic",
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_28"
+    },
+    "Sinnoh Victory Road Inside": {
+      "needs": [
+        "Elite Four",
+        "national-dex",
+        "rock-climb",
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_30"
+    },
+    "Sinnoh Victory Road 2F": {
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_20"
+    },
+    "Sinnoh Victory Road B1F": {
+      "needs": [
+        "surf",
+        "waterfall",
+        "rock-climb",
+        "strength",
+        "rock-smash"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_20"
+    },
+    "Sinnoh Victory Road 1F": {
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_20"
+    },
+    "Sinnoh Route 224": {
+      "needs": [
+        "Elite Four",
+        "national-dex",
+        "rock-climb",
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_30"
+    },
+    "Snowpoint Temple B5F": {
+      "needs": [
+        "Elite Four",
+        "national-dex",
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_29"
+    },
+    "Snowpoint Temple": {
+      "needs": [
+        "Elite Four",
+        "national-dex"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_29"
+    },
+    "Sendoff Spring": {
+      "needs": [],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sendoff_Spring",
+      "quote": "In {{game|Diamond and Pearl|s}}, the spring cannot be visited until the {{player}} has entered the [[Hall of Fame]]."
+    },
+    "Turnback Cave": {
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_28"
+    },
+    "Stark Mountain Inside": {
+      "needs": [
+        "rock-smash",
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_25"
+    },
+    "Stark Mountain Heatran Chamber": {
+      "needs": [
+        "rock-smash",
+        "strength",
+        "magma-stone"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_25"
+    },
+    "Mt. Coronet 3F": {
+      "needs": [
+        "galactic-hq"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Mount_Coronet",
+      "quote": "A mural of the [[lake guardians]], similar to the one in Celestic Town, blocks the way to 3F until Team Galactic is defeated in [[Team Galactic HQ]] in [[Veilstone City]]."
+    },
+    "Mt. Coronet 4F": {
+      "needs": [
+        "galactic-hq"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Mount_Coronet",
+      "quote": "A mural of the [[lake guardians]], similar to the one in Celestic Town, blocks the way to 3F until Team Galactic is defeated in [[Team Galactic HQ]] in [[Veilstone City]]."
+    },
+    "Mt. Coronet 5F": {
+      "needs": [
+        "galactic-hq"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Mount_Coronet",
+      "quote": "A mural of the [[lake guardians]], similar to the one in Celestic Town, blocks the way to 3F until Team Galactic is defeated in [[Team Galactic HQ]] in [[Veilstone City]]."
+    },
+    "Mt. Coronet 6F": {
+      "needs": [
+        "galactic-hq"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Mount_Coronet",
+      "quote": "A mural of the [[lake guardians]], similar to the one in Celestic Town, blocks the way to 3F until Team Galactic is defeated in [[Team Galactic HQ]] in [[Veilstone City]]."
+    },
+    "Mt. Coronet Exterior": {
+      "needs": [
+        "galactic-hq"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Mount_Coronet",
+      "quote": "A mural of the [[lake guardians]], similar to the one in Celestic Town, blocks the way to 3F until Team Galactic is defeated in [[Team Galactic HQ]] in [[Veilstone City]]."
+    },
+    "Mt. Coronet 1F From Exterior": {
+      "needs": [
+        "galactic-hq"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Mount_Coronet",
+      "quote": "A mural of the [[lake guardians]], similar to the one in Celestic Town, blocks the way to 3F until Team Galactic is defeated in [[Team Galactic HQ]] in [[Veilstone City]]."
+    },
+    "Spear Pillar": {
+      "needs": [
+        "galactic-hq"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Mount_Coronet",
+      "quote": "A mural of the [[lake guardians]], similar to the one in Celestic Town, blocks the way to 3F until Team Galactic is defeated in [[Team Galactic HQ]] in [[Veilstone City]]."
+    }
+  },
+  "row_needs": [
+    {
+      "place": "Hearthome City",
+      "n": 133,
+      "needs": [
+        "national-dex"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon"
+    },
+    {
+      "place": "Valley Windworks",
+      "n": 425,
+      "needs": [
+        "windworks"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_5"
+    },
+    {
+      "place": "Iron Island",
+      "n": 447,
+      "needs": [
+        "riley"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_14"
+    },
+    {
+      "place": "Lake Acuity Cavern",
+      "n": 480,
+      "needs": [
+        "galactic",
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_28"
+    },
+    {
+      "place": "Lake Valor Cavern",
+      "n": 482,
+      "needs": [
+        "galactic",
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_28"
+    },
+    {
+      "place": "Roaming Sinnoh",
+      "n": 481,
+      "needs": [
+        "mesprit"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_28"
+    },
+    {
+      "place": "Roaming Sinnoh",
+      "n": 488,
+      "needs": [
+        "Elite Four",
+        "national-dex",
+        "cresselia"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_29"
+    },
+    {
+      "place": "Spear Pillar",
+      "n": 483,
+      "needs": [
+        "galactic"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_18"
+    },
+    {
+      "place": "Spear Pillar",
+      "n": 484,
+      "needs": [
+        "galactic"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_18"
+    },
+    {
+      "place": "Snowpoint Temple",
+      "n": 486,
+      "needs": [],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_29"
+    },
+    {
+      "place": "Oreburgh City Oreburgh Mining Museum",
+      "n": 138,
+      "needs": [
+        "underground",
+        "national-dex"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Fossil"
+    },
+    {
+      "place": "Oreburgh City Oreburgh Mining Museum",
+      "n": 140,
+      "needs": [
+        "underground",
+        "national-dex"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Fossil"
+    },
+    {
+      "place": "Oreburgh City Oreburgh Mining Museum",
+      "n": 142,
+      "needs": [
+        "underground",
+        "national-dex"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Fossil"
+    },
+    {
+      "place": "Oreburgh City Oreburgh Mining Museum",
+      "n": 345,
+      "needs": [
+        "underground",
+        "national-dex"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Fossil"
+    },
+    {
+      "place": "Oreburgh City Oreburgh Mining Museum",
+      "n": 347,
+      "needs": [
+        "underground",
+        "national-dex"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Fossil"
+    },
+    {
+      "place": "Oreburgh City Oreburgh Mining Museum",
+      "n": 408,
+      "needs": [
+        "underground"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Fossil"
+    },
+    {
+      "place": "Oreburgh City Oreburgh Mining Museum",
+      "n": 410,
+      "needs": [
+        "underground"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Fossil"
+    },
+    {
+      "place": "Sinnoh Pokemart",
+      "n": 490,
+      "needs": [
+        "ranger-egg"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Pokémon_Diamond_and_Pearl_Versions"
+    },
+    {
+      "place": "Sinnoh Route 207",
+      "n": 190,
+      "m": "honey-tree",
+      "needs": [
+        "bicycle"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_207"
+    },
+    {
+      "place": "Sinnoh Route 207",
+      "n": 214,
+      "m": "honey-tree",
+      "needs": [
+        "bicycle"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_207"
+    },
+    {
+      "place": "Sinnoh Route 207",
+      "n": 265,
+      "m": "honey-tree",
+      "needs": [
+        "bicycle"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_207"
+    },
+    {
+      "place": "Sinnoh Route 207",
+      "n": 266,
+      "m": "honey-tree",
+      "needs": [
+        "bicycle"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_207"
+    },
+    {
+      "place": "Sinnoh Route 207",
+      "n": 268,
+      "m": "honey-tree",
+      "needs": [
+        "bicycle"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_207"
+    },
+    {
+      "place": "Sinnoh Route 207",
+      "n": 412,
+      "m": "honey-tree",
+      "needs": [
+        "bicycle"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_207"
+    },
+    {
+      "place": "Sinnoh Route 207",
+      "n": 415,
+      "m": "honey-tree",
+      "needs": [
+        "bicycle"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_207"
+    },
+    {
+      "place": "Sinnoh Route 207",
+      "n": 420,
+      "m": "honey-tree",
+      "needs": [
+        "bicycle"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_207"
+    },
+    {
+      "place": "Sinnoh Route 207",
+      "n": 446,
+      "m": "honey-tree",
+      "needs": [
+        "bicycle"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_207"
+    },
+    {
+      "place": "Ravaged Path",
+      "n": 41,
+      "m": "surf",
+      "needs": [
+        "rock-smash"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Ravaged_Path"
+    },
+    {
+      "place": "Ravaged Path",
+      "n": 42,
+      "m": "surf",
+      "needs": [
+        "rock-smash"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Ravaged_Path"
+    },
+    {
+      "place": "Ravaged Path",
+      "n": 54,
+      "m": "surf",
+      "needs": [
+        "rock-smash"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Ravaged_Path"
+    },
+    {
+      "place": "Ravaged Path",
+      "n": 55,
+      "m": "surf",
+      "needs": [
+        "rock-smash"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Ravaged_Path"
+    },
+    {
+      "place": "Sinnoh Route 218",
+      "n": 100,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_218"
+    },
+    {
+      "place": "Sinnoh Route 218",
+      "n": 122,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_218"
+    },
+    {
+      "place": "Ravaged Path",
+      "n": 129,
+      "m": "old-rod",
+      "needs": [
+        "rock-smash"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Ravaged_Path"
+    },
+    {
+      "place": "Ravaged Path",
+      "n": 129,
+      "m": "good-rod",
+      "needs": [
+        "rock-smash"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Ravaged_Path"
+    },
+    {
+      "place": "Ravaged Path",
+      "n": 130,
+      "m": "super-rod",
+      "needs": [
+        "rock-smash"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Ravaged_Path"
+    },
+    {
+      "place": "Sinnoh Route 218",
+      "n": 132,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_218"
+    },
+    {
+      "place": "Eterna Forest",
+      "n": 190,
+      "m": "honey-tree",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Eterna_Forest"
+    },
+    {
+      "place": "Sinnoh Route 218",
+      "n": 190,
+      "m": "honey-tree",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_218"
+    },
+    {
+      "place": "Eterna Forest",
+      "n": 214,
+      "m": "honey-tree",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Eterna_Forest"
+    },
+    {
+      "place": "Sinnoh Route 218",
+      "n": 214,
+      "m": "honey-tree",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_218"
+    },
+    {
+      "place": "Eterna Forest",
+      "n": 265,
+      "m": "honey-tree",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Eterna_Forest"
+    },
+    {
+      "place": "Sinnoh Route 218",
+      "n": 265,
+      "m": "honey-tree",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_218"
+    },
+    {
+      "place": "Eterna Forest",
+      "n": 266,
+      "m": "honey-tree",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Eterna_Forest"
+    },
+    {
+      "place": "Sinnoh Route 218",
+      "n": 266,
+      "m": "honey-tree",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_218"
+    },
+    {
+      "place": "Eterna Forest",
+      "n": 268,
+      "m": "honey-tree",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Eterna_Forest"
+    },
+    {
+      "place": "Sinnoh Route 218",
+      "n": 268,
+      "m": "honey-tree",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_218"
+    },
+    {
+      "place": "Sinnoh Route 218",
+      "n": 278,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_218"
+    },
+    {
+      "place": "Ravaged Path",
+      "n": 339,
+      "m": "good-rod",
+      "needs": [
+        "rock-smash"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Ravaged_Path"
+    },
+    {
+      "place": "Ravaged Path",
+      "n": 340,
+      "m": "super-rod",
+      "needs": [
+        "rock-smash"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Ravaged_Path"
+    },
+    {
+      "place": "Eterna Forest",
+      "n": 412,
+      "m": "honey-tree",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Eterna_Forest"
+    },
+    {
+      "place": "Sinnoh Route 218",
+      "n": 412,
+      "m": "honey-tree",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_218"
+    },
+    {
+      "place": "Eterna Forest",
+      "n": 415,
+      "m": "honey-tree",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Eterna_Forest"
+    },
+    {
+      "place": "Sinnoh Route 218",
+      "n": 415,
+      "m": "honey-tree",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_218"
+    },
+    {
+      "place": "Sinnoh Route 218",
+      "n": 419,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_218"
+    },
+    {
+      "place": "Eterna Forest",
+      "n": 420,
+      "m": "honey-tree",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Eterna_Forest"
+    },
+    {
+      "place": "Sinnoh Route 218",
+      "n": 420,
+      "m": "honey-tree",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_218"
+    },
+    {
+      "place": "Sinnoh Route 218",
+      "n": 422,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_218"
+    },
+    {
+      "place": "Sinnoh Route 218",
+      "n": 423,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_218"
+    },
+    {
+      "place": "Sinnoh Route 218",
+      "n": 431,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_218"
+    },
+    {
+      "place": "Eterna Forest",
+      "n": 446,
+      "m": "honey-tree",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Eterna_Forest"
+    },
+    {
+      "place": "Sinnoh Route 218",
+      "n": 446,
+      "m": "honey-tree",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_218"
+    }
+  ],
+  "chapters": [
+    {
+      "title": "Twinleaf to Oreburgh",
+      "needs": [],
+      "places": [
+        "Twinleaf Town",
+        "Lake Verity",
+        "Route 201",
+        "Route 202",
+        "Route 203",
+        "Route 204 South",
+        "Route 207",
+        "Route 218",
+        "Route 219",
+        "Oreburgh Gate",
+        "Oreburgh Mine",
+        "Oreburgh City",
+        "Ravaged Path"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_1",
+      "kit": "old-rod"
+    },
+    {
+      "title": "Floaroma and Valley Windworks",
+      "needs": [
+        "rock-smash"
+      ],
+      "places": [
+        "Route 204 North",
+        "Floaroma Meadow",
+        "Valley Windworks"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_5"
+    },
+    {
+      "title": "Eterna Forest and Eterna City",
+      "needs": [
+        "windworks"
+      ],
+      "places": [
+        "Route 205",
+        "Eterna Forest",
+        "Eterna City",
+        "Route 211 West",
+        "Mt. Coronet 1F Route 211",
+        "Old Chateau"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_6",
+      "kit": "cut-hm"
+    },
+    {
+      "title": "Cycling Road and Hearthome",
+      "needs": [
+        "bicycle"
+      ],
+      "places": [
+        "Route 206",
+        "Wayward Cave",
+        "Mt. Coronet 1F Route 207",
+        "Route 208",
+        "Hearthome City"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_7",
+      "kit": "bicycle"
+    },
+    {
+      "title": "Solaceon and Veilstone",
+      "needs": [
+        "bicycle"
+      ],
+      "places": [
+        "Route 209",
+        "Lost Tower",
+        "Solaceon Ruins",
+        "Route 210 South",
+        "Route 215"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_9",
+      "kit": "strength"
+    },
+    {
+      "title": "Pastoria and the southern routes",
+      "needs": [
+        "bicycle"
+      ],
+      "places": [
+        "Route 214",
+        "Ruin Maniac Cave",
+        "Maniac Tunnel",
+        "Valor Lakefront",
+        "Route 213",
+        "Pastoria City",
+        "Great Marsh",
+        "Route 212",
+        "Trophy Garden"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_11",
+      "kit": "defog"
+    },
+    {
+      "title": "The road to Celestic",
+      "needs": [
+        "psyduck"
+      ],
+      "places": [
+        "Route 210 West",
+        "Celestic Town",
+        "Route 211 East"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_13",
+      "kit": "surf"
+    },
+    {
+      "title": "Canalave and the western waters",
+      "needs": [
+        "surf"
+      ],
+      "places": [
+        "Canalave City",
+        "Iron Island",
+        "Fuego Ironworks",
+        "Sea Route 220",
+        "Route 221"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_14"
+    },
+    {
+      "title": "Through Mt. Coronet to Snowpoint",
+      "needs": [
+        "strength"
+      ],
+      "places": [
+        "Mt. Coronet B1F",
+        "Mt. Coronet 1F Route 216",
+        "Route 216",
+        "Route 217",
+        "Acuity Lakefront",
+        "Snowpoint City"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_15",
+      "kit": "rock-climb"
+    },
+    {
+      "title": "Lake Acuity",
+      "needs": [
+        "Icicle"
+      ],
+      "places": [
+        "Lake Acuity"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_17"
+    },
+    {
+      "title": "The summit and Spear Pillar",
+      "needs": [
+        "surf",
+        "rock-climb"
+      ],
+      "places": [
+        "Mt. Coronet 2F",
+        "Mt. Coronet 3F",
+        "Mt. Coronet 4F",
+        "Mt. Coronet 5F",
+        "Mt. Coronet 6F",
+        "Mt. Coronet Exterior",
+        "Mt. Coronet 1F From Exterior",
+        "Spear Pillar"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_18"
+    },
+    {
+      "title": "Sunyshore and the Pokémon League",
+      "needs": [
+        "galactic"
+      ],
+      "places": [
+        "Route 222",
+        "Sunyshore City",
+        "Sea Route 223",
+        "Pokemon League",
+        "Victory Road"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_19",
+      "kit": "waterfall"
+    },
+    {
+      "title": "The lakes and roaming Pokémon",
+      "needs": [
+        "galactic"
+      ],
+      "places": [
+        "Lake Valor",
+        "Roaming Sinnoh"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_28"
+    },
+    {
+      "title": "The Battle Zone",
+      "needs": [
+        "Elite Four",
+        "national-dex"
+      ],
+      "places": [
+        "Route 225",
+        "Sea Route 226",
+        "Route 227",
+        "Route 228",
+        "Route 229",
+        "Sea Route 230",
+        "Resort Area",
+        "Stark Mountain"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_24",
+      "kit": "super-rod"
+    },
+    {
+      "title": "Sinnoh after the Hall of Fame",
+      "needs": [
+        "Elite Four"
+      ],
+      "places": [
+        "Sendoff Spring",
+        "Turnback Cave",
+        "Snowpoint Temple",
+        "Route 224"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_28"
+    },
+    {
+      "title": "Special gifts",
+      "needs": [],
+      "places": [
+        "Poké Mart"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_22"
+    }
+  ],
+  "events": [
+    {
+      "id": "windworks",
+      "label": "Free Valley Windworks",
+      "q": "Did you defeat Mars at Valley Windworks?",
+      "chap": 1,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_5"
+    },
+    {
+      "id": "psyduck",
+      "label": "Cure the Route 210 Psyduck",
+      "q": "Did you use the SecretPotion on the Psyduck on Route 210?",
+      "chap": 5,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_13"
+    },
+    {
+      "id": "galactic",
+      "label": "Defeat Cyrus at Spear Pillar",
+      "q": "Did you defeat Cyrus at Spear Pillar?",
+      "chap": 10,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_18"
+    },
+    {
+      "id": "national-dex",
+      "label": "Receive the National Pokédex",
+      "q": "Did Professor Oak upgrade your Pokédex after you saw all 150 required Sinnoh species?",
+      "chap": 0,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_22"
+    },
+    {
+      "id": "mesprit",
+      "label": "Release Mesprit from Verity Cavern",
+      "q": "Did you speak to Mesprit in Verity Cavern after Spear Pillar?",
+      "chap": 12,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_28"
+    },
+    {
+      "id": "cresselia",
+      "label": "Meet Cresselia on Fullmoon Island",
+      "q": "Did you visit Fullmoon Island and meet Cresselia?",
+      "chap": 14,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_29"
+    },
+    {
+      "id": "magma-stone",
+      "label": "Have Buck return the Magma Stone",
+      "q": "Did you speak to Buck in the Survival Area after he took the Magma Stone?",
+      "chap": 13,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_25"
+    },
+    {
+      "id": "underground",
+      "label": "Get the Explorer Kit",
+      "q": "Did you receive the Explorer Kit in Eterna City?",
+      "chap": 2,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_6"
+    },
+    {
+      "id": "unown-26",
+      "label": "Collect the 26 letter forms of Unown",
+      "q": "Have you collected all 26 letter forms of Unown?",
+      "chap": 4,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Solaceon_Ruins"
+    },
+    {
+      "id": "ranger-egg",
+      "label": "Receive a Pokémon Ranger Manaphy Egg",
+      "q": "Did you transfer the Manaphy Egg from Pokémon Ranger?",
+      "chap": 0,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Pokémon_Diamond_and_Pearl_Versions"
+    },
+    {
+      "id": "galactic-hq",
+      "label": "Free the lake guardians at Galactic HQ",
+      "q": "Did you defeat Saturn and release the lake guardians at Galactic HQ?",
+      "chap": 9,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_17"
+    },
+    {
+      "id": "riley",
+      "label": "Help Riley defeat the Iron Island Grunts",
+      "q": "Did you and Riley defeat the Team Galactic Grunts on Iron Island?",
+      "chap": 7,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_14"
+    }
+  ],
+  "condition_needs": {
+    "story-progress-national-dex": [
+      "national-dex"
+    ],
+    "radar-on": [
+      "national-dex"
+    ],
+    "swarm-yes": [
+      "national-dex"
+    ],
+    "slot2-ruby": [
+      "national-dex"
+    ],
+    "slot2-sapphire": [
+      "national-dex"
+    ],
+    "slot2-emerald": [
+      "national-dex"
+    ],
+    "slot2-firered": [
+      "national-dex"
+    ],
+    "slot2-leafgreen": [
+      "national-dex"
+    ],
+    "backlot-mentioned": [
+      "national-dex"
+    ],
+    "story-progress-beat-galactic-coronet": [
+      "galactic"
+    ],
+    "story-progress-defeat-mars": [
+      "windworks"
+    ],
+    "story-progress-cure-eldritch-nightmares": [
+      "cresselia"
+    ],
+    "story-progress-beat-team-galactic-iron-island": [
+      "riley"
+    ]
+  },
+  "drop_conditions": [
+    "radar-off",
+    "slot2-none",
+    "great-marsh-daily-slot-none",
+    "backlot-not-mentioned"
+  ],
+  "keep_conditions": [
+    "radar-on",
+    "swarm-yes",
+    "backlot-mentioned",
+    "slot2-ruby",
+    "slot2-sapphire",
+    "slot2-emerald",
+    "slot2-firered",
+    "slot2-leafgreen"
+  ],
+  "obtainable_forms": {
+    "201": [
+      "unown-a",
+      "unown-b",
+      "unown-c",
+      "unown-d",
+      "unown-e",
+      "unown-f",
+      "unown-g",
+      "unown-h",
+      "unown-i",
+      "unown-j",
+      "unown-k",
+      "unown-l",
+      "unown-m",
+      "unown-n",
+      "unown-o",
+      "unown-p",
+      "unown-q",
+      "unown-r",
+      "unown-s",
+      "unown-t",
+      "unown-u",
+      "unown-v",
+      "unown-w",
+      "unown-x",
+      "unown-y",
+      "unown-z",
+      "unown-exclamation",
+      "unown-question"
+    ],
+    "412": [
+      "burmy-plant",
+      "burmy-sandy",
+      "burmy-trash"
+    ],
+    "413": [
+      "wormadam-plant",
+      "wormadam-sandy",
+      "wormadam-trash"
+    ],
+    "422": [
+      "shellos-west",
+      "shellos-east"
+    ],
+    "423": [
+      "gastrodon-west",
+      "gastrodon-east"
+    ]
+  }
+}

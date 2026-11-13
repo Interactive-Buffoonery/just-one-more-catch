@@ -194,3 +194,48 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 - Victory Road B2F: does the first reachable encounter tile require Rock
   Smash as well as Strength? Trace the map or check in-game; the walkthrough
   establishes Rock Smash for full traversal, not the earliest encounter.
+
+## Diamond and Pearl (`dp`)
+
+- **PokeAPI gap:** species 487 (Giratina), including its alternate variety,
+  has no Diamond/Pearl encounter detail, despite the sourced Turnback Cave
+  static. The catalog includes Giratina with zero encounter rows; no static
+  was invented. PokeAPI also supplies no Pal Park transfer encounters; those
+  are not ordinary local catches. The 161 raw areas become 158 after the
+  three never-released native event areas are excluded (Newmoon Island,
+  Flower Paradise and Hall of Origin).
+- **Earliest encounter tiles:** walkthrough traversal requirements support
+  the provisional Victory Road floor gates, but an independent collision-map
+  trace is still needed for the first encounter tile on 2F/B1F and eastern
+  passage. Check whether Strength/Rock Smash/Rock Climb are required before
+  those earliest tiles, rather than merely for full traversal. Likewise,
+  check Mt. Coronet 2F's earliest tiles before blanket Surf/Rock Climb and
+  Turnback Cave's basin entrance before adding any Rock Climb gate. Turnback
+  Cave currently uses only the sourced Hall of Fame requirement.
+- **Ravaged Path:** the initial cave is available before Rock Smash; its
+  water/fishing rows use Rock Smash provisionally because water lies beyond
+  the rocks. Independently trace the original D/P map to verify the first
+  reachable fishing tile. Route 218 grass/tree Surf and Eterna Forest's Cut
+  Honey Tree bypass are separately sourced and modeled at row level.
+- **Ruin Maniac:** reconcile source wording about seeing versus catching all
+  26 letter Unown. The explicit event asks whether the player collected them;
+  independently confirm the exact original D/P flag and whether the 10–25
+  intermediate cave's whole encounter table should wait for that threshold.
+  It currently shares the early cave chapter; only completed Maniac Tunnel
+  and the !/? upper room need the 26-form event.
+- **Conditional encounters:** the app labels GBA dual-slot cartridge, Radar,
+  swarm, Honey Tree group, Great Marsh selection, Backlot guest, held fossil,
+  NPC trade request and Regigigas party conditions. It does not configure a
+  cartridge, daily roll, Honey Tree timer/group or trade-party inventory.
+  Honey Tree rates describe the PokeAPI group table, not overall Munchlax
+  probability. Great Marsh slot numbers remain in the generated data, while
+  the UI labels them as daily Pokémon; their independent selection odds
+  have not been verified.
+- **Source coverage:** no official guide PDF or emulator/gameplay validation
+  was available. The cached walkthrough/location pages supply chapter/gate
+  evidence; a second independent source for every gate remains pending.
+  `pret/pokediamond` fossil revival code was checked, but its binary map
+  scripts were not decoded for an independent access audit. Imported form
+  catalogs (for example Deoxys) are not claimed complete by this local-form
+  implementation. No browser, DS hardware, clock transition or Ranger/GBA
+  transfer interaction was exercised.

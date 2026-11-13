@@ -263,6 +263,33 @@ const EMERALD: Pack = {
   boxes: [14, 30],
 };
 
+const DP: Pack = {
+  load: () => import("./data/dp").then((m) => m.default),
+  art: "dp",
+  region: "Sinnoh",
+  regional: 151,
+  national: 493,
+  start: "Lake Verity",
+  starters: [387, 390, 393],
+  badges: [
+    ["Coal", "Roark"], ["Forest", "Gardenia"], ["Cobble", "Maylene"],
+    ["Fen", "Crasher Wake"], ["Relic", "Fantina"], ["Mine", "Byron"],
+    ["Icicle", "Candice"], ["Beacon", "Volkner"],
+  ],
+  kit: [
+    ["old-rod", "Old Rod"], ["good-rod", "Good Rod"], ["super-rod", "Super Rod"],
+    ["rock-smash", "Rock Smash"], ["cut-hm", "Cut"], ["fly", "Fly"],
+    ["defog", "Defog"], ["surf", "Surf"], ["strength", "Strength"],
+    ["rock-climb", "Rock Climb"], ["waterfall", "Waterfall"], ["bicycle", "Bicycle"],
+  ],
+  hm: {
+    "rock-smash": "Coal", "cut-hm": "Forest", fly: "Cobble", defog: "Fen",
+    surf: "Relic", strength: "Mine", "rock-climb": "Icicle", waterfall: "Beacon",
+  },
+  nightFrom: 20,
+  boxes: [18, 30],
+};
+
 const USUM: Pack = {
   load: () => import("./data/usum").then((m) => m.default),
   art: "usum",
@@ -301,6 +328,14 @@ const USUM: Pack = {
 };
 
 export const VERSIONS: Record<VersionId, Version> = {
+  diamond: {
+    name: "Diamond", short: "D", code: "d", gen: "Gen 4",
+    pack: DP, other: "Pearl", ring: ["steel", "dragon"],
+  },
+  pearl: {
+    name: "Pearl", short: "P", code: "p", gen: "Gen 4",
+    pack: DP, other: "Diamond", ring: ["water", "dragon"],
+  },
   emerald: {
     name: "Emerald", short: "E", code: "e", gen: "Gen 3",
     pack: EMERALD, ring: ["grass", "dragon"],
@@ -416,10 +451,7 @@ export const CONSOLES: { name: string; tag: string; titles: (VersionId | Soon)[]
     ["emerald"],
   ] },
   { name: "Nintendo DS", tag: "DS", titles: [
-    [
-      { name: "Diamond", short: "D", color: "#5b8fd6", region: "Sinnoh" },
-      { name: "Pearl", short: "P", color: "#c98aa8", region: "Sinnoh" },
-    ],
+    ["diamond", "pearl"],
     [{ name: "Platinum", short: "PT", color: "#8d8f9c", region: "Sinnoh" }],
     ["heartgold", "soulsilver"],
     [

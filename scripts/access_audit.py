@@ -16,7 +16,7 @@ from urllib.parse import unquote
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 POKEAPI = os.path.join(ROOT, ".cache", "pokeapi")
 WIKI = os.path.join(ROOT, ".cache", "bulbapedia")
-PACKS = ["crystal", "hgss", "frlg", "usum"]
+PACKS = ["dp", "crystal", "hgss", "frlg", "usum"]
 
 
 def nice(slug):
@@ -51,6 +51,20 @@ def areas(pack):
 
 def candidates(area, pack):
     """Bulbapedia titles to try for an area, most specific first."""
+    if pack == "dp":
+        area = re.sub(r"^Sinnoh ", "", area)
+        if area.startswith("Victory Road"):
+            return ["Victory Road (Sinnoh)"]
+        if area.startswith("Pokemon League"):
+            return ["Pokémon League (Sinnoh)"]
+        if area.startswith("Roaming Sinnoh"):
+            return ["Roaming Pokémon"]
+        if area.startswith("Sinnoh Pokemart") or area == "Pokemart":
+            return ["Pokémon Diamond and Pearl Versions"]
+        if area.startswith("Ruin Maniac Cave"):
+            return ["Maniac Tunnel"]
+        if area.startswith("Mt. Coronet"):
+            return ["Mount Coronet"]
     a = area.replace(" Of ", " of ").replace(" The ", " the ").replace("Pokemon", "Pokémon")
     for x, y in [("Ss Anne", "S.S. Anne"), ("Dragons Den", "Dragon's Den"), ("Digletts", "Diglett's"),
                  ("Team Rocket Hq", "Team Rocket HQ"), ("Silph Co", "Silph Co."), ("Kirks House", "Kirk's House"),
@@ -60,7 +74,7 @@ def candidates(area, pack):
     route = re.match(r"(?:Sea )?Route (\d+)", a)
     if route:
         n = int(route.group(1))
-        return [f"{'Alola' if pack == 'usum' else 'Johto' if 29 <= n <= 48 else 'Kanto'} Route {n}"]
+        return [f"{'Sinnoh' if pack == 'dp' else 'Alola' if pack == 'usum' else 'Johto' if 29 <= n <= 48 else 'Kanto'} Route {n}"]
     if a.startswith("Safari Zone"):
         return ["Johto Safari Zone" if pack == "hgss" else "Kanto Safari Zone"]
     if a.endswith(" Chamber"):
@@ -82,6 +96,8 @@ SPECIFIC = {"Pokémon Mansion": "Pokémon Mansion (Kanto)", "Underground Path": 
 
 def page_for(area, pack, resolved):
     for t in candidates(area, pack):
+        if pack == "dp" and os.path.exists(wiki_path(t)):
+            return t
         if resolved.get(t):
             return SPECIFIC.get(resolved[t], resolved[t])
     return None

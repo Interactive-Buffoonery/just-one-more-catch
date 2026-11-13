@@ -770,3 +770,117 @@ Advance game. Ruby and Sapphire remain separate Coming Soon entries.
   attributes and `include/global.fieldmap.h` collision bits. The western
   connection reaches at most x=41; grass begins at x=49, beyond westbound
   ledges. Its encounters therefore stay with the later Route 122 approach.
+
+## Diamond and Pearl (`dp`)
+
+Encounter rows, species types, levels, rates, version membership, encounter
+conditions and evolution text come from the pre-cached PokeAPI responses,
+processed by `scripts/build_data.py dp`. Regional ordering uses PokeAPI
+Pokédex 5 (`original-sinnoh`, 151 entries); the national catalog ends at 493.
+No encounter rows were transcribed from a guide. The following cached
+Bulbapedia articles were read as raw wikitext; URLs identify the source pages.
+Each hand-written gate/event also carries its source in `data/dp.json`.
+
+- Chapter sequence and starter choice/location:
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl
+  Parts 1–4 cover Twinleaf, Lake Verity (Turtwig, Chimchar, Piplup), Jubilife,
+  Oreburgh and the Old Rod. Parts 5–7 cover Rock Smash north through Route
+  204, Mars clearing Route 205, the Friday Drifloon, Eterna, Explorer Kit,
+  Cut, Jupiter's Bicycle reward and Wayward Cave. Its basement requires
+  Strength in D/P; Platinum's earlier access does not apply.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_8
+  and Parts 9–13 cover Hearthome's Happiny Egg, Good Rod on Route 209,
+  Strength at Lost Tower, Solaceon, the southern routes, Defog in the Great
+  Marsh, SecretPotion and Celestic's Surf. Defog helps visibility on Route
+  210 but is not required to proceed; no blanket Defog gate is applied.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_14
+  and Parts 15–20 cover Surf to Canalave, Riley's Egg after the Grunts,
+  Strength through northern Mt. Coronet, Icicle Badge opening Lake Acuity,
+  Galactic HQ, the summit's Surf/Rock Climb route, Cyrus before Dialga or
+  Palkia, the Route 222 power outage ending, and Waterfall to Victory Road.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_22
+  establishes Oak's National Dex upgrade after seeing the required 150
+  Sinnoh species (Manaphy is optional), Poké Radar, swarms and dual-slot
+  encounters after that upgrade. The National Dex is an explicit event,
+  separate from Hall of Fame; D/P conditions do not use the shared
+  "After the Elite Four" display shortcut. Five individual GBA cartridge
+  conditions remain attached to their original rows, rather than inventing
+  one combined encounter method. Parts 23–26 establish Battle Zone access,
+  the mainland's National Dex guard, Super Rod and Buck returning the Magma
+  Stone before Heatran, plus Rock Smash/Strength within Stark Mountain.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_28
+  and Parts 29–30 source the lake guardians after Cyrus, speaking to Mesprit
+  before it roams, Cresselia's Fullmoon Island encounter after the nightmare
+  quest, Rotom's National Dex/night restriction, Snowpoint Temple's Hall of
+  Fame/National Dex entrance and Strength to B5F, Regigigas needing all three
+  Regis, and the eastern Victory Road/Route 224 opening. Giratina is described
+  here but absent from PokeAPI's D/P encounter responses; no row is invented.
+- https://bulbapedia.bulbagarden.net/wiki/Mount_Coronet
+  explicitly places the Galactic-HQ mural blocker before 3F.
+  https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_206
+  sources Cut to the encounter area below Cycling Road.
+  https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_207
+  sources the Bicycle slope above its early grass and the later Honey Tree.
+  https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_218
+  places the encounter grass/tree beyond Surf while early fishing remains
+  available from Jubilife's shore.
+  https://bulbapedia.bulbagarden.net/wiki/Eterna_Forest
+  puts its Honey Tree on the Cut bypass.
+  https://bulbapedia.bulbagarden.net/wiki/Ravaged_Path
+  distinguishes the early cave entrance from Rock Smash traversal/water.
+  https://bulbapedia.bulbagarden.net/wiki/Sendoff_Spring
+  specifies Hall of Fame access in D/P.
+- https://bulbapedia.bulbagarden.net/wiki/Badge#Sinnoh_League
+  gives D/P leaders and field-move badges: Coal/Roark/Rock Smash,
+  Forest/Gardenia/Cut, Cobble/Maylene/Fly, Fen/Crasher Wake/Defog,
+  Relic/Fantina/Surf, Mine/Byron/Strength, Icicle/Candice/Rock Climb,
+  Beacon/Volkner/Waterfall. Platinum's swapped Surf/Defog badges do not apply.
+  https://bulbapedia.bulbagarden.net/wiki/Time gives Gen IV morning
+  04:00–09:59, day 10:00–19:59 and night 20:00–03:59.
+  https://bulbapedia.bulbagarden.net/wiki/Pokémon_Storage_System gives
+  18 boxes of 30. https://bulbapedia.bulbagarden.net/wiki/List_of_Pokémon_by_Sinnoh_Pokédex_number
+  confirms the original 151-entry regional dex.
+- https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon sources Bebe's
+  National Dex Eevee; the walkthrough sources the two gift Eggs.
+  https://bulbapedia.bulbagarden.net/wiki/Pokémon_Diamond_and_Pearl_Versions
+  sources Manaphy's Pokémon Ranger transfer; an explicit received-Egg event
+  prevents it appearing as an ordinary freely available gift.
+  https://bulbapedia.bulbagarden.net/wiki/In-game_trade sources NPC trades;
+  PokeAPI retains the requested-species conditions and version membership.
+  The walkthrough Part 8 Hallowed Tower section sources Spiritomb's Odd
+  Keystone and 32 Underground player conversations; these remain conditions
+  on its original PokeAPI static rather than an invented gift.
+- https://bulbapedia.bulbagarden.net/wiki/Fossil and
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Underground
+  source the Explorer Kit, Diamond's local Skull Fossils/Pearl's Armor
+  Fossils, and the five older fossils after the National Dex. PokeAPI offers
+  both revival gifts in both versions subject to their held fossil; traded
+  fossil items can be revived, so these gift rows are not version-filtered.
+  A second source confirms item/species revival pairs and item possession:
+  https://github.com/pret/pokediamond/blob/b623abef1b4dfe204ca50aab42447ac00c134290/arm9/src/scrcmd_fossils.c
+- https://bulbapedia.bulbagarden.net/wiki/Honey_Tree sources the six-hour
+  wait, 24-hour expiration and groups A/B/C. PokeAPI group rates remain
+  conditional table rates, not overall per-tree probabilities.
+  https://bulbapedia.bulbagarden.net/wiki/Great_Marsh sources daily selections
+  and the National Dex expansion; raw daily-slot conditions remain visible.
+  https://bulbapedia.bulbagarden.net/wiki/Trophy_Garden sources Backlot's
+  National Dex guests and the last two daily selections remaining available.
+  https://bulbapedia.bulbagarden.net/wiki/Poké_Radar and
+  https://bulbapedia.bulbagarden.net/wiki/Roaming_Pokémon provide mechanic
+  cross-checks. This pack has no Platinum-only roaming legendary birds.
+- https://bulbapedia.bulbagarden.net/wiki/Solaceon_Ruins sources Unown's
+  letter chambers and the upper !/? room through Maniac Tunnel.
+  https://www.serebii.net/games/forms.shtml cross-checks Burmy's three
+  terrain cloaks, permanent Wormadam cloaks and western/eastern Shellos and
+  Gastrodon. These plus Unown are the local form catalogs. Rotom appliances,
+  Origin Giratina and Sky Shaymin are not enabled for original D/P.
+- https://bulbapedia.bulbagarden.net/wiki/Newmoon_Island,
+  https://bulbapedia.bulbagarden.net/wiki/Flower_Paradise and
+  https://bulbapedia.bulbagarden.net/wiki/Hall_of_Origin establish that the
+  corresponding D/P event items were never legitimately distributed.
+  Their PokeAPI encounter areas are excluded; external distribution/trade
+  availability does not create native encounter rows.
+- Art: https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon/versions/generation-iv/diamond-pearl
+  supplies regular/shiny art and form sprites. Sinnoh badge sprites use
+  PokeAPI IDs 25–32; Fly/Defog use its Flying-type TM icon. Existing sourced
+  `public/covers/d.jpg` and `p.jpg` are reused. Save import stays disabled.

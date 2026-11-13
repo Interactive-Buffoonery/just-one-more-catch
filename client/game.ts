@@ -29,6 +29,8 @@ export let EVENTS: Record<string, GameData["events"][number]> = {};
 let LATER: Record<string, GameData["events"][number][]> = {};
 export const METHOD: Record<string, [string, string | null]> = {
   walk: ["Walking", null],
+  "honey-tree": ["Honey Tree", null],
+  "pokemon-ranger": ["Pokémon Ranger gift", null],
   seaweed: ["Underwater", "dive"],
   "feebas-tile-fishing": ["Feebas fishing tiles", "old-rod"],
   "devon-scope": ["Devon Scope", null],
@@ -55,6 +57,7 @@ export const METHOD: Record<string, [string, string | null]> = {
   "berry-trees": ["Berry tree", null],
 };
 export const ONE_TIME = new Set([
+  "pokemon-ranger",
   "devon-scope",
   "wailmer-pail",
   "gift",
@@ -107,11 +110,26 @@ const STORY: Record<string, string> = {
   "first-party-pokemon-high-friendship": "Lead Pokémon has high friendship",
   "story-progress-beat-olivias-trial": "After Olivia's grand trial",
   "other-scan-qr-code": "Scan its QR code",
+  "radar-on": "Poké Radar grass",
+  "slot2-ruby": "Ruby in the DS Game Boy Advance slot",
+  "slot2-sapphire": "Sapphire in the DS Game Boy Advance slot",
+  "slot2-emerald": "Emerald in the DS Game Boy Advance slot",
+  "slot2-firered": "FireRed in the DS Game Boy Advance slot",
+  "slot2-leafgreen": "LeafGreen in the DS Game Boy Advance slot",
+  "backlot-mentioned": "Today's or yesterday's Trophy Garden guest",
+  "honey-tree-group-a": "Honey Tree group A (after 6 hours)",
+  "honey-tree-group-b": "Honey Tree group B (after 6 hours)",
+  "honey-tree-group-c": "Munchlax Honey Tree (after 6 hours)",
+  "item-odd-keystone": "Place an Odd Keystone in the Hallowed Tower",
+  "other-talked-to-32-people-underground": "Talk to players 32 times in the Underground",
+  "other-regirock-regice-registeel-in-party": "Regirock, Regice and Registeel in your party",
 };
 export const cap = (s: string) => s[0].toUpperCase() + s.slice(1);
 function specialLabel(c: string) {
   if (STORY[c]) return STORY[c];
-  let m = c.match(/^johto-safari-blocks-(\w+)-min-(\d+)$/);
+  let m = c.match(/^great-marsh-daily-slot-(\d+)-of-32$/);
+  if (m) return "Great Marsh daily Pokémon";
+  m = c.match(/^johto-safari-blocks-(\w+)-min-(\d+)$/);
   if (m) return `Safari: ${m[2]}+ ${m[1]} blocks`;
   m = c.match(/^item-(\w+)-fossil$/);
   if (m) return `Bring a ${cap(m[1])} Fossil`;
