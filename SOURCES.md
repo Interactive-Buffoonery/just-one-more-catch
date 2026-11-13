@@ -73,6 +73,10 @@ Coordinates below are zero-based player-tile coordinates.
   [1F entrances](https://github.com/pret/pokecrystal/blob/3c813b0b4d82b39bf62185aceffb76fd6026c70b/maps/UnionCave1F.asm#L203-L207),
   [B1F exits and boulder](https://github.com/pret/pokecrystal/blob/3c813b0b4d82b39bf62185aceffb76fd6026c70b/maps/UnionCaveB1F.asm#L156-L174),
   [Outside warps](https://github.com/pret/pokecrystal/blob/3c813b0b4d82b39bf62185aceffb76fd6026c70b/maps/RuinsOfAlphOutside.asm#L284-L295).
+  Agrees with https://bulbapedia.bulbagarden.net/wiki/Ruins_of_Alph
+  (Research Center chambers): "The upper-left entrance 1 is accessible
+  only from the basement of [[Union Cave]], which requires {{m|Surf}} to
+  navigate."
 - **Ice Path B2F:** from Route 44 through 1F/B1F, the Mahogany-side
   ladder (17,1) and 36 non-ice floor squares on B2F are reachable with
   no Strength and no fallen boulders. This includes floor (0,1).
