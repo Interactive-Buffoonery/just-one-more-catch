@@ -21,6 +21,7 @@ import {
   PALETTE,
   R,
   run,
+  searching,
   setBridge,
   store,
   ui,
@@ -34,7 +35,7 @@ import { SETTINGS_ICON, TAB_ICONS } from "./parts";
 import { Bridge, PairingHandle, PairingLookup, RunRow } from "./types";
 import { Devices, fillApprove, pairBody, pairErrorText, pairLetters, showCode, ttl } from "./views/devices";
 import { Boxes, fillBoxSheet, fillMonSheet, saveMon, updateMonSprite } from "./views/boxes";
-import { Dex, dexGrid, fillSpecies } from "./views/dex";
+import { DEX_SIZES, Dex, dexGrid, fillSpecies, resetDexCache } from "./views/dex";
 import { fillClock, fillCustom, Journey, untick } from "./views/journey";
 import {
   confirmGame,
@@ -206,6 +207,29 @@ function shell() {
   <dialog class="sheet" id="sheet" aria-labelledby="sheet-title"><div class="sheetbody" id="sheetbody"></div></dialog>
   <div class="sr" aria-live="polite" id="live"></div>`;
 }
+let resultsTimer: ReturnType<typeof setTimeout> | undefined,
+  typingTimer: ReturnType<typeof setTimeout> | undefined;
+// Patches the toolbar in place so the focused search input survives typing.
+function searchDexGrid(q: string, now = false) {
+  clearTimeout(typingTimer);
+  typingTimer = undefined;
+  ui.q = q;
+  const was = !!$("#dexgrid").querySelector(".q, [data-clearsearch]");
+  $("#dexgrid").innerHTML = dexGrid();
+  const active = !!searching();
+  $(".dextop .filters").querySelectorAll("[data-filter]").forEach((b: HTMLElement) =>
+    b.setAttribute("aria-pressed", String(!active && b.dataset.filter === ui.filter)),
+  );
+  $(".searchclear").hidden = !active;
+  clearTimeout(resultsTimer);
+  if (!active) return was && announce("Search cleared");
+  const say = () => {
+    const n = $("#dexgrid")?.querySelectorAll(".dt").length;
+    if (n !== undefined) announce(n ? `${n} ${n === 1 ? "result" : "results"}` : "No matches");
+  };
+  if (now) say();
+  else resultsTimer = setTimeout(say, 400);
+}
 function tabFromUrl() {
   if (IMPORT_PATH.test(location.pathname)) return "import";
   const path = Object.keys(PATHS).find((t) => PATHS[t] === location.pathname);
@@ -213,6 +237,10 @@ function tabFromUrl() {
   return t === "journey" && !isGuest() && run?.view === "dexonly" ? "dex" : t && Object.hasOwn(VIEWS, t) ? t : "playthroughs";
 }
 function render() {
+  clearTimeout(resultsTimer);
+  clearTimeout(typingTimer);
+  typingTimer = undefined;
+  resetDexCache();
   if (ui.tab !== "playthroughs") dash.slot = undefined;
   if (ui.tab === "journey" && !isGuest() && run?.view === "dexonly") ui.tab = "dex";
   const a = bridge.auth,
@@ -291,6 +319,13 @@ function render() {
 }
 
 let saveTimer: any, undoTimer: any;
+function hideToast() {
+  const n = ui.undo?.n,
+    inToast = $("#toast").contains(document.activeElement);
+  ui.undo = null;
+  $("#toast").innerHTML = "";
+  if (inToast) ($(`[data-k="d${n}"]`) || $("#dexq"))?.focus();
+}
 function showSaveError(msg: string) {
   ui.saveError = msg;
   render();
@@ -350,13 +385,10 @@ function toggleCaught(n: number) {
     r = R(),
     had = r.caught.has(n);
   had ? r.caught.delete(n) : r.caught.add(n);
-  ui.undo = { n, had, msg: `${p.name} ${had ? "unmarked" : "caught"}` };
+  ui.undo = { n, had, msg: `${p.name} ${had ? "not caught" : "caught"}` };
   $("#live").textContent = ui.undo.msg;
   clearTimeout(undoTimer);
-  undoTimer = setTimeout(() => {
-    ui.undo = null;
-    render();
-  }, 5000);
+  undoTimer = setTimeout(hideToast, 5000);
 }
 
 async function download(kind: "json" | "csv") {
@@ -412,6 +444,18 @@ async function onClick(e: MouseEvent) {
     e.preventDefault();
   }
   const d = t.dataset;
+  if (d.dexsize && Object.hasOwn(DEX_SIZES, d.dexsize)) {
+    ui.dexSize = d.dexsize;
+    store.set("jomc.dexSize", ui.dexSize);
+    render();
+    return;
+  }
+  if (d.clearsearch) {
+    $("#dexq").value = "";
+    searchDexGrid("", true);
+    $("#dexq").focus();
+    return;
+  }
   if (d.boxlayout === "list" || d.boxlayout === "grid") {
     ui.boxLayout = d.boxlayout;
     store.set("jomc.boxLayout", ui.boxLayout);
@@ -747,7 +791,11 @@ async function onClick(e: MouseEvent) {
     r.safari.has(d.safari) ? r.safari.delete(d.safari) : r.safari.add(d.safari);
   } else if (d.kit) {
     r.kit.has(d.kit) ? r.kit.delete(d.kit) : r.kit.add(d.kit);
-  } else if (d.filter) ui.filter = d.filter;
+  } else if (d.filter) {
+    clearTimeout(resultsTimer);
+    ui.filter = d.filter;
+    ui.q = "";
+  }
   else if (d.boxfilter) ui.boxFilter = d.boxfilter;
   else if (d.bulk) {
     ui.bulk = !ui.bulk;
@@ -798,10 +846,7 @@ function flash(msg: string) {
   ui.undo = { msg };
   $("#live").textContent = msg;
   clearTimeout(undoTimer);
-  undoTimer = setTimeout(() => {
-    ui.undo = null;
-    render();
-  }, 8000);
+  undoTimer = setTimeout(hideToast, 8000);
   render();
 }
 let pendingRun: string | null = null;
@@ -886,6 +931,8 @@ export function mount(el: HTMLElement, b: Bridge) {
   // A page restored from the back/forward cache starts a fresh import; file bytes never persist.
   addEventListener("pagehide", closeImport);
   addEventListener("pageshow", (e) => { if (e.persisted) render(); });
+  const dexSize = store.get("jomc.dexSize");
+  ui.dexSize = Object.hasOwn(DEX_SIZES, dexSize || "") ? dexSize : matchMedia("(max-height:480px)").matches ? "compact" : "tiles";
   ui.boxLayout = store.get("jomc.boxLayout") === "grid" ? "grid" : "list";
   ui.look = PALETTE[store.get("jomc.look") || ""]
     ? store.get("jomc.look")
@@ -913,6 +960,24 @@ export function mount(el: HTMLElement, b: Bridge) {
     },
     true,
   );
+  el.addEventListener("keydown", (e) => {
+    const t = e.target as HTMLInputElement;
+    if (t.id !== "dexq" || e.isComposing || e.repeat) return;
+    if (e.key === "Escape") {
+      if (!t.value && !searching()) return;
+      e.preventDefault();
+      t.value = "";
+      searchDexGrid("", true);
+    } else if (e.key === "Enter" && searching()) {
+      if (typingTimer) searchDexGrid(t.value);
+      const results = el.querySelectorAll<HTMLButtonElement>("#dexgrid button.dt");
+      e.preventDefault();
+      clearTimeout(resultsTimer);
+      if (results.length === 1) results[0].click();
+      else if (results.length) results[0].focus();
+      else announce("No matches");
+    }
+  });
   el.addEventListener("input", (e) => {
     const t = e.target as HTMLInputElement;
     if (t.id === "paircode") {
@@ -926,7 +991,9 @@ export function mount(el: HTMLElement, b: Bridge) {
     }
     if (t.id !== "dexq") return;
     ui.q = t.value;
-    $("#dexgrid").innerHTML = dexGrid();
+    $(".searchclear").hidden = !searching();
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(() => searchDexGrid(t.value), 80);
   });
   el.addEventListener("submit", (e) => {
     if ((e.target as HTMLElement).id !== "pairform") return;
