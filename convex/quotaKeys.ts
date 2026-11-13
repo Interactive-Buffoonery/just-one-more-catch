@@ -3,7 +3,7 @@ import { components, internal } from "./_generated/api";
 import { internalMutation, type MutationCtx } from "./_generated/server";
 
 export const QUOTA_IDLE_MS = 2 * DAY;
-const names = ["eventCaller", "eventDaily", "contactSender", "pairingStart"];
+const names = ["eventCaller", "eventDaily", "contactSender", "pairingStart", "sharePublish"];
 
 export async function touchQuota(ctx: MutationCtx, key: string) {
   const row = await ctx.db.query("quotaKeys").withIndex("by_key", q => q.eq("key", key)).unique();

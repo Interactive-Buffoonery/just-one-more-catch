@@ -11,7 +11,7 @@ import { saveLink } from "./schema";
 
 import { sendContact } from "./contactSpam";
 import { verifiedVisitor } from "./verification";
-import { identityOf } from "./auth";
+import { accountOf, identityOf, rememberIdentity } from "./auth";
 import { preserveJournal, validateJournal } from "../shared/journal";
 // Each run can carry up to MAX_RUN_BYTES, so batches stay well under the 16 MiB per-call read limit
 const BATCH = 16;
@@ -21,6 +21,7 @@ async function owner(ctx: QueryCtx, expectedUserId?: string) {
   const me = await identityOf(ctx);
   if (!me) throw new Error("Sign in first");
   if (expectedUserId !== undefined && me.subject !== expectedUserId) throw new Error("Account changed");
+  if ((await accountOf(ctx, me.tokenIdentifier))?.deleting) throw new Error("Account is being deleted");
   return me.tokenIdentifier;
 }
 
@@ -37,6 +38,7 @@ const stateOf = (ctx: QueryCtx, run: Id<"runs">) =>
     .unique();
 
 async function putState(ctx: MutationCtx, run: Doc<"runs">, state: string, fields: { updatedAt?: number } = {}) {
+  await rememberIdentity(ctx);
   const old = await stateOf(ctx, run._id);
   state = preserveJournal(state, old?.state ?? "{}");
   validateJournal(JSON.parse(state));
@@ -47,12 +49,14 @@ async function putState(ctx: MutationCtx, run: Doc<"runs">, state: string, field
 }
 
 async function dropRun(ctx: MutationCtx, run: Id<"runs">) {
+  const share = await ctx.db.query("shares").withIndex("by_runId", q => q.eq("runId", run)).unique();
+  if (share) await ctx.db.delete(share._id);
   const s = await stateOf(ctx, run);
   if (s) await ctx.db.delete(s._id);
   await ctx.db.delete(run);
 }
 
-async function mine(ctx: QueryCtx, id: string, expectedUserId?: string, missing = new Error("Not your playthrough")) {
+export async function mine(ctx: QueryCtx, id: string, expectedUserId?: string, missing = new Error("Not your playthrough")) {
   const who = await owner(ctx, expectedUserId);
   const runId = ctx.db.normalizeId("runs", id);
   const run = runId && (await ctx.db.get(runId));
@@ -88,6 +92,7 @@ export const create = mutation({
   handler: async (ctx, { version, expectedUserId, link }) => {
     if (link) validateSaveLink(link);
     const who = await owner(ctx, expectedUserId);
+    await rememberIdentity(ctx);
     if (!(VERSION_IDS as readonly string[]).includes(version)) throw new Error("Unknown game");
     if ((await ownedBy(ctx, who)).length >= MAX_RUNS) throw new Error("Too many playthroughs");
     return (await ctx.db.insert("runs", { owner: who, version, saveLink: link, summary: summarize("{}") })) as string;
@@ -100,6 +105,7 @@ export const importCaught = mutation({
   handler: async (ctx, { version, caught, importId, startedAt, link }) => {
     const who = await owner(ctx);
     if (link) validateSaveLink(link);
+    await rememberIdentity(ctx);
     validateImportId(importId);
     validateImportStart(startedAt);
     const state = importCaughtState(version, caught);
@@ -208,21 +214,46 @@ export const purge = internalMutation({
 export const deleteAccount = mutation({
   args: {},
   handler: async (ctx) => {
-    const who = await owner(ctx);
-    await purgeRuns(ctx, who);
-    await purgeEventsFor(ctx, who);
-    for (const p of await profileOf(ctx, who)) await ctx.db.delete(p._id);
-    const devices = await ctx.db
-      .query("deviceLabels")
-      .withIndex("by_owner", (q) => q.eq("owner", who))
-      .take(100);
-    for (const d of devices) await ctx.db.delete(d._id);
-    const sent = await ctx.db
-      .query("messages")
-      .withIndex("by_sender", (q) => q.eq("sender", who))
-      .collect();
-    for (const m of sent) await ctx.db.delete(m._id);
+    const me = await identityOf(ctx);
+    if (!me) throw new Error("Sign in first");
+    const who = me.tokenIdentifier;
+    if ((await accountOf(ctx, who))?.deleting) return;
+    await rememberIdentity(ctx);
+    await markDeleting(ctx, who);
+    await cleanupAccount(ctx, who);
   },
+});
+
+export async function markDeleting(ctx: MutationCtx, who: string) {
+  const account = await accountOf(ctx, who);
+  if (!account) throw new Error("Account mapping missing");
+  if (account.deleting) return false;
+  await ctx.db.patch(account._id, { deleting: true });
+  return true;
+}
+
+async function cleanupAccount(ctx: MutationCtx, who: string) {
+  await purgeRuns(ctx, who);
+  await purgeEventsFor(ctx, who);
+  for (const p of await profileOf(ctx, who)) await ctx.db.delete(p._id);
+  const devices = await ctx.db
+    .query("deviceLabels")
+    .withIndex("by_owner", (q) => q.eq("owner", who))
+    .take(100);
+  for (const d of devices) await ctx.db.delete(d._id);
+  const sent = await ctx.db
+    .query("messages")
+    .withIndex("by_sender", (q) => q.eq("sender", who))
+    .take(BATCH);
+  for (const m of sent) await ctx.db.delete(m._id);
+  if (sent.length === BATCH || devices.length === 100)
+    await ctx.scheduler.runAfter(0, internal.runs.cleanup, { owner: who });
+}
+
+export const cleanup = internalMutation({
+  args: { owner: v.string() },
+  returns: v.null(),
+  handler: async (ctx, { owner }) => { await cleanupAccount(ctx, owner); return null; },
 });
 
 const contactArgs = { email: v.string(), message: v.string(), website: v.optional(v.string()) };

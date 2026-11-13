@@ -17,6 +17,7 @@ import type * as events from "../events.js";
 import type * as pairing from "../pairing.js";
 import type * as quotaKeys from "../quotaKeys.js";
 import type * as runs from "../runs.js";
+import type * as shares from "../shares.js";
 import type * as stats from "../stats.js";
 import type * as verification from "../verification.js";
 
@@ -36,6 +37,7 @@ declare const fullApi: ApiFromModules<{
   pairing: typeof pairing;
   quotaKeys: typeof quotaKeys;
   runs: typeof runs;
+  shares: typeof shares;
   stats: typeof stats;
   verification: typeof verification;
 }>;
