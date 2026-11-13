@@ -125,7 +125,7 @@ export function Dex() {
     <div class="dexhead"><h1 class="lg" id="dex-h">${e4() ? "National" : P().region} dex</h1><div class="dexcount"><b>${have}</b>/ ${total}<span class="sr"> caught</span></div></div>
     <div class="bar"><i style="width:${(have / total) * 100}%"></i></div>
     <div class="dextop">
-      <div class="filters${(ui.q || "").trim() ? " searching" : ""}${viewOf(R()) === "dexonly" ? " three" : ""}" role="group" aria-label="Show">${FILTERS.filter(([k]) => k !== "now" || viewOf(R()) !== "dexonly").map(
+      <div class="filters${viewOf(R()) === "dexonly" ? " three" : ""}" role="group" aria-label="Show">${FILTERS.filter(([k]) => k !== "now" || viewOf(R()) !== "dexonly").map(
         ([k, l, f]) =>
           `<button type="button" data-filter="${k}" data-k="f-${k}" aria-pressed="${!(ui.q || "").trim() && ui.filter === k}"><b>${all.filter((x) => f(x.s)).length}</b>${k === "now" ? '<span class="nowlong">Catchable now</span><span class="nowshort">Now</span>' : l}</button>`,
       ).join("")}</div>

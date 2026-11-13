@@ -211,10 +211,8 @@ let resultsTimer: ReturnType<typeof setTimeout> | undefined;
 function searchDexGrid(q: string, now = false) {
   ui.q = q;
   $("#dexgrid").innerHTML = dexGrid();
-  const searching = !!q.trim(),
-    filters = $(".dextop .filters") as HTMLElement;
-  filters.classList.toggle("searching", searching);
-  filters.querySelectorAll<HTMLElement>("[data-filter]").forEach((b) =>
+  const searching = !!q.trim();
+  $(".dextop .filters").querySelectorAll("[data-filter]").forEach((b: HTMLElement) =>
     b.setAttribute("aria-pressed", String(!searching && b.dataset.filter === ui.filter)),
   );
   $(".searchclear").hidden = !searching;
