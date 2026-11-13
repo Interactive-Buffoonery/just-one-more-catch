@@ -41,7 +41,7 @@ for (const destination of ["stay", "dashboard", "fresh-import"]) {
     pathname: new URL(url, location.href).pathname,
     search: new URL(url, location.href).search,
   });
-  const element = {innerHTML: "", open: false, replaceChildren() {}};
+  const element = {innerHTML: "", open: false, replaceChildren() {}, remove() {}};
   const importer = {isOpen: true, close() { this.isOpen = false; }, open() { this.isOpen = true; }};
   const lifecycle = stripTypeScriptTypes(
     app.slice(app.indexOf("function tabFromUrl()"), app.indexOf("let saveTimer:")) +

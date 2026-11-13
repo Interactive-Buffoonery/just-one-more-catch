@@ -333,8 +333,12 @@ function render() {
   $("#tabs").innerHTML = !a.isLoading
     ? `<nav class="tabbar${!isGuest() && run?.view === "dexonly" ? " four" : ""}" aria-label="Sections">${tabButtons(true)}<button class="tab-settings" data-tab="settings" data-k="tab-settings"${here}>${SETTINGS_ICON}<span>Settings</span></button></nav>`
     : "";
-  if (!$("#huntbar-host")) { const host = document.createElement("div"); host.id="huntbar-host"; root.append(host); }
-  $("#huntbar-host").innerHTML = huntBar();
+  const huntMarkup = huntBar();
+  if (huntMarkup && !$("#huntbar-host")) { const host = document.createElement("div"); host.id="huntbar-host"; root.append(host); }
+  if ($("#huntbar-host")) {
+    if (huntMarkup) $("#huntbar-host").innerHTML = huntMarkup;
+    else $("#huntbar-host").remove();
+  }
   $("#toast").innerHTML = ui.undo
     ? `<div class="toast"><span id="toast-msg">${ui.undo.msg}</span>${ui.undo.restore || ui.undo.n ? `<button data-undo="1" data-k="toast-undo" aria-describedby="toast-msg">Undo</button>` : ""}</div>`
     : "";
@@ -520,7 +524,7 @@ async function onClick(e: MouseEvent) {
     return;
   }
   if (d.hunt) {
-    huntClick(d.hunt, () => { scheduleSave(); $("#huntbar-host").innerHTML = huntBar(); }, fill => showSheet({kind:"hunt"}, fill), (n, note) => { openSheet({kind:"mon", n}); if ($("#f-shiny")) { $("#f-shiny").checked = true; $("#f-note").value = note; } });
+    huntClick(d.hunt, () => { scheduleSave(); const markup = huntBar(); let host = $("#huntbar-host"); if (!host && markup) { host = document.createElement("div"); host.id = "huntbar-host"; root.append(host); } if (host) { if (markup) host.innerHTML = markup; else host.remove(); } }, fill => showSheet({kind:"hunt"}, fill), (n, note) => { openSheet({kind:"mon", n}); if ($("#f-shiny")) { $("#f-shiny").checked = true; $("#f-note").value = note; } });
     return;
   }
   if (d.dexsize && Object.hasOwn(DEX_SIZES, d.dexsize)) {
