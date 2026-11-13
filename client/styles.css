@@ -839,3 +839,9 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
 
 .dexmarker{position:absolute;right:5px;top:5px;width:15px;height:15px;border:2px solid var(--teal);border-radius:50%;z-index:1;background:var(--surface);display:grid;place-items:center;font-size:11px;font-weight:800;line-height:1;color:var(--teal)}
 .dexmarker.caught{background:var(--teal);color:var(--surface)}
+.filters.searching{opacity:.55}
+.app .searchclear{position:absolute;right:4px;top:4px;min-height:36px;width:32px;border:0;background:transparent;color:var(--soft);font-size:22px}
+.searchclear[hidden]{display:none}
+.app .search input{padding-right:36px}
+.dt .no{display:flex;flex-wrap:wrap;justify-content:center;gap:3px}
+.dt .no i{flex-basis:100%}

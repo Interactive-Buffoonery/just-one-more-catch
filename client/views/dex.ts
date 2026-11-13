@@ -62,7 +62,7 @@ const tile = (p: Species, s: string) => {
     R().trackForms && available.length > 1 ? `${collectedForms(p).size} of ${available.length} forms` : "",
   ].filter(Boolean).map((text) => `, ${text}`).join("");
   const short = ((ui.q || "").trim() || ["missing", "all"].includes(ui.filter)) && SHORT[s];
-  return `<button type="button" class="dt${s === "now" ? " n" : ""}${s === "now" || s === "caught" ? "" : " dim"}" data-${ui.bulk ? "toggle" : "open"}="${p.n}" data-k="d${p.n}" ${ui.bulk ? `aria-pressed="${s === "caught"}"` : ""} aria-label="${p.name}, number ${num(p)}, ${STATUS_TEXT[s]}${progress}">${s === "caught" || s === "now" ? `<span class="dexmarker ${s}" aria-hidden="true">${s === "caught" ? "✓" : ""}</span>` : ""}${sprite(p, "mon")} <span class="nm">${p.name}</span><span class="no">#${pad(num(p))}${R().trackGenders && hasGenders(p) ? `<span class="gx" aria-hidden="true">${GENDERS.map(([g, symbol]) => `<b class="${genders.has(g) ? "on" : ""}">${symbol}</b>`).join("")}</span>` : ""}${R().trackForms && available.length > 1 ? `<i aria-hidden="true">${collectedForms(p).size}/${available.length}</i>` : short ? `<i aria-hidden="true">${short}</i>` : ""}</span></button>`;
+  return `<button type="button" class="dt${s === "now" ? " n" : ""}${s === "now" || s === "caught" ? "" : " dim"}" data-${ui.bulk ? "toggle" : "open"}="${p.n}" data-k="d${p.n}" ${ui.bulk ? `aria-pressed="${s === "caught"}"` : ""} aria-label="${p.name}, number ${num(p)}, ${STATUS_TEXT[s]}${progress}">${s === "caught" || s === "now" ? `<span class="dexmarker ${s}" aria-hidden="true">${s === "caught" ? "✓" : ""}</span>` : ""}${sprite(p, "mon")} <span class="nm">${p.name}</span><span class="no">#${pad(num(p))}${R().trackGenders && hasGenders(p) ? `<span class="gx" aria-hidden="true">${GENDERS.map(([g, symbol]) => `<b class="${genders.has(g) ? "on" : ""}">${symbol}</b>`).join("")}</span>` : ""}${R().trackForms && available.length > 1 ? `<i aria-hidden="true">${collectedForms(p).size}/${available.length}</i>` : ""}${short ? `<i aria-hidden="true">${short}</i>` : ""}</span></button>`;
 };
 const section = (title: string, list: { p: Species; s: string }[]) =>
   list.length
@@ -102,8 +102,8 @@ export function dexGrid() {
           "Elsewhere",
           list.filter((x) => !here(x.p)),
         )
-      : section("", list)) ||
-    `<p class="muted dexnone">${t ? "No matches" : "Nothing here"}</p>`
+      : section(t ? "Results" : "", list)) ||
+    `<p class="muted dexnone">${t ? 'No matches</p><button type="button" class="quietbtn" data-clearsearch="1">Clear</button><p hidden>' : "Nothing here"}</p>`
   );
 }
 export function Dex() {
@@ -117,12 +117,12 @@ export function Dex() {
     <div class="dexhead"><h1 class="lg" id="dex-h">${e4() ? "National" : P().region} dex</h1><div class="dexcount"><b>${have}</b>/ ${total}<span class="sr"> caught</span></div></div>
     <div class="bar"><i style="width:${(have / total) * 100}%"></i></div>
     <div class="dextop">
-      <div class="filters${viewOf(R()) === "dexonly" ? " three" : ""}" role="group" aria-label="Show">${FILTERS.filter(([k]) => k !== "now" || viewOf(R()) !== "dexonly").map(
+      <div class="filters${(ui.q || "").trim() ? " searching" : ""}${viewOf(R()) === "dexonly" ? " three" : ""}" role="group" aria-label="Show">${FILTERS.filter(([k]) => k !== "now" || viewOf(R()) !== "dexonly").map(
         ([k, l, f]) =>
-          `<button type="button" data-filter="${k}" data-k="f-${k}" aria-pressed="${ui.filter === k}"><b>${all.filter((x) => f(x.s)).length}</b>${l}</button>`,
+          `<button type="button" data-filter="${k}" data-k="f-${k}" aria-pressed="${!(ui.q || "").trim() && ui.filter === k}"><b>${all.filter((x) => f(x.s)).length}</b>${l}</button>`,
       ).join("")}</div>
       <div class="dextools">
-        <label class="search"><span class="sr">Search the dex</span>${SEARCH_ICON}<input id="dexq" data-k="dexq" type="search" placeholder="Name or number" autocomplete="off" value="${esc(ui.q || "")}"></label>
+        <label class="search"><span class="sr">Search the dex</span>${SEARCH_ICON}<input id="dexq" data-k="dexq" type="search" placeholder="Name or number" autocomplete="off" value="${esc(ui.q || "")}"><button type="button" class="searchclear" data-clearsearch="1" aria-label="Clear search" ${(ui.q || "").trim() ? "" : "hidden"}>×</button></label>
         <button type="button" class="quietbtn" data-bulk="1" data-k="bulk" aria-pressed="${ui.bulk}">${ui.bulk ? "Done marking" : "Mark many"}</button>
         <button class="quietbtn" data-custom="1" data-k="custom">${SLIDERS_ICON}Customize</button>
       </div>

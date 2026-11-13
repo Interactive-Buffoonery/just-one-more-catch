@@ -412,6 +412,12 @@ async function onClick(e: MouseEvent) {
     e.preventDefault();
   }
   const d = t.dataset;
+  if (d.clearsearch) {
+    ui.q = "";
+    render();
+    $("#dexq").focus();
+    return;
+  }
   if (d.boxlayout === "list" || d.boxlayout === "grid") {
     ui.boxLayout = d.boxlayout;
     store.set("jomc.boxLayout", ui.boxLayout);
@@ -747,7 +753,7 @@ async function onClick(e: MouseEvent) {
     r.safari.has(d.safari) ? r.safari.delete(d.safari) : r.safari.add(d.safari);
   } else if (d.kit) {
     r.kit.has(d.kit) ? r.kit.delete(d.kit) : r.kit.add(d.kit);
-  } else if (d.filter) ui.filter = d.filter;
+  } else if (d.filter) { ui.filter = d.filter; ui.q = ""; }
   else if (d.boxfilter) ui.boxFilter = d.boxfilter;
   else if (d.bulk) {
     ui.bulk = !ui.bulk;
@@ -920,7 +926,7 @@ export function mount(el: HTMLElement, b: Bridge) {
       e.preventDefault();
       t.value = "";
       ui.q = "";
-      $("#dexgrid").innerHTML = dexGrid();
+      render();
     } else if (e.key === "Enter") {
       const results = el.querySelectorAll<HTMLButtonElement>("#dexgrid button.dt");
       if (results.length === 1) {
@@ -942,7 +948,8 @@ export function mount(el: HTMLElement, b: Bridge) {
     }
     if (t.id !== "dexq") return;
     ui.q = t.value;
-    $("#dexgrid").innerHTML = dexGrid();
+    render();
+    $("#live").textContent = `Results ${el.querySelectorAll("#dexgrid .dt").length}`;
   });
   el.addEventListener("submit", (e) => {
     if ((e.target as HTMLElement).id !== "pairform") return;
