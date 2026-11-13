@@ -848,7 +848,7 @@
         "Elite Four"
       ],
       "src": "https://bulbapedia.bulbagarden.net/w/index.php?title=Turnback_Cave&oldid=4663925",
-      "quote": "The cave can only be entered after entering the Hall of Fame."
+      "quote": "The cave can only be entered after entering the [[Hall of Fame]]."
     }
   ],
   "chapters": [
@@ -1307,7 +1307,8 @@
       "conditions": [],
       "src": "bulbapedia",
       "url": "https://bulbapedia.bulbagarden.net/w/index.php?title=Turnback_Cave&oldid=4663925",
-      "quote": "Diamond and Pearl special encounters: Giratina, level 70."
+      "quote": "A {{p|Giratina}} appears here on the first visit. If run from, it respawns upon leaving the area.",
+      "note": "Diamond and Pearl special encounter; the template below the quote gives level=70."
     }
   ]
 }
