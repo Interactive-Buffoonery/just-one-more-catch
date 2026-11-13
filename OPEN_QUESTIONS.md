@@ -100,11 +100,11 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Red and Blue
 
-- Independent access audit remains for the coordinator, particularly the
-  first reachable parts of Seafoam's basement floors, Route 12's southern
-  grass, and the Route 2 trade-house approach. The implementation cites
-  original pret scripts/maps and accessible walkthroughs, but no local
-  Red/Blue scanned guide or emulator confirmation was available.
+- **Route 2 trade-house alternatives:** the pinned static map trace reaches
+  the house at (15,19) from Diglett’s Cave without Cut, and from the western
+  Route 2 entrances with Cut. Keep the existing Bill prerequisite pending
+  shared support for alternative requirements (Bill’s route OR usable Cut).
+  See the Route 2 trace in SOURCES.md; no gameplay confirmation was run.
 - PokeAPI's NPC-trade levels are fixed example levels; original NPC trades
   retain the offered Pokémon's level (`engine/events/in_game_trades.asm`).
   The shared encounter row schema only supports numeric ranges, so these

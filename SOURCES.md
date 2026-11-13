@@ -338,6 +338,79 @@ https://github.com/pret/pokered/tree/130ac3fa5493fb29a8005e8439fd31b4826e46af
   needs an availability-ending condition before these rows can be hidden
   after departure. No encounter rows change on this evidence alone.
 
+### Static reachability trace (Red/Blue)
+
+Decoded the pinned `.blk` maps into 16×16-pixel movement squares using the
+4×4-tile blocksets, sampling the lower-left collision tile. A scratch Python
+BFS followed numbered warps, gate-house exits and directional ledges, kept
+objects blocking, and applied tile-pair elevation restrictions. Coordinates
+below are zero-based movement squares, not 32×32-pixel map blocks. This is
+static source tracing, not gameplay or emulator verification.
+
+- Common decoder evidence: [collision tiles](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/tilesets/collision_tile_ids.asm),
+  [tile-pair restrictions](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/tilesets/pair_collision_tile_ids.asm),
+  [ledge directions](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/tilesets/ledge_tiles.asm),
+  [grass IDs](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/tilesets/tileset_headers.asm),
+  [map dimensions](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/constants/map_constants.asm),
+  [overworld blockset](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/gfx/blocksets/overworld.bst) and
+  [cavern blockset](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/gfx/blocksets/cavern.bst).
+- **Route 12 — settled, existing encounter gates confirmed.**
+  [Map](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/maps/Route12.blk),
+  [connections](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/maps/headers/Route12.asm),
+  [objects/warps](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/maps/objects/Route12.asm#L17-L41),
+  [gate warps](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/maps/objects/Route12Gate1F.asm),
+  [Cut block swaps](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/tilesets/cut_tree_blocks.asm)
+  and adjoining `maps/Route11.blk` / `maps/Route13.blk`: BFS from Lavender,
+  Route 11 and the matching Route 13 connection squares (10,107)/(11,107)
+  reaches zero grass squares on foot without Cut, even with Snorlax removed.
+  With Cut and Snorlax removed, all three approaches reach all 32 grass
+  squares (for example (4,100)); the southern approach reaches them with
+  Cut while Route 12 Snorlax remains. Its ordinary story route from Fuchsia
+  still requires passing Route 16 Snorlax. Thus retain the Flute row gates
+  and chapter's Cut requirement. North-approach fishing already reaches
+  shores without removing Snorlax; keep fishing independent of the grass gate.
+- **Route 2 — direct approach confirmed; alternative gate remains open.**
+  [Map](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/maps/Route2.blk),
+  [objects/warps](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/maps/objects/Route2.asm#L8-L14)
+  and [gate exits](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/maps/objects/Route2Gate.asm):
+  from the cave exit (12,10), walk east to x18, south to y20, then west to
+  (15,20) and north into house warp (15,19), without Cut or Surf. Western
+  entrances from Viridian, Pewter and both forest gates cannot reach it
+  without Cut; allowing the Cut block swaps opens those approaches. Bill's
+  ticket still provides the ordinary cave route; a traded Cut user offers
+  another path once Cut is usable. Keep the existing gate until the model
+  supports OR prerequisites; do not replace it with an additional Cut gate.
+- **Seafoam basement floors — settled, existing ordinary encounters confirmed.**
+  Read `maps/SeafoamIslands{1F,B1F,B2F,B3F,B4F}.blk` and corresponding
+  [1F warps](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/maps/objects/SeafoamIslands1F.asm),
+  [B1F warps](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/maps/objects/SeafoamIslandsB1F.asm),
+  [B2F warps](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/maps/objects/SeafoamIslandsB2F.asm),
+  [B3F warps](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/maps/objects/SeafoamIslandsB3F.asm) and
+  [B4F warps](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/maps/objects/SeafoamIslandsB4F.asm)
+  with the cavern blockset. From west entrance (4,16), dry ladders link
+  1F (7,5) → B1F (7,5); B1F (13,7) → B2F (13,7);
+  B2F (5,13) → B3F (5,12); B3F (8,6) → B4F (11,7).
+  Reachable non-warp encounter-floor examples are B1F (8,5), B2F (6,3),
+  B3F (6,12), B4F (12,7). All boulder object coordinates were conservatively
+  blocked, including initially hidden objects; holes were excluded and no
+  internal Surf was allowed. From the east entrance (26,16), dry paths reach
+  B1F–B3F but not B4F; earliest west access suffices for the shared floor rows.
+  [Wild-encounter rules](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/battle/wild_encounters.asm#L25-L50)
+  allow indoor cave encounters on ordinary land;
+  [B4F's encounter table](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/wild/maps/SeafoamIslandsB4F.asm)
+  has a nonzero land rate. Dry B3F/B4F shores also permit fishing.
+  The [B3F](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/SeafoamIslandsB3F.asm)
+  and [B4F](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/SeafoamIslandsB4F.asm)
+  current scripts do not trigger along these dry witnesses. This confirms
+  ordinary floor access only; retain Articuno's separate Strength gate.
+- **Decoder sanity check:** the same BFS on
+  [Route 10's map](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/maps/Route10.blk)
+  could not reach the [Power Plant door (6,39)](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/maps/objects/Route10.asm#L11-L16)
+  from the north/center approach on foot; enabling Surf reached it, matching
+  the already cited Power Plant requirement. Fishing checks used reachable
+  land facing water/shore IDs from
+  [IsNextTileShoreOrWater](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm#L2826-L2855).
+
 ### Encounters, historical data and artwork
 
 - https://pokeapi.co/api/v2/pokemon/1/encounters and the corresponding
