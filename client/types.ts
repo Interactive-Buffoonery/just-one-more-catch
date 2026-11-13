@@ -27,6 +27,7 @@ export type Species = {
   all: Row[];
 };
 export type Mon = {
+  acquisition?: import("../shared/journal").Acquisition;
   id: number;
   n: number;
   form?: string;

@@ -1,0 +1,17 @@
+<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><div id="app"></div><script type="module">
+import { mount, update } from '/client/app.ts';
+import * as game from '/client/game.ts';
+import { summarize } from '/shared/summary.ts';
+const states = {
+  qa: JSON.stringify({ caught: [25,16], mons: [{ id: 1, n: 25, box: 'party', acquisition: {method:'gift',place:'Pallet Town',day:'2020-01-02'} }, {id:2,n:16,box:1}], monSeq:2, journalEntries: [{id:'note-1',text:'A memory\n<script> is plain text',day:'2020-01-01'}] }),
+  other: JSON.stringify({caught:[1],journalEntries:[{id:'other-note',text:'Other run only'}]}),
+};
+const b = {
+  auth: {isLoading:false,isAuthenticated:true,userId:'qa',displayName:'QA fixture'},
+  runs: Object.keys(states).map(id=>({id,version:'yellow',createdAt:'2020-01-01T00:00:00.000Z',summary:summarize(states[id])})),
+  avatar:25,theme:{look:'blossom',mode:'dark'},pairCode:null,
+  getState:async id=>states[id],saveRun:async(id,state)=>{states[id]=state},track(){},setTheme:async()=>{},setAvatar:async()=>{},listDevices:async()=>[],clearPairCode(){},mountSignIn(){return false},unmountSignIn(){},
+};
+window.qa={states,b,game,update};
+mount(document.querySelector('#app'),b);
+</script></body></html>

@@ -11,6 +11,7 @@ import { importCaughtState, validateImportId, validateImportStart } from "../sha
 import { sendContact } from "./contactSpam";
 import { verifiedVisitor } from "./verification";
 import { identityOf } from "./auth";
+import { preserveJournal, validateJournal } from "../shared/journal";
 // Each run can carry up to MAX_RUN_BYTES, so batches stay well under the 16 MiB per-call read limit
 const BATCH = 16;
 
@@ -35,6 +36,9 @@ const stateOf = (ctx: QueryCtx, run: Id<"runs">) =>
 
 async function putState(ctx: MutationCtx, run: Doc<"runs">, state: string, fields: { updatedAt?: number } = {}) {
   const old = await stateOf(ctx, run._id);
+  state = preserveJournal(state, old?.state ?? "{}");
+  validateJournal(JSON.parse(state));
+  if (runBytes(state) > MAX_RUN_BYTES) throw new Error("Playthrough is too large");
   if (old) await ctx.db.patch(old._id, { state });
   else await ctx.db.insert("states", { run: run._id, state });
   await ctx.db.patch(run._id, { ...fields, summary: summarize(state) });

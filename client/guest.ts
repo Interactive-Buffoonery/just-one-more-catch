@@ -1,6 +1,7 @@
 import { bridge, store } from "./game";
 import { Bridge, RunRow } from "./types";
 import { isAvatar } from "../shared/avatars";
+import { preserveJournal } from "../shared/journal";
 import { MAX_RUNS } from "../shared/limits";
 import { summarize } from "../shared/summary";
 import { importCaughtState, validateImportId, validateImportStart } from "../shared/save-import";
@@ -79,7 +80,7 @@ export function withGuest(b: Bridge, refresh: () => void): Bridge {
     async saveRun(id, state) {
       const updatedAt = new Date().toISOString();
       setGuestRows(
-        guestRows().map((r) => (r.id === id ? { ...r, state, updatedAt } : r)),
+        guestRows().map((r) => (r.id === id ? { ...r, state: preserveJournal(state, r.state), updatedAt } : r)),
       );
     },
     async setStart(id, startedAt) {
