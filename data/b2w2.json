@@ -444,6 +444,15 @@
       "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_7"
     },
     {
+      "place": "Nacrene City West Gate",
+      "n": 440,
+      "m": "gift-egg",
+      "needs": [],
+      "show_as": "Nacrene City East Gate",
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_20",
+      "quote": "Talk to the Pokémon Breeder in the east gate when you have space in your party to receive a Pokémon Egg."
+    },
+    {
       "place": "Unova Route 4",
       "n": 628,
       "m": "static",
