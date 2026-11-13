@@ -135,6 +135,9 @@ def rows_for(encounters, version, n):
                     continue
                 cond = sorted(GAME.get("condition_replacements", {}).get(c["name"], c["name"]) for c in d["condition_values"] if c["name"] not in DEFAULT_COND)
                 m = GAME.get("methods", {}).get(src, src)
+                for override in GAME.get("area_methods", []):
+                    if matches(loc, override["place"]) and n in override.get("species", [n]):
+                        m = override["methods"].get(src, m)
                 extra = []
                 row_place = place
                 for i, g in enumerate(GAME.get("row_needs", [])):

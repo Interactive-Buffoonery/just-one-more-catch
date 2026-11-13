@@ -200,6 +200,17 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 The initial pack is partial. Its sourced access work list is
 `docs/sm-access-audit.md`; independent review and gameplay checks remain.
 
+- **Ambush source granularity:** land ambushes are now classified by cached
+  terrain tables and no longer require the Fishing Rod. Haina's corrected
+  SOS rows still lack weather conditions. Poni Wilds' Wailmer bubbling row
+  combines fishing bubbles and water splashes under one PokeAPI method;
+  Wailord's direct row is corrected to a Lapras water splash; its fishing
+  SOS still requires the rod. Splitting Wailmer's mixed water table needs
+  source-backed encounter overrides. USUM's analogous
+  land rows remain unchanged; see `docs/sm-access-audit.md` for the list.
+- **Machamp milestone resolved:** Part 21 places registration after Aether
+  Paradise. All four Machamp-gated areas now require `sm-aether` as well as
+  the selected ride; Darkinium alone cannot open them.
 - **Missing PokeAPI conditions:** nearly every SM encounter-detail record
   has an empty condition list (Necrozma is the exception). Day/night
   availability, Island Scan weekdays, weather-dependent SOS allies, and

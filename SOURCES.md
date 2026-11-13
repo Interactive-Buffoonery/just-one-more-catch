@@ -889,3 +889,12 @@ claim that every obtainable Pokémon or condition is represented.
   metrics. Existing sourced libretro Sun/Moon box covers `su.jpg`/`mo.jpg`
   are reused (see Coming Soon box art above). No save-file reader mapping
   is enabled by registering these games.
+
+### Sun/Moon ambush terrain review
+
+The cached location pages linked in `data/sm.json`'s `area_methods` establish
+rustling grass/trees/bushes, flying shadows, dirt/sand clouds and Hano Beach's
+water splashes. PokeAPI calls these `bubbling-spots` too. Only SM opts into
+these place/species method corrections. Walkthrough Part 21 (linked above)
+places Machamp registration after Part 20's Aether rescue; every SM Machamp
+area also requires the existing Aether event.

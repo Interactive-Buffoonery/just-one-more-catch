@@ -2,7 +2,7 @@
 
 Implementation source review; independent audit pending. Pack `sm`, versions `sun`/`moon`.
 
-The cached PokeAPI preflight found 102 matching areas and 891 Sun / 890 Moon encounter-detail records. Two Sun records at Hoenn’s New Mauville (Voltorb/Electrode) are dropped, leaving 101 retained areas and 889 / 890 raw details. The generator merges these into 892 rows across versions. Every retained area resolves to a cached Bulbapedia location page. This inventory is a reviewer work list, not proof that each terrain boundary was independently traced.
+The cached PokeAPI preflight found 102 matching areas and 891 Sun / 890 Moon encounter-detail records. Two Sun records at Hoenn’s New Mauville (Voltorb/Electrode) are dropped, leaving 101 retained areas and 889 / 890 raw details. The generator merges these into 890 rows across versions. Every retained area resolves to a cached Bulbapedia location page. This inventory is a reviewer work list, not proof that each terrain boundary was independently traced.
 
 Sources and gate excerpts live in `data/sm.json` and `SOURCES.md`; unresolved terrain and cache limitations live in `OPEN_QUESTIONS.md`. Rebuild the work list with `python3 scripts/access_audit.py areas sm`.
 
@@ -34,7 +34,7 @@ Sources and gate excerpts live in `data/sm.json` and `SOURCES.md`; unresolved te
 | Lake Of The Moone | 9: Haina Desert to Route 17 (needs ['Ghostium']) | sm-sharpedo | [Lake of the Moone](https://bulbapedia.bulbagarden.net/wiki/Lake_of_the_Moone) |
 | Lake Of The Sunne | 9: Haina Desert to Route 17 (needs ['Ghostium']) | sm-sharpedo | [Lake of the Sunne](https://bulbapedia.bulbagarden.net/wiki/Lake_of_the_Sunne) |
 | Lush Jungle All Areas | 5: Route 8 and Lush Jungle (needs ['Firium']) | Grassium | [Lush Jungle](https://bulbapedia.bulbagarden.net/wiki/Lush_Jungle) |
-| Lush Jungle East Cave | 5: Route 8 and Lush Jungle (needs ['Firium']) | Grassium, machamp | [Lush Jungle](https://bulbapedia.bulbagarden.net/wiki/Lush_Jungle) |
+| Lush Jungle East Cave | 5: Route 8 and Lush Jungle (needs ['Firium']) | Grassium, machamp, sm-aether | [Lush Jungle](https://bulbapedia.bulbagarden.net/wiki/Lush_Jungle) |
 | Lush Jungle North | 5: Route 8 and Lush Jungle (needs ['Firium']) | Grassium | [Lush Jungle](https://bulbapedia.bulbagarden.net/wiki/Lush_Jungle) |
 | Lush Jungle South | 5: Route 8 and Lush Jungle (needs ['Firium']) | Grassium | [Lush Jungle](https://bulbapedia.bulbagarden.net/wiki/Lush_Jungle) |
 | Lush Jungle West | 5: Route 8 and Lush Jungle (needs ['Firium']) | Grassium | [Lush Jungle](https://bulbapedia.bulbagarden.net/wiki/Lush_Jungle) |
@@ -92,10 +92,10 @@ Sources and gate excerpts live in `data/sm.json` and `SOURCES.md`; unresolved te
 | Route 8 Fossil Restoration Center | 5: Route 8 and Lush Jungle (needs ['Firium']) | — | [Alola Route 8](https://bulbapedia.bulbagarden.net/wiki/Alola_Route_8) |
 | Route 8 Main | 5: Route 8 and Lush Jungle (needs ['Firium']) | — | [Alola Route 8](https://bulbapedia.bulbagarden.net/wiki/Alola_Route_8) |
 | Route 9 Main | 6: Diglett's Tunnel to Konikoni (needs ['Grassium']) | — | [Alola Route 9](https://bulbapedia.bulbagarden.net/wiki/Alola_Route_9) |
-| Ruins Of Abundance | 9: Haina Desert to Route 17 (needs ['Ghostium']) | Ghostium, machamp | [Ruins of Abundance](https://bulbapedia.bulbagarden.net/wiki/Ruins_of_Abundance) |
+| Ruins Of Abundance | 9: Haina Desert to Route 17 (needs ['Ghostium']) | Ghostium, machamp, sm-aether | [Ruins of Abundance](https://bulbapedia.bulbagarden.net/wiki/Ruins_of_Abundance) |
 | Ruins Of Conflict | 0: Melemele: Iki Town to Verdant Cavern (needs nothing) | — | [Ruins of Conflict](https://bulbapedia.bulbagarden.net/wiki/Ruins_of_Conflict) |
-| Ruins Of Hope | 10: Poni Island (needs ['Darkinium', 'sm-aether']) | machamp | [Ruins of Hope](https://bulbapedia.bulbagarden.net/wiki/Ruins_of_Hope) |
-| Ruins Of Life | 6: Diglett's Tunnel to Konikoni (needs ['Grassium']) | machamp | [Ruins of Life](https://bulbapedia.bulbagarden.net/wiki/Ruins_of_Life) |
+| Ruins Of Hope | 10: Poni Island (needs ['Darkinium', 'sm-aether']) | machamp, sm-aether | [Ruins of Hope](https://bulbapedia.bulbagarden.net/wiki/Ruins_of_Hope) |
+| Ruins Of Life | 6: Diglett's Tunnel to Konikoni (needs ['Grassium']) | machamp, sm-aether | [Ruins of Life](https://bulbapedia.bulbagarden.net/wiki/Ruins_of_Life) |
 | Seafolk Village Huntail Boat | 10: Poni Island (needs ['Darkinium', 'sm-aether']) | — | [Seafolk Village](https://bulbapedia.bulbagarden.net/wiki/Seafolk_Village) |
 | Seafolk Village Main | 10: Poni Island (needs ['Darkinium', 'sm-aether']) | — | [Seafolk Village](https://bulbapedia.bulbagarden.net/wiki/Seafolk_Village) |
 | Seaward Cave | 1: Route 3 and Melemele Meadow (needs ['Normalium']) | — | [Seaward Cave](https://bulbapedia.bulbagarden.net/wiki/Seaward_Cave) |
@@ -126,11 +126,11 @@ Sources and gate excerpts live in `data/sm.json` and `SOURCES.md`; unresolved te
 - Sprites/shiny/forms visually, regional/national dex limits and boxes, Moon device/manual clock display.
 - Generated `/sun-moon/` title, covers, canonical, chapter content and links; account sync separately.
 
-No save-file reader mapping, PR, push, deployment or release is part of this handoff.
+No save-file reader mapping, deployment or release is part of this review correction.
 
 ## Validation receipt
 
-- `python3 scripts/build_data.py sm`: 802 species, 892 merged encounter rows.
+- `python3 scripts/build_data.py sm`: 802 species, 890 merged encounter rows (two duplicate Haina SOS rows merge after terrain correction).
 - Regional dex: 302 entries; 254 species have direct cached encounters.
 - 101 retained raw areas normalize to 100 distinct row place names and 71
   chapter place groups; 15 chapters, 17 events, 69 catalogued forms.
@@ -141,5 +141,66 @@ No save-file reader mapping, PR, push, deployment or release is part of this han
   15 chapters, 71 chapter places). Existing large Clerk chunk warnings remain.
 - `pnpm test:convex`: 8 test files, 88 tests passed.
 - `pnpm exec tsc --noEmit -p convex/tsconfig.json`: passed.
-- `git diff --check`: passed. No generator behaviour was changed; no
-  pre-existing generated encounter pack changed.
+- `git diff --check`: passed. The initial pack did not change generator
+  behaviour; the review corrections below add opt-in area method overrides.
+
+## PR #104 review corrections
+
+Cached SM location tables confirm 32 land ambush rows: Route 2 and Poni Plains
+Center rustling grass; Route 3/Poni Plains North flying shadows; Verdant Cavern,
+Routes 5/7, Diglett's Tunnel, Vast Poni Canyon Inside and Poni Coast dirt clouds;
+Haina Desert sand clouds; Route 10, Lush Jungle West and Poni Plains West
+rustling trees; Scyther/Cottonee/Petilil in Poni Plains Center rustling bushes.
+`data/sm.json` records each location source and its literal encounter-table quote.
+Place/species overrides run before row gates; new terrain method labels have no
+kit requirement. Haina Castform/Gabite use plain SOS, retaining the cache's
+weather-condition limitation. Real fishing bubbles and their SOS retain the rod.
+Hano Beach Tentacool and the direct Poni Wilds Wailord row are water-splash
+ambushes and require Lapras instead. Wailord fishing SOS keeps its rod gate.
+
+Walkthrough Part 21 registers Machamp on Ancient Poni Path after the Part 20
+Aether rescue. Every Machamp area now also requires the existing `sm-aether`
+event. The preceding Darkinium rule remains a redundant milestone; it cannot
+open a Machamp area before Aether. No new story event or shared HM behavior is
+needed. Regression scenarios exercise all terrain labels, Route 2 without rod
+or Waterium, real bubbles with rod/Waterium, Haina SOS, Hano Lapras and all
+Machamp rows before/after Aether.
+
+### USUM follow-up candidates (unchanged)
+
+These existing USUM rows still use fishing-bubble methods for land ambushes.
+The owner can decide a separate correction; this PR changes no USUM data.
+
+| Place | Rows |
+| --- | --- |
+| Diglett's Tunnel | Diglett |
+| Dividing Peak Tunnel | Kecleon |
+| Haina Desert | Baltoy (SOS), Castform (SOS), Dugtrio, Gabite (SOS), Golett (SOS), Krokorok, Trapinch |
+| Lush Jungle South | Oranguru, Passimian, Steenee, Trumbeak (SOS) |
+| Lush Jungle West | Oranguru, Passimian, Steenee, Trumbeak (SOS) |
+| Poni Coast | Dugtrio |
+| Poni Plains Center | Blissey (SOS), Chansey, Cottonee, Gumshoos, Petilil, Pyroar, Raticate, Scyther |
+| Poni Plains North | Braviary, Fearow, Mandibuzz |
+| Poni Plains West | Aipom, Ambipom (SOS), Emolga, Primeape |
+| Route 10 | Fearow, Pineco, Skarmory |
+| Route 2 North | Drowzee, Dunsparce, Ekans, Makuhita |
+| Route 2 South | Drowzee, Dunsparce, Ekans, Makuhita |
+| Route 3 North | Rufflet, Spearow, Vullaby |
+| Route 5 | Diglett |
+| Route 7 | Diglett, Gyarados (SOS), Magikarp, Starmie (SOS), Staryu, Wishiwashi |
+| Vast Poni Canyon Inside | Dugtrio |
+| Verdant Cavern Trial Site | Rattata, Yungoos |
+
+### Review-fix validation
+
+- `python3 scripts/build_data.py sm`: passed; 802 species, 890 rows.
+- `node scripts/check_sm.mjs`: passed, including the new terrain/ride cases.
+- `pnpm check`: passed.
+- `pnpm build`: passed; existing Clerk chunk-size/directive warnings remain.
+- `pnpm test:convex`: 8 files, 88 tests passed.
+- Isolated regeneration of all nine packs against the combined local PokeAPI
+  caches: SM matches its new output; Crystal, Emerald, FRLG, GS, HGSS, RB,
+  USUM and Yellow each match their existing generated files byte-for-byte.
+  The first comparison lacked Emerald's cache; combining existing local
+  caches resolved it without fetching or altering any encounter data.
+- `git diff --check`: passed. Browser/gameplay checks remain unrun.
