@@ -71,6 +71,7 @@ export type Bridge = {
   signOut(): void;
   saveLinks(version: string): Promise<({ id: string } & SaveLink)[]>;
   refreshRun(id: string, caught: number[], link?: SaveLink, startedAt?: number): Promise<{ added: number[] }>;
+  undoRefresh(id: string, added: number[], startedAt?: number, link?: SaveLink): Promise<unknown>;
   createRun(version: string, link?: SaveLink): Promise<string>;
   importRun(version: string, caught: number[], importId: string, startedAt?: number, link?: SaveLink): Promise<string>;
   saveRun(id: string, state: string): Promise<unknown>;

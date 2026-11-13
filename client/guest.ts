@@ -3,7 +3,7 @@ import { Bridge, RunRow } from "./types";
 import { isAvatar } from "../shared/avatars";
 import { MAX_RUNS } from "../shared/limits";
 import { summarize } from "../shared/summary";
-import { importCaughtState, validateImportId, validateImportStart, validateSaveLink, mergeSaveLink, mergeCaughtState, type SaveLink } from "../shared/save-import";
+import { importCaughtState, validateImportId, validateImportStart, validateSaveLink, mergeSaveLink, mergeCaughtState, sameSaveLink, unmergeCaughtState, type SaveLink } from "../shared/save-import";
 
 /* ---- Guest runs live in this browser until sign-in ---- */
 type GuestRow = Omit<RunRow, "summary"> & { state: string; saveLink?: SaveLink; movedTo?: string; importStartedAt?: number };
@@ -62,7 +62,7 @@ export function withGuest(b: Bridge, refresh: () => void): Bridge {
       const id = "local-import-" + importId;
       const existing = rows.find((row) => row.id === id);
       if (existing) {
-        if (JSON.stringify(existing.saveLink) !== JSON.stringify(link) || existing.version !== version || existing.state !== state ||
+        if (!sameSaveLink(existing.saveLink, link) || existing.version !== version || existing.state !== state ||
             existing.importStartedAt !== startedAt)
           throw new Error("Import ID already used for another playthrough");
         return id;
@@ -97,6 +97,21 @@ export function withGuest(b: Bridge, refresh: () => void): Bridge {
       guestMem = next;
       refresh();
       return { added: result.added };
+    },
+    async undoRefresh(id, added, startedAt, link) {
+      const rows = guestRows();
+      const row = rows.find((r) => r.id === id);
+      if (!row || row.movedTo) throw new Error("This playthrough moved");
+      validateImportStart(startedAt);
+      if (link) validateSaveLink(link);
+      const state = unmergeCaughtState(row.state, added);
+      const next = JSON.stringify(rows.map((r) => r.id === id ? {
+        ...r, state, saveLink: link, updatedAt: new Date().toISOString(),
+        ...(startedAt !== undefined ? { createdAt: new Date(startedAt).toISOString() } : {}),
+      } : r));
+      localStorage.setItem(GUEST, next);
+      guestMem = next;
+      refresh();
     },
     async saveRun(id, state) {
       const updatedAt = new Date().toISOString();
@@ -139,6 +154,12 @@ export function moveGuestAvatar(raw: Bridge) {
 export let moving = false;
 let lastLeft = 0;
 const plural = (n: number) => `${n} playthrough${n === 1 ? "" : "s"}`;
+const validLink = (link?: SaveLink) => {
+  try {
+    if (link) validateSaveLink(link);
+    return link;
+  } catch {}
+};
 export async function moveGuestRuns(
   raw: Bridge,
   flash: (msg: string) => void,
@@ -151,7 +172,7 @@ export async function moveGuestRuns(
   try {
     for (const g of guestRows()) {
       if (!g.movedTo && have >= MAX_RUNS) break;
-      const id = g.movedTo || (await raw.createRun(g.version, g.saveLink));
+      const id = g.movedTo || (await raw.createRun(g.version, validLink(g.saveLink)));
       if (!g.movedTo) have++;
       setGuestRows(
         guestRows().map((r) => (r.id === g.id ? { ...r, movedTo: id } : r)),

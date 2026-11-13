@@ -36,3 +36,24 @@ it("refreshes owned runs atomically with additive state and link history", async
   const imported = await a.mutation(api.runs.importCaught, { version: "blue", caught: [], importId: "d60f37e5-bef7-4e53-8726-1c964120c460", link });
   expect(await a.query(api.runs.saveLinks, { version: "blue" })).toEqual([{ id: imported, ...link }]);
 });
+it("undoes a refresh atomically, restoring start date and link", async () => {
+  const t = convexTest(schema, modules);
+  const a = t.withIdentity({ sid: "sess_a", subject: "a", tokenIdentifier: "issuer|a" });
+  const b = t.withIdentity({ sid: "sess_b", subject: "b", tokenIdentifier: "issuer|b" });
+  const id = await a.mutation(api.runs.create, { version: "red" });
+  await a.mutation(api.runs.save, { id, state: '{"caught":[1],"notes":"keep"}' });
+  await a.mutation(api.runs.setStart, { id, startedAt: 5000 });
+  const { added } = await a.mutation(api.runs.refreshCaught, { id, caught: [1, 25], link, startedAt: 1000 });
+  await expect(b.mutation(api.runs.undoRefresh, { id, added })).rejects.toThrow();
+  await expect(a.mutation(api.runs.undoRefresh, { id, added, link: { ...link, salt: "" } })).rejects.toThrow();
+  await a.mutation(api.runs.undoRefresh, { id, added, startedAt: 5000 });
+  expect(JSON.parse(await a.query(api.runs.get, { id }))).toEqual({ caught: [1], notes: "keep" });
+  expect(await a.query(api.runs.saveLinks, { version: "red" })).toEqual([]);
+  expect((await a.query(api.runs.list, {}))[0]).toMatchObject({ summary: { caught: 1 }, createdAt: new Date(5000).toISOString() });
+  await a.mutation(api.runs.refreshCaught, { id, caught: [4], link });
+  await a.mutation(api.runs.refreshCaught, { id, caught: [7], link: { ...link, playSeconds: 300 } });
+  await a.mutation(api.runs.undoRefresh, { id, added: [7], link });
+  expect(await a.query(api.runs.saveLinks, { version: "red" })).toEqual([{ id, ...link }]);
+  await a.mutation(api.runs.remove, { id });
+  await expect(a.mutation(api.runs.refreshCaught, { id, caught: [9] })).rejects.toThrow("This playthrough moved");
+});
