@@ -417,12 +417,7 @@ its successful generation/check/build as verified game access.
   `Sinnoh_Route_205` (Before the Eterna Forest) and walkthrough Part 5
   (Route 205 Southwest). The walkthrough lists grass and fishing together
   but does not establish grass access before the bridge opens.
-- **PokeAPI gap:** species 487 (Giratina), including its alternate variety,
-  has no Diamond/Pearl encounter detail, so it has zero rows. PKHeX agrees
-  with the sourced static: Level 70, Turnback Cave
-  (`Encounters4DPPt.cs` L57, pinned in SOURCES.md). A hand-added row needs
-  a data feature: `extra_encounters` outside an ORAS-style fallback only
-  accepts daily-outbreak rows. PokeAPI also supplies no Pal Park transfer
+- **Transfer/event exclusions:** PokeAPI supplies no Pal Park transfer
   encounters; those are not ordinary local catches. The 161 raw areas become
   158 after the three never-released native event areas are excluded
   (Newmoon Island, Flower Paradise and Hall of Origin).
