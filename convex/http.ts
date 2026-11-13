@@ -5,7 +5,9 @@ import { internal } from "./_generated/api";
 import { validateProjection } from "../shared/share-projection";
 
 const http = httpRouter();
-const origins = new Set(["https://justonemorecatch.app", "http://localhost:5173"]);
+// Vite moves to the next free port when 5173 is taken, so any local port is allowed
+const allowedOrigin = (origin: string) =>
+  origin === "https://justonemorecatch.app" || /^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin);
 
 function shareHeaders(request: Request) {
   const headers = new Headers({
@@ -16,7 +18,7 @@ function shareHeaders(request: Request) {
     "Vary": "Origin",
   });
   const origin = request.headers.get("Origin");
-  if (origin && origins.has(origin)) headers.set("Access-Control-Allow-Origin", origin);
+  if (origin && allowedOrigin(origin)) headers.set("Access-Control-Allow-Origin", origin);
   return headers;
 }
 

@@ -120,7 +120,7 @@ test("app deletion marks the account and drains shares in run batches", async ()
 test("the reader returns exactly projection keys with privacy headers and tight CORS", async () => {
   const { t, owner, input } = await fixture();
   const shared = await owner.action(api.shares.publish, input);
-  for (const origin of ["https://justonemorecatch.app", "http://localhost:5173", "https://attacker.example"]) {
+  for (const origin of ["https://justonemorecatch.app", "http://localhost:5173", "http://127.0.0.1:5174", "https://attacker.example", "http://localhost.attacker.example:5173"]) {
     const response = await t.fetch("/share", { headers: { "X-Share-Token": shared.token!, Origin: origin } });
     expect(response.status).toBe(200);
     expect(Object.keys(await response.json()).sort()).toEqual(["badges", "caught", "game", "v"]);
