@@ -23,8 +23,8 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## FireRed and LeafGreen
 
-- Route 23: do the badge checkpoints block any encounters?
-- S.S. Anne: what can you catch before it leaves?
+- Route 23: badge-check scripts explicitly check Cascade through Earth ([primary source](https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/maps/Route23/scripts.inc#L14-L123)). Trace encounter terrain against checkpoint coordinates before assigning fishing, Surf and grass gates.
+- S.S. Anne: the exterior has Surf and fishing encounters ([FireRed table](https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/src/data/wild_encounters.json#L838-L925)); trace fishable shore tiles and departure access before deciding which encounters remain reachable.
 
 ## Ultra Sun and Ultra Moon
 

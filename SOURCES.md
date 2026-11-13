@@ -48,6 +48,8 @@ from PokeAPI and needs no source.
 - https://bulbapedia.bulbagarden.net/wiki/Appendix:FireRed_and_LeafGreen_walkthrough
 - https://strategywiki.org/wiki/Pok%C3%A9mon_FireRed_and_LeafGreen
 - No guide PDF yet.
+- https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/maps/Route23/scripts.inc#L14-L123 — Cascade through Earth guards select badge numbers 2–8; terrain reachability remains unverified.
+- https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/src/data/wild_encounters.json#L838-L925 — `MAP_SSANNE_EXTERIOR` FireRed table contains `water_mons` and `fishing_mons`; this establishes encounter methods, not accessible shore tiles or departure timing.
 
 ## Ultra Sun and Ultra Moon
 
