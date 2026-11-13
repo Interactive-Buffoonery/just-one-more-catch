@@ -1,13 +1,9 @@
-/// <reference types="vite/client" />
-import { convexTest } from "convex-test";
-import rateLimiter from "@convex-dev/rate-limiter/test";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { api, internal } from "./_generated/api";
-import schema from "./schema";
+import { setup } from "./setup.testing";
 import { CODE_ALPHABET, PAIRING_MS } from "./pairing";
 import { REVOKED_MS } from "./devices";
 
-const modules = import.meta.glob("./**/*.ts");
 const player = {
   subject: "user_phone",
   tokenIdentifier: "issuer|user_phone",
@@ -19,11 +15,6 @@ const stranger = {
   sid: "sess_stranger",
 };
 
-const setup = () => {
-  const t = convexTest(schema, modules);
-  rateLimiter.register(t);
-  return t;
-};
 
 type Call = { url: string; method: string; body?: unknown };
 let calls: Call[];

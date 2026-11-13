@@ -61,7 +61,9 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
       await m.link(()=>{}); await m.evaluate(); return m;
     }
   });
-  await main.link(name=>makeModule(name,name==='convex/browser'?{ConvexClient}:name.endsWith('/api')?{api:{runs:{}}}:name==='./app'?{mount:(el,b)=>bridges.push(b),update:b=>bridges.push(b)}:{}));
+  const asyncModule = new SourceTextModule(stripTypeScriptTypes(readFileSync('client/async.ts', 'utf8')), {context});
+  await asyncModule.link(()=>{}); await asyncModule.evaluate();
+  await main.link(name=>name==='./async'?asyncModule:makeModule(name,name==='convex/browser'?{ConvexClient}:name.endsWith('/api')?{api:{runs:{}}}:name==='./app'?{mount:(el,b)=>bridges.push(b),update:b=>bridges.push(b)}:{}));
   await main.evaluate();
   await new Promise(setImmediate);
   if (pathname === '/contact/') {

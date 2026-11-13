@@ -1,16 +1,7 @@
-/// <reference types="vite/client" />
-import { convexTest } from "convex-test";
-import rateLimiter from "@convex-dev/rate-limiter/test";
 import { afterEach, expect, test, vi } from "vitest";
 import { api } from "./_generated/api";
-import schema from "./schema";
+import { setup } from "./setup.testing";
 
-const modules = import.meta.glob("./**/*.ts");
-const setup = () => {
-  const t = convexTest(schema, modules);
-  rateLimiter.register(t);
-  return t;
-};
 afterEach(() => { vi.useRealTimers(); vi.restoreAllMocks(); });
 
 test("honeypot and invalid submissions never store or schedule mail", async () => {

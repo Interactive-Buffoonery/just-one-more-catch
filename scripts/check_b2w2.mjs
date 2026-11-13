@@ -1,9 +1,10 @@
+import { loadGeneratedPack } from './check-utils.mjs';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { stripTypeScriptTypes } from 'node:module';
 import { runInNewContext } from 'node:vm';
 
-const data = JSON.parse(readFileSync('client/data/b2w2.ts', 'utf8').split('export default ')[1].replace(/;\s*$/, ''));
+const data = loadGeneratedPack('b2w2');
 const byN = Object.fromEntries(data.dex.map(p => [p.n, p]));
 assert.equal(byN[494].j, 0);
 assert.equal(data.dex.filter(p => p.j != null).length, 301);

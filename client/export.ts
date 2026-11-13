@@ -1,16 +1,10 @@
+import { withTimeout } from "./async";
 import { bridge, dumpRun, loaded, R, run, startDay, verOf } from "./game";
 import { Pack } from "./packs";
 import { RunRow, Species } from "./types";
 import { csv } from "../shared/csv";
 
 const tick = (ms: number) => new Promise((r) => setTimeout(r, ms));
-const within = <T>(p: Promise<T>, ms: number) =>
-  Promise.race([
-    p,
-    tick(ms).then(() => {
-      throw new Error("Timed out");
-    }),
-  ]);
 // ponytail: all-or-nothing, so a run deleted mid-export fails the whole export; just try again
 export async function fetchStates(
   rows: RunRow[],
@@ -21,8 +15,8 @@ export async function fetchStates(
     open = run && dumpRun(R()),
     out: string[] = [];
   const one = (id: string) =>
-    within(get(id), 20000).catch(() =>
-      tick(500).then(() => within(get(id), 20000)),
+    withTimeout(get(id), 20000, "Timed out").catch(() =>
+      tick(500).then(() => withTimeout(get(id), 20000, "Timed out")),
     );
   let next = 0,
     done = 0,
