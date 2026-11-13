@@ -412,6 +412,16 @@ async function onClick(e: MouseEvent) {
     e.preventDefault();
   }
   const d = t.dataset;
+  if (d.dexsize && ["compact", "tiles", "large", "list"].includes(d.dexsize)) {
+    const key = el.querySelector<HTMLElement>(".dt:focus")?.dataset.k;
+    ui.dexSize = d.dexsize;
+    store.set("jomc.dexSize", ui.dexSize);
+    render();
+    const tile = key ? el.querySelector<HTMLElement>(`[data-k="${key}"]`) : null;
+    tile?.focus();
+    tile?.scrollIntoView({block:"nearest"});
+    return;
+  }
   if (d.clearsearch) {
     ui.q = "";
     render();
@@ -892,6 +902,8 @@ export function mount(el: HTMLElement, b: Bridge) {
   // A page restored from the back/forward cache starts a fresh import; file bytes never persist.
   addEventListener("pagehide", closeImport);
   addEventListener("pageshow", (e) => { if (e.persisted) render(); });
+  const dexSize = store.get("jomc.dexSize");
+  ui.dexSize = ["compact", "tiles", "large", "list"].includes(dexSize || "") ? dexSize : matchMedia("(max-height:480px)").matches ? "compact" : "tiles";
   ui.boxLayout = store.get("jomc.boxLayout") === "grid" ? "grid" : "list";
   ui.look = PALETTE[store.get("jomc.look") || ""]
     ? store.get("jomc.look")

@@ -845,3 +845,24 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
 .app .search input{padding-right:36px}
 .dt .no{display:flex;flex-wrap:wrap;justify-content:center;gap:3px}
 .dt .no i{flex-basis:100%}
+.dexsizes{display:flex;gap:2px;align-items:center}
+.app .dexsizes button{width:36px;min-height:44px;padding:8px;border:0;border-radius:9px;background:var(--surface);color:var(--soft)}
+.dexsizes svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2}
+.app .dexsizes [aria-pressed=true]{background:var(--teal-soft);color:var(--teal)}
+.dgrid.compact{grid-template-columns:repeat(auto-fill,minmax(56px,1fr))}
+.app .compact .dt{min-height:60px;padding:4px}
+.compact .nm,.compact .no{display:none}
+.compact .dexmarker{width:12px;height:12px;font-size:9px;right:2px;top:2px}
+.dgrid.large{grid-template-columns:repeat(2,minmax(0,1fr))}
+.large .dt .mon{width:100px;height:100px}
+.large .dt .nm{font-size:16px}
+.large .dexmarker{width:20px;height:20px;font-size:14px}
+.dgrid.list{grid-template-columns:1fr}
+.app .list .dt{grid-template-columns:56px 1fr;justify-items:start;text-align:left;padding:10px;gap:4px 10px;min-height:80px}
+.list .dt .mon{grid-row:1/6;align-self:center}
+.list .dt .no{justify-content:start}
+.dextypes{display:flex;gap:3px;flex-wrap:wrap}
+.dexstatus,.dexplace{font-size:12px;color:var(--soft)}
+@media(min-width:560px){.dgrid.list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:640px){.dgrid.large{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:959px){.dextools .search{flex-basis:calc(100% - 160px)}}
