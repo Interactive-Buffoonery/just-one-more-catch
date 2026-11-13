@@ -368,6 +368,7 @@ export const ui: any = {
   boxLayout: "list",
   filter: "now",
   q: "",
+  dexSize: "tiles",
   bulk: false,
   undo: null,
   sheet: null,

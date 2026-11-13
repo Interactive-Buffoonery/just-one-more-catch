@@ -81,7 +81,7 @@ const tile = (p: Species, s: string) => {
 };
 const section = (title: string, list: { p: Species; s: string }[]) =>
   list.length
-    ? `<section class="dexsec">${title ? `<div class="sec-h"><h2 class="lg">${title}<small>${list.length}</small></h2></div>` : ""}<div class="dgrid ${ui.dexSize || "tiles"}${ui.bulk ? " bulk" : ""}">${list.map((x) => tile(x.p, x.s)).join("")}</div></section>`
+    ? `<section class="dexsec">${title ? `<div class="sec-h"><h2 class="lg">${title}<small>${list.length}</small></h2></div>` : ""}<div class="dgrid ${ui.dexSize}${ui.bulk ? " bulk" : ""}">${list.map((x) => tile(x.p, x.s)).join("")}</div></section>`
     : "";
 export function searchDex<T extends { p: Species }>(
   list: T[], query: string, number: (p: Species) => number,
