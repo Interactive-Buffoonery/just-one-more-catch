@@ -79,3 +79,20 @@ test("GB identities retain paired choices and exclude unsupported Green", async 
     expect(caughtForPack(s, version, data).caught).toEqual([]);
   }
 });
+
+test.each([["B", "black"], ["W", "white"]] as const)("%s imports only its original Unova title", async (identity, version) => {
+  const data = await VERSIONS[version].pack.load();
+  const s = snapshot([identity]);
+  expect(importVersions(s)).toEqual([version]);
+  s.pokedex.caughtSpecies = [649, 495, 25, 495, 650];
+  expect(caughtForPack(s, version, data)).toEqual({ caught: [25, 495, 649], skipped: 1, partial: false });
+  s.pokedex.caughtSpecies = [];
+  expect(caughtForPack(s, version, data).caught).toEqual([]);
+  for (const other of ["B2", "W2", "BW", "B2W2", identity === "B" ? "W" : "B"]) {
+    expect(() => caughtForPack(snapshot([other]), version, data)).toThrow();
+  }
+});
+
+test("sequel identities never map to original Unova games", () => {
+  expect(importVersions(snapshot(["B2", "W2", "BW", "B2W2"]))).toEqual([]);
+});

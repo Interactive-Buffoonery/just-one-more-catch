@@ -25,6 +25,7 @@ Website game support is an explicit adapter in `client/save-import.ts`:
 | FR / LG | FireRed / LeafGreen, with a GBA or Switch choice |
 | E | Emerald |
 | HG / SS | HeartGold / SoulSilver |
+| B / W | Black / White (individual stored title; excludes B2 / W2) |
 | US / UM | Ultra Sun / Ultra Moon |
 
 The parser can read more games than the website offers. A readable unsupported
@@ -54,7 +55,7 @@ supports HeartGold/SoulSilver and Sun/Moon/Ultra Sun/Ultra Moon; only the websit
 supported packs can be imported. The source fields are PKHeX's `SecondsToStart`
 with its `DateUtil.GetDateTime2000` conversion. The reader checks each format's
 console calendar bounds and omits uninitialized zero values. Red/Blue/Yellow, Gold/Silver/Crystal and
-FireRed/LeafGreen and Emerald provide no recorded date through this reader. Missing, invalid
+FireRed/LeafGreen, Emerald and Black/White provide no recorded date through this reader. Missing, invalid
 or future dates use import day; the preview never invents a recorded date.
 
 The website converts the selected calendar day to local midnight, matching the
@@ -173,6 +174,36 @@ A disposable emulator profile using a user-supplied ROM and 64 KiB flash setting
 is another possible reproduction, but has not been verified here. Do not change
 a player's active profile or truncate their only save. No personal Emerald
 save, live account import or mobile Safari check was performed.
+
+## Black/White verification
+
+Black/White uses unchanged reader 0.1.2 and the pack's 649-species National Dex
+limit, already present in `IMPORT_SPECIES_LIMITS` on the pack branch. Eight
+serialized synthetic 512 KiB fixtures cover caught and empty saves for Black,
+White, Black 2 and White 2. Native Core, independent raw-bit reads and the
+published WASM worker agree on each individual identity, complete National Dex
+coverage and 19 caught species retained after removal from storage. Three
+seen-only species exercise separate gender/shiny regions and stay uncaught.
+The website maps only `B` and `W`; every sequel fixture remains unsupported.
+Both original titles import and reload exact caught state, preserving existing
+runs and input bytes. Zero-filled and truncated files create nothing.
+
+PKHeX Gen V does expose an adventure-start field: `SAV5.SecondsToStart`
+forwards to the 64-bit `AdventureInfo5.SecondsToStart` at adventure block +
+`0x34` (the generic property narrows it to 32 bits). Reader 0.1.2 does not
+allowlist Gen V. Both populated and zero fields omit `startDate` through the
+published worker, so imports use import day. The Gen V epoch, calendar bounds,
+invalid values, leap days and exported recorded-date behavior remain unverified
+for date import; no new date allowlist or reader release is introduced.
+
+Reproduce with [the B/W fixture README](../scripts/bw-save-fixtures/README.md).
+The guest browser matrix covers file selection/drop, both titles, empty dex at
+390px, preview counts, import-day fallback, creation/reload, cancellation,
+storage failure/retry, duplicate confirmation, navigation and preparation
+failure/retry/cancellation. Existing automated tests cover limits and account
+changes. These are structural fixtures, not cartridge exports or evidence of a
+legitimate in-game zero-caught save. Permitted real saves, a legitimate in-game
+zero-caught save, live signed-in imports and mobile Safari remain unverified.
 
 ## Adding a ROM hack
 
