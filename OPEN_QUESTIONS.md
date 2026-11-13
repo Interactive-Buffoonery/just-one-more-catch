@@ -23,8 +23,7 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## FireRed and LeafGreen
 
-- Route 23: badge-check scripts explicitly check Cascade through Earth ([primary source](https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/maps/Route23/scripts.inc#L14-L123)). Trace encounter terrain against checkpoint coordinates before assigning fishing, Surf and grass gates.
-- S.S. Anne: the exterior has Surf and fishing encounters ([FireRed table](https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/src/data/wild_encounters.json#L838-L925)); trace fishable shore tiles and departure access before deciding which encounters remain reachable.
+- S.S. Anne timing: the static trace proves six fishable pier edges without Surf and reachable water with Surf in both versions. Confirm progression that preserves dock access until each rod/Surf is obtained. The [captain triggers departure](https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/maps/SSAnne_CaptainsOffice/scripts.inc#L4-L23); the [dock guard then redirects access](https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/maps/VermilionCity/scripts.inc#L190-L217). Rows remain unchanged; before-departure availability is not modeled.
 
 ## Ultra Sun and Ultra Moon
 
