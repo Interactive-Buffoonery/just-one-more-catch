@@ -16,7 +16,7 @@ from urllib.parse import unquote
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 POKEAPI = os.path.join(ROOT, ".cache", "pokeapi")
 WIKI = os.path.join(ROOT, ".cache", "bulbapedia")
-PACKS = ["crystal", "hgss", "frlg", "usum"]
+PACKS = ["crystal", "hgss", "frlg", "usum", "oras"]
 
 
 def nice(slug):
@@ -33,6 +33,7 @@ def as_list(v):
 def areas(pack):
     game = json.load(open(os.path.join(ROOT, "data", pack + ".json")))
     out = {}
+    covered = set()
     for n in range(1, game["species"] + 1):
         sp = json.load(open(os.path.join(POKEAPI, f"pokemon_species_{n}.json")))
         name = next(x["name"] for x in sp["names"] if x["language"]["name"] == "en")
@@ -46,6 +47,14 @@ def areas(pack):
                     continue
                 for d in v["encounter_details"]:
                     out.setdefault(loc, set()).add((n, name, d["method"]["name"]))
+                    covered.add((v["version"]["name"], loc, d["method"]["name"]))
+    if pack == "oras":
+        from bulbapedia_encounters import gap_fill
+        supplement = json.load(open(os.path.join(ROOT, game["bulbapedia_gap_fill"])))
+        for r in gap_fill(supplement, covered) + game.get("extra_encounters", []):
+            sp = json.load(open(os.path.join(POKEAPI, f"pokemon_species_{r['n']}.json")))
+            name = next(x["name"] for x in sp["names"] if x["language"]["name"] == "en")
+            out.setdefault(r["area"], set()).add((r["n"], name, r["method"]))
     return game, out
 
 
@@ -60,7 +69,13 @@ def candidates(area, pack):
     route = re.match(r"(?:Sea )?Route (\d+)", a)
     if route:
         n = int(route.group(1))
-        return [f"{'Alola' if pack == 'usum' else 'Johto' if 29 <= n <= 48 else 'Kanto'} Route {n}"]
+        return [f"{'Hoenn' if pack == 'oras' else 'Alola' if pack == 'usum' else 'Johto' if 29 <= n <= 48 else 'Kanto'} Route {n}"]
+    if a.startswith("Hoenn Safari Zone") or (pack == "oras" and a.startswith("Safari Zone")):
+        return ["Hoenn Safari Zone"]
+    if pack == "oras" and a.startswith("Hoenn Route "):
+        return ["Hoenn Route " + re.search(r"\d+", a)[0]]
+    if pack == "oras" and a.startswith("Hoenn Victory Road"):
+        return ["Victory Road (Hoenn)"]
     if a.startswith("Safari Zone"):
         return ["Johto Safari Zone" if pack == "hgss" else "Kanto Safari Zone"]
     if a.endswith(" Chamber"):
@@ -81,6 +96,8 @@ SPECIFIC = {"Pokémon Mansion": "Pokémon Mansion (Kanto)", "Underground Path": 
 
 
 def page_for(area, pack, resolved):
+    if pack == "oras" and ("Victory Road" in area):
+        return "Victory Road (Hoenn)"
     for t in candidates(area, pack):
         if resolved.get(t):
             return SPECIFIC.get(resolved[t], resolved[t])

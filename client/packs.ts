@@ -236,6 +236,33 @@ const FRLG: Pack = {
   boxes: [14, 30],
 };
 
+const ORAS: Pack = {
+  load: () => import("./data/oras").then((m) => m.default),
+  art: "oras",
+  region: "Hoenn",
+  regional: 211,
+  national: 721,
+  start: "Route 101",
+  starters: [252, 255, 258],
+  badges: [
+    ["Stone", "Roxanne"], ["Knuckle", "Brawly"], ["Dynamo", "Wattson"],
+    ["Heat", "Flannery"], ["Balance", "Norman"], ["Feather", "Winona"],
+    ["Mind", "Tate & Liza"], ["Rain", "Wallace"],
+  ],
+  kit: [
+    ["old-rod", "Old Rod"], ["good-rod", "Good Rod"], ["super-rod", "Super Rod"],
+    ["cut-hm", "Cut"], ["rock-smash", "Rock Smash"], ["strength", "Strength"],
+    ["surf", "Surf"], ["dive", "Dive"], ["waterfall", "Waterfall"],
+    ["mach-bike", "Mach Bike"], ["acro-bike", "Acro Bike"],
+  ],
+  hm: {
+    "cut-hm": "Stone", "rock-smash": "Dynamo", strength: "Heat",
+    surf: "Balance", dive: "Mind", waterfall: "Rain",
+  },
+  nightFrom: 21,
+  boxes: [31, 30],
+};
+
 const EMERALD: Pack = {
   load: () => import("./data/emerald").then((m) => m.default),
   art: "emerald",
@@ -301,6 +328,14 @@ const USUM: Pack = {
 };
 
 export const VERSIONS: Record<VersionId, Version> = {
+  "omega-ruby": {
+    name: "Omega Ruby", short: "OR", code: "o", gen: "Gen 6",
+    pack: ORAS, other: "Alpha Sapphire", ring: ["ground", "fire"],
+  },
+  "alpha-sapphire": {
+    name: "Alpha Sapphire", short: "AS", code: "a", gen: "Gen 6",
+    pack: ORAS, other: "Omega Ruby", ring: ["water", "dragon"],
+  },
   emerald: {
     name: "Emerald", short: "E", code: "e", gen: "Gen 3",
     pack: EMERALD, ring: ["grass", "dragon"],
@@ -436,10 +471,7 @@ export const CONSOLES: { name: string; tag: string; titles: (VersionId | Soon)[]
       { name: "X", short: "X", color: "#3b6fd1", region: "Kalos" },
       { name: "Y", short: "YY", color: "#c8323c", region: "Kalos" },
     ],
-    [
-      { name: "Omega Ruby", short: "OR", color: "#c8323c", region: "Hoenn" },
-      { name: "Alpha Sapphire", short: "AS", color: "#2f5fb3", region: "Hoenn" },
-    ],
+    ["omega-ruby", "alpha-sapphire"],
     [
       { name: "Sun", short: "SU", color: "#e8892a", region: "Alola" },
       { name: "Moon", short: "MO", color: "#6a4fc9", region: "Alola" },

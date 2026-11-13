@@ -6,6 +6,8 @@ import { needLabel } from "../client/need-labels.ts";
 import { readFileSync, writeFileSync, mkdirSync, accessSync, readdirSync } from "node:fs";
 const METHOD: Record<string, [string, string | null]> = {
   walk: ["Walking", null],
+  horde: ["Horde encounter", null],
+  flocks: ["Soaring flock", null],
   seaweed: ["Underwater", "dive"],
   "feebas-tile-fishing": ["Feebas fishing tiles", "old-rod"],
   "devon-scope": ["Devon Scope", null],
@@ -37,6 +39,7 @@ import { VERSIONS } from "../client/packs.ts";
 const esc = (s: unknown) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
 const games = [
   ["emerald", "emerald", "Hoenn"],
+  ["omega-ruby-alpha-sapphire", "oras", "Hoenn"],
   ["red-blue", "rb", "Kanto"],
   ["yellow", "yellow", "Kanto"],
   ["gold-silver", "gs", "Johto and Kanto"],

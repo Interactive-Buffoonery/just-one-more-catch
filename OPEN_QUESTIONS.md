@@ -195,21 +195,60 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
   Smash as well as Strength? Trace the map or check in-game; the walkthrough
   establishes Rock Smash for full traversal, not the earliest encounter.
 
-## Omega Ruby and Alpha Sapphire (`oras`) — implementation blocked
+## Omega Ruby and Alpha Sapphire (`oras`)
 
-- PokeAPI coverage is partial: each version has 302 raw slots, 115 area IDs
-  and 132 Pokémon IDs, with zero Surf or rod-method encounters. Obtain
-  upstream encounter coverage before generating a complete tracker pack;
-  do not substitute Ruby/Sapphire or Emerald tables. See SOURCES.md for
-  method counts and API spot checks.
-- Audit ordinary walking coverage, DexNav hidden Pokémon and every Mirage
-  spot against ORAS-specific sources; current raw counts alone cannot prove
-  completeness. Determine how random daily Mirage availability and
-  party-dependent legendary requirements fit the tracker before enabling it.
-- All hand-written access remains unverified: chapters, Gen 6 HM badge
-  rules, Soaring/Eon Flute, Delta Episode, legendary prerequisites/version
-  exclusives, gifts (including Cosplay Pikachu, Beldum, Castform), fossils
-  and eggs. No gates were written or inferred from another Hoenn game.
-- No generated pack, registry entries, sprites, covers or save-import
-  support were added. First-pass access, browser/guest persistence,
-  account sync and gameplay verification remain unperformed.
+- **Upstream coverage remains partial.** The pack now fills missing ORAS
+  tables from cached Bulbapedia location pages, keeping PokeAPI primary per
+  version/area/method. The generated rows retain provenance. Rebuild after
+  refreshing the API cache to retire covered fallback tables. Upstream
+  issues #1456/#621 and partial PR #1542 remain the background for this gap.
+- **Daily Mirage tables:** all 32 API daily-spot areas are retained, but only
+  the generic Mirage spot page was cached. Individual spot ordinary-water,
+  hidden and Rock Smash completeness was not independently established.
+  Do not claim the national encounter catalog is exhaustive. Check those
+  individual ORAS pages when they become available. Random daily/StreetPass
+  availability is displayed as a condition, not predicted.
+- **Regional coverage:** 211 dex entries; 132 have direct encounter rows
+  across the pair. Family closure via evolution and breeding reaches 210;
+  Jirachi is event-only and deliberately has no rows. Natu and Phanpy have
+  no direct ORAS table entries; Xatu and Donphan occur in the Gen VI Safari
+  tables and provide breeding paths. The existing app does not infer every
+  reverse breeding path in its recommendation text, so these two may still
+  read as trade-only rather than describing breeding. No Gen III Safari
+  encounters were copied.
+- **Source-table granularity:** API's generic Seafloor Cavern table is kept;
+  supplemental room annotations distinguish its water/walking tables.
+  Water encounters in rooms 5/6 also require the sourced Rock Smash/Strength
+  traversal. The generic API walking table only requires Dive for entry;
+  review first reachable walking tiles independently before calling every
+  encounter "catchable now" exact.
+  Victory Road B1F/2F first encounter tiles similarly need a floor-by-floor
+  check against the Surf/Strength route; the entrance area only needs Waterfall.
+- **Safari grass/bike alternatives:** the northern-area confirmation models
+  either bike plus Surf. Specific long-grass access may need the other bike;
+  the condition is retained, but individual grass patches have not been traced.
+- **Shoal Cave:** low/high tide conditions are retained and the ice room
+  states Strength OR Mach Bike. Mapping the API B1F/B2F areas to the location
+  page's shared low-tide table remains uncertain; no extra floor rows were
+  guessed. The generic low-tide walking table is included.
+- **Access details awaiting independent review:** Route 123's western access
+  versus encounter grass, Route 120's east/west grass, optional Kecleon timing
+  on Route 119/Lavaridge, and the earliest northern Route 115 approach. Source
+  location/walkthrough citations are recorded; there is no ORAS decompilation
+  or cartridge collision-path proof in this implementation.
+- **National/clock limitations:** the existing tracker treats nonregional
+  species as post-League in recommendations even though ORAS's crisis can
+  unlock DexNav and Soaring species before the League. Minute windows, party
+  prerequisites, tide and daily spots remain special conditions rather than
+  live cartridge checks. The coarse clock model does not expose Gen VI's
+  evening separately. No shared progression redesign was made.
+- **Forms:** Deoxys's four persistent forms are cataloged. Cosplay Pikachu
+  uses the existing species gift row but its outfits are not separately tracked;
+  other imported/persistent form catalogs (Rotom, Kyurem, Therian formes,
+  seasonal/cosmetic variants) need a separate verified catalog pass. Mega and
+  Primal battle transformations remain excluded.
+- **Second source and runtime:** no ORAS guide PDF, second source, independent
+  two-pass access audit, browser QA, guest persistence, account sync, cartridge
+  or emulator gameplay was verified. The coordinator owns the independent
+  review. Save-file import is not enabled; no push, PR, merge or deployment
+  is part of this implementation.

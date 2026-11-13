@@ -26,6 +26,30 @@ def nice(slug):
     return s.replace("-", " ").title().replace("Mt ", "Mt. ")
 
 
+# Supplements are explicitly opted into by a pack. Coverage is computed across
+# all species, so a new API species retires the entire matching fallback table.
+SUPPLEMENT = {}
+if GAME.get("bulbapedia_gap_fill"):
+    from bulbapedia_encounters import gap_fill
+    covered = set()
+    for filename in sorted(os.listdir(CACHE)):
+        if not re.fullmatch(r"pokemon_\d+_encounters.json", filename):
+            continue
+        for area in cached(filename[:-5]):
+            for version in area["version_details"]:
+                if version["version"]["name"] in VERSIONS:
+                    for detail in version["encounter_details"]:
+                        covered.add((version["version"]["name"], nice(area["location_area"]["name"]), detail["method"]["name"]))
+    candidates = json.load(open(os.path.join(ROOT, GAME["bulbapedia_gap_fill"])))
+    for row in gap_fill(candidates, covered) + GAME.get("extra_encounters", []):
+        detail = {"method": {"name": row["method"]}, "min_level": row["lo"], "max_level": row["hi"],
+                  "chance": row["chance"], "condition_values": [{"name": c} for c in row.get("conditions", [])],
+                  "src": row["src"], "url": row["url"], "habitat": row.get("habitat", row["method"]),
+                  "needs": ["primal"] if "DexNav hidden Pokémon" in row.get("conditions", []) else []}
+        SUPPLEMENT.setdefault(row["n"], []).append({"area_name": row["area"],
+            "version_details": [{"version": {"name": v}, "encounter_details": [detail]} for v in row["versions"]]})
+
+
 def pretty(s):
     for a, b in [("Kings Rock", "King's Rock"), ("Dragons Den", "Dragon's Den"), ("Team Rocket Hq", "Team Rocket HQ"),
                  ("Digletts", "Diglett's"), ("Kirks House", "Kirk's House"), ("Bills House", "Bill's House"),
@@ -116,7 +140,7 @@ def rows_for(encounters, version, n):
     for a in encounters:
         if not any(v["version"]["name"] == source_version for v in a["version_details"]):
             continue
-        loc = nice(a["location_area"]["name"])
+        loc = a["area_name"] if "area_name" in a else nice(a["location_area"]["name"])
         if any(re.search(p, loc) for p in GAME["drop"]):
             continue
         if any(matches(loc, place) and version not in allowed for place, allowed in GAME.get("area_versions", {}).items()):
@@ -135,7 +159,8 @@ def rows_for(encounters, version, n):
                     continue
                 cond = sorted(GAME.get("condition_replacements", {}).get(c["name"], c["name"]) for c in d["condition_values"] if c["name"] not in DEFAULT_COND)
                 m = GAME.get("methods", {}).get(src, src)
-                extra = []
+                cond += [c for area, conditions in GAME.get("area_conditions", {}).items() if matches(loc, area) for c in conditions]
+                extra = list(d.get("needs", []))
                 row_place = place
                 for i, g in enumerate(GAME.get("row_needs", [])):
                     if g["n"] == n and matches(loc, g["place"]) and g.get("m", m) == m and version in g.get("versions", VERSIONS):
@@ -143,16 +168,21 @@ def rows_for(encounters, version, n):
                         extra += g["needs"]
                         row_place = g.get("show_as", row_place)
                 need = tuple(dict.fromkeys(area_need + extra)) or None
-                k = (row_place, m, need, tuple(cond))
+                k = (row_place, m, need, tuple(cond), d.get("src"), d.get("url"))
                 r = merged.setdefault(k, {"place": pretty(row_place), "chap": chap, "m": k[1], "need": list(need) if need else None, "cond": cond, "lo": 99, "hi": 0, "by": {}})
-                r["lo"] = min(r["lo"], d["min_level"]); r["hi"] = max(r["hi"], d["max_level"]); r["by"][src] = r["by"].get(src, 0) + d["chance"]
+                if "src" in d:
+                    r.update(src=d["src"], url=d["url"])
+                r["lo"] = min(r["lo"], d["min_level"]); r["hi"] = max(r["hi"], d["max_level"])
+                habitat = d.get("habitat", src)
+                previous = r["by"].get(habitat, 0)
+                r["by"][habitat] = max(previous, d["chance"]) if "src" in d else previous + d["chance"]
     # methods folded into one (Crystal's three Headbutt tree tables) keep the best table's odds
     for r in merged.values():
         r["c"] = min(max(r.pop("by").values()), 100)
     # rows that differ only by time of day and cover all three times become one "any time" row
     groups = {}
     for r in merged.values():
-        groups.setdefault((r["place"], r["m"], tuple(r["need"] or ()), tuple(c for c in r["cond"] if c not in TIME)), []).append(r)
+        groups.setdefault((r["place"], r["m"], tuple(r["need"] or ()), tuple(c for c in r["cond"] if c not in TIME), r.get("src"), r.get("url")), []).append(r)
     out = []
     for g in groups.values():
         times = {c for r in g for c in r["cond"] if c in TIME}
@@ -197,7 +227,7 @@ def species(n, johto):
     p = next((cached(f"pokemon_{i}") for i in varieties(sp) if cached(f"pokemon_{i}")["name"] in GAME.get("forms", [])), cached(f"pokemon_{n}"))
     chain_id = sp["evolution_chain"]["url"].rstrip("/").split("/")[-1]
     chain = cached(f"evolution_chain_{chain_id}")["chain"]
-    enc = [a for i in varieties(sp) for a in cached(f"pokemon_{i}_encounters")]
+    enc = [a for i in varieties(sp) for a in cached(f"pokemon_{i}_encounters")] + SUPPLEMENT.get(n, [])
     name = lambda s: next(x["name"] for x in s["names"] if x["language"]["name"] == "en")
     rows = {}
     for version, v in VERSIONS.items():

@@ -29,6 +29,8 @@ export let EVENTS: Record<string, GameData["events"][number]> = {};
 let LATER: Record<string, GameData["events"][number][]> = {};
 export const METHOD: Record<string, [string, string | null]> = {
   walk: ["Walking", null],
+  horde: ["Horde encounter", null],
+  flocks: ["Soaring flock", null],
   seaweed: ["Underwater", "dive"],
   "feebas-tile-fishing": ["Feebas fishing tiles", "old-rod"],
   "devon-scope": ["Devon Scope", null],

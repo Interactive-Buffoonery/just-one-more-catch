@@ -771,7 +771,7 @@ Advance game. Ruby and Sapphire remain separate Coming Soon entries.
   connection reaches at most x=41; grass begins at x=49, beyond westbound
   ledges. Its encounters therefore stay with the later Route 122 approach.
 
-## Omega Ruby and Alpha Sapphire coverage audit
+## Omega Ruby and Alpha Sapphire (`oras`)
 
 - PokeAPI raw encounter table: https://github.com/PokeAPI/pokeapi/blob/master/data/v2/csv/encounters.csv
   joined to `versions.csv`, `encounter_slots.csv` and `encounter_methods.csv`
@@ -788,4 +788,142 @@ Advance game. Ruby and Sapphire remain separate Coming Soon entries.
 - No Surf, Old Rod, Good Rod or Super Rod slots exist for either version
   in the audited raw table. No DexNav-specific method exists in these rows;
   this does not establish whether hidden encounters were encoded another way.
-  The pack is not registered while coverage and access remain unresolved.
+  The ORAS-only supplement below fills the missing tables.
+
+- Coverage decision: PokeAPI remains primary. `scripts/bulbapedia_encounters.py`
+  reads cached ORAS location tables into `data/oras-bulbapedia.json`.
+  `scripts/build_data.py` uses a candidate only if the current cache has no
+  PokeAPI row for its `(version, pre-rename area, method)` table, regardless
+  of species. It never replaces an existing API table. Generated fallback
+  rows carry `src: "bulbapedia"` and the location `url`. Rebuild after each
+  API refresh to retire newly covered tables. Other packs do not opt in.
+  The candidate file also retains the source section, habitat and rate text.
+  Unknown rates use `c: 0` (the UI omits the percentage), with the source's
+  unknown or qualitative rate retained as a condition. They are not 0% odds.
+- All candidate URLs in `data/oras-bulbapedia.json` cite the exact cached
+  location page; only `Catch/entryoras` rows are read, case-insensitively.
+  Walkthrough and Horde Encounter summary tables are excluded to avoid
+  duplicated encounters. Nested templates, form arguments, per-version
+  flags, comma-separated levels, ranges, rate tooltips, DexNav divisions,
+  route halves, cave floors and underwater sections are retained. Grass
+  habitats sharing an area use their best table's odds, rather than adding
+  the probabilities of two different patches of grass.
+- Chapter access and story sequence use the ORAS walkthrough, not Emerald:
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire
+  Parts 1–2 cover western Hoenn and the Devon Parts; Part 3 covers Briney's
+  ferry and Steven's letter; Parts 4–6 cover Slateport, Mauville, rods, bikes
+  and Rock Smash; Parts 7–10 cover the northern land route, Meteor Falls,
+  Mt. Chimney, Lavaridge, Go-Goggles, fossils and Surf; Parts 11–14 cover
+  the Weather Institute, Devon Scope, Fortree, Mt. Pyre and submarine raid;
+  Parts 15–17 cover the eastern sea, Dive, Seafloor Cavern, Cave of Origin
+  and Eon Flute; Parts 18–21 cover optional areas and Victory Road;
+  Parts 22–25 cover the League, Delta Episode, starter gifts and Battle Resort.
+  Each chapter/event in `data/oras.json` links its specific part. Earliest
+  access to broad routes is separate from their underwater/northern grass.
+- https://bulbapedia.bulbagarden.net/wiki/Badge
+  Hoenn League's Generation VI entries establish the leaders and field-use
+  rules: Stone/Cut, Dynamo/Rock Smash, Heat/Strength, Balance/Surf,
+  Feather/Fly, Mind/Dive and Rain/Waterfall. Knuckle only gates Flash in
+  RSE, not ORAS; no Flash badge rule is copied from Emerald. Fly is not a
+  kit requirement for ordinary travel; the Registeel puzzle has its own event.
+- https://bulbapedia.bulbagarden.net/wiki/HM
+  The game-specific Hoenn move list agrees with the Badge table; ORAS uses
+  seven HMs. Rock Smash is HM06 and Dive is HM07.
+- https://bulbapedia.bulbagarden.net/wiki/Pokémon_Omega_Ruby_and_Alpha_Sapphire
+  establishes the 3DS/Gen VI setting and starters. PokeAPI `pokedex/15`
+  (`updated-hoenn`) supplies 211 regional entries; Generation VI ends at
+  national #721. The main-game start gift is Treecko, Torchic or Mudkip on
+  Route 101 (walkthrough Part 1 and API gift rows).
+- https://bulbapedia.bulbagarden.net/wiki/Time#Generation_VI
+  ORAS uses the 3DS clock after setting the bedroom clock; night starts at
+  21:00. `nightFrom: 21` uses the existing coarse clock model; minute-window
+  and party conditions from PokeAPI remain explicit special conditions.
+- https://bulbapedia.bulbagarden.net/wiki/Pokémon_Storage_System
+  Generation VI has up to 31 boxes of 30, with the last box unlocked after
+  Rayquaza. The tracker uses maximum capacity, not progressive box unlocks.
+- https://bulbapedia.bulbagarden.net/wiki/Granite_Cave
+  “The player cannot access lower floors without the Mach Bike.” Both
+  basement areas require the bike; the ground floor does not require Brawly.
+- https://bulbapedia.bulbagarden.net/wiki/Meteor_Falls
+  ORAS item locations explicitly require Surf/Waterfall for the inner cave,
+  B1F and dead-end back room. Their source tables map to API's Back, B1F
+  and Backsmall Room; the first room remains open on the initial visit.
+- https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_115
+  The northern section requires Surf. Grass/horde rows are gated separately
+  from shore fishing; the whole route is not Surf-gated.
+- https://bulbapedia.bulbagarden.net/wiki/Hoenn_Safari_Zone
+  Generation VI Area 1/2/3/4 map to API SW/SE/NW/NE areas. ORAS allows
+  either Bike plus Surf to access the northern areas; a confirmation event
+  models that alternative without requiring both bikes. Long grass remains
+  a source condition. Xatu (Area 2 grass) and Donphan (Area 4 grass) permit
+  breeding Natu and Phanpy; neither has a direct ORAS row on this page.
+- https://bulbapedia.bulbagarden.net/wiki/Scorched_Slab
+  Surf is required for entry; Strength only makes a shortcut. Heatran waits
+  for the Cave of Origin crisis. The shared B2F/B3F table is expanded over
+  the matching API floors.
+- https://bulbapedia.bulbagarden.net/wiki/Shoal_Cave
+  High/low tide stays conditional. Ice-room access permits Strength OR the
+  Mach Bike in ORAS, expressed as a condition rather than requiring both.
+- https://bulbapedia.bulbagarden.net/wiki/New_Mauville
+  ORAS requires Wattson's eye registration after Groudon/Kyogre, modelled by
+  its own event. This replaces neither a key nor an Emerald story gate.
+- https://bulbapedia.bulbagarden.net/wiki/Sea_Mauville
+  Ordinary surface/interior water tables are separate. Spiritomb waits for
+  the crisis; the Scanner requires Dive and the crisis, then Stern exchanges
+  it for the version's bell. Both bell legendaries require the exchange.
+- https://bulbapedia.bulbagarden.net/wiki/Southern_Island
+  The main story gift is Latios in OR and Latias in AS. The API's additional
+  static rows remain behind an explicit Eon Ticket event; they do not claim
+  that the historical distribution is available today.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_19
+  Sealed Chamber uses Dig, Relicanth first and Wailord last. Separate puzzle
+  confirmations gate Regirock (Strength), Regice (wait) and Registeel (Fly).
+  Regigigas also waits for the crisis; API party/item/day conditions remain.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Soaring_Legendaries
+  supplies Ho-Oh/Lugia for Trackless Forest, maximum friendship for Nameless
+  Cavern, maximum EVs for Pathless Plain and the party prerequisites for the
+  sky rifts, Fabled Cave and Gnarled Den. Version flags and API time/day
+  conditions stay intact. These are special conditions, not automatic party
+  inspection; the app cannot inspect the player's cartridge party.
+- https://bulbapedia.bulbagarden.net/wiki/Mirage_spot
+  Daily Mirage spots require the Eon Flute and are selected daily or received
+  by StreetPass. The 32 API daily-spot areas and Crescent Isle stay conditional;
+  no missing individual Mirage table is reconstructed from another game.
+- https://bulbapedia.bulbagarden.net/wiki/DexNav
+  Hidden Pokémon unlocked after defeating/capturing Groudon/Kyogre retain
+  their source divisions and receive the `primal` event gate. Ordinary
+  DexNav encounters are labelled special; no search-level bonus is invented.
+- https://bulbapedia.bulbagarden.net/wiki/Fossil
+- https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon#Pokémon_Omega_Ruby_and_Alpha_Sapphire
+  supply the nine level-20 Devon revivals. Root/Claw follow Go-Goggles;
+  Mirage fossils follow the crisis. OR: Dome/Armor/Plume; AS: Helix/Skull/Cover;
+  Old Amber is shared. Root/Claw are a choice, not two guaranteed gifts.
+  Each hand-written row carries this source and its required fossil condition.
+- https://bulbapedia.bulbagarden.net/wiki/Mossdeep_City
+  Beldum is a level-1 gift after the Hall of Fame; Space Center Kecleon is
+  after the Delta Episode. Cosplay Pikachu follows the first Contest (Part 4),
+  Castform follows the Weather Institute (Part 11), and the Togepi egg follows
+  the crisis (Lavaridge location page). API gifts/eggs remain primary.
+- https://bulbapedia.bulbagarden.net/wiki/In-game_trade
+  The three location-table trades retain their offered species conditions:
+  Slakoth/Makuhita, Spinda/Skitty and Bellossom/Corsola. They are not gifts.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_23
+  Sky Pillar opens during Delta; Rayquaza precedes Deoxys. Part 24 supplies
+  the S.S. Ticket and Unova starter gift; Part 25 supplies the Sinnoh starter
+  after a League rematch. The Johto gift follows the first Hall of Fame.
+  The game article describes Deoxys's four freely changeable persistent forms
+  using the meteorite in Cozmo's house; battle-only Mega/Primal forms are omitted.
+- Sprites: https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon
+  ORAS uses the same supplied static regular/shiny national artwork fallback
+  as USUM. The Gen VI folders primarily supply animated artwork, whereas the
+  existing tracker requires static PNGs. Generic files already present are
+  reused byte-for-byte, excluding USUM's Alolan replacements. Deoxys form
+  sprites use the same upstream set. Existing Hoenn badge art (IDs 17–24)
+  and full box covers `or.jpg` / `as.jpg` are reused; cover sources are in
+  the box-art section above. No artwork or UI redesign is introduced.
+
+ORAS evolution-location overrides: [New Mauville](https://bulbapedia.bulbagarden.net/wiki/New_Mauville) identifies the Gen VI magnetic field for Magnezone/Probopass; [Petalburg Woods](https://bulbapedia.bulbagarden.net/wiki/Petalburg_Woods) identifies its ORAS Moss Rock; [Shoal Cave](https://bulbapedia.bulbagarden.net/wiki/Shoal_Cave) identifies the ORAS Ice Rock. These replace the API evolution chain’s Sinnoh locations.
+
+Sylveon retains the cached [PokeAPI Eevee chain](https://pokeapi.co/api/v2/evolution-chain/67/) Gen VI affection threshold of 2 plus a Fairy move, explicitly restored in its pack override because the generic text renderer omits affection. The [ORAS game article](https://bulbapedia.bulbagarden.net/wiki/Pokémon_Omega_Ruby_and_Alpha_Sapphire) confirms all contemporary Eevee evolutions are obtainable. Seafloor Cavern rooms 5/6 water rows also receive Rock Smash and Strength: walkthrough Part 16 describes both obstacles in room 1 before these rooms. Generic API walking rows retain the broad entry gate pending a tile-level audit.
+
+Implementation verification: 721 catalog entries, 272 directly encountered species, 154 distinct generated areas, 1,328 combined-version rows (306 API; 1,013 location-table gap fills; nine hand-written fossil revivals), 19 chapters and 24 events. Hoenn dex: 132/211 have direct encounters; family closure through evolution/breeding reaches 210/211, excluding event-only Jirachi. All eight existing generated encounter packs rebuild byte-identically. The supplied cache omitted `pokedex_4.json`; for this comparison it was reconstructed locally from the supplied read-only PokeAPI `pokemon_dex_numbers.csv` and `pokemon_species.csv`, without fetching the API.

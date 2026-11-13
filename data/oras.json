@@ -1,0 +1,1347 @@
+{
+  "versions": {
+    "omega-ruby": "o",
+    "alpha-sapphire": "a"
+  },
+  "pokedex": 15,
+  "species": 721,
+  "gen": "generation-vi",
+  "historical_pre_evolutions": true,
+  "keep_floors": true,
+  "bulbapedia_gap_fill": "data/oras-bulbapedia.json",
+  "drop": [],
+  "rename": {
+    "Hoenn Route 101": "Route 101",
+    "Hoenn Route 102": "Route 102",
+    "Hoenn Route 103": "Route 103",
+    "Hoenn Route 104 North Oras": "Route 104 North",
+    "Hoenn Route 104 South Oras": "Route 104 South",
+    "Hoenn Route 105": "Route 105",
+    "Hoenn Route 106": "Route 106",
+    "Hoenn Route 107": "Route 107",
+    "Hoenn Route 107 Underwater": "Route 107 Underwater",
+    "Hoenn Route 108": "Route 108",
+    "Hoenn Route 109": "Route 109",
+    "Hoenn Route 110": "Route 110",
+    "Hoenn Route 111": "Route 111",
+    "Hoenn Route 111 Desert": "Route 111 Desert",
+    "Hoenn Route 112": "Route 112",
+    "Hoenn Route 113": "Route 113",
+    "Hoenn Route 114": "Route 114",
+    "Hoenn Route 115": "Route 115",
+    "Hoenn Route 116": "Route 116",
+    "Hoenn Route 117": "Route 117",
+    "Hoenn Route 118": "Route 118",
+    "Hoenn Route 119": "Route 119",
+    "Hoenn Route 119 Weather Institute": "Route 119 Weather Institute",
+    "Hoenn Route 120": "Route 120",
+    "Hoenn Route 121": "Route 121",
+    "Hoenn Route 122": "Route 122",
+    "Hoenn Route 123": "Route 123",
+    "Hoenn Route 124": "Route 124",
+    "Hoenn Route 124 Underwater": "Route 124 Underwater",
+    "Hoenn Route 125": "Route 125",
+    "Hoenn Route 126": "Route 126",
+    "Hoenn Route 126 Underwater": "Route 126 Underwater",
+    "Hoenn Route 127": "Route 127",
+    "Hoenn Route 128": "Route 128",
+    "Hoenn Route 128 Underwater": "Route 128 Underwater",
+    "Hoenn Route 129": "Route 129",
+    "Hoenn Route 129 Underwater": "Route 129 Underwater",
+    "Hoenn Route 130": "Route 130",
+    "Hoenn Route 130 Underwater": "Route 130 Underwater",
+    "Hoenn Route 131": "Route 131",
+    "Hoenn Route 132": "Route 132",
+    "Hoenn Route 133": "Route 133",
+    "Hoenn Route 134": "Route 134",
+    "Hoenn Safari Zone Neacro Bike": "Safari Zone Neacro Bike",
+    "Hoenn Safari Zone Nwmach Bike": "Safari Zone Nwmach Bike",
+    "Hoenn Safari Zone Se": "Safari Zone Se",
+    "Hoenn Safari Zone Sw": "Safari Zone Sw",
+    "Hoenn Victory Road 1F": "Victory Road 1F",
+    "Hoenn Victory Road 2F": "Victory Road 2F",
+    "Hoenn Victory Road B1F": "Victory Road B1F"
+  },
+  "methods": {},
+  "needs": {
+    "Granite Cave B1F": {
+      "needs": [
+        "mach-bike"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Granite_Cave",
+      "quote": "The player cannot access lower floors without the Mach Bike."
+    },
+    "Granite Cave B2F": {
+      "needs": [
+        "mach-bike"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Granite_Cave",
+      "quote": "The player cannot access lower floors without the Mach Bike."
+    },
+    "Meteor Falls Backsmall Room": {
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Meteor_Falls"
+    },
+    "Meteor Falls Back": {
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Meteor_Falls"
+    },
+    "Meteor Falls B1F": {
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Meteor_Falls"
+    },
+    "Scorched Slab": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Scorched_Slab"
+    },
+    "Sea Mauville": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sea_Mauville"
+    },
+    "Southern Island": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Southern_Island"
+    },
+    "Hoenn Route 107 Underwater": {
+      "needs": [
+        "dive"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_107"
+    },
+    "Hoenn Route 124 Underwater": {
+      "needs": [
+        "dive"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_124"
+    },
+    "Hoenn Route 126 Underwater": {
+      "needs": [
+        "dive"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_126"
+    },
+    "Hoenn Route 128 Underwater": {
+      "needs": [
+        "dive"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_128"
+    },
+    "Hoenn Route 129 Underwater": {
+      "needs": [
+        "dive"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_129"
+    },
+    "Hoenn Route 130 Underwater": {
+      "needs": [
+        "dive"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_130"
+    },
+    "Seafloor Cavern": {
+      "needs": [
+        "dive"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_16"
+    },
+    "Hoenn Safari Zone Nwmach Bike": {
+      "needs": [
+        "safari-north"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Safari_Zone"
+    },
+    "Hoenn Safari Zone Neacro Bike": {
+      "needs": [
+        "safari-north"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Safari_Zone"
+    }
+  },
+  "row_needs": [
+    {
+      "place": "Hoenn Route 101",
+      "n": 152,
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_23",
+      "m": "gift"
+    },
+    {
+      "place": "Hoenn Route 101",
+      "n": 155,
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_23",
+      "m": "gift"
+    },
+    {
+      "place": "Hoenn Route 101",
+      "n": 158,
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_23",
+      "m": "gift"
+    },
+    {
+      "place": "Hoenn Route 101",
+      "n": 495,
+      "needs": [
+        "Elite Four",
+        "delta-complete"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_24",
+      "m": "gift"
+    },
+    {
+      "place": "Hoenn Route 101",
+      "n": 498,
+      "needs": [
+        "Elite Four",
+        "delta-complete"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_24",
+      "m": "gift"
+    },
+    {
+      "place": "Hoenn Route 101",
+      "n": 501,
+      "needs": [
+        "Elite Four",
+        "delta-complete"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_24",
+      "m": "gift"
+    },
+    {
+      "place": "Hoenn Route 101",
+      "n": 387,
+      "needs": [
+        "Elite Four",
+        "league-rematch"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_25",
+      "m": "gift"
+    },
+    {
+      "place": "Hoenn Route 101",
+      "n": 390,
+      "needs": [
+        "Elite Four",
+        "league-rematch"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_25",
+      "m": "gift"
+    },
+    {
+      "place": "Hoenn Route 101",
+      "n": 393,
+      "needs": [
+        "Elite Four",
+        "league-rematch"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_25",
+      "m": "gift"
+    },
+    {
+      "place": "Slateport City",
+      "n": 25,
+      "needs": [
+        "contest"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_4",
+      "m": "gift"
+    },
+    {
+      "place": "Verdanturf Town",
+      "n": 25,
+      "needs": [
+        "contest"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_4",
+      "m": "gift"
+    },
+    {
+      "place": "Fallarbor Town",
+      "n": 25,
+      "needs": [
+        "contest"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_4",
+      "m": "gift"
+    },
+    {
+      "place": "Lilycove City",
+      "n": 25,
+      "needs": [
+        "contest"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_4",
+      "m": "gift"
+    },
+    {
+      "place": "Hoenn Route 119 Weather Institute",
+      "n": 351,
+      "needs": [
+        "weather"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_11",
+      "m": "gift"
+    },
+    {
+      "place": "Hoenn Route 119",
+      "n": 352,
+      "needs": [
+        "scope"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kecleon_(Pokémon)",
+      "m": "devon-scope"
+    },
+    {
+      "place": "Hoenn Route 120",
+      "n": 352,
+      "needs": [
+        "scope"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kecleon_(Pokémon)",
+      "m": "devon-scope"
+    },
+    {
+      "place": "Lavaridge Town",
+      "n": 352,
+      "needs": [
+        "scope"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kecleon_(Pokémon)",
+      "m": "devon-scope"
+    },
+    {
+      "place": "Mossdeep Space Center",
+      "n": 352,
+      "needs": [
+        "Elite Four",
+        "delta-complete",
+        "scope"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Mossdeep_City",
+      "m": "devon-scope"
+    },
+    {
+      "place": "Mossdeep City Stevens House",
+      "n": 374,
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Mossdeep_City",
+      "m": "gift"
+    },
+    {
+      "place": "Lavaridge Town",
+      "n": 175,
+      "needs": [
+        "primal"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Lavaridge_Town",
+      "m": "gift-egg"
+    },
+    {
+      "place": "Southern Island",
+      "n": 380,
+      "needs": [
+        "eon-ticket"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Southern_Island",
+      "m": "static"
+    },
+    {
+      "place": "Southern Island",
+      "n": 381,
+      "needs": [
+        "eon-ticket"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Southern_Island",
+      "m": "static"
+    },
+    {
+      "place": "Sea Mauville Inside",
+      "n": 442,
+      "needs": [
+        "primal"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sea_Mauville",
+      "m": "static"
+    },
+    {
+      "place": "Sea Mauville Inside",
+      "n": 249,
+      "needs": [
+        "primal",
+        "dive",
+        "bells"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sea_Mauville",
+      "m": "static"
+    },
+    {
+      "place": "Sea Mauville Inside",
+      "n": 250,
+      "needs": [
+        "primal",
+        "dive",
+        "bells"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Sea_Mauville",
+      "m": "static"
+    },
+    {
+      "place": "Scorched Slab B3F",
+      "n": 485,
+      "needs": [
+        "primal"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Scorched_Slab",
+      "m": "static"
+    },
+    {
+      "place": "Desert Ruins",
+      "n": 377,
+      "needs": [
+        "regirock-puzzle"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_19",
+      "m": "static"
+    },
+    {
+      "place": "Island Cave",
+      "n": 378,
+      "needs": [
+        "regice-puzzle"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_19",
+      "m": "static"
+    },
+    {
+      "place": "Ancient Tomb",
+      "n": 379,
+      "needs": [
+        "registeel-puzzle"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_19",
+      "m": "static"
+    },
+    {
+      "place": "Island Cave",
+      "n": 486,
+      "needs": [
+        "primal"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_19",
+      "m": "static"
+    },
+    {
+      "place": "Rustboro City Devon Corporation",
+      "n": 345,
+      "needs": [
+        "goggles"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Fossil",
+      "m": "gift"
+    },
+    {
+      "place": "Rustboro City Devon Corporation",
+      "n": 347,
+      "needs": [
+        "goggles"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Fossil",
+      "m": "gift"
+    },
+    {
+      "place": "Rustboro City Devon Corporation",
+      "n": 138,
+      "needs": [
+        "primal"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Fossil",
+      "m": "gift"
+    },
+    {
+      "place": "Rustboro City Devon Corporation",
+      "n": 140,
+      "needs": [
+        "primal"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Fossil",
+      "m": "gift"
+    },
+    {
+      "place": "Rustboro City Devon Corporation",
+      "n": 142,
+      "needs": [
+        "primal"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Fossil",
+      "m": "gift"
+    },
+    {
+      "place": "Rustboro City Devon Corporation",
+      "n": 408,
+      "needs": [
+        "primal"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Fossil",
+      "m": "gift"
+    },
+    {
+      "place": "Rustboro City Devon Corporation",
+      "n": 410,
+      "needs": [
+        "primal"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Fossil",
+      "m": "gift"
+    },
+    {
+      "place": "Rustboro City Devon Corporation",
+      "n": 564,
+      "needs": [
+        "primal"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Fossil",
+      "m": "gift"
+    },
+    {
+      "place": "Rustboro City Devon Corporation",
+      "n": 566,
+      "needs": [
+        "primal"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Fossil",
+      "m": "gift"
+    },
+    {
+      "place": "Sky Pillar Apex",
+      "n": 386,
+      "m": "static",
+      "needs": [
+        "Elite Four",
+        "rayquaza-caught"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_23"
+    },
+    {
+      "place": "Hoenn Route 115",
+      "n": 333,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_115"
+    },
+    {
+      "place": "Hoenn Route 115",
+      "n": 35,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_115"
+    },
+    {
+      "place": "Hoenn Route 115",
+      "n": 39,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_115"
+    },
+    {
+      "place": "Hoenn Route 115",
+      "n": 200,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_115"
+    },
+    {
+      "place": "Hoenn Route 115",
+      "n": 276,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_115"
+    },
+    {
+      "place": "Hoenn Route 115",
+      "n": 278,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_115"
+    },
+    {
+      "place": "Hoenn Route 115",
+      "n": 519,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_115"
+    },
+    {
+      "place": "Hoenn Route 115",
+      "n": 333,
+      "m": "horde",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_115"
+    },
+    {
+      "place": "Seafloor Cavern",
+      "n": 42,
+      "m": "surf",
+      "needs": [
+        "rock-smash",
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_16"
+    },
+    {
+      "place": "Seafloor Cavern",
+      "n": 73,
+      "m": "surf",
+      "needs": [
+        "rock-smash",
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_16"
+    },
+    {
+      "place": "Seafloor Cavern",
+      "n": 72,
+      "m": "old-rod",
+      "needs": [
+        "rock-smash",
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_16"
+    },
+    {
+      "place": "Seafloor Cavern",
+      "n": 129,
+      "m": "old-rod",
+      "needs": [
+        "rock-smash",
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_16"
+    },
+    {
+      "place": "Seafloor Cavern",
+      "n": 72,
+      "m": "good-rod",
+      "needs": [
+        "rock-smash",
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_16"
+    },
+    {
+      "place": "Seafloor Cavern",
+      "n": 129,
+      "m": "good-rod",
+      "needs": [
+        "rock-smash",
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_16"
+    },
+    {
+      "place": "Seafloor Cavern",
+      "n": 320,
+      "m": "good-rod",
+      "needs": [
+        "rock-smash",
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_16"
+    },
+    {
+      "place": "Seafloor Cavern",
+      "n": 320,
+      "m": "super-rod",
+      "needs": [
+        "rock-smash",
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_16"
+    }
+  ],
+  "chapters": [
+    {
+      "title": "Set out in western Hoenn",
+      "needs": [],
+      "places": [
+        "Route 101",
+        "Route 102",
+        "Route 103",
+        "Route 104",
+        "Petalburg City",
+        "Petalburg Woods",
+        "Rustboro City",
+        "Route 116",
+        "Rusturf Tunnel"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_2"
+    },
+    {
+      "title": "Sail to Dewford",
+      "needs": [
+        "briney"
+      ],
+      "places": [
+        "Dewford Town",
+        "Granite Cave",
+        "Route 105",
+        "Route 106"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_3"
+    },
+    {
+      "title": "Slateport and Mauville",
+      "needs": [
+        "steven-letter"
+      ],
+      "places": [
+        "Route 107",
+        "Route 108",
+        "Route 109",
+        "Slateport City",
+        "Route 110",
+        "Route 117",
+        "Verdanturf Town"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_4"
+    },
+    {
+      "title": "Beyond the rocks",
+      "needs": [
+        "rock-smash"
+      ],
+      "places": [
+        "Route 111",
+        "Route 112",
+        "Fiery Path",
+        "Route 113",
+        "Fallarbor Town",
+        "Route 114",
+        "Meteor Falls",
+        "Route 115"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_7"
+    },
+    {
+      "title": "Mt. Chimney and Lavaridge",
+      "needs": [
+        "meteorite"
+      ],
+      "places": [
+        "Jagged Pass",
+        "Lavaridge Town"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_9"
+    },
+    {
+      "title": "Explore the desert",
+      "needs": [
+        "goggles"
+      ],
+      "places": [
+        "Route 111 Desert"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_10"
+    },
+    {
+      "title": "Surf to eastern Hoenn",
+      "needs": [
+        "surf"
+      ],
+      "places": [
+        "Route 118",
+        "Southern Island",
+        "Route 119",
+        "Fortree City",
+        "Route 120",
+        "Scorched Slab",
+        "Route 123"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_11"
+    },
+    {
+      "title": "Beyond Fortree",
+      "needs": [
+        "Feather"
+      ],
+      "places": [
+        "Route 121",
+        "Safari Zone",
+        "Route 122",
+        "Mt. Pyre",
+        "Lilycove City"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_12"
+    },
+    {
+      "title": "Raid the hideout",
+      "needs": [
+        "submarine"
+      ],
+      "places": [
+        "Team Magma Hideout",
+        "Team Aqua Hideout"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_14"
+    },
+    {
+      "title": "Across the eastern sea",
+      "needs": [
+        "hideout"
+      ],
+      "places": [
+        "Route 124",
+        "Route 125",
+        "Route 126",
+        "Route 127",
+        "Route 128",
+        "Mossdeep City",
+        "Mossdeep Space Center",
+        "Shoal Cave",
+        "Route 129",
+        "Route 130",
+        "Route 131",
+        "Pacifidlog Town",
+        "Route 132",
+        "Route 133",
+        "Route 134",
+        "Ever Grande City"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_15"
+    },
+    {
+      "title": "Dive into the depths",
+      "needs": [
+        "dive"
+      ],
+      "places": [
+        "Seafloor Cavern",
+        "Sootopolis City"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_16"
+    },
+    {
+      "title": "Cave of Origin",
+      "needs": [
+        "awakened"
+      ],
+      "places": [
+        "Cave Of Origin"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_17"
+    },
+    {
+      "title": "Soar over Hoenn",
+      "needs": [
+        "eon-flute"
+      ],
+      "places": [
+        "Soaring In The Sky",
+        "Mirage Spot",
+        "Crescent Isle",
+        "Trackless Forest",
+        "Nameless Cavern",
+        "Pathless Plain",
+        "Fabled Cave",
+        "Gnarled Den"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_20"
+    },
+    {
+      "title": "Ancient chambers",
+      "needs": [
+        "sealed"
+      ],
+      "places": [
+        "Island Cave",
+        "Desert Ruins",
+        "Ancient Tomb"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_19"
+    },
+    {
+      "title": "New Mauville",
+      "needs": [
+        "wattson-access"
+      ],
+      "places": [
+        "New Mauville"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_18"
+    },
+    {
+      "title": "Sea Mauville",
+      "needs": [
+        "surf"
+      ],
+      "places": [
+        "Sea Mauville"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_20"
+    },
+    {
+      "title": "The Pokémon League",
+      "needs": [
+        "waterfall"
+      ],
+      "places": [
+        "Victory Road"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_21"
+    },
+    {
+      "title": "The Delta Episode",
+      "needs": [
+        "Elite Four",
+        "delta-pillar"
+      ],
+      "places": [
+        "Sky Pillar"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_23"
+    },
+    {
+      "title": "Battle Resort",
+      "needs": [
+        "delta-complete"
+      ],
+      "places": [
+        "Battle Resort"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_25"
+    }
+  ],
+  "events": [
+    {
+      "id": "briney",
+      "label": "Return the Devon Parts",
+      "q": "Have you returned the stolen Devon Parts to Rustboro?",
+      "chap": 0,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_2"
+    },
+    {
+      "id": "steven-letter",
+      "label": "Deliver Steven’s letter",
+      "q": "Have you delivered the letter to Steven in Granite Cave?",
+      "chap": 1,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_3",
+      "after": [
+        "briney"
+      ]
+    },
+    {
+      "id": "meteorite",
+      "label": "Rescue Professor Cozmo",
+      "q": "Have you defeated the villainous team in Meteor Falls?",
+      "chap": 3,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_8"
+    },
+    {
+      "id": "goggles",
+      "label": "Get the Go-Goggles",
+      "q": "Have you received the Go-Goggles outside Lavaridge Gym?",
+      "chap": 4,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_9"
+    },
+    {
+      "id": "contest",
+      "label": "Enter a Contest Spectacular",
+      "q": "Have you completed your first Contest Spectacular?",
+      "chap": 2,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_4"
+    },
+    {
+      "id": "weather",
+      "label": "Save the Weather Institute",
+      "q": "Have you rescued the Weather Institute and received Castform?",
+      "chap": 6,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_11"
+    },
+    {
+      "id": "scope",
+      "label": "Get the Devon Scope",
+      "q": "Have you received the Devon Scope from Steven on Route 120?",
+      "chap": 6,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_11"
+    },
+    {
+      "id": "submarine",
+      "label": "Witness the submarine theft",
+      "q": "Have you seen the submarine stolen at Slateport Harbor?",
+      "chap": 7,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_13"
+    },
+    {
+      "id": "hideout",
+      "label": "Clear the villainous hideout",
+      "q": "Have you reached the submarine in the Lilycove hideout?",
+      "chap": 8,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_14",
+      "after": [
+        "submarine"
+      ]
+    },
+    {
+      "id": "awakened",
+      "label": "Finish Seafloor Cavern",
+      "q": "Has Groudon or Kyogre awakened at Seafloor Cavern?",
+      "chap": 10,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_16"
+    },
+    {
+      "id": "primal",
+      "label": "Resolve the Cave of Origin crisis",
+      "q": "Have you defeated or captured Groudon or Kyogre in the Cave of Origin?",
+      "chap": 11,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_17",
+      "after": [
+        "awakened"
+      ]
+    },
+    {
+      "id": "eon-flute",
+      "label": "Get the Eon Flute",
+      "q": "Have you received the Eon Flute from Steven?",
+      "chap": 11,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_17",
+      "after": [
+        "primal"
+      ]
+    },
+    {
+      "id": "sealed",
+      "label": "Open the three ancient ruins",
+      "q": "Have you solved the Sealed Chamber with Dig, Relicanth and Wailord?",
+      "chap": 10,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_19"
+    },
+    {
+      "id": "wattson-access",
+      "label": "Register with Wattson",
+      "q": "Has Wattson registered your eyes for New Mauville’s gate?",
+      "chap": 12,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/New_Mauville",
+      "after": [
+        "primal"
+      ]
+    },
+    {
+      "id": "delta-pillar",
+      "label": "Open Sky Pillar with Wallace",
+      "q": "Has Wallace opened Sky Pillar during the Delta Episode?",
+      "chap": 16,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_23"
+    },
+    {
+      "id": "delta-complete",
+      "label": "Finish the Delta Episode",
+      "q": "Have you finished the Delta Episode and received the S.S. Ticket?",
+      "chap": 17,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_24"
+    },
+    {
+      "id": "league-rematch",
+      "label": "Win the League rematch",
+      "q": "Have you beaten the Elite Four and Champion a second time?",
+      "chap": 18,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_25"
+    },
+    {
+      "id": "regirock-puzzle",
+      "label": "Solve the Desert Ruins puzzle",
+      "q": "Have you solved the Desert Ruins puzzle with Strength?",
+      "chap": 13,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_19",
+      "after": [
+        "sealed"
+      ]
+    },
+    {
+      "id": "regice-puzzle",
+      "label": "Solve the Island Cave puzzle",
+      "q": "Have you waited for the Island Cave door to open?",
+      "chap": 13,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_19",
+      "after": [
+        "sealed"
+      ]
+    },
+    {
+      "id": "registeel-puzzle",
+      "label": "Solve the Ancient Tomb puzzle",
+      "q": "Have you solved the Ancient Tomb puzzle with Fly?",
+      "chap": 13,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_19",
+      "after": [
+        "sealed"
+      ]
+    },
+    {
+      "id": "bells",
+      "label": "Trade the Scanner for a bell",
+      "q": "Have you given Captain Stern the Scanner and received the Clear Bell or Tidal Bell?",
+      "chap": 15,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_20",
+      "after": [
+        "primal"
+      ]
+    },
+    {
+      "id": "safari-north",
+      "label": "Reach the northern Safari areas",
+      "q": "Have you reached the northern Safari areas using a Bike and Surf?",
+      "chap": 7,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Safari_Zone"
+    },
+    {
+      "id": "eon-ticket",
+      "label": "Use an Eon Ticket",
+      "q": "Have you used an Eon Ticket to return to Southern Island?",
+      "chap": 6,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Southern_Island"
+    },
+    {
+      "id": "rayquaza-caught",
+      "label": "Catch Rayquaza",
+      "q": "Have you caught Rayquaza during the Delta Episode?",
+      "chap": 17,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Omega_Ruby_and_Alpha_Sapphire/Part_23"
+    }
+  ],
+  "extra_encounters": [
+    {
+      "n": 345,
+      "versions": [
+        "omega-ruby",
+        "alpha-sapphire"
+      ],
+      "area": "Rustboro City Devon Corporation",
+      "method": "gift",
+      "lo": 20,
+      "hi": 20,
+      "chance": 100,
+      "conditions": [
+        "Bring Root Fossil"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon"
+    },
+    {
+      "n": 347,
+      "versions": [
+        "omega-ruby",
+        "alpha-sapphire"
+      ],
+      "area": "Rustboro City Devon Corporation",
+      "method": "gift",
+      "lo": 20,
+      "hi": 20,
+      "chance": 100,
+      "conditions": [
+        "Bring Claw Fossil"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon"
+    },
+    {
+      "n": 138,
+      "versions": [
+        "alpha-sapphire"
+      ],
+      "area": "Rustboro City Devon Corporation",
+      "method": "gift",
+      "lo": 20,
+      "hi": 20,
+      "chance": 100,
+      "conditions": [
+        "Bring Helix Fossil"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon"
+    },
+    {
+      "n": 140,
+      "versions": [
+        "omega-ruby"
+      ],
+      "area": "Rustboro City Devon Corporation",
+      "method": "gift",
+      "lo": 20,
+      "hi": 20,
+      "chance": 100,
+      "conditions": [
+        "Bring Dome Fossil"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon"
+    },
+    {
+      "n": 142,
+      "versions": [
+        "omega-ruby",
+        "alpha-sapphire"
+      ],
+      "area": "Rustboro City Devon Corporation",
+      "method": "gift",
+      "lo": 20,
+      "hi": 20,
+      "chance": 100,
+      "conditions": [
+        "Bring Old Amber"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon"
+    },
+    {
+      "n": 408,
+      "versions": [
+        "alpha-sapphire"
+      ],
+      "area": "Rustboro City Devon Corporation",
+      "method": "gift",
+      "lo": 20,
+      "hi": 20,
+      "chance": 100,
+      "conditions": [
+        "Bring Skull Fossil"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon"
+    },
+    {
+      "n": 410,
+      "versions": [
+        "omega-ruby"
+      ],
+      "area": "Rustboro City Devon Corporation",
+      "method": "gift",
+      "lo": 20,
+      "hi": 20,
+      "chance": 100,
+      "conditions": [
+        "Bring Armor Fossil"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon"
+    },
+    {
+      "n": 564,
+      "versions": [
+        "alpha-sapphire"
+      ],
+      "area": "Rustboro City Devon Corporation",
+      "method": "gift",
+      "lo": 20,
+      "hi": 20,
+      "chance": 100,
+      "conditions": [
+        "Bring Cover Fossil"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon"
+    },
+    {
+      "n": 566,
+      "versions": [
+        "omega-ruby"
+      ],
+      "area": "Rustboro City Devon Corporation",
+      "method": "gift",
+      "lo": 20,
+      "hi": 20,
+      "chance": 100,
+      "conditions": [
+        "Bring Plume Fossil"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon"
+    }
+  ],
+  "obtainable_forms": {
+    "386": [
+      "deoxys-normal",
+      "deoxys-attack",
+      "deoxys-defense",
+      "deoxys-speed"
+    ]
+  },
+  "area_conditions": {
+    "Mirage Spot": [
+      "Daily Mirage spot must be present"
+    ],
+    "Crescent Isle": [
+      "Daily Mirage spot must be present"
+    ],
+    "Trackless Forest": [
+      "Ho-Oh or Lugia in your party"
+    ],
+    "Nameless Cavern": [
+      "Three Pokémon with maximum friendship in your party"
+    ],
+    "Pathless Plain": [
+      "Three Pokémon with maximum effort values in your party"
+    ],
+    "Shoal Cave High Tide": [
+      "High tide"
+    ],
+    "Shoal Cave Low Tide": [
+      "Low tide"
+    ],
+    "Shoal Cave B1F": [
+      "Low tide"
+    ],
+    "Shoal Cave B2F": [
+      "Low tide"
+    ],
+    "Shoal Cave B3F": [
+      "Low tide; access with Strength or Mach Bike"
+    ]
+  },
+  "evolution_overrides": {
+    "462": "Level up at New Mauville",
+    "470": "Level up near the Moss Rock in Petalburg Woods",
+    "471": "Level up near the Ice Rock in Shoal Cave",
+    "476": "Level up at New Mauville",
+    "700": "Level up + knows a Fairy move + at least 2 affection hearts"
+  }
+}
