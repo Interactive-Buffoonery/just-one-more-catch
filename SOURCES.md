@@ -517,6 +517,15 @@ mechanics sources. The `gold` / `silver` encounter codes are `g` / `i`.
   Manias's house and cave sections. Floor-specific gates apply before
   display-floor names are merged; no encounter area is dropped.
 
+### Dark Cave trace endpoints
+
+- [Violet-room events, lines 33–48](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/DarkCaveVioletEntrance.asm#L33-L48)
+  identify Route 31 warp (3,15), Blackthorn-room warp (17,1), and four
+  smashable rock objects. [Blackthorn-room events, lines 65–67](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/DarkCaveBlackthornEntrance.asm#L65-L67)
+  identify the Violet arrival (3,25) separately from the Route 45 exit (23,3).
+  These are endpoints for the unresolved collision trace, not evidence of a
+  walkable path or grounds for changing the current gates.
+
 ### Chapters, access and events
 
 `src` / `quote` fields in `data/gs.json` identify individual gates. These

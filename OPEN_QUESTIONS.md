@@ -170,13 +170,14 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
   cave warp, which is not a valid path. These source/model checks were not
   emulator or gameplay verification.
 
-- **Dark Cave Blackthorn-room earliest entrance:** the original scripts link
-  Violet-room warp (17,1) to the Blackthorn room, and the Psypoke maps show
-  an earlier approach. The current provisional gate is Surf + Rock Smash
-  in the initial chapter. Independently trace the Violet room's shoreline,
-  smashable rock and ledges to establish whether both moves are necessary.
-  Do not confuse entry into this room with reaching Route 45/Blackthorn
-  City past the one-way ledge. Sources: SOURCES.md, Gold/Silver access list.
+- **Dark Cave Blackthorn-room earliest entrance:** trace Violet-room warp
+  (17,1) from Route 31's arrival (3,15), accounting for water, ledges and
+  smashable rocks at (16,14), (27,6), (7,14) and (36,31). The destination is
+  Blackthorn-room warp (3,25); reaching Route 45 instead requires its separate
+  exit at (23,3). These script coordinates narrow the required terrain trace
+  but do not prove either move necessary; retain Surf + Rock Smash.
+  Sources: [Violet warps and rocks](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/DarkCaveVioletEntrance.asm#L33-L48),
+  [Blackthorn-room exits](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/DarkCaveBlackthornEntrance.asm#L65-L67).
 - **Mt. Mortar basement and Ice Path floors:** independently map PokeAPI's
   basement to the lower Surf entrance versus the raised Tyrogue platform;
   the basement currently needs Surf, Tyrogue also needs Waterfall. Confirm
