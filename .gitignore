@@ -9,7 +9,7 @@ dist/
 .spacefast/.space-link-*.tmp
 .wrangler/
 .DS_Store
-/__pycache__/
+__pycache__/
 /.playwright-mcp/
 
 stats.html
