@@ -1,4 +1,4 @@
-import { internalMutation, mutation, query, type MutationCtx, type QueryCtx } from "./_generated/server";
+import { action, internalMutation, mutation, query, type MutationCtx, type QueryCtx } from "./_generated/server";
 import { internal } from "./_generated/api";
 import type { Doc, Id } from "./_generated/dataModel";
 import { v } from "convex/values";
@@ -9,13 +9,15 @@ import { isAvatar } from "../shared/avatars";
 import { importCaughtState, validateImportId, validateImportStart } from "../shared/save-import";
 
 import { sendContact } from "./contactSpam";
+import { verifiedVisitor } from "./verification";
 import { identityOf } from "./auth";
 // Each run can carry up to MAX_RUN_BYTES, so batches stay well under the 16 MiB per-call read limit
 const BATCH = 16;
 
-async function owner(ctx: QueryCtx) {
+async function owner(ctx: QueryCtx, expectedUserId?: string) {
   const me = await identityOf(ctx);
   if (!me) throw new Error("Sign in first");
+  if (expectedUserId !== undefined && me.subject !== expectedUserId) throw new Error("Account changed");
   return me.tokenIdentifier;
 }
 
@@ -44,10 +46,10 @@ async function dropRun(ctx: MutationCtx, run: Id<"runs">) {
   await ctx.db.delete(run);
 }
 
-async function mine(ctx: QueryCtx, id: string) {
+async function mine(ctx: QueryCtx, id: string, expectedUserId?: string) {
   const runId = ctx.db.normalizeId("runs", id);
   const run = runId && (await ctx.db.get(runId));
-  if (!run || run.owner !== (await owner(ctx))) throw new Error("Not your playthrough");
+  if (!run || run.owner !== (await owner(ctx, expectedUserId))) throw new Error("Not your playthrough");
   return run;
 }
 
@@ -75,9 +77,9 @@ export const get = query({
 });
 
 export const create = mutation({
-  args: { version: v.string() },
-  handler: async (ctx, { version }) => {
-    const who = await owner(ctx);
+  args: { version: v.string(), expectedUserId: v.optional(v.string()) },
+  handler: async (ctx, { version, expectedUserId }) => {
+    const who = await owner(ctx, expectedUserId);
     if (!(VERSION_IDS as readonly string[]).includes(version)) throw new Error("Unknown game");
     if ((await ownedBy(ctx, who)).length >= MAX_RUNS) throw new Error("Too many playthroughs");
     return (await ctx.db.insert("runs", { owner: who, version, summary: summarize("{}") })) as string;
@@ -108,20 +110,20 @@ export const importCaught = mutation({
 });
 
 export const save = mutation({
-  args: { id: v.string(), state: v.string() },
-  handler: async (ctx, { id, state }) => {
+  args: { id: v.string(), state: v.string(), expectedUserId: v.optional(v.string()) },
+  handler: async (ctx, { id, state, expectedUserId }) => {
     if (runBytes(state) > MAX_RUN_BYTES) throw new Error("Playthrough is too large");
     JSON.parse(state);
-    const run = await mine(ctx, id);
+    const run = await mine(ctx, id, expectedUserId);
     await putState(ctx, run, state, { updatedAt: Date.now() });
   },
 });
 
 export const setStart = mutation({
-  args: { id: v.string(), startedAt: v.number() },
-  handler: async (ctx, { id, startedAt }) => {
+  args: { id: v.string(), startedAt: v.number(), expectedUserId: v.optional(v.string()) },
+  handler: async (ctx, { id, startedAt, expectedUserId }) => {
     if (!Number.isFinite(startedAt) || startedAt > Date.now() + 864e5) throw new Error("Pick a past date");
-    const run = await mine(ctx, id);
+    const run = await mine(ctx, id, expectedUserId);
     await ctx.db.patch(run._id, { startedAt });
   },
 });
@@ -214,9 +216,20 @@ export const deleteAccount = mutation({
   },
 });
 
-export const contact = mutation({
-  args: { email: v.string(), message: v.string(), website: v.optional(v.string()) },
-  returns: v.object({ ok: v.boolean(), retryAfterSeconds: v.optional(v.number()) }),
+const contactArgs = { email: v.string(), message: v.string(), website: v.optional(v.string()) };
+const contactResult = v.object({ ok: v.boolean(), retryAfterSeconds: v.optional(v.number()) });
+export const contact = action({
+  args: { ...contactArgs, token: v.optional(v.string()) },
+  returns: contactResult,
+  handler: async (ctx, { token, ...input }): Promise<{ ok: boolean; retryAfterSeconds?: number }> => {
+    if (input.website) return { ok: true };
+    const visitor = await verifiedVisitor(ctx, token, "contact");
+    return ctx.runMutation(internal.runs.acceptContact, { ...input, visitor });
+  },
+});
+export const acceptContact = internalMutation({
+  args: { ...contactArgs, visitor: v.optional(v.string()) },
+  returns: contactResult,
   handler: sendContact,
 });
 

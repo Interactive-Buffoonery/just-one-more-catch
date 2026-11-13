@@ -33,6 +33,8 @@ type Env = {
   readonly CLERK_SECRET_KEY: string | undefined;
   readonly CONTACT_TO: string | undefined;
   readonly RESEND_API_KEY: string | undefined;
+  readonly TURNSTILE_HOSTNAMES: string | undefined;
+  readonly TURNSTILE_SECRET_KEY: string | undefined;
 };
 
 /**

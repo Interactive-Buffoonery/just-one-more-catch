@@ -1,6 +1,6 @@
 # Contact form
 
-The page at `/contact/` calls `api.runs.contact`. It accepts an optional reply
+The page at `/contact/` calls the `api.runs.contact` action. It accepts an optional reply
 email and a message, and never accepts attachments.
 
 Spam checks run on the server before a message is stored or an email is queued:
@@ -9,22 +9,22 @@ Spam checks run on the server before a message is stored or an email is queued:
 - Blank messages, invalid reply addresses and oversized fields are rejected.
 - Repeating the latest identical message and reply address does not store or
   notify twice.
-- Each signed-in account can send two messages immediately and replenishes
-  three messages per hour.
-- Guests share a bucket allowing five immediate messages and replenishing
-  twenty per hour. Email addresses and browser IDs do not grant a new bucket.
-- The whole site allows five immediate messages, replenishes five per minute,
-  and accepts at most twenty messages per hour-long window.
+- Anonymous submissions require a server-verified Turnstile proof with the
+  expected action, hostname and browser visitor value before accepting a message.
+- Each signed-in account or verified browser visitor can send two messages
+  immediately and replenishes three messages per hour.
 
 The Convex rate-limiter component applies these limits transactionally. Requests
 that hit a limit return a wait time without storing a message, recording a
 contact event or scheduling email. The page keeps the draft and shows when to
 try again. Limits live in `convex/contactSpam.ts`.
 
-These controls bound accepted submissions and notifications; they do not stop
-requests from reaching Convex. There is no CAPTCHA or IP-based blocking. If the
-site needs that later, verify a challenge on the server before accepting a
-submission, and keep these limits as a second layer.
+These controls bound accepted submissions and notifications per caller; they do
+not stop requests from reaching Convex. Browser visitor values can rotate, but
+each anonymous submission still needs a fresh successful Turnstile proof. There
+is no site-wide notification cap or IP-based blocking. See README.md for the
+required Turnstile site key, backend secret and hostname configuration. Inactive
+caller quota records are cleaned up after two days.
 
 Run `pnpm test:convex` for the backend spam checks and `pnpm check` for form
 validation, repeat-click prevention, draft retention and retry copy. Deployment

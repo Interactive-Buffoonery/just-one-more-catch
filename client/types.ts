@@ -68,11 +68,11 @@ export type Bridge = {
   mountSignIn(el: HTMLDivElement): boolean;
   unmountSignIn(el: HTMLDivElement): void;
   signOut(): void;
-  createRun(version: string): Promise<string>;
+  createRun(version: string, expectedUserId?: string): Promise<string>;
   importRun(version: string, caught: number[], importId: string, startedAt?: number): Promise<string>;
-  saveRun(id: string, state: string): Promise<unknown>;
+  saveRun(id: string, state: string, expectedUserId?: string): Promise<unknown>;
   deleteRun(id: string): Promise<unknown>;
-  setStart(id: string, startedAt: number): Promise<unknown>;
+  setStart(id: string, startedAt: number, expectedUserId?: string): Promise<unknown>;
   deleteAccount(): Promise<unknown>;
   contact(input: {
     email: string;
