@@ -83,7 +83,7 @@ const parts = read('client/parts.ts');
 const spriteCode = stripTypeScriptTypes(parts.slice(parts.indexOf('const ring ='), parts.indexOf('export const lvl')).replaceAll('export ', ''));
 const context = {
   $, esc, ui, byN, searching: () => '', R: () => current, viewOf: r => r.view, isGuest: () => false, run: true, P: () => ({ art: 'hgss', boxes: [2, 30] }),
-  PARTY_SIZE: 6, HELD_ITEMS: [], FIT: {}, TYPE: { psychic: 'pink', normal: 'grey' },
+  FORM_ZOOM: { hgss: { unown: 200 } }, PARTY_SIZE: 6, HELD_ITEMS: [], FIT: {}, TYPE: { psychic: 'pink', normal: 'grey' },
   collectedForms: api.collectedForms, visibleForms: api.visibleForms, collectedGenders: api.collectedGenders, hasGenders: api.hasGenders, GENDERS: api.GENDERS, num: (p) => p.n, pad: (n) => String(n).padStart(3, '0'),
   tagBits: () => [], isHere: () => false, rowStatus: () => ({ s: 'now' }), howElse: () => '', cap: (s) => s,
 };
