@@ -115,6 +115,14 @@ class HistoricalData(unittest.TestCase):
                 total = sum(r["c"] for mon in dex.values() for r in rows(mon["n"], place, version) if not r["cond"] or r["cond"] == ["time-night"])
                 self.assertEqual(total, 100, (place, version))
 
+    def test_route16_grass_requires_cut(self):
+        text = (ROOT / "client/data/gs.ts").read_text()
+        dex = json.loads(text[text.index("{"):-2])["dex"]
+        rows = [r for p in dex for r in p["rows"] if r["place"] == "Route 16"]
+        self.assertEqual(len(rows), 8)
+        self.assertTrue(all(r["m"] == "walk" and r["need"] == ["cut-hm"] for r in rows))
+        self.assertEqual({v for r in rows for v in r["v"]}, set("gi"))
+
     def test_condition_replacement_stays_with_its_pack(self):
         encounter = [{"location_area": {"name": "example-area"}, "version_details": [{
             "version": {"name": "gold"}, "encounter_details": [{

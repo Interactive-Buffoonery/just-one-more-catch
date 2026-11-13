@@ -1164,6 +1164,56 @@
       "src": "https://www.psypokes.com/gsc/images/darkcave2.png",
       "quote": "Dark Cave",
       "note": "Retains the previous provisional aquatic requirement. The Surf-only trace proves floor encounters in the southern pocket, not access to the main water or fishing shore; see OPEN_QUESTIONS.md."
+    },
+    {
+      "place": "Route 16",
+      "n": 22,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route16.blk",
+      "note": "The eight grass cells at x12-15, y0-1 occupy the northern enclosure. Its only entrance from the gate/east-road/south-road approaches is the Cut tree at (15,4). Verified against pinned Route16 events, connections and kanto_collision.asm; no north connection or alternative house entrance."
+    },
+    {
+      "place": "Route 16",
+      "n": 88,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route16.blk",
+      "note": "The eight grass cells at x12-15, y0-1 occupy the northern enclosure. Its only entrance from the gate/east-road/south-road approaches is the Cut tree at (15,4). Verified against pinned Route16 events, connections and kanto_collision.asm; no north connection or alternative house entrance."
+    },
+    {
+      "place": "Route 16",
+      "n": 89,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route16.blk",
+      "note": "The eight grass cells at x12-15, y0-1 occupy the northern enclosure. Its only entrance from the gate/east-road/south-road approaches is the Cut tree at (15,4). Verified against pinned Route16 events, connections and kanto_collision.asm; no north connection or alternative house entrance."
+    },
+    {
+      "place": "Route 16",
+      "n": 198,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route16.blk",
+      "note": "The eight grass cells at x12-15, y0-1 occupy the northern enclosure. Its only entrance from the gate/east-road/south-road approaches is the Cut tree at (15,4). Verified against pinned Route16 events, connections and kanto_collision.asm; no north connection or alternative house entrance."
+    },
+    {
+      "place": "Route 16",
+      "n": 218,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route16.blk",
+      "note": "The eight grass cells at x12-15, y0-1 occupy the northern enclosure. Its only entrance from the gate/east-road/south-road approaches is the Cut tree at (15,4). Verified against pinned Route16 events, connections and kanto_collision.asm; no north connection or alternative house entrance."
     }
   ],
   "obtainable_forms": {

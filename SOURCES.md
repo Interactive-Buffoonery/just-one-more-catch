@@ -2838,3 +2838,23 @@ Independently checked against pret/pokered at
 Add `bicycle` only to the seven old/good/super-rod rows in both versions.
 Walking encounters and the Lickitung trade retain their existing access.
 This is source and collision-model verification; no emulator play-test was run.
+
+
+## Gold/Silver Route 16 grass access (2026-11-13)
+
+The delayed original access audit flagged the northern grass enclosure's Cut
+tree. Independently verified the cached files byte-for-byte against pinned
+pret/pokegold `f2cde36f49b994c143bfd18582182302fdc76492`:
+[Route 16 blocks](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route16.blk),
+[collision table](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/kanto_collision.asm),
+[events/warps](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route16.asm) and
+[connections](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/maps/attributes.asm).
+
+All eight grass cells at x12–15, y0–1 sit in the north enclosure. The only
+entrance is the Cut tree at (15,4); the house door at (3,1) returns to this
+same enclosure and the map has no north connection. A separate flood starting
+from the east road, both western gate exits and all southern road entrances
+reaches 0/8 grass cells without Cut and 8/8 with Cut, even over-allowing every
+other non-wall collision. Add `cut-hm` to the walking rows for Fearow, Grimer,
+Muk, Murkrow and Slugma in both versions. This is static source verification;
+no emulator play-test was run.
