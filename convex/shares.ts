@@ -30,10 +30,10 @@ function checkRevision(actual: number | undefined, expected: number) {
 export const status = query({
   args: { runId: v.id("runs") },
   returns: statusValidator,
-  handler: async (ctx, { runId }) => {
+  handler: async (ctx, { runId }): Promise<ShareStatus> => {
     const run = await mine(ctx, runId);
     const row = await ctx.db.query("shares").withIndex("by_runId", q => q.eq("runId", runId)).unique();
-    return { token: row?.token ?? null, projection: row?.projection ?? null, revision: run.shareRevision ?? 0 };
+    return { token: row?.token ?? null, projection: row ? validateProjection(row.projection) : null, revision: run.shareRevision ?? 0 };
   },
 });
 

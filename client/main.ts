@@ -3,6 +3,7 @@ import "@fontsource/jetbrains-mono/latin-500.css";
 import type { Clerk } from "@clerk/clerk-js";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex/_generated/api";
+import type { Id } from "../convex/_generated/dataModel";
 import type { Bridge, Device } from "./types";
 
 const legacyTab = new URLSearchParams(location.search).get("tab");
@@ -238,6 +239,10 @@ async function startTracker() {
     deleteRun: (id) => convex.mutation(api.runs.remove, { id }),
     setStart: (id, startedAt, expectedUserId) =>
       convex.mutation(api.runs.setStart, { id, startedAt, expectedUserId }),
+    shareStatus: (runId) => convex.query(api.shares.status, { runId: runId as Id<"runs"> }),
+    publishShare: (runId, projection, expectedRevision) => convex.action(api.shares.publish, { runId: runId as Id<"runs">, projection, expectedRevision }),
+    replaceShare: (runId, projection, expectedRevision) => convex.action(api.shares.replace, { runId: runId as Id<"runs">, projection, expectedRevision }),
+    stopShare: (runId, expectedRevision) => convex.mutation(api.shares.stop, { runId: runId as Id<"runs">, expectedRevision }),
     deleteAccount: async () => {
       await convex.mutation(api.runs.deleteAccount, {});
       await clerk?.user?.delete();

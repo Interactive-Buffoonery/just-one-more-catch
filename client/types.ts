@@ -1,6 +1,8 @@
 import type { SaveLink } from "../shared/save-import";
 import type { FunctionReturnType } from "convex/server";
 import type { api } from "../convex/_generated/api";
+import type { ShareProjection } from "../shared/share-projection";
+import type { ShareStatus } from "../convex/shares";
 import { Summary } from "../shared/summary";
 
 export type Row = {
@@ -78,6 +80,10 @@ export type Bridge = {
   saveRun(id: string, state: string, expectedUserId?: string): Promise<unknown>;
   deleteRun(id: string): Promise<unknown>;
   setStart(id: string, startedAt: number, expectedUserId?: string): Promise<unknown>;
+  shareStatus(runId: string): Promise<ShareStatus>;
+  publishShare(runId: string, projection: ShareProjection, expectedRevision: number): Promise<ShareStatus>;
+  replaceShare(runId: string, projection: ShareProjection, expectedRevision: number): Promise<ShareStatus>;
+  stopShare(runId: string, expectedRevision: number): Promise<ShareStatus>;
   deleteAccount(): Promise<unknown>;
   contact(input: {
     email: string;
