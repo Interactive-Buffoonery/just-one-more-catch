@@ -4,15 +4,10 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## HeartGold and SoulSilver
 
-- Ruins of Alph Outside: same grass question as Crystal.
-- Route 42: do any grass patches need Surf or Strength?
-- Route 44: is all the grass reachable on foot?
-- Whirl Islands B3F: does it need Waterfall?
-- Tohjo Falls: is Surf enough for every part?
-- Mt. Silver: how do 1F Top, 2F to 4F and Top map to the cave, and which of them need Rock Climb? (Only Mountainside and Sneasel are gated so far.)
-- Fuchsia City: are the headbutt trees behind a Cut tree?
-- Safari Zone Desert and Rocky Beach: they need Baoba's second challenge. Model it?
-- Violet City Pokémon Center: Primo's egg codes. Model them?
+- Ruins of Alph Outside: is the Natu and Smeargle grass reachable on foot? Prima p82 lists only Rock Smash and Surf as field moves and Bulbapedia gates only Union Cave entrance 1 and the Hyper Potion, but neither places the grass itself.
+- Route 42: is any grass reachable on foot from Ecruteak or Mahogany? Bulbapedia says Surf is needed to get past the lakes from either end (https://bulbapedia.bulbagarden.net/wiki/Johto_Route_42) but doesn't place the grass, and the Prima p134 map is too small to tell grass from trees.
+- Mt. Silver: pret's encounter tables (https://github.com/pret/pokeheartgold/blob/6bf138d6035aa6b43d6f8f4132a12df70f86dcec/files/fielddata/encountdata/gs_enc_data.json) match PokeAPI areas by species: 1f is 1F (D41R0101), mountainside is the lower mountainside (D41R0103), 3f is the Expert Belt chamber (D41R0104), 2f is Moltres's chamber (D41R0105), 1f-top is 2F (D41R0106), and 4f and top are 3F (D41R0107) and the upper mountainside (D41R0102), in an order the species can't tell apart. Bulbapedia gates the lower and upper mountainside, 2F and 3F on Rock Climb and the Expert Belt chamber on Surf and Waterfall (https://bulbapedia.bulbagarden.net/wiki/Mt._Silver_Cave). Golduck, Quagsire and Misdreavus appear only behind one of those gates, so they need an either-or gate that the pack cannot express.
+- Fuchsia City: are the headbutt trees behind the Cut tree? Bulbapedia says the northern half needs Cut, and the zone has one Cut tree (https://github.com/pret/pokeheartgold/blob/6bf138d6035aa6b43d6f8f4132a12df70f86dcec/files/fielddata/eventdata/zone_event/053_T08.json#L98-L103), but tree positions and collision are not in the decompilation.
 
 ## FireRed and LeafGreen
 
