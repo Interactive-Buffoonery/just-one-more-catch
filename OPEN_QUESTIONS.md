@@ -194,3 +194,63 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 - Victory Road B2F: does the first reachable encounter tile require Rock
   Smash as well as Strength? Trace the map or check in-game; the walkthrough
   establishes Rock Smash for full traversal, not the earliest encounter.
+
+## Black and White (`bw`)
+
+This pack is integrated with provisional access details; it is not a certified
+complete representation of all original BW acquisition methods.
+
+- **PokeAPI gaps:** no White Forest area/encounters in White, no NPC-trade
+  rows in either version, no swarm conditions, and no Desert Resort Zen Mode
+  Darmanitan statue encounter. Do not invent these rows. No wild encounters
+  should be added to Black City to compensate for White Forest's absence.
+- **Roamers:** the cache places Tornadus (Black) and Thundurus (White) at
+  `team-flare-secret-hq-area`, method `static`. That location is excluded.
+  Actual roaming routes, rates and levels need corrected PokeAPI data.
+  Walkthrough part 11 sources their Route 7 release after Legend. Landorus
+  remains represented with the both-roamers/own-Trainer-ID party gate, but
+  this pack cannot guide catching the roamers themselves.
+- **Victory Road unknown rooms:** PokeAPI has `unknown-area-53` through
+  `unknown-area-66` (with gaps) and `1f-unknown-room`. Their room identities
+  and first encounter tiles need a map/script or game audit. They retain
+  individual labels/tables under Legend, without invented Surf/Strength
+  requirements. Terrakion is displayed in Trial Chamber with Cobalion and
+  Strength, following walkthrough part 11 rather than PokeAPI's 4F label.
+- **Combined cave tables:** Wellspring Cave is one PokeAPI area and Twist
+  Mountain combines B1F–3F. The pack cannot separate Surf-only Wellspring
+  basement encounters or winter-only Twist Mountain passages without more
+  detailed encounter data. Mistralton Cave also combines ordinary floors;
+  its earliest floor needs Surf while Cobalion/Guidance additionally needs
+  Strength. Challenger's Cave B2F has a Surf traversal requirement, but the
+  source does not settle whether the first encounter tile needs Surf. Its
+  blanket gate is currently postgame only; verify this on the map/in game.
+- **Seasons and time:** all PokeAPI `season-*` conditions remain, displayed
+  as special requirements rather than automatically filtered by date. The
+  cache's `Season` is the anime page; `Time#Generation_V` establishes monthly
+  seasons and variable clock intervals. Winter changes in Icirrus/Route 8/
+  Moor, snow paths and season-specific box forms need gameplay verification.
+  No fixed night boundary is asserted and no wild time-of-day rows exist.
+- **Dreamyard duplicates:** PokeAPI supplies Friday Musharna twice (area and
+  B1F), with Friday/Ghetsis omitted from B1F. Both are now Friday/postgame
+  gated and displayed as Dreamyard, but are retained as distinct source rows.
+  Confirm whether both entries should collapse upstream; dark grass and
+  ordinary ruins grass have separate Cut/postgame needs.
+- **National visibility:** the shared UI exposes national species with the
+  Elite Four switch, slightly before Cedric's post-credits upgrade. Areas
+  after Team Plasma additionally require `ghetsis`; consider a future
+  pack-specific national-unlock model if this distinction matters.
+- **Choice tracking:** starter conditions label the appropriate Dreamyard
+  monkey gift, but do not consume a gift choice. Fossils likewise keep all
+  item-qualified choices. The existing tracker does not model those choices
+  as exclusive state. No new acquisition rows were invented for them.
+- **Forms:** local Basculin stripes, seasonal Deerling/Sawsbuck and Rotom
+  appliances are sourced. Older transfer-only form families (Unown, Burmy,
+  Shellos, Giratina and others) are not exhaustively catalogued for BW.
+  Do not add B2W2-only Therian formes or fused Kyurem. Deferred additional
+  catalogs need game-specific sources and regular/shiny sprite verification.
+- **Review coverage:** all 87 retained encounter areas map to cached source
+  pages; walkthrough and important exceptions were inspected once. No
+  independent second-model audit, scanned-guide cross-check, BW script
+  verification, browser/guest/account-sync QA, save-file import, emulator
+  or cartridge playthrough was performed. Missing second sources did not
+  block integration. See `docs/bw-access-audit.md` for the reviewer work list.
