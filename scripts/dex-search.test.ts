@@ -7,7 +7,8 @@ const species = (name: string, n: number, j: number, types: string[] = [], forms
 const pikachu = species("Pikachu", 25, 22, ["electric"]);
 const raichu = species("Raichu", 26, 23, ["electric"], [{ id: "alola", name: "Alolan" }]);
 const list = [raichu, pikachu].map((p) => ({ p }));
-const search = (q: string) => searchDex(list, q, (p) => p.j!).map(({ p }) => p.name);
+const forms = (p: Species) => p.forms || [];
+const search = (q: string, visible = forms) => searchDex(list, q, (p) => p.j!, visible).map(({ p }) => p.name);
 
 test("matches regional and national number prefixes", () => {
   expect(search("22")).toEqual(["Pikachu"]);
@@ -19,8 +20,16 @@ test("matches types and form names without case sensitivity", () => {
   expect(search("ELECTRIC")).toEqual(["Raichu", "Pikachu"]);
   expect(search("ALOL")).toEqual(["Raichu"]);
 });
+test("strips a leading # for names", () => {
+  expect(search("#pika")).toEqual(["Pikachu"]);
+});
+test("matches only visible forms and only for two or more letters", () => {
+  expect(search("alol", () => [])).toEqual([]);
+  expect(search("l")).toEqual([]);
+  expect(search("al")).toEqual(["Raichu"]);
+});
 test("puts name prefixes first and preserves other order", () => {
   const rows = ["Raichu", "Pikachu", "Pichu"].map((name) => ({ p: species(name, 1, 1) }));
-  expect(searchDex(rows, "pi", (p) => p.n).map(({ p }) => p.name)).toEqual(["Pikachu", "Pichu"]);
+  expect(searchDex(rows, "pi", (p) => p.n, forms).map(({ p }) => p.name)).toEqual(["Pikachu", "Pichu"]);
   expect(search("chu")).toEqual(["Raichu", "Pikachu"]);
 });
