@@ -203,13 +203,8 @@ async function purgeRuns(ctx: MutationCtx, who: string) {
     .withIndex("by_owner", (q) => q.eq("owner", who))
     .take(BATCH);
   for (const r of runs) await dropRun(ctx, r._id);
-  if (runs.length === BATCH) await ctx.scheduler.runAfter(0, internal.runs.purge, { owner: who });
+  return runs.length === BATCH;
 }
-
-export const purge = internalMutation({
-  args: { owner: v.string() },
-  handler: (ctx, { owner }) => purgeRuns(ctx, owner),
-});
 
 export const deleteAccount = mutation({
   args: {},
@@ -233,8 +228,8 @@ export async function markDeleting(ctx: MutationCtx, who: string) {
 }
 
 async function cleanupAccount(ctx: MutationCtx, who: string) {
-  await purgeRuns(ctx, who);
-  await purgeEventsFor(ctx, who);
+  const moreRuns = await purgeRuns(ctx, who);
+  const moreEvents = await purgeEventsFor(ctx, who);
   for (const p of await profileOf(ctx, who)) await ctx.db.delete(p._id);
   const devices = await ctx.db
     .query("deviceLabels")
@@ -246,8 +241,12 @@ async function cleanupAccount(ctx: MutationCtx, who: string) {
     .withIndex("by_sender", (q) => q.eq("sender", who))
     .take(BATCH);
   for (const m of sent) await ctx.db.delete(m._id);
-  if (sent.length === BATCH || devices.length === 100)
+  if (moreRuns || moreEvents || sent.length === BATCH || devices.length === 100)
     await ctx.scheduler.runAfter(0, internal.runs.cleanup, { owner: who });
+  else {
+    const account = await accountOf(ctx, who);
+    if (account) await ctx.db.delete(account._id);
+  }
 }
 
 export const cleanup = internalMutation({
@@ -276,13 +275,8 @@ export const acceptContact = internalMutation({
 async function purgeEventsFor(ctx: MutationCtx, who: string) {
   const rows = await ctx.db.query("events").withIndex("by_owner", (q) => q.eq("owner", who)).take(BATCH);
   for (const row of rows) await ctx.db.delete(row._id);
-  if (rows.length === BATCH) await ctx.scheduler.runAfter(0, internal.runs.purgeEvents, { owner: who });
+  return rows.length === BATCH;
 }
-
-export const purgeEvents = internalMutation({
-  args: { owner: v.string() },
-  handler: (ctx, { owner }) => purgeEventsFor(ctx, owner),
-});
 
 export const saveLinks = query({
   args: { version: v.string() },

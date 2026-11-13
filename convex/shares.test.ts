@@ -114,6 +114,7 @@ test("app deletion marks the account and drains shares in run batches", async ()
   await t.finishAllScheduledFunctions(vi.runAllTimers);
   expect(await t.run(ctx => ctx.db.query("shares").take(1))).toEqual([]);
   expect(await t.run(ctx => ctx.db.query("runs").take(1))).toEqual([]);
+  expect(await t.run(ctx => ctx.db.query("accounts").take(1))).toEqual([]);
 });
 
 test("the reader returns exactly projection keys with privacy headers and tight CORS", async () => {
