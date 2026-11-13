@@ -196,16 +196,16 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 This pack is integrated with provisional access details; it is not a certified
 complete representation of all original BW acquisition methods.
 
-- **PokeAPI gaps:** no White Forest area/encounters in White, no NPC-trade
-  rows in either version, no swarm conditions, and no Desert Resort Zen Mode
-  Darmanitan statue encounter. Do not invent these rows. No wild encounters
-  should be added to Black City to compensate for White Forest's absence.
-- **Roamers:** the cache places Tornadus (Black) and Thundurus (White) at
-  `team-flare-secret-hq-area`, method `static`. That location is excluded.
-  Actual roaming routes, rates and levels need corrected PokeAPI data.
-  Walkthrough part 11 sources their Route 7 release after Legend. Landorus
-  remains represented with the both-roamers/own-Trainer-ID party gate, but
-  this pack cannot guide catching the roamers themselves.
+- **PokeAPI gaps:** White Forest encounters and swarm conditions remain absent.
+  The existing gap-fill format now supplies the six NPC-trade species and
+  Desert Resort's level 35 Darmanitan statues, with trade partners, Munchlax's
+  summer restriction and the RageCandyBar prerequisite. White Forest needs
+  two-source population tables; swarms need two-source route/species tables.
+  Do not add rows to Black City for White Forest.
+- **Roamers:** Tornadus (Black) and Thundurus (White) now appear at level 40
+  under Roaming Unova after Legend and the Route 7 release. Gate bulletin
+  boards identify their stormy-weather route. Exact time-of-day route filtering
+  remains unmodeled; the broad roaming entry does not claim a fixed catch site.
 - **Victory Road unknown rooms:** PokeAPI has `unknown-area-53` through
   `unknown-area-66` (with gaps) and `1f-unknown-room`. Their room identities
   and first encounter tiles need a map/script or game audit. They retain
@@ -226,12 +226,6 @@ complete representation of all original BW acquisition methods.
   seasons and variable clock intervals. Winter changes in Icirrus/Route 8/
   Moor, snow paths and season-specific box forms need gameplay verification.
   No fixed night boundary is asserted and no wild time-of-day rows exist.
-- **Dreamyard duplicates:** PokeAPI supplies Friday Musharna twice (area and
-  B1F), with Friday/Ghetsis omitted from B1F. Both are now Friday/postgame
-  gated and displayed as Dreamyard, but are retained as distinct source rows.
-  Confirm whether both entries should collapse upstream; dark grass and
-  ordinary ruins grass have separate needs: dark grass and the basement
-  require the postgame, while grass behind the tree keeps Cut.
 - **National visibility:** the shared UI exposes national species with the
   Elite Four switch, slightly before Cedric's post-credits upgrade. Areas
   after Team Plasma additionally require `ghetsis`; consider a future
