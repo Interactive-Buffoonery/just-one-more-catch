@@ -654,6 +654,17 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
 .app .form[aria-pressed=false] .sprite{opacity:.45;filter:grayscale(.5)}
 :is([data-theme=dracula],[data-theme=rosepine],[data-theme$=-dark]) .form[aria-pressed=false] .sprite{opacity:.6}
 
+.form-tiles{grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.app .form-tiles .form{position:relative;padding:6px 0 0;gap:4px;overflow:visible;font-size:15px}
+.form-tiles .crop{position:relative;overflow:hidden;width:80px;height:80px}
+.form-tiles .crop .sprite{position:absolute;left:50%;top:50%;width:var(--fz);height:var(--fz);max-width:none;margin:0;transform:translate(-50%,-50%);image-rendering:pixelated}
+.app .form-tiles .form[aria-pressed=false] .sprite{opacity:.75;filter:none}
+.app .form-tiles .form[aria-pressed=true]{box-shadow:inset 0 0 0 1px var(--teal)}
+.form-tiles .form span{width:100%;padding:5px 4px;border-radius:0 0 11px 11px;border-top:1px solid var(--line)}
+.form-tiles .form span.long{font-size:12.5px}
+.form-tiles .form[aria-pressed=true] span{background:var(--teal);border-color:var(--teal);color:var(--on-fill)}
+.form-tiles .form[aria-pressed=true]::after{content:"✓";position:absolute;top:-5px;right:-5px;display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--teal);color:var(--on-fill);font-size:12px;font-weight:900;box-shadow:0 0 0 2px var(--bg)}
+
 /* ---- Gender tracking ---- */
 .form .gsym{display:grid;place-items:center;width:48px;height:48px;font-size:30px;line-height:1;font-weight:800;color:var(--teal)}
 .app .form[aria-pressed=false] .gsym{color:var(--soft);opacity:.45}
