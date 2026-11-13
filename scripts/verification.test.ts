@@ -41,9 +41,21 @@ test("loads lazily, reuses the API, binds visitor/action, and removes each widge
   expect(await verificationToken("pairing")).toBe("one-use-token");
   expect(b.scripts).toHaveLength(1);
   expect(b.options().action).toBe("pairing");
-  expect(b.api.ready).toHaveBeenCalledTimes(1);
+  expect(b.api.ready).not.toHaveBeenCalled();
   expect(b.api.remove).toHaveBeenCalledTimes(2);
   expect(b.containers.slice(1).every(c => c.remove.mock.calls.length === 1)).toBe(true);
+});
+
+test("uses the loaded async API without waiting for ready", async () => {
+  vi.useFakeTimers();
+  const b = browser();
+  b.api.ready.mockImplementation(() => {});
+  const { verificationToken } = await import("../client/verification");
+  const result = verificationToken("pairing").then(token => ({ token }), error => ({ error }));
+  await vi.advanceTimersByTimeAsync(10000);
+  expect(await result).toEqual({ token: "one-use-token" });
+  expect(b.api.ready).not.toHaveBeenCalled();
+  expect(b.api.remove).toHaveBeenCalledWith("widget");
 });
 
 test("keeps an interactive challenge inside the active modal", async () => {

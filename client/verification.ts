@@ -1,5 +1,4 @@
 type Turnstile = {
-  ready(callback: () => void): void;
   render(container: HTMLElement, options: {
     sitekey: string;
     action: string;
@@ -31,16 +30,16 @@ function load(): Promise<Turnstile> {
     let script: HTMLScriptElement | undefined;
     const fail = () => { script?.remove(); reject(new Error("Verification couldn't load. Please try again.")); };
     const timeout = setTimeout(fail, 10000);
-    const ready = (api: Turnstile) => api.ready(() => { clearTimeout(timeout); resolve(api); });
+    const loaded = (api: Turnstile) => { clearTimeout(timeout); resolve(api); };
     const existing = turnstile();
-    if (existing) return ready(existing);
+    if (existing) return loaded(existing);
     script = document.createElement("script");
     script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
     script.async = true;
     script.onerror = () => { clearTimeout(timeout); fail(); };
     script.onload = () => {
       const api = turnstile();
-      if (api) ready(api); else { clearTimeout(timeout); fail(); }
+      if (api) loaded(api); else { clearTimeout(timeout); fail(); }
     };
     document.head.append(script);
   }).catch(error => { loading = undefined; throw error; });
