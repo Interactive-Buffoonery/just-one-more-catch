@@ -206,6 +206,26 @@ function shell() {
   <dialog class="sheet" id="sheet" aria-labelledby="sheet-title"><div class="sheetbody" id="sheetbody"></div></dialog>
   <div class="sr" aria-live="polite" id="live"></div>`;
 }
+let resultsTimer: ReturnType<typeof setTimeout> | undefined;
+// Patches the toolbar in place so the focused search input survives typing.
+function searchDexGrid(q: string, now = false) {
+  ui.q = q;
+  $("#dexgrid").innerHTML = dexGrid();
+  const searching = !!q.trim(),
+    filters = $(".dextop .filters") as HTMLElement;
+  filters.classList.toggle("searching", searching);
+  filters.querySelectorAll<HTMLElement>("[data-filter]").forEach((b) =>
+    b.setAttribute("aria-pressed", String(!searching && b.dataset.filter === ui.filter)),
+  );
+  $(".searchclear").hidden = !searching;
+  clearTimeout(resultsTimer);
+  const say = () => {
+    const grid = $("#dexgrid");
+    if (grid) announce(`Results ${grid.querySelectorAll(".dt").length}`);
+  };
+  if (now) say();
+  else resultsTimer = setTimeout(say, 400);
+}
 function tabFromUrl() {
   if (IMPORT_PATH.test(location.pathname)) return "import";
   const path = Object.keys(PATHS).find((t) => PATHS[t] === location.pathname);
@@ -419,8 +439,8 @@ async function onClick(e: MouseEvent) {
     return;
   }
   if (d.clearsearch) {
-    ui.q = "";
-    render();
+    $("#dexq").value = "";
+    searchDexGrid("", true);
     $("#dexq").focus();
     return;
   }
@@ -933,8 +953,7 @@ export function mount(el: HTMLElement, b: Bridge) {
     if (e.key === "Escape") {
       e.preventDefault();
       t.value = "";
-      ui.q = "";
-      render();
+      searchDexGrid("", true);
     } else if (e.key === "Enter") {
       const results = el.querySelectorAll<HTMLButtonElement>("#dexgrid button.dt");
       if (results.length === 1) {
@@ -955,9 +974,7 @@ export function mount(el: HTMLElement, b: Bridge) {
       return;
     }
     if (t.id !== "dexq") return;
-    ui.q = t.value;
-    render();
-    $("#live").textContent = `Results ${el.querySelectorAll("#dexgrid .dt").length}`;
+    searchDexGrid(t.value);
   });
   el.addEventListener("submit", (e) => {
     if ((e.target as HTMLElement).id !== "pairform") return;
