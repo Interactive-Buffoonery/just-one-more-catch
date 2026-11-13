@@ -117,8 +117,8 @@ pnpm run deploy
 
 - Pushes Convex functions to production. Answer **y** when it asks (where it
   can't prompt, add `--yes` to the `convex deploy` command).
-- Builds the site with `.env.production`. The script removes the dev Clerk key
-  first, because `convex deploy` loads `.env.local`, then stops the deploy if
+- Builds the site with `.env.production`. The script removes development Clerk
+  and Turnstile keys first, because `convex deploy` loads `.env.local`, then stops the deploy if
   the build doesn't contain the live (`pk_live_`) key.
 - Uploads `dist/` to the Cloudflare Worker with `wrangler deploy`. Run
   `pnpm exec wrangler login` once first.
