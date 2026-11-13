@@ -74,6 +74,14 @@ const kantoBadges = (soul: string, earth: string) => [
   ["Volcano", "Blaine"],
   ["Earth", earth],
 ];
+const ALOLA_KIT = [
+  ["fishing-rod", "Fishing Rod"],
+  ["tauros", "Tauros Charge"],
+  ["surf", "Lapras Paddle"],
+  ["mudsdale", "Mudsdale Gallop"],
+  ["machamp", "Machamp Shove"],
+  ["island-scan", "Island Scan"],
+];
 const JOHTO_KIT = [
   ["old-rod", "Old Rod"],
   ["headbutt", "Headbutt"],
@@ -388,14 +396,7 @@ const USUM: Pack = {
   ],
   badgeWord: "Z",
   badgesWord: "trials",
-  kit: [
-    ["fishing-rod", "Fishing Rod"],
-    ["tauros", "Tauros Charge"],
-    ["surf", "Lapras Paddle"],
-    ["mudsdale", "Mudsdale Gallop"],
-    ["machamp", "Machamp Shove"],
-    ["island-scan", "Island Scan"],
-  ],
+  kit: ALOLA_KIT,
   hm: {},
   boxes: [32, 30],
 };
@@ -473,14 +474,7 @@ const SM: Pack = {
   ],
   badgeWord: "Z",
   badgesWord: "trials",
-  kit: [
-    ["fishing-rod", "Fishing Rod"],
-    ["tauros", "Tauros Charge"],
-    ["surf", "Lapras Paddle"],
-    ["mudsdale", "Mudsdale Gallop"],
-    ["machamp", "Machamp Shove"],
-    ["island-scan", "Island Scan"],
-  ],
+  kit: ALOLA_KIT,
   hm: { tauros: "Fightinium", "fishing-rod": "Waterium", mudsdale: "Electrium", machamp: "Darkinium" },
   nightFrom: 18,
   morningFrom: 6,

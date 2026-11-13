@@ -6,7 +6,7 @@ import { runInNewContext } from 'node:vm';
 const game = JSON.parse(readFileSync('client/data/usum.ts', 'utf8').split('export default ')[1].trim().replace(/;$/, ''));
 const source = readFileSync('client/game.ts', 'utf8');
 const packs = readFileSync('client/packs.ts', 'utf8');
-const usum = runInNewContext(stripTypeScriptTypes(packs.slice(packs.indexOf('const USUM:'), packs.indexOf('export const VERSIONS'))) + '\nUSUM');
+const usum = runInNewContext(stripTypeScriptTypes(packs.slice(packs.indexOf('const ALOLA_KIT'), packs.indexOf('const JOHTO_KIT')) + packs.slice(packs.indexOf('const USUM:'), packs.indexOf('export const VERSIONS'))) + '\nUSUM');
 const run = { caught: new Set(), badges: new Set(usum.badges.map(b => b[0])), kit: new Set(usum.kit.map(k => k[0])), events: new Set() };
 const context = {
   R: () => run, P: () => usum, EVENTS: Object.fromEntries(game.events.map(e => [e.id, e])),
