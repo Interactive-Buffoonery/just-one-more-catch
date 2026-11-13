@@ -32,6 +32,22 @@ describe("guest caught-list imports", () => {
     return { values, storage, refresh, track, guest, guestRows };
   };
 
+  it("refreshes additively and preserves rows after failed writes or moved rows", async () => {
+    const { guest, guestRows, storage, values } = await setup();
+    const link = { salt: "a".repeat(32), fingerprint: "b".repeat(64), playSeconds: 100 };
+    const id = await guest.importRun("red", [1], importId, undefined, link);
+    expect(await guest.refreshRun(id, [25], { ...link, playSeconds: 50 }, 1000)).toEqual({ added: [25] });
+    expect(await guest.refreshRun(id, [25])).toEqual({ added: [] });
+    expect(await guest.saveLinks("red")).toEqual([{ id, ...link }]);
+    const before = JSON.stringify(guestRows());
+    storage.setItem.mockImplementationOnce(() => { throw new Error("quota"); });
+    await expect(guest.refreshRun(id, [2])).rejects.toThrow("quota");
+    expect(JSON.stringify(guestRows())).toBe(before);
+    values.set("jomc.guest", JSON.stringify(guestRows().map(r => ({ ...r, movedTo: "remote" }))));
+    await expect(guest.refreshRun(id, [2])).rejects.toThrow("This playthrough moved");
+    await expect(guest.refreshRun("missing", [2])).rejects.toThrow("This playthrough moved");
+  });
+
   it("stores caught flags and keeps the existing playthrough unchanged", async () => {
     const { values, guest, guestRows, refresh, track } = await setup();
     const existing = { id: "local-existing", version: "crystal", state: '{"caught":[1],"notes":"Keep me"}', createdAt: "2026-01-01T00:00:00.000Z" };
