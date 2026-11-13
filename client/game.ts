@@ -29,6 +29,12 @@ export let EVENTS: Record<string, GameData["events"][number]> = {};
 let LATER: Record<string, GameData["events"][number][]> = {};
 export const METHOD: Record<string, [string, string | null]> = {
   walk: ["Walking", null],
+  "dark-grass": ["Dark grass", null],
+  "grass-spots": ["Rustling grass", null],
+  "cave-spots": ["Dust cloud", null],
+  "bridge-spots": ["Flying shadow", null],
+  "surf-spots": ["Rippling water (Surf)", "surf"],
+  "super-rod-spots": ["Rippling water (fishing)", "super-rod"],
   horde: ["Horde encounter", null],
   "yellow-flowers": ["Yellow flowers", null],
   "purple-flowers": ["Purple flowers", null],
@@ -61,6 +67,14 @@ export const METHOD: Record<string, [string, string | null]> = {
   fishing: ["Fishing", "fishing-rod"],
   "bubbling-spots": ["Bubbling fishing spot", "fishing-rod"],
   "sos-from-bubbling-spot": ["SOS at a bubbling spot", "fishing-rod"],
+  "dirt-cloud": ["Dirt cloud ambush", null],
+  "sand-cloud": ["Sand cloud ambush", null],
+  "rustling-grass": ["Rustling grass ambush", null],
+  "rustling-tree": ["Rustling tree ambush", null],
+  "rustling-bush": ["Rustling bush ambush", null],
+  "flying-shadow": ["Flying shadow ambush", null],
+  "water-splash": ["Water splash ambush", "surf"],
+  "cave-shadow": ["Cave shadow ambush", null],
   sos: ["SOS call", null],
   "island-scan": ["Island Scan", "island-scan"],
   "berry-trees": ["Berry tree", null],
@@ -127,6 +141,8 @@ const STORY: Record<string, string> = {
 export const cap = (s: string) => s[0].toUpperCase() + s.slice(1);
 function specialLabel(c: string) {
   if (STORY[c]) return STORY[c];
+  if (c.startsWith("season-")) return `${cap(c.slice(7))} only`;
+  if (c === "special-encounter-couldnt-capture-before") return "If the earlier catch was deferred";
   let m = c.match(/^johto-safari-blocks-(\w+)-min-(\d+)$/);
   if (m) return `Safari: ${m[2]}+ ${m[1]} blocks`;
   m = c.match(/^item-(\w+)-fossil$/);
@@ -411,15 +427,15 @@ export const R = () => run as Run;
 export const ver = () => verOf(R().version);
 export const P = () => ver().pack;
 export const e4 = () => R().badges.has("Elite Four");
-export const visible = (p: Species) => !!p.j || e4();
+export const visible = (p: Species) => p.j != null || e4();
 export const dexList = () =>
   DEX.filter(visible).sort((a, b) =>
     e4() ? a.n - b.n : (a.j as number) - (b.j as number),
   );
-export const num = (p: Species) => (e4() || !p.j ? p.n : p.j);
+export const num = (p: Species) => (e4() || p.j == null ? p.n : p.j);
 export const pad = (n: number) => String(n).padStart(3, "0");
 export const regionalCaught = () =>
-  [...R().caught].filter((n) => byN[n]?.j).length;
+  [...R().caught].filter((n) => byN[n]?.j != null).length;
 
 export const gameTime = () => {
   const h = gameNow(R().clock).hour,

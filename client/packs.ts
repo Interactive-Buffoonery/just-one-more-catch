@@ -236,6 +236,32 @@ const FRLG: Pack = {
   boxes: [14, 30],
 };
 
+const RS: Pack = {
+  load: () => import("./data/rs").then((m) => m.default),
+  art: "rs",
+  region: "Hoenn",
+  regional: 202,
+  national: 386,
+  start: "Route 101",
+  starters: [252, 255, 258],
+  badges: [
+    ["Stone", "Roxanne"], ["Knuckle", "Brawly"], ["Dynamo", "Wattson"],
+    ["Heat", "Flannery"], ["Balance", "Norman"], ["Feather", "Winona"],
+    ["Mind", "Tate & Liza"], ["Rain", "Wallace"],
+  ],
+  kit: [
+    ["old-rod", "Old Rod"], ["good-rod", "Good Rod"], ["super-rod", "Super Rod"],
+    ["cut-hm", "Cut"], ["flash", "Flash"], ["rock-smash", "Rock Smash"],
+    ["strength", "Strength"], ["surf", "Surf"], ["dive", "Dive"],
+    ["waterfall", "Waterfall"], ["mach-bike", "Mach Bike"], ["acro-bike", "Acro Bike"],
+  ],
+  hm: {
+    "cut-hm": "Stone", flash: "Knuckle", "rock-smash": "Dynamo",
+    strength: "Heat", surf: "Balance", dive: "Mind", waterfall: "Rain",
+  },
+  boxes: [14, 30],
+};
+
 const EMERALD: Pack = {
   load: () => import("./data/emerald").then((m) => m.default),
   art: "emerald",
@@ -261,6 +287,28 @@ const EMERALD: Pack = {
     strength: "Heat", surf: "Balance", dive: "Mind", waterfall: "Rain",
   },
   boxes: [14, 30],
+};
+
+const BW: Pack = {
+  load: () => import("./data/bw").then((m) => m.default),
+  art: "bw",
+  region: "Unova",
+  regional: 156,
+  national: 649,
+  start: "Nuvema Town",
+  starters: [495, 498, 501],
+  badges: [
+    ["Trio", "Cilan / Chili / Cress"], ["Basic", "Lenora"],
+    ["Insect", "Burgh"], ["Bolt", "Elesa"], ["Quake", "Clay"],
+    ["Jet", "Skyla"], ["Freeze", "Brycen"], ["Legend", "Drayden / Iris"],
+  ],
+  kit: [
+    ["cut-hm", "Cut"], ["surf", "Surf"], ["strength", "Strength"],
+    ["waterfall", "Waterfall"], ["super-rod", "Super Rod"],
+    ["bicycle", "Bicycle"],
+  ],
+  hm: {},
+  boxes: [24, 30],
 };
 
 const XY: Pack = {
@@ -324,6 +372,22 @@ const USUM: Pack = {
 };
 
 export const VERSIONS: Record<VersionId, Version> = {
+  ruby: {
+    name: "Ruby", short: "RU", code: "R", gen: "Gen 3",
+    pack: RS, other: "Sapphire", ring: ["fire", "ground"],
+  },
+  sapphire: {
+    name: "Sapphire", short: "SA", code: "S", gen: "Gen 3",
+    pack: RS, other: "Ruby", ring: ["water", "ice"],
+  },
+  black: {
+    name: "Black", short: "BL", code: "k", gen: "Gen 5",
+    pack: BW, other: "White", ring: ["dragon", "fire"],
+  },
+  white: {
+    name: "White", short: "W", code: "w", gen: "Gen 5",
+    pack: BW, other: "Black", ring: ["dragon", "electric"],
+  },
   x: {
     name: "X", short: "X", code: "X", gen: "Gen 6",
     pack: XY, other: "Y", ring: ["fairy", "psychic"],
@@ -439,10 +503,7 @@ export const CONSOLES: { name: string; tag: string; titles: (VersionId | Soon)[]
   { name: "Game Boy", tag: "Game Boy", titles: [["red", "blue"], ["yellow"]] },
   { name: "Game Boy Color", tag: "GB Color", titles: [["gold", "silver"], ["crystal"]] },
   { name: "Game Boy Advance", tag: "GBA", titles: [
-    [
-      { name: "Ruby", short: "RU", color: "#c8323c", region: "Hoenn" },
-      { name: "Sapphire", short: "SA", color: "#2f5fb3", region: "Hoenn" },
-    ],
+    ["ruby", "sapphire"],
     ["firered", "leafgreen"],
     ["emerald"],
   ] },
@@ -453,10 +514,7 @@ export const CONSOLES: { name: string; tag: string; titles: (VersionId | Soon)[]
     ],
     [{ name: "Platinum", short: "PT", color: "#8d8f9c", region: "Sinnoh" }],
     ["heartgold", "soulsilver"],
-    [
-      { name: "Black", short: "BL", color: "#3a3a40", region: "Unova" },
-      { name: "White", short: "W", color: "#c9c9d0", region: "Unova" },
-    ],
+    ["black", "white"],
     [
       { name: "Black 2", short: "B2", color: "#2f3a4a", region: "Unova" },
       { name: "White 2", short: "W2", color: "#d9c6bb", region: "Unova" },

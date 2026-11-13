@@ -28,6 +28,10 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Ultra Sun and Ultra Moon
 
+- Haina Desert weather SOS: cached PokeAPI rows omit the weather conditions for Castform and Gabite. Their corrected plain SOS rows still need a sourced weather representation.
+- Lush Jungle South/West: PokeAPI duplicates Steenee, Oranguru, Passimian and Trumbeak ambush records in both subareas, while the cached USUM location table places the rustling-grass block in the south. Terrain is corrected in both existing subareas; confirm whether the West duplicates should be removed.
+- Poni Breaker Coast Wailmer: the cached bubbling-spots record combines fishing and water-splash encounters (10–49, 100%). Leave its rod requirement unchanged until those encounters can be split with sourced levels and odds. Wailord, Dragalge and Clawitzer have distinct splash rows and now require Lapras.
+
 - Brooklet Hill Main and North: are these the first lake (open before Lana's trial) or the trial pools (Waterium)? South is gated.
 - Route 13: the guide has Mudsdale given at the start of Route 12, so Gallop is likely in hand. Confirm nothing on Route 13 needs more.
 - Route 15 Main: the guide says more than half the route waits for a Ride Pokémon that breaks the rocks in the water. Which encounter rows are out there?
@@ -195,11 +199,140 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
   Smash as well as Strength? Trace the map or check in-game; the walkthrough
   establishes Rock Smash for full traversal, not the earliest encounter.
 
+## Ruby and Sapphire (`rs`)
+
+- **Save imports:** reader 0.1.3 verifies synthetic 128 KiB RS files through
+  native Core, raw National Dex flags and the published WASM worker. It cannot
+  distinguish Ruby from Sapphire; players choose the title. Obtain permitted
+  real cartridge/emulator exports and a legitimate in-game zero-caught save
+  for comparison. Real 64 KiB RS exports remain unverified and unsupported;
+  the Emerald-only recovery path must not be applied to them.
+
+- **Independent access audit:** coordinator's Opus review remains. The local
+  103-area work list is `.cache/areas-rs.json` (regenerate with
+  `python3 scripts/access_audit.py areas rs`). All areas have cached source
+  pages; Weather Institute uses walkthrough Part 11. No second guide/source
+  confirms every access path. No gate was entered without a source, but the
+  following earliest-tile questions need independent map/gameplay proof.
+- **Victory Road B2F:** the forward route in R/S walkthrough Part 21 uses
+  both Strength and Rock Smash; the pack conservatively requires both.
+  Check whether either legitimate approach reaches any B2F encounter tile
+  with Strength alone. B1F is open before its initial boulders. Do not infer
+  this from Emerald's traversal or layout.
+- **Route 123 western approach:** the location article describes westward
+  ledges and the separate Berry Master terminus; the pack keeps encounter
+  grass behind the Route 122 approach (Surf + Devon Scope). Independently
+  trace the original R/S western entrance to confirm no early grass/water
+  encounter tile can be reached. Route 118 walking rows separately need
+  Surf; fishing stays open from the western beach.
+- **Shoal Cave clock:** cached PokeAPI has no time conditions for its named
+  High Tide / Low Tide or basement areas. The clock changes at 03:00, 09:00,
+  15:00, 21:00; low tide is 03:00–09:00 and 15:00–21:00 (Time page).
+  The pack preserves both sets and gates B3F (ice room) with Strength, but
+  cannot automatically hide low-tide rooms or high-tide fishing. A shared
+  tide model, plus original floor-name mapping verification, remains.
+- **Temporary hideout:** Ruby/Sapphire's Lilycove hideout eventually closes
+  after defeating Tate and Liza (Mind Badge; location articles); the tracker
+  models its opening after submarine theft, not loss of access. Verify a shared temporary-area
+  model before claiming all currently available Electrode rows are exact.
+- **PokeAPI limits/corrections:** New Mauville's spurious level-30 Electrode
+  static is excluded from this pack using the original scripts; Voltorb
+  statics and actual hideout Electrode remain. PokeAPI also incorrectly tags
+  Magma Hideout with Sapphire; the pack limits Magma to Ruby and Aqua to
+  Sapphire using the version-specific location sources. Other R/S encounter
+  areas were present; no missing encounter region was identified. The cache
+  lacked only the Pokédex-4 response (fetched individually). Distribution-only
+  Hoenn Pokecenter Pikachu/Celebi/Jirachi rows are deliberately excluded;
+  they are not ordinary local encounters. Numeric NPC-trade levels are
+  retained upstream examples, not mandatory in-game trade levels.
+- **Choice/state limits:** one desert fossil can be selected; its counterpart
+  sinks. The tracker offers independent possession events for imported or
+  traded fossils and does not enforce mutual exclusion. Mirage Island's
+  event must be kept in sync with today's game. Regi events represent full
+  puzzle completion, including Sealed Chamber, Dig, Relicanth/Wailord and
+  the individual puzzle; they do not automatically prove party composition.
+  Eon Ticket voyages require historical distribution access. These are
+  existing tracker-model limits, not invented encounter rows.
+- **Unverified:** no browser picker/guest persistence/account sync, cartridge
+  or emulator gameplay, clock manipulation, historical ticket distribution,
+  save-file import, or independent form-catalog expansion was tested.
+  No R/S file-import mapping or Works-with claim was enabled.
+## Black and White (`bw`)
+
+- **Save imports:** synthetic 512 KiB B/W and B2/W2 fixtures verify distinct
+  identities and complete National Dex caught flags through native Core, raw
+  bits and published reader 0.1.3 WASM. Obtain permitted real cartridge/emulator
+  exports and a legitimate in-game zero-caught save for comparison. Live account
+  imports and mobile Safari remain unverified. PKHeX exposes Gen V adventure
+  start seconds, but its epoch/bounds, invalid values, leap days and exported
+  date behavior are not verified for reader date import; use import day.
+
+This pack is integrated with provisional access details; it is not a certified
+complete representation of all original BW acquisition methods.
+
+- **PokeAPI gaps:** no White Forest area/encounters in White, no NPC-trade
+  rows in either version, no swarm conditions, and no Desert Resort Zen Mode
+  Darmanitan statue encounter. Do not invent these rows. No wild encounters
+  should be added to Black City to compensate for White Forest's absence.
+- **Roamers:** the cache places Tornadus (Black) and Thundurus (White) at
+  `team-flare-secret-hq-area`, method `static`. That location is excluded.
+  Actual roaming routes, rates and levels need corrected PokeAPI data.
+  Walkthrough part 11 sources their Route 7 release after Legend. Landorus
+  remains represented with the both-roamers/own-Trainer-ID party gate, but
+  this pack cannot guide catching the roamers themselves.
+- **Victory Road unknown rooms:** PokeAPI has `unknown-area-53` through
+  `unknown-area-66` (with gaps) and `1f-unknown-room`. Their room identities
+  and first encounter tiles need a map/script or game audit. They retain
+  individual labels/tables under Legend, without invented Surf/Strength
+  requirements. Terrakion is displayed in Trial Chamber with Cobalion and
+  Strength, following walkthrough part 11 rather than PokeAPI's 4F label.
+- **Combined cave tables:** Wellspring Cave is one PokeAPI area and Twist
+  Mountain combines B1F–3F. The pack cannot separate Surf-only Wellspring
+  basement encounters or winter-only Twist Mountain passages without more
+  detailed encounter data. Mistralton Cave also combines ordinary floors;
+  its earliest floor needs Surf while Cobalion/Guidance additionally needs
+  Strength. Challenger's Cave B2F has a Surf traversal requirement, but the
+  source does not settle whether the first encounter tile needs Surf. Its
+  blanket gate is currently postgame only; verify this on the map/in game.
+- **Seasons and time:** all PokeAPI `season-*` conditions remain, displayed
+  as special requirements rather than automatically filtered by date. The
+  cache's `Season` is the anime page; `Time#Generation_V` establishes monthly
+  seasons and variable clock intervals. Winter changes in Icirrus/Route 8/
+  Moor, snow paths and season-specific box forms need gameplay verification.
+  No fixed night boundary is asserted and no wild time-of-day rows exist.
+- **Dreamyard duplicates:** PokeAPI supplies Friday Musharna twice (area and
+  B1F), with Friday/Ghetsis omitted from B1F. Both are now Friday/postgame
+  gated and displayed as Dreamyard, but are retained as distinct source rows.
+  Confirm whether both entries should collapse upstream; dark grass and
+  ordinary ruins grass have separate needs: dark grass and the basement
+  require the postgame, while grass behind the tree keeps Cut.
+- **National visibility:** the shared UI exposes national species with the
+  Elite Four switch, slightly before Cedric's post-credits upgrade. Areas
+  after Team Plasma additionally require `ghetsis`; consider a future
+  pack-specific national-unlock model if this distinction matters.
+- **Choice tracking:** starter conditions label the appropriate Dreamyard
+  monkey gift, but do not consume a gift choice. Fossils likewise keep all
+  item-qualified choices. The existing tracker does not model those choices
+  as exclusive state. No new acquisition rows were invented for them.
+- **Forms:** local Basculin stripes, seasonal Deerling/Sawsbuck and Rotom
+  appliances are sourced. Older transfer-only form families (Unown, Burmy,
+  Shellos, Giratina and others) are not exhaustively catalogued for BW.
+  Do not add B2W2-only Therian formes or fused Kyurem. Deferred additional
+  catalogs need game-specific sources and regular/shiny sprite verification.
+- **Review coverage:** all 87 retained encounter areas map to cached source
+  pages; walkthrough and important exceptions were inspected once. No
+  exhaustive independent access audit, scanned-guide cross-check, BW script
+  verification, browser/guest/account-sync QA, save-file import, emulator
+  or cartridge playthrough was performed. Missing second sources did not
+  block integration. Three independent-review findings were checked against
+  cached sources and corrected: the Route 9 stone gate, Black Landorus's
+  deferred-catch condition, and Cut on Dreamyard dark grass/B1F.
+  See `docs/bw-access-audit.md` for the reviewer work list.
 ## X and Y (`xy`) implementation handoff
 
 - **Save imports:** synthetic X/Y caught/empty files verify individual titles and
   complete National Dex flags through native Core, independent raw bits and
-  published reader 0.1.2 WASM. Obtain permitted real cartridge/emulator exports
+  published reader 0.1.3 WASM. Obtain permitted real cartridge/emulator exports
   and a legitimate in-game zero-caught save. Live account imports, encrypted
   backup extraction, mobile Safari and physical mobile performance remain
   unverified. Gen VI adventure-start date import needs separate epoch/bounds,

@@ -1,0 +1,877 @@
+{
+  "versions": {
+    "ruby": "R",
+    "sapphire": "S"
+  },
+  "pokedex": 4,
+  "species": 386,
+  "gen": "generation-iii",
+  "historical_pre_evolutions": true,
+  "keep_floors": true,
+  "drop": [
+    "^Hoenn Pokecenter$"
+  ],
+  "drop_methods": [
+    "colosseum-bonus-disc-jpn",
+    "colosseum-bonus-disc-us",
+    "pokemon-channel-pal"
+  ],
+  "rename": {
+    "Hoenn Route 116": "Route 116",
+    "Hoenn Route 131": "Route 131",
+    "Hoenn Route 109": "Route 109",
+    "Hoenn Route 117": "Route 117",
+    "Hoenn Victory Road B1F": "Victory Road B1F",
+    "Hoenn Route 127": "Route 127",
+    "Hoenn Route 105": "Route 105",
+    "Hoenn Route 107": "Route 107",
+    "Hoenn Route 132": "Route 132",
+    "Hoenn Route 133": "Route 133",
+    "Hoenn Route 125": "Route 125",
+    "Hoenn Route 123": "Route 123",
+    "Hoenn Route 115": "Route 115",
+    "Hoenn Route 118": "Route 118",
+    "Hoenn Route 108": "Route 108",
+    "Hoenn Route 102": "Route 102",
+    "Hoenn Route 112": "Route 112",
+    "Hoenn Route 130": "Route 130",
+    "Hoenn Route 120": "Route 120",
+    "Hoenn Route 119 Weather Institute": "Route 119 Weather Institute",
+    "Hoenn Route 121": "Route 121",
+    "Hoenn Route 134": "Route 134",
+    "Hoenn Route 129": "Route 129",
+    "Hoenn Victory Road B2F": "Victory Road B2F",
+    "Hoenn Route 111": "Route 111",
+    "Hoenn Route 101": "Route 101",
+    "Hoenn Safari Zone Neacro Bike": "Safari Zone northeast",
+    "Hoenn Safari Zone Sw": "Safari Zone southwest",
+    "Hoenn Route 113": "Route 113",
+    "Hoenn Route 103": "Route 103",
+    "Hoenn Route 124": "Route 124",
+    "Hoenn Route 110": "Route 110",
+    "Hoenn Safari Zone Se": "Safari Zone southeast",
+    "Hoenn Safari Zone Nwmach Bike": "Safari Zone northwest",
+    "Hoenn Route 106": "Route 106",
+    "Hoenn Route 124 Underwater": "Route 124 Underwater",
+    "Hoenn Route 122": "Route 122",
+    "Hoenn Victory Road 1F": "Victory Road 1F",
+    "Hoenn Route 119": "Route 119",
+    "Hoenn Route 128": "Route 128",
+    "Hoenn Route 126": "Route 126",
+    "Hoenn Route 114": "Route 114",
+    "Hoenn Route 104": "Route 104",
+    "Hoenn Route 126 Underwater": "Route 126 Underwater",
+    "Granite Cave 1Fsmall Room": "Granite Cave Steven’s room",
+    "Meteor Falls Backsmall Room": "Meteor Falls Bagon room",
+    "Mossdeep City Stevens House": "Mossdeep City Steven’s house"
+  },
+  "methods": {},
+  "needs": {
+    "Hoenn Route 110": {
+      "needs": [
+        "museum"
+      ],
+      "src": "https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/SlateportCity_OceanicMuseum_2F/scripts.inc"
+    },
+    "Hoenn Route 111": {
+      "needs": [
+        "museum"
+      ],
+      "src": "https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/SlateportCity_OceanicMuseum_2F/scripts.inc"
+    },
+    "Hoenn Route 117": {
+      "needs": [
+        "museum"
+      ],
+      "src": "https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/SlateportCity_OceanicMuseum_2F/scripts.inc"
+    },
+    "Hoenn Route 118": {
+      "needs": [
+        "museum"
+      ],
+      "src": "https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/SlateportCity_OceanicMuseum_2F/scripts.inc"
+    },
+    "New Mauville Entrance": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_10"
+    },
+    "New Mauville": {
+      "needs": [
+        "surf",
+        "basement-key"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_10"
+    },
+    "Meteor Falls Back": {
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Meteor_Falls"
+    },
+    "Meteor Falls B1F": {
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Meteor_Falls"
+    },
+    "Fortree City": {
+      "needs": [
+        "weather-institute"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_11"
+    },
+    "Hoenn Route 120": {
+      "needs": [
+        "weather-institute"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_11"
+    },
+    "Hoenn Safari Zone Neacro Bike": {
+      "needs": [
+        "acro-bike"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_12"
+    },
+    "Hoenn Safari Zone Nwmach Bike": {
+      "needs": [
+        "mach-bike"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_12"
+    },
+    "Team Magma Hideout": {
+      "needs": [
+        "surf",
+        "submarine"
+      ],
+      "src": "https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/SlateportCity_Harbor/scripts.inc"
+    },
+    "Team Aqua Hideout": {
+      "needs": [
+        "surf",
+        "submarine"
+      ],
+      "src": "https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/SlateportCity_Harbor/scripts.inc"
+    },
+    "Hoenn Route 124 Underwater": {
+      "needs": [
+        "dive"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_17"
+    },
+    "Hoenn Route 126 Underwater": {
+      "needs": [
+        "dive"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_17"
+    },
+    "Shoal Cave B3F": {
+      "needs": [
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_15"
+    },
+    "Seafloor Cavern": {
+      "needs": [
+        "dive"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_16"
+    },
+    "Ancient Tomb": {
+      "needs": [
+        "registeel"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_20"
+    },
+    "Desert Ruins": {
+      "needs": [
+        "regirock"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_20"
+    },
+    "Island Cave": {
+      "needs": [
+        "regice"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_20"
+    },
+    "Mirage Island": {
+      "needs": [
+        "mirage"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_18"
+    },
+    "Southern Island": {
+      "needs": [
+        "eon-ticket"
+      ],
+      "src": "https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/LilycoveCity_Harbor/scripts.inc"
+    },
+    "Sky Pillar 3F": {
+      "needs": [
+        "mach-bike"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_23"
+    },
+    "Sky Pillar 5F": {
+      "needs": [
+        "mach-bike"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_23"
+    },
+    "Sky Pillar Apex": {
+      "needs": [
+        "mach-bike"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_23"
+    },
+    "Hoenn Victory Road B2F": {
+      "needs": [
+        "strength",
+        "rock-smash"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_21"
+    },
+    "Hoenn Route 123": {
+      "needs": [
+        "scope"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_12"
+    },
+    "Meteor Falls Backsmall Room": {
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Meteor_Falls"
+    }
+  },
+  "chapters": [
+    {
+      "title": "Littleroot to Rustboro",
+      "needs": [],
+      "places": [
+        "Route 101",
+        "Route 102",
+        "Route 103",
+        "Route 104",
+        "Petalburg City",
+        "Petalburg Woods",
+        "Rustboro City",
+        "Route 115",
+        "Route 116",
+        "Rusturf Tunnel"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_3"
+    },
+    {
+      "title": "Dewford and Granite Cave",
+      "needs": [
+        "briney"
+      ],
+      "places": [
+        "Dewford Town",
+        "Route 106",
+        "Granite Cave"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_4"
+    },
+    {
+      "title": "Slateport to Mauville",
+      "needs": [
+        "stern"
+      ],
+      "places": [
+        "Route 109",
+        "Slateport City",
+        "Route 110",
+        "Route 111",
+        "Route 117",
+        "Route 118"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_6"
+    },
+    {
+      "title": "Fallarbor and Meteor Falls",
+      "needs": [
+        "rock-smash"
+      ],
+      "places": [
+        "Route 112",
+        "Fiery Path",
+        "Route 113",
+        "Route 114",
+        "Meteor Falls"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_8"
+    },
+    {
+      "title": "Mt. Chimney and Lavaridge",
+      "needs": [
+        "chimney"
+      ],
+      "places": [
+        "Jagged Pass",
+        "Lavaridge Town"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_9"
+    },
+    {
+      "title": "Surfing western Hoenn",
+      "needs": [
+        "surf"
+      ],
+      "places": [
+        "Route 105",
+        "Route 107",
+        "Route 108",
+        "Abandoned Ship",
+        "New Mauville"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_20"
+    },
+    {
+      "title": "Weather Institute and Fortree",
+      "needs": [
+        "surf"
+      ],
+      "places": [
+        "Route 119",
+        "Fortree City",
+        "Route 120"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_11"
+    },
+    {
+      "title": "Lilycove and Mt. Pyre",
+      "needs": [
+        "surf",
+        "scope"
+      ],
+      "places": [
+        "Route 121",
+        "Route 122",
+        "Route 123",
+        "Safari Zone",
+        "Mt. Pyre",
+        "Lilycove City",
+        "Team Magma Hideout",
+        "Team Aqua Hideout"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_12"
+    },
+    {
+      "title": "The eastern ocean",
+      "needs": [
+        "surf",
+        "hideout"
+      ],
+      "places": [
+        "Route 124",
+        "Route 125",
+        "Route 126",
+        "Route 127",
+        "Route 128",
+        "Route 129",
+        "Route 130",
+        "Route 131",
+        "Route 132",
+        "Route 133",
+        "Route 134",
+        "Mossdeep City",
+        "Shoal Cave",
+        "Pacifidlog Town",
+        "Mirage Island",
+        "Ever Grande City"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_14"
+    },
+    {
+      "title": "Beneath the sea",
+      "needs": [
+        "surf",
+        "dive"
+      ],
+      "places": [
+        "Sootopolis City",
+        "Seafloor Cavern",
+        "Island Cave",
+        "Desert Ruins",
+        "Ancient Tomb"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_17"
+    },
+    {
+      "title": "Cave of Origin",
+      "needs": [
+        "surf",
+        "dive",
+        "seafloor"
+      ],
+      "places": [
+        "Cave Of Origin"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_17"
+    },
+    {
+      "title": "Victory Road",
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "places": [
+        "Victory Road"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_21"
+    },
+    {
+      "title": "After the Elite Four",
+      "needs": [
+        "Elite Four"
+      ],
+      "places": [
+        "Sky Pillar",
+        "Roaming Hoenn",
+        "Southern Island"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_23"
+    }
+  ],
+  "events": [
+    {
+      "id": "briney",
+      "label": "Rescue Peeko and get the Devon Letter",
+      "q": "Did you rescue Peeko and receive the Letter for Steven?",
+      "chap": 0,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_3"
+    },
+    {
+      "id": "stern",
+      "label": "Deliver the Letter to Steven",
+      "q": "Did you deliver the Devon Letter to Steven in Granite Cave?",
+      "chap": 1,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_4",
+      "after": [
+        "briney"
+      ]
+    },
+    {
+      "id": "museum",
+      "label": "Deliver the Devon Goods",
+      "q": "Did you deliver the Devon Goods to Stern in the Oceanic Museum?",
+      "chap": 2,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_5"
+    },
+    {
+      "id": "chimney",
+      "label": "Defeat the team boss on Mt. Chimney",
+      "q": "Did you defeat Maxie (Ruby) or Archie (Sapphire) on Mt. Chimney?",
+      "chap": 3,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_9"
+    },
+    {
+      "id": "goggles",
+      "label": "Get the Go-Goggles",
+      "q": "Did your rival give you the Go-Goggles after beating Flannery?",
+      "chap": 4,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_9"
+    },
+    {
+      "id": "root-fossil",
+      "label": "Get the Root Fossil",
+      "q": "Have you obtained a Root Fossil for revival at Devon?",
+      "chap": 4,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_10"
+    },
+    {
+      "id": "claw-fossil",
+      "label": "Get the Claw Fossil",
+      "q": "Have you obtained a Claw Fossil for revival at Devon?",
+      "chap": 4,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_10"
+    },
+    {
+      "id": "basement-key",
+      "label": "Get the Basement Key",
+      "q": "Did Wattson give you the Basement Key for New Mauville?",
+      "chap": 5,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_10"
+    },
+    {
+      "id": "weather-institute",
+      "label": "Rescue the Weather Institute",
+      "q": "Did you defeat Team Magma (Ruby) or Team Aqua (Sapphire) at the Weather Institute?",
+      "chap": 6,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_11"
+    },
+    {
+      "id": "scope",
+      "label": "Get the Devon Scope",
+      "q": "Did Steven give you the Devon Scope on Route 120?",
+      "chap": 6,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_11",
+      "after": [
+        "weather-institute"
+      ]
+    },
+    {
+      "id": "submarine",
+      "label": "Witness the submarine theft",
+      "q": "Did you see Team Magma (Ruby) or Team Aqua (Sapphire) steal the submarine in Slateport?",
+      "chap": 7,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_13"
+    },
+    {
+      "id": "hideout",
+      "label": "Clear the Lilycove hideout",
+      "q": "Did you defeat Tabitha (Ruby) or Matt (Sapphire) and see the submarine leave the hideout?",
+      "chap": 7,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_14",
+      "after": [
+        "submarine"
+      ]
+    },
+    {
+      "id": "mirage",
+      "label": "Find Mirage Island",
+      "q": "Did Mirage Island appear on Route 130 today?",
+      "chap": 8,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_18"
+    },
+    {
+      "id": "seafloor",
+      "label": "Awaken the legendary in Seafloor Cavern",
+      "q": "Did you defeat Maxie (Ruby) or Archie (Sapphire) and awaken the legendary in Seafloor Cavern?",
+      "chap": 9,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_16"
+    },
+    {
+      "id": "regirock",
+      "label": "Open Regirock’s chamber",
+      "q": "Did you solve the Sealed Chamber and open Regirock’s room in Desert Ruins?",
+      "chap": 9,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_20"
+    },
+    {
+      "id": "regice",
+      "label": "Open Regice’s chamber",
+      "q": "Did you solve the Sealed Chamber and open Regice’s room in Island Cave?",
+      "chap": 9,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_20"
+    },
+    {
+      "id": "registeel",
+      "label": "Open Registeel’s chamber",
+      "q": "Did you solve the Sealed Chamber and open Registeel’s room in Ancient Tomb?",
+      "chap": 9,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_20"
+    },
+    {
+      "id": "tv-report",
+      "label": "Watch the roaming Pokémon report",
+      "q": "Did you watch the TV report about the blue (Ruby) or red (Sapphire) flying Pokémon after entering the Hall of Fame?",
+      "chap": 12,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_23"
+    },
+    {
+      "id": "eon-ticket",
+      "label": "Unlock the Eon Ticket voyage",
+      "q": "Did you unlock the special island voyage with the Eon Ticket distribution?",
+      "chap": 12,
+      "src": "https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/LilycoveCity_Harbor/scripts.inc"
+    }
+  ],
+  "row_needs": [
+    {
+      "place": "Hoenn Route 111",
+      "n": 27,
+      "m": "walk",
+      "needs": [
+        "goggles"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_10"
+    },
+    {
+      "place": "Hoenn Route 111",
+      "n": 328,
+      "m": "walk",
+      "needs": [
+        "goggles"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_10"
+    },
+    {
+      "place": "Hoenn Route 111",
+      "n": 331,
+      "m": "walk",
+      "needs": [
+        "goggles"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_10"
+    },
+    {
+      "place": "Hoenn Route 111",
+      "n": 343,
+      "m": "walk",
+      "needs": [
+        "goggles"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_10"
+    },
+    {
+      "place": "Hoenn Route 115",
+      "n": 39,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_8"
+    },
+    {
+      "place": "Hoenn Route 115",
+      "n": 276,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_8"
+    },
+    {
+      "place": "Hoenn Route 115",
+      "n": 277,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_8"
+    },
+    {
+      "place": "Hoenn Route 115",
+      "n": 278,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_8"
+    },
+    {
+      "place": "Hoenn Route 115",
+      "n": 333,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_8"
+    },
+    {
+      "place": "Hoenn Route 118",
+      "n": 263,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_118"
+    },
+    {
+      "place": "Hoenn Route 118",
+      "n": 264,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_118"
+    },
+    {
+      "place": "Hoenn Route 118",
+      "n": 278,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_118"
+    },
+    {
+      "place": "Hoenn Route 118",
+      "n": 309,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_118"
+    },
+    {
+      "place": "Hoenn Route 118",
+      "n": 310,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_118"
+    },
+    {
+      "place": "Hoenn Route 118",
+      "n": 352,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_118"
+    },
+    {
+      "place": "Hoenn Route 119",
+      "n": 352,
+      "m": "devon-scope",
+      "needs": [
+        "scope"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_11"
+    },
+    {
+      "place": "Hoenn Route 119 Weather Institute",
+      "n": 351,
+      "m": "gift",
+      "needs": [
+        "weather-institute"
+      ],
+      "src": "https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/Route119_WeatherInstitute_2F/scripts.inc"
+    },
+    {
+      "place": "Hoenn Route 120",
+      "n": 352,
+      "m": "devon-scope",
+      "needs": [
+        "scope"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_11"
+    },
+    {
+      "place": "Mossdeep City Stevens House",
+      "n": 374,
+      "m": "gift",
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/MossdeepCity_StevensHouse/scripts.inc"
+    },
+    {
+      "place": "Roaming Hoenn",
+      "n": 380,
+      "m": "roaming-grass",
+      "needs": [
+        "Elite Four",
+        "tv-report"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_23"
+    },
+    {
+      "place": "Roaming Hoenn",
+      "n": 380,
+      "m": "roaming-water",
+      "needs": [
+        "Elite Four",
+        "tv-report"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_23"
+    },
+    {
+      "place": "Roaming Hoenn",
+      "n": 381,
+      "m": "roaming-grass",
+      "needs": [
+        "Elite Four",
+        "tv-report"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_23"
+    },
+    {
+      "place": "Roaming Hoenn",
+      "n": 381,
+      "m": "roaming-water",
+      "needs": [
+        "Elite Four",
+        "tv-report"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_23"
+    },
+    {
+      "place": "Rustboro City",
+      "n": 345,
+      "m": "gift",
+      "needs": [
+        "root-fossil"
+      ],
+      "src": "https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/RustboroCity_DevonCorp_2F/scripts.inc"
+    },
+    {
+      "place": "Rustboro City",
+      "n": 347,
+      "m": "gift",
+      "needs": [
+        "claw-fossil"
+      ],
+      "src": "https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/RustboroCity_DevonCorp_2F/scripts.inc"
+    }
+  ],
+  "evolution_overrides": {
+    "26": {
+      "evo": "Thunder Stone"
+    },
+    "36": {
+      "evo": "Moon Stone"
+    },
+    "38": {
+      "evo": "Fire Stone"
+    },
+    "39": {
+      "evo": "High friendship"
+    },
+    "40": {
+      "evo": "Moon Stone"
+    },
+    "173": {
+      "evo": "High friendship"
+    },
+    "174": {
+      "evo": "High friendship"
+    },
+    "350": {
+      "evo": "High beauty + level up"
+    },
+    "196": {
+      "evo": "High friendship + level up from noon to midnight"
+    },
+    "197": {
+      "evo": "High friendship + level up from midnight to noon"
+    },
+    "292": {
+      "evo": "Lv 20 + evolve Nincada with an empty party slot"
+    }
+  },
+  "drop_rows": [
+    {
+      "place": "Hoenn Route 130",
+      "n": 360,
+      "m": "walk",
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_130",
+      "quote": "{{Catch/div|land|Mirage Island}}"
+    },
+    {
+      "place": "New Mauville",
+      "n": 101,
+      "m": "static",
+      "src": "https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/NewMauville_Inside/scripts.inc",
+      "quote": "setwildbattle SPECIES_VOLTORB, 25, ITEM_NONE"
+    }
+  ],
+  "area_versions": {
+    "Team Magma Hideout": [
+      "ruby"
+    ],
+    "Team Aqua Hideout": [
+      "sapphire"
+    ]
+  }
+}

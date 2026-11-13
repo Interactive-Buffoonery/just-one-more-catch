@@ -6,6 +6,12 @@ import { needLabel } from "../client/need-labels.ts";
 import { readFileSync, writeFileSync, mkdirSync, accessSync, readdirSync } from "node:fs";
 const METHOD: Record<string, [string, string | null]> = {
   walk: ["Walking", null],
+  "dark-grass": ["Dark grass", null],
+  "grass-spots": ["Rustling grass", null],
+  "cave-spots": ["Dust cloud", null],
+  "bridge-spots": ["Flying shadow", null],
+  "surf-spots": ["Rippling water (Surf)", "surf"],
+  "super-rod-spots": ["Rippling water (fishing)", "super-rod"],
   horde: ["Horde encounter", null],
   "yellow-flowers": ["Yellow flowers", null],
   "purple-flowers": ["Purple flowers", null],
@@ -47,6 +53,8 @@ import { VERSIONS } from "../client/packs.ts";
 
 const esc = (s: unknown) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
 const games = [
+  ["ruby-sapphire", "rs", "Hoenn"],
+  ["black-white", "bw", "Unova"],
   ["x-y", "xy", "Kalos"],
   ["emerald", "emerald", "Hoenn"],
   ["red-blue", "rb", "Kanto"],
@@ -91,7 +99,7 @@ for (const [slug, id, region] of games) {
       return open(k) && (!pack.hm[k] || open(pack.hm[k]));
     };
     return candidates.filter((m: any) => {
-      if (listed.has(m.n) || (!m.j && !has("Elite Four"))) return false;
+      if (listed.has(m.n) || (m.j == null && !has("Elite Four"))) return false;
       const catchable = m.rows.some((r: any) => r.chap <= i &&
         [...data.chapters[r.chap].needs, ...(data.chapters[r.chap].kit ? [data.chapters[r.chap].kit] : []), METHOD[r.m]?.[1], ...(r.need || [])].every(k => !k || has(k)) &&
         r.cond.every((c: string) => (c !== "story-progress-zephyr-badge" || has("Zephyr")) &&

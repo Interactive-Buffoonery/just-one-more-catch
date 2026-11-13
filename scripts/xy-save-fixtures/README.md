@@ -1,6 +1,6 @@
 # X/Y save-import fixtures
 
-Opt-in validation of unchanged reader 0.1.2 and the built website. Generated
+Opt-in validation of vendored reader 0.1.3 and the built website. Generated
 saves and receipts stay in ignored `.cache/xy-save-tests/`. No personal saves,
 ROMs or downloaded fixtures are used.
 
@@ -53,7 +53,7 @@ Pinned Core source references:
 - `Saves/Substructures/Gen6/GameTime6.cs`: adventure-start seconds.
 - `Saves/Util/SaveUtil.cs`: size and BEEF footer detection.
 
-Gen VI exposes an adventure-start field, but reader 0.1.2 intentionally omits it.
+Gen VI exposes an adventure-start field, but reader 0.1.3 intentionally omits it.
 Caught fixtures populate it and empty fixtures leave it zero; both must omit
 `startDate`. Epoch/calendar bounds, invalid values, leap days and exported date
 behavior need separate verification before a Gen VI date allowlist is added.

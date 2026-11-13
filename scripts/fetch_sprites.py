@@ -18,6 +18,8 @@ BASE = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/"
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 UA = {"User-Agent": "just-one-more-catch-data-build"}
 ART = {
+    "rs": "pokemon/versions/generation-iii/ruby-sapphire/",
+    "bw": "pokemon/versions/generation-v/black-white/",
     "xy": "pokemon/",
     "emerald": "pokemon/versions/generation-iii/emerald/",
     "gs": "pokemon/versions/generation-ii/gold/transparent/",
@@ -37,7 +39,9 @@ ITEMS = {"flash": "tm-normal", "dive": "tm-water", "mach-bike": "mach-bike", "ac
          "yellow-cut": "tm-normal", "rock-smash": "tm-fighting", "surf": "tm-water", "whirlpool": "tm-water", "waterfall": "tm-water", "strength": "tm-normal", "rock-climb": "tm-normal", "bicycle": "bicycle",
          # USUM: Poké Ride moves have no item art, so they use the ride Pokémon; Island Scan uses Rotom
          "fishing-rod": "fishing-rod", "tauros": "../pokemon/128", "mudsdale": "../pokemon/750", "machamp": "../pokemon/68", "island-scan": "../pokemon/479"}
-# Alola's trial rewards are Z-Crystals, so its badges use the crystal's bag icon
+# Unova follows Sinnoh (25–32) in the upstream badge set.
+BW_BADGES = {33: "Trio", 34: "Basic", 35: "Insect", 36: "Bolt", 37: "Quake", 38: "Jet", 39: "Freeze", 40: "Legend"}
+# Alola's trial rewards use the crystal's bag icon.
 Z_CRYSTALS = ["Normalium", "Fightinium", "Waterium", "Firium", "Grassium", "Rockium",
               "Electrium", "Ghostium", "Darkinium", "Dragonium", "Fairium", "Groundium"]
 
@@ -116,6 +120,7 @@ def centre_all():
 
 if __name__ == "__main__":
     jobs = [(f"{BASE}badges/{i + 1}.png", os.path.join(ROOT, "public", "badges", f"{b.lower()}.png")) for i, b in enumerate(BADGES)]
+    jobs += [(f"{BASE}badges/{i}.png", os.path.join(ROOT, "public", "badges", f"{b.lower()}.png")) for i, b in BW_BADGES.items()]
     jobs += [(f"{BASE}badges/{i + 41}.png", os.path.join(ROOT, "public", "badges", f"{b.lower()}.png")) for i, b in enumerate(["Bug", "Cliff", "Rumble", "Plant", "Voltage", "Fairy", "Psychic", "Iceberg"])]
     jobs += [(f"{BASE}items/{z.lower()}-z--bag.png", os.path.join(ROOT, "public", "badges", f"{z.lower()}.png")) for z in Z_CRYSTALS]
     jobs += [(f"{BASE}items/{src}.png", os.path.join(ROOT, "public", "items", f"{key}.png")) for key, src in ITEMS.items()]

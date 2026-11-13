@@ -23,7 +23,7 @@ test("game caps match the pack data", () => {
     expect(VERSIONS[id as keyof typeof VERSIONS].pack.national).toBe(limit);
 });
 
-test("Emerald imports National Dex flags and keeps other Hoenn games unsupported", async () => {
+test("Emerald imports National Dex flags separately from RS", async () => {
   const data = await VERSIONS.emerald.pack.load();
   const s = snapshot(["E"]);
   expect(importVersions(s)).toEqual(["emerald"]);
@@ -31,7 +31,8 @@ test("Emerald imports National Dex flags and keeps other Hoenn games unsupported
   expect(caughtForPack(s, "emerald", data)).toEqual({ caught: [25, 252, 386], skipped: 1, partial: false });
   s.pokedex.caughtSpecies = [];
   expect(caughtForPack(s, "emerald", data).caught).toEqual([]);
-  expect(importVersions(snapshot(["R", "S", "RS"]))).toEqual([]);
+  expect(importVersions(snapshot(["S", "R"]))).toEqual(["sapphire", "ruby"]);
+  expect(importVersions(snapshot(["RS"]))).toEqual([]);
   expect(() => caughtForPack(snapshot(["R", "S"]), "emerald", data)).toThrow();
 });
 
@@ -78,6 +79,33 @@ test("GB identities retain paired choices and exclude unsupported Green", async 
     s.pokedex.caughtSpecies = [];
     expect(caughtForPack(s, version, data).caught).toEqual([]);
   }
+});
+
+test.each(["ruby", "sapphire"] as const)("%s imports bounded National Dex history", async version => {
+  const data = await VERSIONS[version].pack.load();
+  const s = snapshot(["S", "R"]);
+  s.pokedex.caughtSpecies = [386, 252, 25, 252, 387];
+  expect(caughtForPack(s, version, data)).toEqual({ caught: [25, 252, 386], skipped: 1, partial: false });
+  s.pokedex.caughtSpecies = [];
+  expect(caughtForPack(s, version, data).caught).toEqual([]);
+  expect(() => caughtForPack(snapshot(["E"]), version, data)).toThrow();
+});
+
+test.each([["B", "black"], ["W", "white"]] as const)("%s imports only its original Unova title", async (identity, version) => {
+  const data = await VERSIONS[version].pack.load();
+  const s = snapshot([identity]);
+  expect(importVersions(s)).toEqual([version]);
+  s.pokedex.caughtSpecies = [649, 495, 25, 495, 650];
+  expect(caughtForPack(s, version, data)).toEqual({ caught: [25, 495, 649], skipped: 1, partial: false });
+  s.pokedex.caughtSpecies = [];
+  expect(caughtForPack(s, version, data).caught).toEqual([]);
+  for (const other of ["B2", "W2", "BW", "B2W2", identity === "B" ? "W" : "B"]) {
+    expect(() => caughtForPack(snapshot([other]), version, data)).toThrow();
+  }
+});
+
+test("sequel identities never map to original Unova games", () => {
+  expect(importVersions(snapshot(["B2", "W2", "BW", "B2W2"]))).toEqual([]);
 });
 
 test.each([["X", "x"], ["Y", "y"]] as const)("%s imports only its Kalos title", async (identity, version) => {
