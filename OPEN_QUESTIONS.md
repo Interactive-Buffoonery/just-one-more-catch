@@ -23,8 +23,7 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## FireRed and LeafGreen
 
-- Route 23: do the badge checkpoints block any encounters?
-- S.S. Anne: what can you catch before it leaves?
+- S.S. Anne timing: the static trace proves six fishable pier edges without Surf and reachable water with Surf in both versions. Confirm progression that preserves dock access until each rod/Surf is obtained. The [captain triggers departure](https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/maps/SSAnne_CaptainsOffice/scripts.inc#L4-L23); the [dock guard then redirects access](https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/maps/VermilionCity/scripts.inc#L190-L217). Rows remain unchanged; before-departure availability is not modeled.
 
 ## Ultra Sun and Ultra Moon
 

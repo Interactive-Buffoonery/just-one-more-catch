@@ -37,6 +37,7 @@
     "Viapos Chamber": "Tanoby Ruins"
   },
   "needs": {
+    "Route 23": {"needs": ["Cascade", "Thunder", "Rainbow"], "src": "https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/maps/Route23/map.json", "note": "Static map trace: first fishable shore at (12,118) faces water at (12,117), beyond the Cascade, Thunder and Rainbow checkpoints."},
     "Birth Island": ["Elite Four"],
     "Navel Rock": ["Elite Four"],
     "Route 17": {"needs": "bicycle", "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Route_17", "quote": "only people with [[Bicycle]]s or Motorcycles are permitted to travel on the road"},
@@ -99,6 +100,14 @@
     {"id": "network", "label": "Finish Celio’s Network Machine", "q": "Did you give Celio the Sapphire?", "chap": 11, "after": ["rainbow-pass"]}
   ],
   "row_needs": [
+    {"place": "Route 23", "n": 21, "m": "walk", "needs": ["surf", "Marsh"], "src": "https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/maps/Route23/map.json", "note": "Static map trace: grass at (18,76) requires crossing the water and Marsh checkpoint; grass is reachable before Volcano and Earth."},
+    {"place": "Route 23", "n": 22, "m": "walk", "needs": ["surf", "Marsh"], "src": "https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/maps/Route23/map.json", "note": "Static map trace: grass at (18,76) requires crossing the water and Marsh checkpoint; grass is reachable before Volcano and Earth."},
+    {"place": "Route 23", "n": 23, "m": "walk", "needs": ["surf", "Marsh"], "src": "https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/maps/Route23/map.json", "note": "Static map trace: grass at (18,76) requires crossing the water and Marsh checkpoint; grass is reachable before Volcano and Earth."},
+    {"place": "Route 23", "n": 24, "m": "walk", "needs": ["surf", "Marsh"], "src": "https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/maps/Route23/map.json", "note": "Static map trace: grass at (18,76) requires crossing the water and Marsh checkpoint; grass is reachable before Volcano and Earth."},
+    {"place": "Route 23", "n": 27, "m": "walk", "needs": ["surf", "Marsh"], "src": "https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/maps/Route23/map.json", "note": "Static map trace: grass at (18,76) requires crossing the water and Marsh checkpoint; grass is reachable before Volcano and Earth."},
+    {"place": "Route 23", "n": 28, "m": "walk", "needs": ["surf", "Marsh"], "src": "https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/maps/Route23/map.json", "note": "Static map trace: grass at (18,76) requires crossing the water and Marsh checkpoint; grass is reachable before Volcano and Earth."},
+    {"place": "Route 23", "n": 56, "m": "walk", "needs": ["surf", "Marsh"], "src": "https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/maps/Route23/map.json", "note": "Static map trace: grass at (18,76) requires crossing the water and Marsh checkpoint; grass is reachable before Volcano and Earth."},
+    {"place": "Route 23", "n": 57, "m": "walk", "needs": ["surf", "Marsh"], "src": "https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/maps/Route23/map.json", "note": "Static map trace: grass at (18,76) requires crossing the water and Marsh checkpoint; grass is reachable before Volcano and Earth."},
     {"place": "Route 12", "n": 143, "m": "pokeflute", "needs": ["flute"]},
     {"place": "Route 16", "n": 143, "m": "pokeflute", "needs": ["flute"]},
     {"place": "Saffron City Fighting Dojo", "n": 106, "m": "gift", "needs": ["dojo"]},
