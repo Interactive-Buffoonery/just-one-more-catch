@@ -75,20 +75,20 @@ for the complete row inventory and cache limitations.
 
 - Haina Desert weather SOS: the Gabite and Castform rows now carry weather
   conditions. https://bulbapedia.bulbagarden.net/wiki/Haina_Desert ("Special
-  allies in weather": Gabite in a sandstorm; Castform in a sandstorm, or rain
-  or hail). pk3DS agrees that weather allies only come up while the weather
+  allies in weather" USUM rows: Gabite and Castform under "Sandstorm", and
+  Castform again under "{{color2|000|Rain}} or {{color2|000|Hail (weather
+  condition)|hail}}"). pk3DS agrees that weather allies only come up while the weather
   is active:
   https://github.com/kwsch/pk3DS/blob/6daaca934ca2284a73ab743bf89c848c57cd9de1/pk3DS.WinForms/Subforms/Gen7/SMWE.cs#L43
   ("If weather is active, create a random number. If 0, use slot 0. If <= 10,
   use slot 1. Else, pick an SOS table and a slot."). Serebii's SOS page
   describes the same weather-only allies:
   https://www.serebii.net/ultrasunultramoon/sosbattles.shtml
-- Lush Jungle West duplicates: https://bulbapedia.bulbagarden.net/wiki/Lush_Jungle
-  lists the rustling-grass ambush block only in the USUM Central and north
-  table, not in the Northwest table. PokeAPI South carries the ambushes and
-  West repeats them, so the three West bubbling-spots rows (Steenee,
-  Oranguru, Passimian) are dropped. The mapping of PokeAPI West to the
-  Northwest table is an inference from the area layout.
+- Lush Jungle subareas (open): PokeAPI South and West both carry the
+  ambush block and North does not. https://bulbapedia.bulbagarden.net/wiki/Lush_Jungle
+  has one USUM "Central and north area" table with "Ambush encounters" and a
+  "Northwest area" table without them, so the West rows match a real zone.
+  The West ambush rows stay.
 - Route 13 access: https://bulbapedia.bulbagarden.net/wiki/Alola_Route_12
   gives Mudsdale Gallop "from Hapu upon visiting the route for the first
   time", and the Route 13 page lists fishing only with no Ride requirement:
@@ -96,14 +96,18 @@ for the complete row inventory and cache limitations.
 - Mahalo Trail Solgaleo/Lunala timing (open): Official Alola Region Strategy
   Guide p227-229 ("Go to Mahalo Trail at this point, and you'll find Lillie
   together with the Legendary Pokémon that you helped rescue from
-  Necrozma"), after the Ultra Necrozma battle. The Bulbapedia walkthrough
-  order is Part 24, Part 25 (Ultra Megalopolis), then Part 26 (Mina's trial).
+  Necrozma"), and the guide's index (PDF p29): "After defeating Ilima in the
+  seventh trial". https://bulbapedia.bulbagarden.net/wiki/Mahalo_Trail:
+  "After defeating [[Ilima]] in [[Hau'oli Cemetery]], the player can return
+  to the plank bridge". Walkthrough Part 26 puts that battle in Mina's petal
+  quest: "[[Ilima]], at [[Hau'oli Cemetery]] on Melemele Island, hands over
+  the [[Orange Petal]] after you beat him in battle."
 - Route 15 and Poni Breaker Coast Ride gates, Totem Stickers (open):
   https://bulbapedia.bulbagarden.net/wiki/Alola_Route_15,
   https://bulbapedia.bulbagarden.net/wiki/Poni_Breaker_Coast,
   https://www.serebii.net/ultrasunultramoon/totemstickers.shtml,
-  https://github.com/kwsch/pk3DS/blob/6daaca934ca2284a73ab743bf89c848c57cd9de1/pk3DS.Core/Structures/Gen7/Gen7SlotDumper.cs#L122
-  (`InaccessibleUnused_USUM`).
+  https://github.com/kwsch/pk3DS/blob/6daaca934ca2284a73ab743bf89c848c57cd9de1/pk3DS.Core/Structures/Gen7/Gen7SlotDumper.cs#L186-L187
+  (`InaccessibleUnused_USUM`, "// Route 15" `{170, [5, 7, 8, 10] }`).
 
 ## Obtainable form catalog
 
