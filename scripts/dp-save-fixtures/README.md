@@ -63,7 +63,7 @@ calendar bounds, invalid values, leap days and exported date behavior require
 separate verification before adding a date allowlist.
 
 No reader source, package, lockfile or vendored tarball change is needed.
-Reader source remains `8cc08fd58b9b148ecba9c9ef262703559e1979e1`.
+Vendored reader source: `d666c67dc4d6d11603cdf50b13f4c431c0b95668` (0.1.3).
 Permitted real cartridge/emulator exports, legitimate in-game zero-caught
 saves, regional/corrupt/modified save variants, live signed-in imports, mobile
 Safari and physical mobile performance remain separate checks.

@@ -105,7 +105,9 @@ test.each([["B", "black"], ["W", "white"]] as const)("%s imports only its origin
 });
 
 test("sequel identities never map to original Unova games", () => {
-  expect(importVersions(snapshot(["B2", "W2", "BW", "B2W2"]))).toEqual([]);
+  expect(importVersions(snapshot(["B2"]))).toEqual(["black-2"]);
+  expect(importVersions(snapshot(["W2"]))).toEqual(["white-2"]);
+  expect(importVersions(snapshot(["BW", "B2W2"]))).toEqual([]);
 });
 
 test.each([["X", "x"], ["Y", "y"]] as const)("%s imports only its Kalos title", async (identity, version) => {
@@ -146,5 +148,19 @@ test("Gen IV identities keep DP, Platinum and HGSS separate", async () => {
   for (const version of ["heartgold", "soulsilver"] as const) {
     const data = await VERSIONS[version].pack.load();
     expect(() => caughtForPack(snapshot(["D", "P"]), version, data)).toThrow();
+  }
+});
+
+test.each([["B2", "black-2"], ["W2", "white-2"]] as const)("%s imports only its sequel Unova title", async (identity, version) => {
+  const data = await VERSIONS[version].pack.load();
+  const s = snapshot([identity]);
+  expect(importVersions(s)).toEqual([version]);
+  s.pokedex.caughtSpecies = [649, 495, 25, 495, 650];
+  expect(caughtForPack(s, version, data)).toEqual({ caught: [25, 495, 649], skipped: 1, partial: false });
+  s.pokedex.caughtSpecies = [];
+  expect(caughtForPack(s, version, data).caught).toEqual([]);
+  expect(IMPORT_SPECIES_LIMITS[version]).toBe(VERSIONS[version].pack.national);
+  for (const other of ["B", "W", "BW", "B2W2", identity === "B2" ? "W2" : "B2"]) {
+    expect(() => caughtForPack(snapshot([other]), version, data)).toThrow();
   }
 });

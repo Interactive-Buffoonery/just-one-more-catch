@@ -22,6 +22,7 @@ ART = {
     "bw": "pokemon/versions/generation-v/black-white/",
     "xy": "pokemon/",
     "dp": "pokemon/versions/generation-iv/diamond-pearl/",
+    "b2w2": "pokemon/versions/generation-v/black-white/",
     "emerald": "pokemon/versions/generation-iii/emerald/",
     "gs": "pokemon/versions/generation-ii/gold/transparent/",
     "rb": "pokemon/versions/generation-i/red-blue/transparent/",
@@ -36,6 +37,8 @@ BADGES = ["Boulder", "Cascade", "Thunder", "Rainbow", "Soul", "Marsh", "Volcano"
           "Zephyr", "Hive", "Plain", "Fog", "Storm", "Mineral", "Glacier", "Rising",
           "Stone", "Knuckle", "Dynamo", "Heat", "Balance", "Feather", "Mind", "Rain",
           "Coal", "Forest", "Cobble", "Fen", "Relic", "Mine", "Icicle", "Beacon"]
+UNOVA_BADGES = {"Basic": 34, "Toxic": 41, "Insect": 35, "Bolt": 36,
+                "Quake": 37, "Jet": 38, "Legend": 40, "Wave": 42}
 # Kit items: rods are their own items; moves use a disc in the move's type colour
 ITEMS = {"defog": "tm-flying", "fly": "tm-flying", "flash": "tm-normal", "dive": "tm-water", "mach-bike": "mach-bike", "acro-bike": "acro-bike", "wailmer-pail": "wailmer-pail", "old-rod": "old-rod", "good-rod": "good-rod", "super-rod": "super-rod", "headbutt": "tm-normal", "cut-hm": "tm-normal",
          "yellow-cut": "tm-normal", "rock-smash": "tm-fighting", "surf": "tm-water", "whirlpool": "tm-water", "waterfall": "tm-water", "strength": "tm-normal", "rock-climb": "tm-normal", "bicycle": "bicycle",
@@ -124,6 +127,7 @@ if __name__ == "__main__":
     jobs = [(f"{BASE}badges/{i + 1}.png", os.path.join(ROOT, "public", "badges", f"{b.lower()}.png")) for i, b in enumerate(BADGES)]
     jobs += [(f"{BASE}badges/{i}.png", os.path.join(ROOT, "public", "badges", f"{b.lower()}.png")) for i, b in BW_BADGES.items()]
     jobs += [(f"{BASE}badges/{i + 41}.png", os.path.join(ROOT, "public", "badges", f"{b.lower()}.png")) for i, b in enumerate(["Bug", "Cliff", "Rumble", "Plant", "Voltage", "Fairy", "Psychic", "Iceberg"])]
+    jobs += [(f"{BASE}badges/{i}.png", os.path.join(ROOT, "public", "badges", f"{b.lower()}.png")) for b, i in UNOVA_BADGES.items()]
     jobs += [(f"{BASE}items/{z.lower()}-z--bag.png", os.path.join(ROOT, "public", "badges", f"{z.lower()}.png")) for z in Z_CRYSTALS]
     jobs += [(f"{BASE}items/{src}.png", os.path.join(ROOT, "public", "items", f"{key}.png")) for key, src in ITEMS.items()]
     # Gen 1 has no shiny palette; retain the original art for the tracker’s shiny paths.

@@ -25,6 +25,7 @@ const METHOD: Record<string, [string, string | null]> = {
 
   "honey-tree": ["Honey Tree", null],
   "pokemon-ranger": ["Pokémon Ranger gift", null],
+  "hidden-grotto": ["Hidden Grotto", null],
   seaweed: ["Underwater", "dive"],
   "feebas-tile-fishing": ["Feebas fishing tiles", "old-rod"],
   "devon-scope": ["Devon Scope", null],
@@ -59,6 +60,7 @@ const games = [
   ["black-white", "bw", "Unova"],
   ["x-y", "xy", "Kalos"],
   ["diamond-pearl", "dp", "Sinnoh"],
+  ["black-2-white-2", "b2w2", "Unova"],
   ["emerald", "emerald", "Hoenn"],
   ["red-blue", "rb", "Kanto"],
   ["yellow", "yellow", "Kanto"],

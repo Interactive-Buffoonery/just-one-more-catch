@@ -29,6 +29,7 @@ Website game support is an explicit adapter in `client/save-import.ts`:
 | HG / SS | HeartGold / SoulSilver |
 | B / W | Black / White (individual stored title; excludes B2 / W2) |
 | X / Y | X / Y (individual stored title) |
+| B2 / W2 | Black 2 / White 2 (individual stored title; excludes B / W) |
 | US / UM | Ultra Sun / Ultra Moon |
 
 The parser can read more games than the website offers. A readable unsupported
@@ -63,7 +64,7 @@ supports HeartGold/SoulSilver and Sun/Moon/Ultra Sun/Ultra Moon; only the websit
 supported packs can be imported. The source fields are PKHeX's `SecondsToStart`
 with its `DateUtil.GetDateTime2000` conversion. The reader checks each format's
 console calendar bounds and omits uninitialized zero values. Red/Blue/Yellow, Gold/Silver/Crystal and
-FireRed/LeafGreen, Ruby/Sapphire, Emerald, Black/White, X/Y and Diamond/Pearl provide no recorded date through this reader. Missing, invalid
+FireRed/LeafGreen, Ruby/Sapphire, Emerald, Black/White, X/Y, Diamond/Pearl and Black 2/White 2 provide no recorded date through this reader. Missing, invalid
 or future dates use import day; the preview never invents a recorded date.
 
 The website converts the selected calendar day to local midnight, matching the
@@ -205,7 +206,8 @@ White, Black 2 and White 2. Native Core, independent raw-bit reads and the
 published WASM worker agree on each individual identity, complete National Dex
 coverage and 19 caught species retained after removal from storage. Three
 seen-only species exercise separate gender/shiny regions and stay uncaught.
-The website maps only `B` and `W`; every sequel fixture remains unsupported.
+The website maps `B`/`W` and `B2`/`W2` to their own titles; sequel saves never
+offer original Black/White choices.
 Both original titles import and reload exact caught state, preserving existing
 runs and input bytes. Zero-filled and truncated files create nothing.
 
@@ -290,6 +292,48 @@ These structural fixtures are not cartridge exports or proof of a legitimate
 in-game zero-caught save. Permitted real cartridge/emulator exports, legitimate
 in-game zero-caught saves, live signed-in imports, mobile Safari and physical
 mobile performance remain unverified.
+## Black 2/White 2 verification
+
+Black 2/White 2 uses vendored reader 0.1.3 and the pack's existing 649-species
+National Dex limits. Eight serialized synthetic 512 KiB fixtures cover caught
+and empty saves for B, W, B2 and W2. Native Core, independent raw bits and the
+published WASM worker agree on individual identities, complete National Dex
+coverage and 19 caught species retained after removal from storage. Three
+seen-only species exercise female/shiny regions and stay uncaught. Both sequel
+titles import and reload exact flags; BW saves cannot create B2W2 runs.
+Zero-filled and truncated files create nothing. Input files/buffers and existing
+runs stay unchanged; the browser harness blocks external requests and uploads.
+
+Gen V exposes `SAV5.SecondsToStart`, backed by the 64-bit adventure block field
+at + `0x34` (the generic property narrows it to 32 bits). Reader 0.1.3 omits
+Gen V dates. Populated and zero fields both omit `startDate` through WASM, so
+imports use import day. Epoch/calendar bounds, invalid values, leap days and
+exported recorded-date behavior need separate verification before allowlisting.
+No reader source, package, lockfile or vendored tarball change is required.
+
+Reproduce with [the B2W2 fixture README](../scripts/b2w2-save-fixtures/README.md).
+Guest scenarios cover selection/drop, both titles, empty dex at 390px, counts,
+creation/reload, cancellation, import-day fallback, storage failure/retry,
+duplicate confirmation, navigation and preparation failure/retry/cancellation.
+Automated tests cover species caps, limits, retries and account changes.
+These structural fixtures are not cartridge exports or proof of legitimate
+in-game zero-caught saves. Permitted real cartridge/emulator exports, legitimate
+zero-caught saves, regional/corrupt/modified variants, live account imports,
+mobile Safari and physical mobile performance remain unverified.
+
+### Combining with Black/White import PR #108
+
+Keep both independent `B`/`W` and `B2`/`W2` adapters, supported-game labels,
+documentation rows/verification sections and mapping/guest tests. Shared edits
+in `client/save-import.ts`, `docs/save-import.md` and both test files may need
+text conflict resolution. Both packs already carry their species limits.
+The fixture directories are separate. #108's final test currently asserts that
+sequel identities map to no website games; change it to assert that they never
+map to original BW titles. Its browser harness currently expects sequels to be
+unsupported; after combining, verify their own sequel titles instead. This
+harness accepts BW as its own original title once #108 lands, while
+continuing to forbid BW-to-B2W2 identity substitution. Neither harness should
+require the other pack to stay unsupported.
 
 ## Adding a ROM hack
 

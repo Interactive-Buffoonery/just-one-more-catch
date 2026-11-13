@@ -1389,3 +1389,156 @@ Each hand-written gate/event also carries its source in `data/dp.json`.
   supplies regular/shiny art and form sprites. Sinnoh badge sprites use
   PokeAPI IDs 25–32; Fly/Defog use its Flying-type TM icon. Existing sourced
   `public/covers/d.jpg` and `p.jpg` are reused. Save import stays disabled.
+## Black 2 / White 2 (`b2w2`)
+
+Implementation sources were read from the supplied `.cache/bulbapedia/*.wiki`
+raw wikitext, not fetched from Bulbapedia. The walkthrough index is:
+https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2
+Each chapter, event, area requirement and added row requirement carries a
+specific `src` in `data/b2w2.json`. `docs/b2w2-access.md` inventories all 137
+PokeAPI areas with cached location-source matches. These are implementation
+citations, not an independent access review or gameplay proof.
+
+- **Encounters and regional numbers:** cached PokeAPI species 1–649,
+  their `pokemon/<id>/encounters` responses, evolution chains, and
+  https://pokeapi.co/api/v2/pokedex/9/ (`updated-unova`). Preserve both
+  versions separately, including levels, rates, seasons, Phenomenon methods,
+  Hidden Grotto tables, gifts and trades. Missing outbreak tables are supplemented from the cached location pages, with per-row provenance (see below).
+  The regional list has 301 entries numbered **000–300**, including Victini;
+  `0` must be treated as a real regional number. National bound is 649.
+- **Game, platform, region, beginning and starters:**
+  https://bulbapedia.bulbagarden.net/wiki/Pokémon_Black_and_White_Versions_2
+  and walkthrough Parts 1–2 establish Nintendo DS, Generation V, Unova,
+  Aspertia City and Snivy/Tepig/Oshawott. The game article's regional Pokédex
+  section states 301 species numbered 0–300. Gen V's final National species
+  is Genesect, as confirmed by cached species 649's Generation V record:
+  https://pokeapi.co/api/v2/pokemon-species/649/
+- **Badges, leaders and field moves:**
+  https://bulbapedia.bulbagarden.net/wiki/Badge (Unova/B2W2 table) gives
+  Cheren/Basic, Roxie/Toxic, Burgh/Insect, Elesa/Bolt, Clay/Quake,
+  Skyla/Jet, Drayden/Legend and Marlon/Wave. The page's HM discussion
+  explicitly excepts Generation V from badge requirements. Thus `hm: {}`
+  is deliberate; possession of the relevant move/tool is still needed.
+  https://bulbapedia.bulbagarden.net/wiki/HM supports Cut, Surf, Strength
+  and Waterfall; Fly and Dive are omitted from encounter requirements
+  because no generated ordinary encounter method needs them. The Super Rod
+  is Looker's post-League gift (walkthrough Part 16).
+- **Storage and clock:**
+  https://bulbapedia.bulbagarden.net/wiki/Pokémon_Storage_System
+  (Generation V) gives 30 per box and expansion from 8 through 16 to 24;
+  the tracker models the final capacity, 24 × 30.
+  https://bulbapedia.bulbagarden.net/wiki/Time (Generation V) states that
+  encounter species no longer vary by time of day and seasons change each
+  month. No fixed `nightFrom` is assigned. Seasonal encounter conditions are
+  retained as PokeAPI labels, not automatically filtered by host date.
+  https://bulbapedia.bulbagarden.net/wiki/Phenomenon and
+  https://bulbapedia.bulbagarden.net/wiki/Hidden_Grotto source the method
+  labels; no extra encounters or regeneration simulation are invented.
+- **Early journey (Parts 1–8):** Parts 1–2 cover Route 19, Floccesy,
+  Route 20/Ranch and Cheren. Part 3 covers Virbank, Roxie, Route 20 Plasma
+  and the boat to Castelia. Part 4 covers Castelia Sewers and the southern
+  Relic Passage entrance. Part 5 covers Colress clearing Route 4, the desert,
+  Relic Castle and Nimbasa approaches. Parts 6–7 cover Elesa, Charles and
+  Driftveil Drawbridge; Part 7 also sources Rood's Zorua gift. Part 8 covers
+  Clay, the Driftveil Tournament/Plasma Frigate, the northern Relic Passage
+  approach and Strength access toward Relic Castle. Fine-grained early
+  access to some sections remains provisional as listed in OPEN_QUESTIONS.
+- **Midgame (Parts 9–13):** Part 9 sources Route 6, Surf into Mistralton
+  Cave, Strength toward Guidance Chamber, Chargestone Cave, Mistralton and
+  Route 7. Part 10 covers Skyla; Part 11 the flight to Lentimas, Reversal
+  Mountain, Strange House/Lunar Wing and Undella; Part 12 the eastern route
+  chain; Part 13 Opelucid's Plasma attack, Humilau, Route 22 and the Colress
+  Machine. https://bulbapedia.bulbagarden.net/wiki/Unova_Route_22 explicitly
+  places Terrakion after the Wave Badge. The Deerling gift is also present
+  with its Quake-Badge condition in the cached PokeAPI row.
+- **Seaside / endgame:**
+  https://bulbapedia.bulbagarden.net/wiki/Seaside_Cave describes the Rocky
+  blockage until Plasma leaves Opelucid; Surf is needed to explore.
+  Part 14 sources the Colress Machine's Crustle, seaside Frigate visit,
+  Giant Chasm interior and Ghetsis. Part 15 sources Route 23 and Victory
+  Road. No catchable fused Kyurem is invented for the story battle.
+  https://bulbapedia.bulbagarden.net/wiki/Unova_Route_21 sources Surf there.
+- **Early optional side areas:**
+  https://bulbapedia.bulbagarden.net/wiki/Unova_Route_14 and Part 18
+  establish the waterfall approach to Abundant Shrine; the Route 14 gate
+  toward White Forest/Black City is postgame, not the entire route. The
+  Shrine is therefore in the eastern chapter with Surf/Waterfall, not
+  blanket postgame. Hidden Grotto's location table specifically requires
+  Surf for Floccesy Ranch, Route 3's pond, Route 6 by Mistralton Cave and
+  inner Pinwheel Forest. Other grotto rows retain their parent area's gate.
+- **Postgame access (Parts 16–22):** Part 16 establishes the League return,
+  National Dex, Amanita's Eevee, Cave of Being and the lake guardians;
+  Part 17 Clay Tunnel, Underground Ruins and Twist Mountain/Icirrus;
+  Part 18 the southeast/Marvelous Bridge; Part 19 N and Dragonspiral Tower;
+  Part 20 Dreamyard, Striaton, Route 3 and Wellspring; Part 21 Accumula,
+  Route 1 and ocean routes; Part 22 Nature Preserve and Heatran.
+  Postgame locations use the Elite Four milestone; special encounters also
+  have their own requirements. No wild tables exist for Black Tower,
+  White Treehollow or Plasma Frigate in these cached version responses.
+- **Legendaries / gifts:** Part 16 requires releasing the lake guardians
+  from Cave of Being (Surf + Waterfall) before their individual encounters.
+  Part 19 gives Zekrom in Black 2 / Reshiram in White 2 after N's castle,
+  then Kyurem after battling that dragon (the stricter PokeAPI capture condition is retained pending resolution in OPEN_QUESTIONS.md). Part 20 gives Latios in Black 2 /
+  Latias in White 2 in Dreamyard, with Cut. Dreamyard’s fence gap reaches the basement without Cut (location article, Geography).
+  Part 22 gives Heatran after taking Route 18's Magma Stone (Part 21) to
+  Reversal Mountain. Part 18 gives Cresselia at Marvelous Bridge with the
+  Lunar Wing from Strange House. https://bulbapedia.bulbagarden.net/wiki/Floccesy_Town
+  sources Benga's Area-10 reward: shiny Gible in Black 2 / Dratini in White 2.
+  Part 21 sources the second Accumula trade after the first trade and battle.
+  Other ordinary gifts, fossils and trades retain their raw PokeAPI method,
+  item conditions and version, and the cited chapter access; see gaps below.
+- **Keys and legendary giants:**
+  https://bulbapedia.bulbagarden.net/wiki/Underground_Ruins and Part 17
+  establish Surf/Strength approach, the hidden switch, Regirock and the
+  Iron Key (Black 2) / Iceberg Key (White 2). Opposite keys can be shared,
+  so key activation is an explicit event rather than an absolute version
+  exclusion. Regigigas needs all three giants in the party, in postgame
+  Twist Mountain with Strength. `iron-room` has no separate cached article;
+  its parent Underground Ruins is the source, not an invented room page.
+- **Nature Preserve:**
+  https://bulbapedia.bulbagarden.net/wiki/Nature_Preserve sources Juniper's
+  Permit for seeing the regional Dex excluding Mythical Pokémon, then
+  Skyla's flight. Nature Sanctuary is PokeAPI's name for this same location;
+  the pack displays Nature Preserve. Its shiny Haxorus remains PokeAPI's
+  static encounter, not a fabricated separate shiny form.
+- **Evolution overrides:**
+  https://bulbapedia.bulbagarden.net/wiki/Chargestone_Cave sources the
+  magnetic evolution location for Magneton/Nosepass;
+  https://bulbapedia.bulbagarden.net/wiki/Pinwheel_Forest sources Moss Rock
+  for Leafeon; https://bulbapedia.bulbagarden.net/wiki/Twist_Mountain sources
+  Ice Rock for Glaceon. No alternate-form catalog is claimed; default
+  species sprites/types and the generation-aware PokeAPI type path are used.
+- **Artwork:** the existing B2/W2 covers are reused. Static regular/shiny
+  art comes from https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon/versions/generation-v/black-white
+  for all 649 species. PokeAPI badge images use Basic 34, Toxic 41,
+  Insect 35, Bolt 36, Quake 37, Jet 38, Legend 40 and Wave 42.
+  Source: https://github.com/PokeAPI/sprites/tree/master/sprites/badges
+
+No second independent source or original-game script audit was available for
+this implementation. Room mappings, incomplete raw encounters, weekday
+restrictions, forms and earliest-tile uncertainties are recorded under
+Black 2 / White 2 in OPEN_QUESTIONS.md. Save-file import is not enabled.
+- **Confirmed encounter-source omission:** the cached B2W2 section of
+  https://bulbapedia.bulbagarden.net/wiki/In-game_trade#Yancy/Curtis lists
+  both contacts' 12 phone-trade rewards. None has a corresponding Nimbasa
+  trade row in these version responses; the exact missing rewards and
+  the seven ordinary raw trade rewards are listed in OPEN_QUESTIONS.md.
+
+- **Outbreak supplements:** `extra_encounters` in `data/b2w2.json` records
+  the cached B2/W2 Swarm table entry, source URL, levels, rate and version
+  flags for each of 23 species (19 encounter rows per version). Sources:
+  Abundant Shrine, Desert Resort, Dreamyard, Reversal Mountain and Unova
+  Routes 1, 3, 5–9, 11–13, 15–16, 18, 20 and 22, each linked on its row.
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16
+  places the National Dex upgrade and daily outbreaks after the League.
+  All rows require `Elite Four` and carry a daily-outbreak condition; gate
+  bulletin boards identify the active location, which the app does not predict.
+  Route 8’s Quagsire table has 40% in spring/summer/autumn and no winter
+  encounter; its row preserves that restriction. Each row retains its source
+  URL in generated output. PokeAPI outbreak tables, if added, retire the
+  corresponding supplemental version/location/method table.
+- **Gigalith trade review:**
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_10
+  places “Trade with a Hiker” under the Route 7 heading (cached lines 50,
+  142–143), before Mistralton City resumes at line 241. Its Route 7 label
+  agrees with PokeAPI and is retained.

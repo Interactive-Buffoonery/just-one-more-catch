@@ -59,7 +59,7 @@ Caught fixtures populate it and empty fixtures leave it zero; both must omit
 behavior need separate verification before a Gen VI date allowlist is added.
 
 No reader source, package, lockfile or vendored tarball change is needed.
-Reader source remains `8cc08fd58b9b148ecba9c9ef262703559e1979e1`.
+Vendored reader source: `d666c67dc4d6d11603cdf50b13f4c431c0b95668` (0.1.3).
 Permitted real cartridge/emulator exports, a legitimate in-game zero-caught
 save, live signed-in imports, encrypted console backup extraction, mobile
 Safari and physical mobile performance remain separate checks.

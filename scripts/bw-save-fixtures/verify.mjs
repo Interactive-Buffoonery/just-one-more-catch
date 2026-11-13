@@ -15,13 +15,13 @@ const native = JSON.parse(fs.readFileSync(path.join(cache, 'native-results.json'
 const names = [...native.map(row => row.name), ...invalid];
 const isEmpty = name => name.endsWith('-empty');
 const expected = [25, 133, 252, 386, 493, 494, 495, 496, 497, 498, 501, 550, 585, 643, 644, 646, 647, 648, 649];
-const versionFor = name => name.startsWith('W-') ? 'white' : 'black';
-const unsupported = name => /^(B2|W2)-/.test(name);
+const versionFor = name => ({ B: 'black', W: 'white', B2: 'black-2', W2: 'white-2' }[name.split('-')[0]] || 'black');
+const isSequel = name => /^(B2|W2)-/.test(name);
 const digest = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
 const before = new Map(names.map(name => [name, digest(fs.readFileSync(path.join(cache, name + '.sav')))]));
 for (const row of native) {
   const bytes = fs.readFileSync(path.join(cache, row.name + '.sav'));
-  const dex = unsupported(row.name) ? 0x21400 : 0x21600;
+  const dex = isSequel(row.name) ? 0x21400 : 0x21600;
   const bits = offsets => Array.from({ length: 649 }, (_, i) => i + 1).filter(n => offsets.some(offset => bytes[dex + offset + ((n - 1) >> 3)] & (1 << ((n - 1) & 7))));
   const flags = isEmpty(row.name) ? [] : expected;
   assert.deepEqual(bits([0x8]), flags);
@@ -123,13 +123,13 @@ try {
     const { context, page, errors, writes } = await setup(isEmpty(name));
     try {
       await choose(page, name === 'cancel' ? 'B-caught' : name, name === 'W-caught');
-      if (invalid.includes(name) || unsupported(name)) {
+      if (invalid.includes(name)) {
         await page.locator('.si-oops').waitFor();
         assert.equal(await page.locator('[data-import-action=create]').count(), 0);
       } else {
         assert.equal(await page.locator('[data-import-action=version]').count(), 0);
         await page.locator('[data-import-action=create]').waitFor();
-        assert.match(await page.locator('#import-title').innerText(), new RegExp(`^${versionFor(name)}$`, 'i'));
+        assert.match(await page.locator('#import-title').innerText(), new RegExp(`^${versionFor(name).replace('-', ' ')}$`, 'i'));
         assert.match((await page.locator('.si-count').innerText()).replace(/\s+/g, ' '), new RegExp(`${isEmpty(name) ? 0 : expected.length} of 649 caught`));
         assert.equal(await page.locator('.si-facts .warn').count(), 0);
         assert.match(await page.locator('.si-start').innerText(), /This save doesn't record a start date/);
@@ -149,7 +149,7 @@ try {
           assert.deepEqual(await readRows(page), rows);
         }
       }
-      if ([...invalid, 'cancel'].includes(name) || unsupported(name)) assert.deepEqual(await readRows(page), [old]);
+      if ([...invalid, 'cancel'].includes(name)) assert.deepEqual(await readRows(page), [old]);
       assert.deepEqual(errors, []);
       assert.deepEqual(writes, []);
       results.push({ name, passed: true });

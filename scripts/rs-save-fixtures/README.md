@@ -46,7 +46,7 @@ Source references at pinned Core:
 - `Saves/SAV3.cs`: sectors, checksums and National Dex flag access.
 - `Saves/Util/SaveUtil.cs`: serialized detection and 128 KiB requirement.
 
-Reader source remains `8cc08fd58b9b148ecba9c9ef262703559e1979e1`.
+Vendored reader source: `d666c67dc4d6d11603cdf50b13f4c431c0b95668` (0.1.3).
 Real 128 KiB exports, real 64 KiB exports, a legitimate in-game zero-caught save,
 live signed-in imports and mobile Safari remain separate checks. 64 KiB RS is
 unsupported; do not apply Emerald's recovery to it.
