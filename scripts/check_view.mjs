@@ -57,7 +57,7 @@ for (const destination of ["stay", "dashboard", "fresh-import"]) {
     importPage: {contains: () => false}, document: {activeElement: null},
     history: {pushState: move, replaceState: move},
     root: {classList: {toggle() {}}, querySelector: () => null}, $: () => element,
-    VIEWS: {playthroughs: () => "", dex: () => ""},
+    VIEWS: {playthroughs: () => "", dex: () => ""}, dash: {},
     partner: () => "", esc: value => value, trainerName: () => "Trainer",
     switcher: () => "", tabButtons: () => "", SETTINGS_ICON: "",
     fillSheet() {}, moveGuestRuns() {}, moveGuestAvatar() {}, flash() {},

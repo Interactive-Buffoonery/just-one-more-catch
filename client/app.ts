@@ -38,6 +38,8 @@ import { Dex, dexGrid, fillSpecies } from "./views/dex";
 import { fillClock, fillCustom, Journey, untick } from "./views/journey";
 import {
   confirmGame,
+  confirmPair,
+  dash,
   exportLabel,
   fillSignIn,
   fillStartDate,
@@ -91,7 +93,7 @@ function useRun(row: RunRow, start = false, customize = false) {
 
 function fillSheet(s: any) {
   if (s.kind === "pick") {
-    $("#sheetbody").innerHTML = confirmGame(s.id);
+    $("#sheetbody").innerHTML = s.pair ? confirmPair(s.id.split(",")) : confirmGame(s.id);
     return;
   }
   typeof s === "number"
@@ -139,7 +141,7 @@ function finishSheet() {
   if (s.hist && history.state?.sheet === s.kind) history.back();
   render();
   if (s.kind === "pick") {
-    (root.querySelector(`[data-newrun="${s.id}"]`) as HTMLElement | null)?.focus();
+    (root.querySelector(s.pair ? `[data-pair="${s.id}"]` : `[data-newrun="${s.id}"]`) as HTMLElement | null)?.focus();
     return;
   }
   (
@@ -211,6 +213,7 @@ function tabFromUrl() {
   return t === "journey" && !isGuest() && run?.view === "dexonly" ? "dex" : t && Object.hasOwn(VIEWS, t) ? t : "playthroughs";
 }
 function render() {
+  if (ui.tab !== "playthroughs") dash.slot = undefined;
   if (ui.tab === "journey" && !isGuest() && run?.view === "dexonly") ui.tab = "dex";
   const a = bridge.auth,
     signedIn = a.isAuthenticated;
@@ -491,6 +494,19 @@ async function onClick(e: MouseEvent) {
     await bridge.deleteAccount();
     closeRun();
     bridge.signOut();
+    return;
+  }
+  if (d.slot || d.shelf) {
+    if (d.slot) dash.slot = d.slot;
+    if (d.shelf) dash.shelf = d.shelf;
+    render();
+    return;
+  }
+  if (d.pair) {
+    if (creating) return;
+    pickOpenedAt = performance.now();
+    openSheet({ kind: "pick", id: d.pair, pair: true });
+    $(".vc").focus();
     return;
   }
   if (d.newrun) {

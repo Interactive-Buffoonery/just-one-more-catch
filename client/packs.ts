@@ -403,44 +403,48 @@ export const VERSIONS: Record<VersionId, Version> = {
   },
 };
 
-export const CONSOLES: { name: string; games: (VersionId | { name: string; short: string; color: string })[] }[] = [
-  { name: "Game Boy", games: [
-    "red",
-    "blue",
-    "yellow",
+export type Soon = { name: string; short: string; color: string; region: string };
+export const CONSOLES: { name: string; tag: string; titles: (VersionId | Soon)[][] }[] = [
+  { name: "Game Boy", tag: "Game Boy", titles: [["red", "blue"], ["yellow"]] },
+  { name: "Game Boy Color", tag: "GB Color", titles: [["gold", "silver"], ["crystal"]] },
+  { name: "Game Boy Advance", tag: "GBA", titles: [
+    [
+      { name: "Ruby", short: "RU", color: "#c8323c", region: "Hoenn" },
+      { name: "Sapphire", short: "SA", color: "#2f5fb3", region: "Hoenn" },
+    ],
+    ["firered", "leafgreen"],
+    ["emerald"],
   ] },
-  { name: "Game Boy Color", games: [
-    "gold",
-    "silver",
-    "crystal",
+  { name: "Nintendo DS", tag: "DS", titles: [
+    [
+      { name: "Diamond", short: "D", color: "#5b8fd6", region: "Sinnoh" },
+      { name: "Pearl", short: "P", color: "#c98aa8", region: "Sinnoh" },
+    ],
+    [{ name: "Platinum", short: "PT", color: "#8d8f9c", region: "Sinnoh" }],
+    ["heartgold", "soulsilver"],
+    [
+      { name: "Black", short: "BL", color: "#3a3a40", region: "Unova" },
+      { name: "White", short: "W", color: "#c9c9d0", region: "Unova" },
+    ],
+    [
+      { name: "Black 2", short: "B2", color: "#2f3a4a", region: "Unova" },
+      { name: "White 2", short: "W2", color: "#d9c6bb", region: "Unova" },
+    ],
   ] },
-  { name: "Game Boy Advance", games: [
-    { name: "Ruby", short: "RU", color: "#c8323c" },
-    { name: "Sapphire", short: "SA", color: "#2f5fb3" },
-    "firered",
-    "leafgreen",
-    "emerald",
+  { name: "Nintendo 3DS", tag: "3DS", titles: [
+    [
+      { name: "X", short: "X", color: "#3b6fd1", region: "Kalos" },
+      { name: "Y", short: "YY", color: "#c8323c", region: "Kalos" },
+    ],
+    [
+      { name: "Omega Ruby", short: "OR", color: "#c8323c", region: "Hoenn" },
+      { name: "Alpha Sapphire", short: "AS", color: "#2f5fb3", region: "Hoenn" },
+    ],
+    [
+      { name: "Sun", short: "SU", color: "#e8892a", region: "Alola" },
+      { name: "Moon", short: "MO", color: "#6a4fc9", region: "Alola" },
+    ],
+    ["ultrasun", "ultramoon"],
   ] },
-  { name: "Nintendo DS", games: [
-    { name: "Diamond", short: "D", color: "#5b8fd6" },
-    { name: "Pearl", short: "P", color: "#c98aa8" },
-    { name: "Platinum", short: "PT", color: "#8d8f9c" },
-    "heartgold",
-    "soulsilver",
-    { name: "Black", short: "BL", color: "#3a3a40" },
-    { name: "White", short: "W", color: "#c9c9d0" },
-    { name: "Black 2", short: "B2", color: "#2f3a4a" },
-    { name: "White 2", short: "W2", color: "#d9c6bb" },
-  ] },
-  { name: "Nintendo 3DS", games: [
-    { name: "X", short: "X", color: "#3b6fd1" },
-    { name: "Y", short: "YY", color: "#c8323c" },
-    { name: "Omega Ruby", short: "OR", color: "#c8323c" },
-    { name: "Alpha Sapphire", short: "AS", color: "#2f5fb3" },
-    { name: "Sun", short: "SU", color: "#e8892a" },
-    { name: "Moon", short: "MO", color: "#6a4fc9" },
-    "ultrasun",
-    "ultramoon",
-  ] },
-  { name: "Nintendo Switch", games: ["firered-switch", "leafgreen-switch"] },
+  { name: "Nintendo Switch", tag: "Switch", titles: [["firered-switch", "leafgreen-switch"]] },
 ];
