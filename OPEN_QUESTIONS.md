@@ -15,16 +15,13 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Ultra Sun and Ultra Moon
 
-- Haina Desert weather SOS: cached PokeAPI rows omit the weather conditions for Castform and Gabite. Their corrected plain SOS rows still need a sourced weather representation.
-- Lush Jungle South/West: PokeAPI duplicates Steenee, Oranguru, Passimian and Trumbeak ambush records in both subareas, while the cached USUM location table places the rustling-grass block in the south. Terrain is corrected in both existing subareas; confirm whether the West duplicates should be removed.
-- Poni Breaker Coast Wailmer: the cached bubbling-spots record combines fishing and water-splash encounters (10–49, 100%). Leave its rod requirement unchanged until those encounters can be split with sourced levels and odds. Wailord, Dragalge and Clawitzer have distinct splash rows and now require Lapras.
-
-- Brooklet Hill Main and North: are these the first lake (open before Lana's trial) or the trial pools (Waterium)? South is gated.
-- Route 13: the guide has Mudsdale given at the start of Route 12, so Gallop is likely in hand. Confirm nothing on Route 13 needs more.
-- Route 15 Main: the guide says more than half the route waits for a Ride Pokémon that breaks the rocks in the water. Which encounter rows are out there?
-- Poni Breaker Coast: can the fishing spots and Wimpod be reached from shore?
-- Mahalo Trail: Solgaleo and Lunala now open with the Dragonium (the Ultra Megalopolis chapter). In the game they come right after Ultra Necrozma, during Mina's trial.
-- Totem Stickers 70: sticker 70 is on Route 15's large island. If that needs Sharpedo Jet, 70 waits for the Haina Desert chapter (as set). Confirm.
+- Poni Breaker Coast Wailmer: the cached bubbling-spots record merges three encounters (10-49, 100%). [Bulbapedia](https://bulbapedia.bulbagarden.net/wiki/Poni_Breaker_Coast) lists fishing at 10-44 (40%), bubbling-spot fishing at 10-49 (30%) and water splashes at 41-44 (70%). The pack format has no way to add split rows for USUM, so this waits for gap-fill or extra-encounter support in the `usum` pack.
+- Lush Jungle West: PokeAPI South and West both have the ambush block and North has none. [Bulbapedia](https://bulbapedia.bulbagarden.net/wiki/Lush_Jungle) has one USUM "Central and north" table with ambushes and a "Northwest" table without, so West's ambush rows look like a real zone and stay. Needs a zone-by-zone map of the PokeAPI area names.
+- Brooklet Hill Main and North: [Bulbapedia](https://bulbapedia.bulbagarden.net/wiki/Brooklet_Hill) says wild Pokémon stay out of the trial site until the trial is done, and that the first lake is outside it. PokeAPI North and South have identical tables, and nothing maps Main, North or South to a lake. Needs a lake-by-lake source.
+- Route 15 Main: [Bulbapedia](https://bulbapedia.bulbagarden.net/wiki/Alola_Route_15) says Sharpedo Jet is needed to fully explore the route, but its encounter table has no sub-area split, and pk3DS ([Gen7SlotDumper.cs](https://github.com/kwsch/pk3DS/blob/6daaca934ca2284a73ab743bf89c848c57cd9de1/pk3DS.Core/Structures/Gen7/Gen7SlotDumper.cs#L186-L187)) lists Route 15 (170) tables 5, 7, 8 and 10 as unused, not as behind-rock tables. Which rows sit behind the rocks is still unknown.
+- Poni Breaker Coast shore access: [Bulbapedia](https://bulbapedia.bulbagarden.net/wiki/Poni_Breaker_Coast) says the water is crossed with Lapras Paddle or Sharpedo Jet. Nothing says whether the fishing spots or the Wimpod chase can be reached from the shore.
+- Mahalo Trail: Solgaleo and Lunala open with the Dragonium. [Bulbapedia](https://bulbapedia.bulbagarden.net/wiki/Mahalo_Trail) and the guide's index (PDF p29) put them after beating Ilima at Hau'oli Cemetery, which Walkthrough Part 26 places in Mina's petal quest, after Ultra Necrozma. Moving the gate needs a new "defeat Ultra Necrozma" event (or a Mina petal event) plus `row_needs` changes for both rows; held back because it adds a tracker question for saves already past the Dragonium.
+- Totem Stickers 70: [Bulbapedia](https://bulbapedia.bulbagarden.net/wiki/Alola_Route_15) puts the Route 15 sticker on the Surf Association building and [Serebii](https://www.serebii.net/ultrasunultramoon/totemstickers.shtml) gives only region totals, so neither source names the 70th sticker. Bulbapedia lists the TM "In front of the Surf Association building" as needing Lapras Paddle or Sharpedo Jet "after obtaining Sharpedo Jet", so the Route 15 sticker likely waits for Sharpedo Jet. Confirm which sticker is 70th.
 
 ## Yellow implementation handoff
 

@@ -39,7 +39,7 @@ The 44 land ambush rows and eight land SOS rows become terrain methods and
 plain SOS respectively. Six SOS duplicates merge (Haina Baltoy, Castform,
 Gabite and Golett; Trumbeak in each Lush Jungle area). Levels and odds continue
 to use the existing builder's merging rules. No species or locations are
-removed. Haina weather conditions remain a source limitation below.
+removed.
 
 ## Machamp
 
@@ -55,12 +55,11 @@ ordinary encounter rows; the shrine rows retain their Champion requirement.
 
 ## Evidence limits
 
-The cache folds Haina's weather-specific allies into SOS without weather
-conditions. Lush Jungle's USUM table labels the ambush block as south, while
-PokeAPI duplicates it under South and West. This change preserves both
-existing locations and corrects their shared terrain; it does not settle the
-subarea duplication. Wailmer's Poni Breaker Coast bubble row mixes fishing
-and splash levels/odds, so it remains unchanged pending a sourced split.
+Haina's Gabite and Castform SOS rows now carry their weather conditions; see
+`SOURCES.md`. Lush Jungle's ambush block appears under PokeAPI South and West,
+which matches Bulbapedia's shared Central and north table, so both stay.
+Wailmer's Poni Breaker Coast bubble row mixes fishing and splash
+levels/odds, so it remains unchanged pending a sourced split.
 These issues are recorded in `OPEN_QUESTIONS.md`.
 
 ## Verification
