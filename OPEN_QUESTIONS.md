@@ -41,50 +41,35 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Yellow implementation handoff
 
-- **S.S. Anne dock timing:** its three Super Rod rows (72, 90, 120) remain
-  timing-dependent. The guard refuses re-entry after the ship leaves, but the
-  review did not settle whether departure can be avoided until the Super Rod
-  is acquired. Do not call the encounters impossible or add an unsupported
-  monotonic gate. Test obtaining the rod while preserving dock access, then
-  confirm the three rows and post-departure refusal. Source:
-  [Vermilion City](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/VermilionCity.asm),
-  `CheckEvent EVENT_SS_ANNE_LEFT` / `.ship_departed`.
+- **S.S. Anne dock timing:** departure requires HM01 and stepping off the
+  ship: the pinned
+  [dock script](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/VermilionDock.asm#L1-L11)
+  returns before departure when `EVENT_GOT_HM01` is unset or the arrival warp
+  is not `$1`, which only
+  [SS Anne 1F](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/SSAnne1F.asm#L9-L10)
+  uses (`VERMILION_DOCK, 2`; the city entrance is warp 1 in the
+  [dock objects](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/VermilionDock.asm#L5-L6)).
+  Departure sets `EVENT_SS_ANNE_LEFT` at line 40. This narrows the remaining
+  question to obtaining the Super Rod while preserving dock access (including how Cut is
+  supplied). The three Super Rod rows (72, 90, 120) remain unchanged. Verify
+  that complete route before settling availability. Static tracing confirms
+  fishing from dock land `(14,1)` without Surf and the Super Rod house from
+  Route 12 once Snorlax is removed; it does not establish how Cut is supplied
+  while preserving the ship. See SOURCES.md;
+  post-departure access remains refused by the
+  [guard](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/VermilionCity.asm#L177-L180).
 
-- **Safari interior paths:** the full pinned Yellow source has interior maps,
-  but the independent reviews did not settle the on-foot collision path to
-  Middle and Area 2 North encounter grass. Test both from the entry without
-  Surf or Strength. The centre warp table links the north map, but a warp
-  alone does not prove access to all encounter tiles. Source:
-  [SafariZoneCenter objects](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/objects/SafariZoneCenter.asm).
-- **Articuno from the west:** retain its Strength requirement until a tester
-  reaches an interaction-adjacent tile without pushing any Seafoam boulder.
-  Both reviews left this unclear: static collision reachability does not
-  reproduce B3F/B4F forced-surf and current scripts. Source:
-  [Seafoam B4F](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/SeafoamIslandsB4F.asm).
-
-- **Cerulean City fishing review disagreement:** first-pass access batch 2
-  called the shore reachable on foot, citing the separate Bulbasaur happiness
-  script. The coordinator independently decoded pinned Yellow Cerulean/Route 4
-  maps, blockset, collisions and ledges and found no reachable fishing land
-  without Surf; Surf reaches the cave-door shore. Fishing itself is refused
-  while surfing. Resolve this discrepancy in the second review before treating
-  the four species' five fishing rows as verified. The Bulbasaur gift remains
-  separate. Source: [original fishing code](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/engine/items/item_effects.asm),
-  `cp 2 ; Surfing?` / `jr z, .cannotFish`; map and collision files at the same
-  revision. Tester check: try all outdoor water edges with a rod before Surf,
-  then reach the cave-door shore with Surf and fish from land. No data change
-  was applied while the two reviews disagree. A subsequent independent Codex
-  reviewer confirmed the coordinator's Surf result against the original
-  Yellow maps and fishing script; the initial Claude verdict still conflicts,
-  so the access-audit disagreement policy keeps this on the tester checklist.
+- **Articuno from the west:** the pinned static trace reaches dry B4F floor
+  `(10,7)` without Strength, and an optimistic Surf graph reaches Articuno.
+  That graph does not simulate Surf state or forced movement. The unresolved
+  part includes forced Surf at `(4,14)` / `(5,14)` and its movement script, not
+  reaching B4F. Retain Strength until that scripted approach is verified.
+  Sources: [forced Surf tiles](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/data/maps/force_bike_surf.asm#L11-L14),
+  [B4F movement](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/SeafoamIslandsB4F.asm#L86-L137).
 
 - Independent `audit-access` reviewer passes have not run in this implementation
-  worktree; the coordinator owns them. In particular, independently confirm the
-  Seafoam lower-floor approach from the west before accepting that ordinary
-  floor encounters need Surf but not Strength (Articuno does need Strength).
-  The location article's west-to-east traversal statement is marked citation
-  needed, although the original scripts and accessible walkthrough explain the
-  current/boulder puzzle. Sources are in the Yellow section of SOURCES.md.
+  worktree; the coordinator owns them. The static trace now confirms ordinary
+  Seafoam floor access from the west without Strength; see SOURCES.md.
 - No Yellow guide PDF was supplied. Bulbapedia Yellow walkthrough parts 7 and
   11 returned HTTP 403. No access-control bypass was attempted; accessible
   walkthroughs and original pret/pokeyellow scripts were used instead.
