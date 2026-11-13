@@ -731,6 +731,11 @@ Advance game. Ruby and Sapphire remain separate Coming Soon entries.
   Sootopolis, Regis, Rayquaza and Victory Road. Parts 20–22 cover postgame
   gifts, weather caves, Battle Frontier and historical distribution islands.
   Each chapter/event/gate in `data/emerald.json` links its relevant part.
+- Victory Road B2F unresolved access evidence: [warp events](https://github.com/pret/pokeemerald/blob/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881/data/maps/VictoryRoad_B2F/map.json#L108-L138)
+  list four entrances at (30,25), (43,2), (19,12), (5,26).
+  [Land encounter table](https://github.com/pret/pokeemerald/blob/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881/src/data/wild_encounters.json#L7394-L7401)
+  has encounter rate 10. Neither establishes collision reachability; retain
+  the existing Strength gate pending a traced path.
 - Primary source pinned to pret/pokeemerald
   `731ad5bfd6e6f265508d0efcca0ba42f9dcf5881`:
   https://github.com/pret/pokeemerald/tree/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881

@@ -195,9 +195,11 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Emerald
 
-- Victory Road B2F: does the first reachable encounter tile require Rock
-  Smash as well as Strength? Trace the map or check in-game; the walkthrough
-  establishes Rock Smash for full traversal, not the earliest encounter.
+- Victory Road B2F: does the earliest land encounter require Rock Smash
+  as well as Strength? The [decompiled warp table](https://github.com/pret/pokeemerald/blob/731ad5bfd6e6f265508d0efcca0ba42f9dcf5881/data/maps/VictoryRoad_B2F/map.json#L108-L138)
+  has four entrances: (30,25), (43,2), (19,12), (5,26). Trace the earliest
+  reachable B1F entrance and its collision path to a B2F encounter tile;
+  full-traversal walkthrough requirements do not settle this.
 
 ## Ruby and Sapphire (`rs`)
 
