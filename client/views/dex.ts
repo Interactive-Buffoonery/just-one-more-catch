@@ -37,6 +37,7 @@ const STATUS_TEXT: Record<string, string> = {
   soon: "Other time or special",
   later: "Later in the story",
   other: "Evolve, breed or trade",
+  missing: "Missing",
 };
 const SHORT: Record<string, string> = {
   caught: "Caught",
@@ -44,6 +45,7 @@ const SHORT: Record<string, string> = {
   soon: "Other time",
   later: "Later",
   other: "Evolve or trade",
+  missing: "Missing",
 };
 const FILTERS: [string, string, (s: string) => boolean][] = [
   ["now", "Catchable now", (s) => s === "now"],
@@ -61,8 +63,8 @@ const tile = (p: Species, s: string) => {
     R().trackGenders && hasGenders(p) ? `${genders.size} of 2 genders` : "",
     R().trackForms && available.length > 1 ? `${collectedForms(p).size} of ${available.length} forms` : "",
   ].filter(Boolean).map((text) => `, ${text}`).join("");
-  const short = ((ui.q || "").trim() || ["missing", "all"].includes(ui.filter)) && SHORT[s];
-  return `<button type="button" class="dt${s === "now" ? " n" : ""}${s === "now" || s === "caught" ? "" : " dim"}" data-${ui.bulk ? "toggle" : "open"}="${p.n}" data-k="d${p.n}" ${ui.bulk ? `aria-pressed="${s === "caught"}"` : ""} aria-label="${p.name}, number ${num(p)}, ${STATUS_TEXT[s]}${progress}">${s === "caught" || s === "now" ? `<span class="dexmarker ${s}" aria-hidden="true">${s === "caught" ? "✓" : ""}</span>` : ""}${mon(p).replace(" got", "")} <span class="nm">${p.name}</span><span class="no">#${pad(num(p))}${R().trackGenders && hasGenders(p) ? `<span class="gx" aria-hidden="true">${GENDERS.map(([g, symbol]) => `<b class="${genders.has(g) ? "on" : ""}">${symbol}</b>`).join("")}</span>` : ""}${R().trackForms && available.length > 1 ? `<i aria-hidden="true">${collectedForms(p).size}/${available.length}</i>` : ""}${short ? `<i aria-hidden="true">${short}</i>` : ""}</span>${["large", "list"].includes(ui.dexSize) ? `<span class="dextypes">${p.types.map((t) => `<span class="type" style="--tc:${TYPE[t]}">${cap(t)}</span>`).join(" ")}</span><span class="dexstatus">${SHORT[s] || STATUS_TEXT[s]}</span>${ui.dexSize === "list" && s === "now" ? `<span class="dexplace">${esc(p.rows.find((r) => rowStatus(r).s === "now")?.place || "")}</span>` : ""}` : ""}</button>`;
+  const short = !["large", "list"].includes(ui.dexSize) && ((ui.q || "").trim() || ["missing", "all"].includes(ui.filter)) && SHORT[s];
+  return `<button type="button" class="dt${s === "now" ? " n" : ""}${s === "now" || s === "caught" ? "" : " dim"}" data-${ui.bulk ? "toggle" : "open"}="${p.n}" data-k="d${p.n}" ${ui.bulk ? `aria-pressed="${s === "caught"}"` : ""} aria-label="${p.name}, number ${num(p)}, ${STATUS_TEXT[s]}${progress}">${s === "caught" || s === "now" ? `<span class="dexmarker ${s}" aria-hidden="true">${s === "caught" ? "✓" : ""}</span>` : ""}${mon(p).replace(" got", "")} <span class="nm">${p.name}</span><span class="no">#${pad(num(p))}${R().trackGenders && hasGenders(p) ? `<span class="gx" aria-hidden="true">${GENDERS.map(([g, symbol]) => `<b class="${genders.has(g) ? "on" : ""}">${symbol}</b>`).join("")}</span>` : ""}${R().trackForms && available.length > 1 ? `<i aria-hidden="true">${collectedForms(p).size}/${available.length}</i>` : ""}${short ? `<i aria-hidden="true">${short}</i>` : ""}</span>${["large", "list"].includes(ui.dexSize) ? `<span class="dextypes">${p.types.map((t) => `<span class="type" style="--tc:${TYPE[t]}">${cap(t)}</span>`).join(" ")}</span><span class="dexstatus">${SHORT[s]}</span>${ui.dexSize === "list" && s === "now" ? `<span class="dexplace">${esc(p.rows.find((r) => rowStatus(r).s === "now")?.place || "")}</span>` : ""}` : ""}</button>`;
 };
 const section = (title: string, list: { p: Species; s: string }[]) =>
   list.length
