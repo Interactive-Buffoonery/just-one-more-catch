@@ -16,7 +16,12 @@ for (const [n, code] of [[643, 'k'], [644, 'w']]) {
   assert.ok(mon(n).rows.every(r => r.v === code));
   assert.ok(mon(n).rows.filter(r => r.place === 'Dragonspiral Tower 7F').every(r => needs(r).includes('dragon-deferred')));
 }
-for (const n of [641, 642]) assert.equal(mon(n).rows.length, 0);
+for (const [n, code] of [[641, 'k'], [642, 'w']]) {
+  assert.equal(mon(n).rows.length, 1);
+  const r = mon(n).rows[0];
+  assert.deepEqual([r.place, r.m, r.v, r.lo, r.hi], ['Roaming Unova', 'roaming-grass', code, 40, 40]);
+  assert.ok(needs(r).includes('Legend') && needs(r).includes('roamer-released'));
+}
 for (const n of [495, 498, 501]) assert.ok(mon(n).rows.some(r => r.place === 'Nuvema Town' && r.m === 'gift'));
 for (const [n, starter] of [[511, 'tepig'], [513, 'oshawott'], [515, 'snivy']]) {
   const r = mon(n).rows.find(r => r.place === 'Dreamyard' && r.m === 'gift');
