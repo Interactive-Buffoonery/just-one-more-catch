@@ -214,7 +214,7 @@ function searchDexGrid(q: string, now = false) {
   clearTimeout(typingTimer);
   typingTimer = undefined;
   ui.q = q;
-  resetDexCache();
+  const was = !!$("#dexgrid").querySelector(".q, [data-clearsearch]");
   $("#dexgrid").innerHTML = dexGrid();
   const active = !!searching();
   $(".dextop .filters").querySelectorAll("[data-filter]").forEach((b: HTMLElement) =>
@@ -222,7 +222,7 @@ function searchDexGrid(q: string, now = false) {
   );
   $(".searchclear").hidden = !active;
   clearTimeout(resultsTimer);
-  if (!active) return;
+  if (!active) return was && announce("Search cleared");
   const say = () => {
     const n = $("#dexgrid")?.querySelectorAll(".dt").length;
     if (n !== undefined) announce(n ? `${n} ${n === 1 ? "result" : "results"}` : "No matches");
@@ -239,6 +239,7 @@ function tabFromUrl() {
 function render() {
   clearTimeout(resultsTimer);
   clearTimeout(typingTimer);
+  typingTimer = undefined;
   resetDexCache();
   if (ui.tab !== "playthroughs") dash.slot = undefined;
   if (ui.tab === "journey" && !isGuest() && run?.view === "dexonly") ui.tab = "dex";
@@ -384,7 +385,7 @@ function toggleCaught(n: number) {
     r = R(),
     had = r.caught.has(n);
   had ? r.caught.delete(n) : r.caught.add(n);
-  ui.undo = { n, had, msg: `${p.name} ${had ? "unmarked" : "caught"}` };
+  ui.undo = { n, had, msg: `${p.name} ${had ? "not caught" : "caught"}` };
   $("#live").textContent = ui.undo.msg;
   clearTimeout(undoTimer);
   undoTimer = setTimeout(hideToast, 5000);
@@ -967,16 +968,14 @@ export function mount(el: HTMLElement, b: Bridge) {
       e.preventDefault();
       t.value = "";
       searchDexGrid("", true);
-    } else if (e.key === "Enter") {
+    } else if (e.key === "Enter" && searching()) {
       if (typingTimer) searchDexGrid(t.value);
       const results = el.querySelectorAll<HTMLButtonElement>("#dexgrid button.dt");
-      if (results.length === 1) {
-        e.preventDefault();
-        results[0].click();
-        clearTimeout(resultsTimer);
-        const n = Number(results[0].dataset.toggle);
-        if (n) announce(`${byN[n].name} ${R().caught.has(n) ? "caught" : "not caught"}`);
-      }
+      e.preventDefault();
+      clearTimeout(resultsTimer);
+      if (results.length === 1) results[0].click();
+      else if (results.length) results[0].focus();
+      else announce("No matches");
     }
   });
   el.addEventListener("input", (e) => {
