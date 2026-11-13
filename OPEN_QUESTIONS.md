@@ -249,6 +249,11 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
   Primal battle transformations remain excluded.
 - **Second source and runtime:** no ORAS guide PDF, second source, independent
   two-pass access audit, browser QA, guest persistence, account sync, cartridge
-  or emulator gameplay was verified. The coordinator owns the independent
-  review. Save-file import is not enabled; no push, PR, merge or deployment
-  is part of this implementation.
+  or emulator gameplay was verified. One independent review checked about
+  36 gap-fill rows against the cached pages and fixed the Eon Ticket statics,
+  western Route 118 and the duplicate desert Sandshrew horde. Save-file
+  import is not enabled.
+- **From that review, still open:** Route 120's western part (Ancient Tomb
+  side) has no Feather Badge gate, which only affects Goldeen by fishing.
+  Regigigas's three-Regi party requirement is shown as a condition rather
+  than a gate.
