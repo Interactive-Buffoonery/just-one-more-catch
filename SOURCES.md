@@ -1510,7 +1510,10 @@ citations, not an independent access review or gameplay proof.
   species sprites/types and the generation-aware PokeAPI type path are used.
   Milotic: PokeAPI's Feebas chain (https://pokeapi.co/api/v2/evolution-chain/178/)
   lists beauty 170 and, for the black-white version group, a trade holding
-  Prism Scale; the generator printed only the first. The override shows both.
+  Prism Scale; the generator printed only the first. Gen 5 has no way to
+  raise beauty (https://www.serebii.net/blackwhite/evolution.shtml: "this
+  game doesn't feature the Beauty stat in any accessible way"), so the
+  override shows only the trade, matching the Black / White pack.
   https://bulbapedia.bulbagarden.net/wiki/Unova_Route_1 lists the Prism Scale
   as a Black 2 / White 2 item (cached line 40: "In the south (requires Surf)").
 - **Artwork:** the existing B2/W2 covers are reused. Static regular/shiny

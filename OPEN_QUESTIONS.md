@@ -531,7 +531,7 @@ and the 137-area work list in `docs/b2w2-access.md`.
   from the entries below and Route 11's Amoonguss (PKHeX Lv 43; PokeAPI and
   the cached Unova Route 11 page Lv 47, so the data is unchanged).
 - **Memory Link N's Pokémon:** PKHeX lists 14 of N's Pokémon as B2W2 gifts
-  (https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5B2W2.cs#L165-L181): Purrloin (Route 2, Lv 7), Pidove, Timburr and Tympole
+  (https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5B2W2.cs#L168-L182): Purrloin (Route 2, Lv 7), Pidove, Timburr and Tympole
   (Pinwheel Forest, Lv 13), Woobat (Wellspring Cave, Lv 55), Sandile, Darumaka,
   Darmanitan, Scraggy and Sigilyph (Desert Resort, Lv 22-35), Boldore, Joltik,
   Ferroseed and Klink (Chargestone Cave, Lv 28), plus Zorua (Driftveil City,
