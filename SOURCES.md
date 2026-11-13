@@ -1962,6 +1962,26 @@ area also requires the existing Aether event.
   after a League rematch. The Johto gift follows the first Hall of Fame.
   The game article describes Deoxys's four freely changeable persistent forms
   using the meteorite in Cozmo's house; battle-only Mega/Primal forms are omitted.
+- Second source (PKHeX, GPL; facts only, nothing copied): https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen6/Encounters6AO.cs
+  Lists the ORAS tables by location ID, with levels. Starters (level 5, Route 101,
+  L39-L54), Rustboro fossil revivals (level 20, L56-L67), Hot Springs Wynaut and
+  Togepi eggs (level 1, L69-L71), Beldum (level 1), Castform (30), Sharpedo and
+  Camerupt (40), the three Regis (40), Regigigas (50), Rayquaza (70), Deoxys (80)
+  (L73-L85), the Hoopa-ring legendaries (50, L87-L101), Kecleon (40 Lavaridge, 45
+  Mossdeep), Spiritomb (50, Sea Mauville), the Soaring group (L112-L120), the version
+  statics (L129-L151: Latias/Latios 30, Groudon/Kyogre 45, Ho-Oh/Lugia 50, the
+  Electrode at the Magma/Aqua hideout 40) and the three trades (L157-L161: Makuhita 9,
+  Skitty 30, Corsola 50) all match the generated rows. Location IDs resolve through
+  https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Resources/text/locations/gen6/text_xy_00000_en.txt (line = ID + 1; e.g. 302
+  New Mauville, 304 Sea Mauville, 190 Rustboro City). Two differences, both left
+  unchanged and listed in OPEN_QUESTIONS.md: Voltorb at New Mauville is level 20
+  here (L109) but 25 in PokeAPI and on the New Mauville page, and Tyrunt/Amaura are
+  listed as Rustboro revivals (L66-L67) while the Fossil page says Jaw/Sail Fossils
+  are absent from ORAS and only transferable. The same file has one location ID per
+  cave (Seafloor Cavern 294, Victory Road 298, Shoal Cave 300), so it does not
+  separate floors or rooms. pk3DS (https://github.com/kwsch/pk3DS/tree/6daaca934ca2284a73ab743bf89c848c57cd9de1)
+  has no ORAS zone-name table (area names come from the ROM's text), so it cannot
+  map PokeAPI's numbered cave areas either.
 - Sprites: https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon
   ORAS uses the same supplied static regular/shiny national artwork fallback
   as USUM. The Gen VI folders primarily supply animated artwork, whereas the
