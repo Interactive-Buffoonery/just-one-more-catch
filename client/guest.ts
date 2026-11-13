@@ -90,7 +90,7 @@ export function withGuest(b: Bridge, refresh: () => void): Bridge {
       const saveLink = mergeSaveLink(row.saveLink, link);
       const result = mergeCaughtState(row.state, row.version, caught);
       const next = JSON.stringify(rows.map((r) => r.id === id ? {
-        ...r, state: result.state, saveLink, updatedAt: new Date().toISOString(),
+        ...r, saveLink, ...(result.added.length ? { state: result.state, updatedAt: new Date().toISOString() } : {}),
         ...(startedAt !== undefined ? { createdAt: new Date(startedAt).toISOString() } : {}),
       } : r));
       localStorage.setItem(GUEST, next);

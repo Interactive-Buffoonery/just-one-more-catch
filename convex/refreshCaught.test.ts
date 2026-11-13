@@ -14,7 +14,9 @@ it("refreshes owned runs atomically with additive state and link history", async
   await expect(b.mutation(api.runs.refreshCaught, { id, caught: [2] })).rejects.toThrow();
   await expect(a.mutation(api.runs.refreshCaught, { id, caught: [152] })).rejects.toThrow();
   expect(await a.mutation(api.runs.refreshCaught, { id, caught: [25], link: { ...link, playSeconds: 50 }, startedAt: 1000 })).toEqual({ added: [25] });
+  const updatedAt = await t.run(async ctx => (await ctx.db.get(ctx.db.normalizeId("runs", id)!))?.updatedAt);
   expect(await a.mutation(api.runs.refreshCaught, { id, caught: [25] })).toEqual({ added: [] });
+  expect(await t.run(async ctx => (await ctx.db.get(ctx.db.normalizeId("runs", id)!))?.updatedAt)).toBe(updatedAt);
   const before = await a.query(api.runs.get, { id });
   await expect(a.mutation(api.runs.refreshCaught, { id, caught: [2], link: { ...link, fingerprint: "c".repeat(64) } })).rejects.toThrow("Different save");
   expect(await a.query(api.runs.get, { id })).toBe(before);

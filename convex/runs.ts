@@ -246,12 +246,13 @@ export const saveLinks = query({
 
 export const refreshCaught = mutation({
   args: { id: v.string(), caught: v.array(v.number()), link: linkValidator, startedAt: v.optional(v.number()) },
+  returns: v.object({ added: v.array(v.number()) }),
   handler: async (ctx, { id, caught, link, startedAt }) => {
     const run = await mine(ctx, id);
     validateImportStart(startedAt);
     const saveLink = mergeSaveLink(run.saveLink, link);
     const result = mergeCaughtState((await stateOf(ctx, run._id))?.state ?? "{}", run.version, caught);
-    await putState(ctx, run, result.state, { updatedAt: Date.now() });
+    if (result.added.length) await putState(ctx, run, result.state, { updatedAt: Date.now() });
     await ctx.db.patch(run._id, { saveLink, ...(startedAt !== undefined ? { startedAt } : {}) });
     return { added: result.added };
   },
