@@ -765,10 +765,10 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
 .tabbar .tlock i svg{width:10px;height:10px;padding:0;background:none!important}
 
 .app button.pt{border:0;font:inherit;color:#211b12;cursor:pointer;box-shadow:0 4px 0 rgba(33,27,18,.16);transition:translate .15s,box-shadow .15s}
-.app button.pt:hover,.app button.pt:focus-visible{translate:0 -3px;box-shadow:0 7px 0 rgba(33,27,18,.2),0 0 0 3px #211b12;outline:0}
+.app button.pt:hover,.app button.pt:focus-visible{translate:0 -3px;box-shadow:0 7px 0 rgba(33,27,18,.2),0 0 0 3px #211b12,0 0 0 6px var(--ink);outline:0}
 .pt .nms{display:flex;flex-wrap:wrap;justify-content:center;align-content:center;gap:2px 6px;min-height:calc(2.1em + 2px);margin-top:auto;font-size:17px;line-height:1.05}
 .pt .nms span{white-space:nowrap}
-.pt .nms em{font-style:normal;opacity:.45}
+.pt .nms em{font-style:normal;opacity:.7}
 .vchoice{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 4px}
 .pickbody.vpick .hv-actions{margin-top:8px}
 .app .vc{display:grid;justify-items:center;gap:10px;border:0;border-radius:16px;padding:16px 10px 12px;background:color-mix(in srgb,var(--g) 40%,#fff);color:#211b12;font:inherit;cursor:pointer;box-shadow:0 4px 0 var(--g-deep)}
