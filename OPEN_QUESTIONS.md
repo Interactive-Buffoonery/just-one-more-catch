@@ -709,6 +709,10 @@ The initial pack is partial. Its sourced access work list is
   encounter "catchable now" exact.
   Victory Road B1F/2F first encounter tiles similarly need a floor-by-floor
   check against the Surf/Strength route; the entrance area only needs Waterfall.
+  Neither PKHeX nor pk3DS can settle this: PKHeX's ORAS location list has one
+  ID per cave ([Seafloor Cavern 294, Victory Road 298, Shoal Cave 300](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Resources/text/locations/gen6/text_xy_00000_en.txt#L295)),
+  and pk3DS labels each ORAS encounter file with the ROM's met-location name
+  ([RSWE.cs L318-L329](https://github.com/kwsch/pk3DS/blob/6daaca934ca2284a73ab743bf89c848c57cd9de1/pk3DS.WinForms/Subforms/Gen6/RSWE.cs#L318-L329)), so every floor shares that one name.
 - **Safari grass/bike alternatives:** the northern-area confirmation models
   either bike plus Surf. Specific long-grass access may need the other bike;
   the condition is retained, but individual grass patches have not been traced.
@@ -716,6 +720,7 @@ The initial pack is partial. Its sourced access work list is
   states Strength OR Mach Bike. Mapping the API B1F/B2F areas to the location
   page's shared low-tide table remains uncertain; no extra floor rows were
   guessed. The generic low-tide walking table is included.
+  The PKHeX/pk3DS limit above applies here too.
 - **Access details awaiting independent review:** Route 123's western access
   versus encounter grass, Route 120's east/west grass, optional Kecleon timing
   on Route 119/Lavaridge, and the earliest northern Route 115 approach. Source
@@ -732,9 +737,12 @@ The initial pack is partial. Its sourced access work list is
   other imported/persistent form catalogs (Rotom, Kyurem, Therian formes,
   seasonal/cosmetic variants) need a separate verified catalog pass. Mega and
   Primal battle transformations remain excluded.
-- **Second source and runtime:** no ORAS guide PDF, second source, independent
-  two-pass access audit, browser QA, guest persistence, account sync, cartridge
-  or emulator gameplay was verified. One independent review checked about
+- **Second source and runtime:** PKHeX now second-sources the starters,
+  fossil revivals, eggs, gifts, statics, Hoopa-ring and Soaring legendaries,
+  Kecleon and the three trades (levels and locations; see SOURCES.md). No ORAS
+  guide PDF, independent two-pass access audit, browser QA, guest persistence,
+  account sync, cartridge or emulator gameplay was verified. One independent
+  review checked about
   36 gap-fill rows against the cached pages and fixed the Eon Ticket statics,
   western Route 118 and the duplicate desert Sandshrew horde. Save-file
   import is not enabled.
@@ -742,3 +750,13 @@ The initial pack is partial. Its sourced access work list is
   side) has no Feather Badge gate, which only affects Goldeen by fishing.
   Regigigas's three-Regi party requirement is shown as a condition rather
   than a gate.
+- **New Mauville Voltorb level:** PKHeX lists the static Voltorb at level 20
+  ([Encounters6AO.cs L109](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen6/Encounters6AO.cs#L109),
+  location 302); PokeAPI and the Bulbapedia New Mauville page say 25. Data is
+  unchanged. Needs a cartridge check.
+- **Jaw and Sail Fossils:** PKHeX lists Tyrunt and Amaura as level 20 Devon
+  revivals at Rustboro
+  ([L66-L67](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen6/Encounters6AO.cs#L66-L67)),
+  and Bulbapedia's Fossil page says the fossils are absent from ORAS but can
+  be transferred from X/Y. No rows are added: should the Devon gift rows offer
+  "Bring Jaw Fossil / Sail Fossil (from X/Y)"?
