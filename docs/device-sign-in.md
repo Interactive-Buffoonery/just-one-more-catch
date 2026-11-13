@@ -78,8 +78,11 @@ revoked per device. Background is in `auth-options.md`.
 - **Pairing:** The secret never leaves the device. Approving needs a
   signed-in player and an explicit confirmation. Both `pairing.start` and
   approval attempts are rate limited with `@convex-dev/rate-limiter`, which
-  is already used in `convex/contactSpam.ts`. Starts use a global bucket;
-  approve and lookup attempts are limited per player, which stops someone
+  is already used in `convex/contactSpam.ts`. Starts are limited per signed-in
+  account or verified browser visitor. Anonymous starts require a fresh,
+  server-verified Turnstile proof; see README.md for configuration. Inactive
+  start quota records are cleaned up after two days. Approve and lookup attempts
+  are limited per player, which stops someone
   from guessing codes.
 - **Tickets:** Clerk sign-in tokens are single-use, and ours expire in two
   minutes. The ticket is deleted once the device finishes.
