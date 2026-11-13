@@ -33,3 +33,14 @@ test("puts name prefixes first and preserves other order", () => {
   expect(searchDex(rows, "pi", (p) => p.n, forms).map(({ p }) => p.name)).toEqual(["Pikachu", "Pichu"]);
   expect(search("chu")).toEqual(["Raichu", "Pikachu"]);
 });
+test("ignores punctuation, spaces and accents", () => {
+  const rows = ["Farfetch'd", "Mr. Mime", "Flabébé"].map((name, i) => ({ p: species(name, 83 + i, 1) }));
+  const find = (q: string) => searchDex(rows, q, (p) => p.n, forms).map(({ p }) => p.name);
+  expect(find("farfetchd")).toEqual(["Farfetch'd"]);
+  expect(find("mr mime")).toEqual(["Mr. Mime"]);
+  expect(find("mrmime")).toEqual(["Mr. Mime"]);
+  expect(find("flabebe")).toEqual(["Flabébé"]);
+});
+test("treats a bare # as no search", () => {
+  expect(search("# ")).toEqual(["Raichu", "Pikachu"]);
+});

@@ -88,24 +88,23 @@ const section = (title: string, list: { p: Species; s: string }[]) =>
   list.length
     ? `<section class="dexsec">${title ? `<div class="sec-h"><h2 class="lg">${title}<small>${list.length}</small></h2></div>` : ""}<div class="dgrid ${ui.dexSize}${ui.bulk ? " bulk" : ""}${searching() ? " q" : ""}">${list.map((x) => tile(x.p, x.s)).join("")}</div></section>`
     : "";
+const norm = (s: string) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
 export function searchDex<T extends { p: Species }>(
   list: T[], query: string, number: (p: Species) => number,
   forms: (p: Species) => { name: string }[],
 ): T[] {
-  const raw = query.trim().toLowerCase();
+  const raw = query.trim().replace(/^#/, "").trim();
   if (!raw) return list;
-  const q = raw.replace(/^#/, ""),
-    digits = q.replace(/^0+(?=\d)/, "");
-  return list.filter(({ p }) =>
-    p.name.toLowerCase().includes(q) ||
+  const q = norm(raw),
+    digits = raw.replace(/^0+(?=\d)/, "");
+  if (!q) return [];
+  return list.map((x) => ({ x, name: norm(x.p.name) })).filter(({ x: { p }, name }) =>
+    name.includes(q) ||
     (/^\d+$/.test(digits) &&
       [number(p), p.n].some((n) => String(n).startsWith(digits))) ||
-    p.types.some((type) => type.toLowerCase() === q) ||
-    (q.length > 1 && forms(p).some((form) => form.name.toLowerCase().includes(q))),
-  ).sort((a, b) =>
-    Number(b.p.name.toLowerCase().startsWith(q)) -
-    Number(a.p.name.toLowerCase().startsWith(q)),
-  );
+    p.types.some((type) => norm(type) === q) ||
+    (q.length > 1 && forms(p).some((form) => norm(form.name).includes(q))),
+  ).sort((a, b) => Number(b.name.startsWith(q)) - Number(a.name.startsWith(q))).map(({ x }) => x);
 }
 export function dexGrid() {
   if (viewOf(R()) === "dexonly" && ui.filter === "now") ui.filter = "missing";

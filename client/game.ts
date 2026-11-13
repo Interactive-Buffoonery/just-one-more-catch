@@ -443,7 +443,7 @@ export function openRun(row: RunRow, data: GameData, state: string) {
   store.set("jomc.run", row.id);
 }
 export const R = () => run as Run;
-export const searching = () => (ui.q || "").trim();
+export const searching = () => (ui.q || "").trim().replace(/^#$/, "");
 export const ver = () => verOf(R().version);
 export const P = () => ver().pack;
 export const e4 = () => R().badges.has("Elite Four");
