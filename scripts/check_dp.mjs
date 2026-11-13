@@ -40,6 +40,42 @@ const has = source.slice(source.indexOf('export function has('), source.indexOf(
 const methods = source.slice(source.indexOf('export const METHOD:'), source.indexOf('export const ONE_TIME')).replace('export ', '');
 const rows = source.slice(source.indexOf('export function rowStatus('), source.indexOf('export function howElse(')).replace('export ', '');
 const status = runInNewContext(stripTypeScriptTypes(has + methods + rows) + '\nrowStatus', context);
+const allRows = game.dex.flatMap(p => p.rows);
+const verityAfter = allRows.filter(r => r.place === 'Lake Verity (after Galactic intervention)');
+assert(verityAfter.length > 0);
+for (const r of verityAfter) {
+  assert.equal(r.chap, 7);
+  assert(r.need?.includes('verity-raid'));
+  assert.equal(status(r).s, 'later');
+}
+const verityBefore = mon(396).rows.find(r => r.place === 'Lake Verity' && r.m === 'walk');
+assert.equal(verityBefore.chap, 0);
+assert.equal(status(verityBefore).s, 'now');
+run.kit.add('surf');
+run.badges.add('Relic');
+run.badges.add('Mine');
+const verityWalk = verityAfter.find(r => r.m === 'walk' && r.need.length === 1);
+assert(verityWalk);
+assert.equal(status(verityWalk).need, 'verity-raid');
+run.events.add('verity-raid');
+assert.equal(status(verityWalk).s, 'now');
+const verityEvent = game.events.find(e => e.id === 'verity-raid');
+assert.equal(verityEvent.chap, 7);
+assert(!game.chapters[verityEvent.chap].needs.includes(verityEvent.id));
+for (const place of ['Route 205 South Towards Floaroma Town', 'Route 205 East Towards Eterna City']) {
+  const grass = allRows.filter(r => r.place === place && ['walk', 'honey-tree'].includes(r.m));
+  assert(grass.length > 0);
+  for (const r of grass) {
+    assert.equal(r.chap, 2);
+    assert.equal(status(r).need, 'windworks');
+  }
+  run.events.add('windworks');
+  assert.equal(status(grass.find(r => r.m === 'walk' && !r.need?.length)).s, 'now');
+  run.events.delete('windworks');
+}
+run.kit.clear();
+run.badges.clear();
+run.events.clear();
 const eevee = mon(133).rows.find(r => r.m === 'gift');
 run.kit.add('bicycle');
 run.badges.add('Elite Four');
@@ -51,4 +87,4 @@ run.kit.add('surf');
 assert.equal(status(psyduck).need, 'surf');
 run.badges.add('Relic');
 assert.equal(status(psyduck).s, 'now');
-console.log('D/P: version exclusives, National Dex, HM badges, forms and sprites ok');
+console.log('D/P: story gates, version exclusives, National Dex, HM badges, forms and sprites ok');

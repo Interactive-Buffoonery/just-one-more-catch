@@ -197,6 +197,14 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Diamond and Pearl (`dp`)
 
+- **Route 205 South:** the cached Route 205 description places the first
+  grass and Honey Tree across the bridge blocked until Valley Windworks is
+  freed. Keep the walking/tree rows gated; a blanket move to chapter 1 would
+  open them too early. Independently trace the southern bank's fishing/Surf
+  access before splitting those methods into an earlier chapter. Sources:
+  `Sinnoh_Route_205` (Before the Eterna Forest) and walkthrough Part 5
+  (Route 205 Southwest). The walkthrough lists grass and fishing together
+  but does not establish grass access before the bridge opens.
 - **PokeAPI gap:** species 487 (Giratina), including its alternate variety,
   has no Diamond/Pearl encounter detail, despite the sourced Turnback Cave
   static. The catalog includes Giratina with zero encounter rows; no static

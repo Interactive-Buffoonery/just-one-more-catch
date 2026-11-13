@@ -64,6 +64,13 @@
   },
   "methods": {},
   "needs": {
+    "Lake Verity After Galactic Intervention": {
+      "needs": [
+        "verity-raid"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_15",
+      "quote": "Mars and her subordinates disappear in an instant, leaving you, {{prof|Rowan}}, and {{ga|Dawn}}/{{ga|Lucas}} to make sense of these events."
+    },
     "Oreburgh Gate B1F": {
       "needs": [
         "rock-smash"
@@ -953,6 +960,7 @@
       ],
       "places": [
         "Canalave City",
+        "Lake Verity (after Galactic intervention)",
         "Iron Island",
         "Fuego Ironworks",
         "Sea Route 220",
@@ -1072,6 +1080,14 @@
     }
   ],
   "events": [
+    {
+      "id": "verity-raid",
+      "label": "Defeat Mars at Lake Verity",
+      "q": "Did you defeat Mars at Lake Verity after meeting Rowan in the Canalave Library?",
+      "chap": 7,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_15",
+      "quote": "Mars and her subordinates disappear in an instant, leaving you, {{prof|Rowan}}, and {{ga|Dawn}}/{{ga|Lucas}} to make sense of these events."
+    },
     {
       "id": "windworks",
       "label": "Free Valley Windworks",
