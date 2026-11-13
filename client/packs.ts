@@ -238,6 +238,32 @@ const FRLG: Pack = {
   boxes: [14, 30],
 };
 
+const RS: Pack = {
+  load: () => import("./data/rs").then((m) => m.default),
+  art: "rs",
+  region: "Hoenn",
+  regional: 202,
+  national: 386,
+  start: "Route 101",
+  starters: [252, 255, 258],
+  badges: [
+    ["Stone", "Roxanne"], ["Knuckle", "Brawly"], ["Dynamo", "Wattson"],
+    ["Heat", "Flannery"], ["Balance", "Norman"], ["Feather", "Winona"],
+    ["Mind", "Tate & Liza"], ["Rain", "Wallace"],
+  ],
+  kit: [
+    ["old-rod", "Old Rod"], ["good-rod", "Good Rod"], ["super-rod", "Super Rod"],
+    ["cut-hm", "Cut"], ["flash", "Flash"], ["rock-smash", "Rock Smash"],
+    ["strength", "Strength"], ["surf", "Surf"], ["dive", "Dive"],
+    ["waterfall", "Waterfall"], ["mach-bike", "Mach Bike"], ["acro-bike", "Acro Bike"],
+  ],
+  hm: {
+    "cut-hm": "Stone", flash: "Knuckle", "rock-smash": "Dynamo",
+    strength: "Heat", surf: "Balance", dive: "Mind", waterfall: "Rain",
+  },
+  boxes: [14, 30],
+};
+
 const EMERALD: Pack = {
   load: () => import("./data/emerald").then((m) => m.default),
   art: "emerald",
@@ -263,6 +289,78 @@ const EMERALD: Pack = {
     strength: "Heat", surf: "Balance", dive: "Mind", waterfall: "Rain",
   },
   boxes: [14, 30],
+};
+
+const BW: Pack = {
+  load: () => import("./data/bw").then((m) => m.default),
+  art: "bw",
+  region: "Unova",
+  regional: 156,
+  national: 649,
+  start: "Nuvema Town",
+  starters: [495, 498, 501],
+  badges: [
+    ["Trio", "Cilan / Chili / Cress"], ["Basic", "Lenora"],
+    ["Insect", "Burgh"], ["Bolt", "Elesa"], ["Quake", "Clay"],
+    ["Jet", "Skyla"], ["Freeze", "Brycen"], ["Legend", "Drayden / Iris"],
+  ],
+  kit: [
+    ["cut-hm", "Cut"], ["surf", "Surf"], ["strength", "Strength"],
+    ["waterfall", "Waterfall"], ["super-rod", "Super Rod"],
+    ["bicycle", "Bicycle"],
+  ],
+  hm: {},
+  boxes: [24, 30],
+};
+
+const XY: Pack = {
+  load: () => import("./data/xy").then((m) => m.default),
+  art: "xy",
+  region: "Kalos",
+  regional: 457,
+  national: 721,
+  start: "Aquacorde Town",
+  starters: [650, 653, 656],
+  badges: [
+    ["Bug", "Viola"], ["Cliff", "Grant"], ["Rumble", "Korrina"],
+    ["Plant", "Ramos"], ["Voltage", "Clemont"], ["Fairy", "Valerie"],
+    ["Psychic", "Olympia"], ["Iceberg", "Wulfric"],
+  ],
+  kit: [
+    ["old-rod", "Old Rod"], ["good-rod", "Good Rod"], ["super-rod", "Super Rod"],
+    ["cut-hm", "Cut"], ["rock-smash", "Rock Smash"], ["strength", "Strength"],
+    ["surf", "Surf"], ["waterfall", "Waterfall"],
+  ],
+  hm: { "cut-hm": "Bug", strength: "Cliff", surf: "Rumble", waterfall: "Iceberg" },
+  nightFrom: 21,
+  boxes: [31, 30],
+};
+
+const DP: Pack = {
+  load: () => import("./data/dp").then((m) => m.default),
+  art: "dp",
+  region: "Sinnoh",
+  regional: 151,
+  national: 493,
+  start: "Lake Verity",
+  starters: [387, 390, 393],
+  badges: [
+    ["Coal", "Roark"], ["Forest", "Gardenia"], ["Cobble", "Maylene"],
+    ["Fen", "Crasher Wake"], ["Relic", "Fantina"], ["Mine", "Byron"],
+    ["Icicle", "Candice"], ["Beacon", "Volkner"],
+  ],
+  kit: [
+    ["old-rod", "Old Rod"], ["good-rod", "Good Rod"], ["super-rod", "Super Rod"],
+    ["rock-smash", "Rock Smash"], ["cut-hm", "Cut"], ["fly", "Fly"],
+    ["defog", "Defog"], ["surf", "Surf"], ["strength", "Strength"],
+    ["rock-climb", "Rock Climb"], ["waterfall", "Waterfall"], ["bicycle", "Bicycle"],
+  ],
+  hm: {
+    "rock-smash": "Coal", "cut-hm": "Forest", fly: "Cobble", defog: "Fen",
+    surf: "Relic", strength: "Mine", "rock-climb": "Icicle", waterfall: "Beacon",
+  },
+  nightFrom: 20,
+  boxes: [18, 30],
 };
 
 const USUM: Pack = {
@@ -300,6 +398,55 @@ const USUM: Pack = {
   ],
   hm: {},
   boxes: [32, 30],
+};
+
+const B2W2: Pack = {
+  load: () => import("./data/b2w2").then((m) => m.default),
+  art: "b2w2",
+  region: "Unova",
+  regional: 301,
+  national: 649,
+  start: "Aspertia City",
+  starters: [495, 498, 501],
+  badges: [
+    ["Basic", "Cheren"], ["Toxic", "Roxie"], ["Insect", "Burgh"],
+    ["Bolt", "Elesa"], ["Quake", "Clay"], ["Jet", "Skyla"],
+    ["Legend", "Drayden"], ["Wave", "Marlon"],
+  ],
+  kit: [
+    ["cut-hm", "Cut"], ["surf", "Surf"], ["strength", "Strength"],
+    ["waterfall", "Waterfall"], ["super-rod", "Super Rod"],
+  ],
+  hm: {},
+  boxes: [24, 30],
+};
+
+const PLATINUM: Pack = {
+  load: () => import("./data/pt").then((m) => m.default),
+  art: "pt",
+  region: "Sinnoh",
+  regional: 210,
+  national: 493,
+  start: "Route 201",
+  starters: [387, 390, 393],
+  badges: [
+    ["Coal", "Roark"], ["Forest", "Gardenia"], ["Relic", "Fantina"],
+    ["Cobble", "Maylene"], ["Fen", "Crasher Wake"], ["Mine", "Byron"],
+    ["Icicle", "Candice"], ["Beacon", "Volkner"],
+  ],
+  kit: [
+    ["old-rod", "Old Rod"], ["good-rod", "Good Rod"], ["super-rod", "Super Rod"],
+    ["rock-smash", "Rock Smash"], ["cut-hm", "Cut"], ["defog", "Defog"],
+    ["surf", "Surf"], ["strength", "Strength"], ["rock-climb", "Rock Climb"],
+    ["waterfall", "Waterfall"], ["bicycle", "Bicycle"], ["honey", "Honey"],
+    ["underground-kit", "Explorer Kit"], ["poke-radar", "Poké Radar"],
+  ],
+  hm: {
+    "rock-smash": "Coal", "cut-hm": "Forest", defog: "Relic", surf: "Fen",
+    strength: "Mine", "rock-climb": "Icicle", waterfall: "Beacon",
+  },
+  nightFrom: 20,
+  boxes: [18, 30],
 };
 
 const SM: Pack = {
@@ -341,6 +488,50 @@ const SM: Pack = {
 };
 
 export const VERSIONS: Record<VersionId, Version> = {
+  platinum: {
+    name: "Platinum", short: "PT", code: "t", gen: "Gen 4",
+    pack: PLATINUM, ring: ["ghost", "dragon"],
+  },
+  "black-2": {
+    name: "Black 2", short: "B2", code: "j", gen: "Gen 5",
+    pack: B2W2, other: "White 2", ring: ["dragon", "ice"],
+  },
+  "white-2": {
+    name: "White 2", short: "W2", code: "k", gen: "Gen 5",
+    pack: B2W2, other: "Black 2", ring: ["ice", "dragon"],
+  },
+  ruby: {
+    name: "Ruby", short: "RU", code: "R", gen: "Gen 3",
+    pack: RS, other: "Sapphire", ring: ["fire", "ground"],
+  },
+  sapphire: {
+    name: "Sapphire", short: "SA", code: "S", gen: "Gen 3",
+    pack: RS, other: "Ruby", ring: ["water", "ice"],
+  },
+  black: {
+    name: "Black", short: "BL", code: "k", gen: "Gen 5",
+    pack: BW, other: "White", ring: ["dragon", "fire"],
+  },
+  white: {
+    name: "White", short: "W", code: "w", gen: "Gen 5",
+    pack: BW, other: "Black", ring: ["dragon", "electric"],
+  },
+  x: {
+    name: "X", short: "X", code: "X", gen: "Gen 6",
+    pack: XY, other: "Y", ring: ["fairy", "psychic"],
+  },
+  y: {
+    name: "Y", short: "YY", code: "Y", gen: "Gen 6",
+    pack: XY, other: "X", ring: ["dark", "flying"],
+  },
+  diamond: {
+    name: "Diamond", short: "D", code: "d", gen: "Gen 4",
+    pack: DP, other: "Pearl", ring: ["steel", "dragon"],
+  },
+  pearl: {
+    name: "Pearl", short: "P", code: "p", gen: "Gen 4",
+    pack: DP, other: "Diamond", ring: ["water", "dragon"],
+  },
   emerald: {
     name: "Emerald", short: "E", code: "e", gen: "Gen 3",
     pack: EMERALD, ring: ["grass", "dragon"],
@@ -456,34 +647,19 @@ export const CONSOLES: { name: string; tag: string; titles: (VersionId | Soon)[]
   { name: "Game Boy", tag: "Game Boy", titles: [["red", "blue"], ["yellow"]] },
   { name: "Game Boy Color", tag: "GB Color", titles: [["gold", "silver"], ["crystal"]] },
   { name: "Game Boy Advance", tag: "GBA", titles: [
-    [
-      { name: "Ruby", short: "RU", color: "#c8323c", region: "Hoenn" },
-      { name: "Sapphire", short: "SA", color: "#2f5fb3", region: "Hoenn" },
-    ],
+    ["ruby", "sapphire"],
     ["firered", "leafgreen"],
     ["emerald"],
   ] },
   { name: "Nintendo DS", tag: "DS", titles: [
-    [
-      { name: "Diamond", short: "D", color: "#5b8fd6", region: "Sinnoh" },
-      { name: "Pearl", short: "P", color: "#c98aa8", region: "Sinnoh" },
-    ],
-    [{ name: "Platinum", short: "PT", color: "#8d8f9c", region: "Sinnoh" }],
+    ["diamond", "pearl"],
+    ["platinum"],
     ["heartgold", "soulsilver"],
-    [
-      { name: "Black", short: "BL", color: "#3a3a40", region: "Unova" },
-      { name: "White", short: "W", color: "#c9c9d0", region: "Unova" },
-    ],
-    [
-      { name: "Black 2", short: "B2", color: "#2f3a4a", region: "Unova" },
-      { name: "White 2", short: "W2", color: "#d9c6bb", region: "Unova" },
-    ],
+    ["black", "white"],
+    ["black-2", "white-2"],
   ] },
   { name: "Nintendo 3DS", tag: "3DS", titles: [
-    [
-      { name: "X", short: "X", color: "#3b6fd1", region: "Kalos" },
-      { name: "Y", short: "YY", color: "#c8323c", region: "Kalos" },
-    ],
+    ["x", "y"],
     [
       { name: "Omega Ruby", short: "OR", color: "#c8323c", region: "Hoenn" },
       { name: "Alpha Sapphire", short: "AS", color: "#2f5fb3", region: "Hoenn" },
