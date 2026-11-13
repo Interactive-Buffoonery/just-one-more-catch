@@ -16,7 +16,7 @@ from urllib.parse import unquote
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 POKEAPI = os.path.join(ROOT, ".cache", "pokeapi")
 WIKI = os.path.join(ROOT, ".cache", "bulbapedia")
-PACKS = ["crystal", "hgss", "frlg", "usum"]
+PACKS = ["xy", "crystal", "hgss", "frlg", "usum"]
 
 
 def nice(slug):
@@ -57,10 +57,24 @@ def candidates(area, pack):
                  ("Bills House", "Bill's House"), ("Groundon", "Groudon"), ("Hauoli", "Hau'oli"), ("Ulaula", "Ula'ula"),
                  ("Kalae", "Kala'e"), ("Team Rockets Castle", "Team Rocket's Castle"), ("Trainers School", "Trainers' School")]:
         a = a.replace(x, y)
+    if pack == "xy":
+        a = re.sub(r"^Kalos ", "", a)
+        if a.startswith("Friend Safari"):
+            return ["Friend Safari"]
+        if a == "Berry Fields":
+            return ["Berry fields (Kalos)"]
+        if a == "Sea Spirits Den":
+            return ["Sea Spirit's Den"]
+        if a == "Team Flare Secret Hq":
+            return ["Walkthrough:Pokémon X and Y/Part 11"]
+        if a.startswith("Victory Road"):
+            return ["Victory Road (Kalos)"]
+        if a.startswith("Unknown Dungeon"):
+            return ["Unknown Dungeon (Kalos)"]
     route = re.match(r"(?:Sea )?Route (\d+)", a)
     if route:
         n = int(route.group(1))
-        return [f"{'Alola' if pack == 'usum' else 'Johto' if 29 <= n <= 48 else 'Kanto'} Route {n}"]
+        return [f"{'Kalos' if pack == 'xy' else 'Alola' if pack == 'usum' else 'Johto' if 29 <= n <= 48 else 'Kanto'} Route {n}"]
     if a.startswith("Safari Zone"):
         return ["Johto Safari Zone" if pack == "hgss" else "Kanto Safari Zone"]
     if a.endswith(" Chamber"):
@@ -82,6 +96,8 @@ SPECIFIC = {"Pokémon Mansion": "Pokémon Mansion (Kanto)", "Underground Path": 
 
 def page_for(area, pack, resolved):
     for t in candidates(area, pack):
+        if pack == "xy" and os.path.exists(wiki_path(t)):
+            return t
         if resolved.get(t):
             return SPECIFIC.get(resolved[t], resolved[t])
     return None

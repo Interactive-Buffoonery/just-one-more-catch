@@ -263,6 +263,29 @@ const EMERALD: Pack = {
   boxes: [14, 30],
 };
 
+const XY: Pack = {
+  load: () => import("./data/xy").then((m) => m.default),
+  art: "xy",
+  region: "Kalos",
+  regional: 457,
+  national: 721,
+  start: "Aquacorde Town",
+  starters: [650, 653, 656],
+  badges: [
+    ["Bug", "Viola"], ["Cliff", "Grant"], ["Rumble", "Korrina"],
+    ["Plant", "Ramos"], ["Voltage", "Clemont"], ["Fairy", "Valerie"],
+    ["Psychic", "Olympia"], ["Iceberg", "Wulfric"],
+  ],
+  kit: [
+    ["old-rod", "Old Rod"], ["good-rod", "Good Rod"], ["super-rod", "Super Rod"],
+    ["cut-hm", "Cut"], ["rock-smash", "Rock Smash"], ["strength", "Strength"],
+    ["surf", "Surf"], ["waterfall", "Waterfall"],
+  ],
+  hm: { "cut-hm": "Bug", strength: "Cliff", surf: "Rumble", waterfall: "Iceberg" },
+  nightFrom: 21,
+  boxes: [31, 30],
+};
+
 const USUM: Pack = {
   load: () => import("./data/usum").then((m) => m.default),
   art: "usum",
@@ -301,6 +324,14 @@ const USUM: Pack = {
 };
 
 export const VERSIONS: Record<VersionId, Version> = {
+  x: {
+    name: "X", short: "X", code: "X", gen: "Gen 6",
+    pack: XY, other: "Y", ring: ["fairy", "psychic"],
+  },
+  y: {
+    name: "Y", short: "YY", code: "Y", gen: "Gen 6",
+    pack: XY, other: "X", ring: ["dark", "flying"],
+  },
   emerald: {
     name: "Emerald", short: "E", code: "e", gen: "Gen 3",
     pack: EMERALD, ring: ["grass", "dragon"],
@@ -432,10 +463,7 @@ export const CONSOLES: { name: string; tag: string; titles: (VersionId | Soon)[]
     ],
   ] },
   { name: "Nintendo 3DS", tag: "3DS", titles: [
-    [
-      { name: "X", short: "X", color: "#3b6fd1", region: "Kalos" },
-      { name: "Y", short: "YY", color: "#c8323c", region: "Kalos" },
-    ],
+    ["x", "y"],
     [
       { name: "Omega Ruby", short: "OR", color: "#c8323c", region: "Hoenn" },
       { name: "Alpha Sapphire", short: "AS", color: "#2f5fb3", region: "Hoenn" },

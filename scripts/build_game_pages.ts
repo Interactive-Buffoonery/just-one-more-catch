@@ -6,6 +6,17 @@ import { needLabel } from "../client/need-labels.ts";
 import { readFileSync, writeFileSync, mkdirSync, accessSync, readdirSync } from "node:fs";
 const METHOD: Record<string, [string, string | null]> = {
   walk: ["Walking", null],
+  horde: ["Horde encounter", null],
+  "yellow-flowers": ["Yellow flowers", null],
+  "purple-flowers": ["Purple flowers", null],
+  "red-flowers": ["Red flowers", null],
+  "rough-terrain": ["Rough terrain", null],
+  "ground-ambush": ["Ground ambush", null],
+  "ceiling-ambush": ["Ceiling ambush", null],
+  "sky-ambush": ["Sky ambush", null],
+  "rustling-bush-ambush": ["Rustling bush", null],
+  "trash-can-ambush": ["Shaking trash can", null],
+
   seaweed: ["Underwater", "dive"],
   "feebas-tile-fishing": ["Feebas fishing tiles", "old-rod"],
   "devon-scope": ["Devon Scope", null],
@@ -36,6 +47,7 @@ import { VERSIONS } from "../client/packs.ts";
 
 const esc = (s: unknown) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
 const games = [
+  ["x-y", "xy", "Kalos"],
   ["emerald", "emerald", "Hoenn"],
   ["red-blue", "rb", "Kanto"],
   ["yellow", "yellow", "Kanto"],
