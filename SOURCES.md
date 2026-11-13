@@ -1799,6 +1799,20 @@ claim that every obtainable Pokémon or condition is represented.
   metrics. Existing sourced libretro Sun/Moon box covers `su.jpg`/`mo.jpg`
   are reused (see Coming Soon box art above). No save-file reader mapping
   is enabled by registering these games.
+- **In-game trade requests and Zygarde gift levels:** the seven NPC trades
+  carry a `trade-<species>` condition through `row_needs`: Machop (Route 2)
+  for Spearow, Bounsweet (Route 5) for Lillipup, Poliwhirl (Konikoni City)
+  for Zubat, Happiny (Malie City) for Pancham, Alolan Graveler (Tapu
+  Village) for Haunter, Steenee (Seafolk Village) for Granbull and
+  Talonflame (Poni Gauntlet) for Bewear. Requested species: each location's
+  cached Bulbapedia `Catch/entry7` Trade row (`tradename=`), agreeing with
+  https://www.serebii.net/sunmoon/ingametrades.shtml ("Trader requests a").
+  Offered species and levels (9, 16, 22, 27, 32, 43, 59):
+  https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen7/Encounters7SM.cs#L128-L138
+  (`TradeGift_SM`). The existing Zygarde gift row (levels 30 and 50) matches
+  PKHeX's two Zygarde gift levels, with the Cell forms assembled afterwards:
+  https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen7/Encounters7SM.cs#L42-L50
+  and walkthrough Part 18.
 
 ### Sun/Moon ambush terrain review
 

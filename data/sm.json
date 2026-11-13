@@ -934,6 +934,83 @@
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Alola_Route_5",
       "quote": "The north part of the route can only be accessed from {{rt|8|Alola}}, or by [[Poké Ride|Charizard Glide]] after entering [[Lush Jungle]]."
+    },
+    {
+      "place": "Route 2",
+      "n": 66,
+      "m": "npc-trade",
+      "needs": [],
+      "conditions": [
+        "trade-spearow"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Alola_Route_2",
+      "quote": "{{Catch/entry7|066|Machop|yes|yes|Trade|9|all=One|tradenum=021|tradename=Spearow|type1=Fighting|alliesna=N/A}}"
+    },
+    {
+      "place": "Route 5",
+      "n": 761,
+      "m": "npc-trade",
+      "needs": [],
+      "conditions": [
+        "trade-lillipup"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Alola_Route_5",
+      "quote": "{{Catch/entry7|761|Bounsweet|yes|yes|Trade|16|all=One|tradenum=506|tradename=Lillipup|type1=Grass|alliesna=N/A}}"
+    },
+    {
+      "place": "Konikoni City",
+      "n": 61,
+      "m": "npc-trade",
+      "needs": [],
+      "conditions": [
+        "trade-zubat"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Konikoni_City",
+      "quote": "{{Catch/entry7|061|Poliwhirl|yes|yes|Trade|22|all=One|tradenum=041|tradename=Zubat|type1=Water|alliesna=N/A}}"
+    },
+    {
+      "place": "Malie City",
+      "n": 440,
+      "m": "npc-trade",
+      "needs": [],
+      "conditions": [
+        "trade-pancham"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Malie_City",
+      "quote": "{{Catch/entry7|440|Happiny|yes|yes|Trade|27|all=One|tradenum=674|tradename=Pancham|type1=Normal|alliesna=N/A}}"
+    },
+    {
+      "place": "Tapu Village",
+      "n": 75,
+      "m": "npc-trade",
+      "needs": [],
+      "conditions": [
+        "trade-haunter"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Tapu_Village",
+      "quote": "{{Catch/entry7|075A|Graveler|yes|yes|Trade|32|all=...|tradenum=093|tradename=Haunter|type1=Rock|type2=Electric|alliesna=N/A|form=Alolan Form}}"
+    },
+    {
+      "place": "Seafolk Village",
+      "n": 762,
+      "m": "npc-trade",
+      "needs": [],
+      "conditions": [
+        "trade-granbull"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Seafolk_Village",
+      "quote": "{{Catch/entry7|762|Steenee|yes|yes|Trade|43|all=One|tradenum=210|tradename=Granbull|type1=grass|alliesna=N/A}}"
+    },
+    {
+      "place": "Poni Gauntlet",
+      "n": 663,
+      "m": "npc-trade",
+      "needs": [],
+      "conditions": [
+        "trade-bewear"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Poni_Gauntlet",
+      "quote": "{{Catch/entry7|663|Talonflame|yes|yes|Trade|59|all=One|tradenum=760|tradename=Bewear|type1=fire|type2=flying|alliesna=N/A}}"
     }
   ],
   "obtainable_forms": {
