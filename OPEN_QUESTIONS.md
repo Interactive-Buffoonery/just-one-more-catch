@@ -85,22 +85,24 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Red and Blue
 
-- Independent access audit remains for the coordinator, particularly the
-  first reachable parts of Seafoam's basement floors, Route 12's southern
-  grass, and the Route 2 trade-house approach. The implementation cites
-  original pret scripts/maps and accessible walkthroughs, but no local
-  Red/Blue scanned guide or emulator confirmation was available.
+- **Route 2 trade-house alternatives:** the pinned static map trace reaches
+  the house at (15,19) from Diglett’s Cave without Cut, and from the western
+  Route 2 entrances with Cut. Keep the existing Bill prerequisite pending
+  shared support for alternative requirements (Bill’s route OR usable Cut).
+  See the Route 2 trace in SOURCES.md; no gameplay confirmation was run.
 - PokeAPI's NPC-trade levels are fixed example levels; original NPC trades
   retain the offered Pokémon's level (`engine/events/in_game_trades.asm`).
   The shared encounter row schema only supports numeric ranges, so these
   source levels are retained, not claimed as mandatory in-game levels.
   Coordinator should decide a shared variable-level presentation rather
   than introducing Red/Blue-only UI changes in this pack task.
-- The S.S. Anne dock is a temporary location after the ship departs. The
-  tracker models access via Bill's ticket but does not model losing access
-  after departure. Its source-backed PokeAPI fishing rows are retained;
-  verify an appropriate shared temporary-area presentation before claiming
-  all currently available encounters are exact.
+- **S.S. Anne temporary access:** original dock script checks
+  `EVENT_GOT_HM01` and destination warp 1 before triggering departure,
+  then sets `EVENT_SS_ANNE_LEFT` (see the pinned dock source in SOURCES.md).
+  Keep the fishing rows unchanged until the shared model can express
+  availability ending after a story event; positive prerequisites alone
+  cannot represent this. Departure timing is now source-confirmed, but
+  the temporary-area presentation remains open.
 - The shared box editor still offers later-generation metadata (gender,
   shiny and held-item fields). Red/Blue has no visible shiny art or held
   items; regular sprites intentionally fill shiny paths. Do not interpret
