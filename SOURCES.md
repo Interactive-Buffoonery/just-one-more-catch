@@ -1227,8 +1227,42 @@ These are cached locally as `Walkthrough:Pokémon X and Y_Part N.wiki`.
   Terminus rooms remain in the Route 18 chapter; the final chamber is postgame.
 - https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon#Pokémon_X_and_Y
 - https://bulbapedia.bulbagarden.net/wiki/In-game_trade#Pokémon_X_and_Y
-  identify the PokeAPI omissions recorded in OPEN_QUESTIONS.md. No invented
-  encounter rows were substituted for missing trades or restored fossils.
+  identified the PokeAPI omissions. The cached X/Y data has no NPC-trade or
+  restored-fossil rows other than Tyrunt/Amaura, so `extra_encounters` in
+  `data/xy.json` adds them (enabled with an empty `data/xy-bulbapedia.json`,
+  as ORAS does). Two sources agree on every row's species, level and trainer ID.
+  PKHeX at commit d8ab568695b4 lists the nine NPC trades with species,
+  level and trainer ID, and the eleven fossil gifts at level 20 with Ambrette
+  Town's location ID 44:
+  https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen6/Encounters6XY.cs#L33-L43 (fossils) and
+  https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen6/Encounters6XY.cs#L93-L103 (trades). Trade levels/OT IDs
+  (Farfetch'd 10/00185, Steelix 20/19250, Bisharp 50/03447, Magikarp 5/44285,
+  Eevee 5/29294, Shauna's starters 5/00037, Ralts 5/37110) match Bulbapedia's
+  table. PKHeX gives no location for trades, so places come from Bulbapedia.
+  - Santalune City Farfetch'd (Bunnelby), Cyllage City Steelix (Luvdisc) and
+    Snowbelle City Bisharp (Jigglypuff):
+    Walkthrough Part 2 ("offers his Farfetch'd, nicknamed Quacklin', in
+    exchange for a Bunnelby"), https://bulbapedia.bulbagarden.net/wiki/Cyllage_City
+    ("An Ace Trainer in the Pokémon Center will offer to trade the player a
+    Steelix.") and Part 13 ("would gladly trade her Bisharp for it").
+    Santalune City follows Route 3 in the first chapter; Snowbelle City joins
+    the Route 18 chapter with the rest of the Snowbelle region.
+  - Hotel Magikarp (for Gyarados) and Eevee (any Pokémon):
+    https://bulbapedia.bulbagarden.net/wiki/Ambrette_Town ("speaking to the
+    Hiker or Maid on the second floor of Hotel Ambrette for the fourth time").
+    The same offers repeat in Hotel Cyllage and the Couriway hotel; the earliest
+    hotel, Ambrette's, is used.
+  - Shauna's starter at Vaniville Town and Diantha's Ralts at Lumiose City,
+    both after the credits: Walkthrough Part 16 ("Once the credits have ended",
+    "asks to trade Pokémon with you", "offers a level 5 Ralts"). Rows need the
+    Elite Four.
+  - Restored fossils at Ambrette Fossil Lab:
+    https://bulbapedia.bulbagarden.net/wiki/Glittering_Cave (Rock Smash table:
+    Old Amber before the Hall of Fame; Skull, Armor, Cover and Plume Fossils
+    in both versions, Dome and Helix in Y only, Root and Claw in X only, all
+    after it) and https://bulbapedia.bulbagarden.net/wiki/Fossil ("The
+    resulting Pokémon are level 20"). Rows need Rock Smash; postgame fossils
+    also need the Elite Four.
 
 ### Historical evolution, forms and artwork
 

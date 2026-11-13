@@ -728,6 +728,144 @@
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_11",
       "quote": "leaving you to take out the rest one by one"
+    },
+    {
+      "place": "Vaniville Town",
+      "n": 656,
+      "m": "npc-trade",
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_16",
+      "quote": "asks to trade Pokémon with you"
+    },
+    {
+      "place": "Vaniville Town",
+      "n": 650,
+      "m": "npc-trade",
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_16",
+      "quote": "asks to trade Pokémon with you"
+    },
+    {
+      "place": "Vaniville Town",
+      "n": 653,
+      "m": "npc-trade",
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_16",
+      "quote": "asks to trade Pokémon with you"
+    },
+    {
+      "place": "Lumiose City",
+      "n": 280,
+      "m": "npc-trade",
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_16",
+      "quote": "She would like to trade Pokémon with you, and offers a level 5 Ralts"
+    },
+    {
+      "place": "Ambrette Town",
+      "n": 142,
+      "m": "gift",
+      "needs": [
+        "rock-smash"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Glittering_Cave",
+      "quote": "Randomly found by smashing breakable rocks in the final room of the cave"
+    },
+    {
+      "place": "Ambrette Town",
+      "n": 408,
+      "m": "gift",
+      "needs": [
+        "Elite Four",
+        "rock-smash"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Glittering_Cave",
+      "quote": "Randomly found by smashing breakable rocks in the final room of the cave"
+    },
+    {
+      "place": "Ambrette Town",
+      "n": 410,
+      "m": "gift",
+      "needs": [
+        "Elite Four",
+        "rock-smash"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Glittering_Cave",
+      "quote": "Randomly found by smashing breakable rocks in the final room of the cave"
+    },
+    {
+      "place": "Ambrette Town",
+      "n": 564,
+      "m": "gift",
+      "needs": [
+        "Elite Four",
+        "rock-smash"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Glittering_Cave",
+      "quote": "Randomly found by smashing breakable rocks in the final room of the cave"
+    },
+    {
+      "place": "Ambrette Town",
+      "n": 566,
+      "m": "gift",
+      "needs": [
+        "Elite Four",
+        "rock-smash"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Glittering_Cave",
+      "quote": "Randomly found by smashing breakable rocks in the final room of the cave"
+    },
+    {
+      "place": "Ambrette Town",
+      "n": 138,
+      "m": "gift",
+      "needs": [
+        "Elite Four",
+        "rock-smash"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Glittering_Cave",
+      "quote": "Randomly found by smashing breakable rocks in the final room of the cave"
+    },
+    {
+      "place": "Ambrette Town",
+      "n": 140,
+      "m": "gift",
+      "needs": [
+        "Elite Four",
+        "rock-smash"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Glittering_Cave",
+      "quote": "Randomly found by smashing breakable rocks in the final room of the cave"
+    },
+    {
+      "place": "Ambrette Town",
+      "n": 345,
+      "m": "gift",
+      "needs": [
+        "Elite Four",
+        "rock-smash"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Glittering_Cave",
+      "quote": "Randomly found by smashing breakable rocks in the final room of the cave"
+    },
+    {
+      "place": "Ambrette Town",
+      "n": 347,
+      "m": "gift",
+      "needs": [
+        "Elite Four",
+        "rock-smash"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Glittering_Cave",
+      "quote": "Randomly found by smashing breakable rocks in the final room of the cave"
     }
   ],
   "chapters": [
@@ -739,7 +877,9 @@
         "Route 2",
         "Santalune Forest",
         "Route 3",
-        "Route 22"
+        "Route 22",
+        "Santalune City",
+        "Vaniville Town"
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_2"
     },
@@ -867,7 +1007,8 @@
         "Route 19",
         "Route 20",
         "Pokemon Village",
-        "Route 21"
+        "Route 21",
+        "Snowbelle City"
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_13"
     },
@@ -1089,5 +1230,331 @@
   "condition_replacements": {
     "trash-can-type-tuesday": "weekday-tuesday",
     "trash-can-type-thursday": "weekday-thursday"
-  }
+  },
+  "bulbapedia_gap_fill": "data/xy-bulbapedia.json",
+  "extra_encounters": [
+    {
+      "n": 83,
+      "versions": [
+        "x",
+        "y"
+      ],
+      "area": "Santalune City",
+      "method": "npc-trade",
+      "lo": 10,
+      "hi": 10,
+      "chance": 100,
+      "conditions": [
+        "Trade a Bunnelby"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_2",
+      "quote": "offers his Farfetch'd, nicknamed Quacklin', in exchange for a Bunnelby"
+    },
+    {
+      "n": 208,
+      "versions": [
+        "x",
+        "y"
+      ],
+      "area": "Cyllage City",
+      "method": "npc-trade",
+      "lo": 20,
+      "hi": 20,
+      "chance": 100,
+      "conditions": [
+        "Trade a Luvdisc"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Cyllage_City",
+      "quote": "An Ace Trainer in the Pokémon Center will offer to trade the player a Steelix."
+    },
+    {
+      "n": 625,
+      "versions": [
+        "x",
+        "y"
+      ],
+      "area": "Snowbelle City",
+      "method": "npc-trade",
+      "lo": 50,
+      "hi": 50,
+      "chance": 100,
+      "conditions": [
+        "Trade a Jigglypuff"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_13",
+      "quote": "would gladly trade her Bisharp for it"
+    },
+    {
+      "n": 129,
+      "versions": [
+        "x",
+        "y"
+      ],
+      "area": "Ambrette Town",
+      "method": "npc-trade",
+      "lo": 5,
+      "hi": 5,
+      "chance": 100,
+      "conditions": [
+        "Trade a Gyarados"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Ambrette_Town",
+      "quote": "speaking to the Hiker or Maid on the second floor of Hotel Ambrette for the fourth time"
+    },
+    {
+      "n": 133,
+      "versions": [
+        "x",
+        "y"
+      ],
+      "area": "Ambrette Town",
+      "method": "npc-trade",
+      "lo": 5,
+      "hi": 5,
+      "chance": 100,
+      "conditions": [
+        "Trade any Pokémon"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Ambrette_Town",
+      "quote": "speaking to the Hiker or Maid on the second floor of Hotel Ambrette for the fourth time"
+    },
+    {
+      "n": 656,
+      "versions": [
+        "x",
+        "y"
+      ],
+      "area": "Vaniville Town",
+      "method": "npc-trade",
+      "lo": 5,
+      "hi": 5,
+      "chance": 100,
+      "conditions": [
+        "Trade any Pokémon",
+        "If you chose Chespin"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_16",
+      "quote": "asks to trade Pokémon with you"
+    },
+    {
+      "n": 650,
+      "versions": [
+        "x",
+        "y"
+      ],
+      "area": "Vaniville Town",
+      "method": "npc-trade",
+      "lo": 5,
+      "hi": 5,
+      "chance": 100,
+      "conditions": [
+        "Trade any Pokémon",
+        "If you chose Fennekin"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_16",
+      "quote": "asks to trade Pokémon with you"
+    },
+    {
+      "n": 653,
+      "versions": [
+        "x",
+        "y"
+      ],
+      "area": "Vaniville Town",
+      "method": "npc-trade",
+      "lo": 5,
+      "hi": 5,
+      "chance": 100,
+      "conditions": [
+        "Trade any Pokémon",
+        "If you chose Froakie"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_16",
+      "quote": "asks to trade Pokémon with you"
+    },
+    {
+      "n": 280,
+      "versions": [
+        "x",
+        "y"
+      ],
+      "area": "Lumiose City",
+      "method": "npc-trade",
+      "lo": 5,
+      "hi": 5,
+      "chance": 100,
+      "conditions": [
+        "Trade any Pokémon"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_16",
+      "quote": "She would like to trade Pokémon with you, and offers a level 5 Ralts"
+    },
+    {
+      "n": 142,
+      "versions": [
+        "x",
+        "y"
+      ],
+      "area": "Ambrette Town",
+      "method": "gift",
+      "lo": 20,
+      "hi": 20,
+      "chance": 100,
+      "conditions": [
+        "Restore Old Amber"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Glittering_Cave",
+      "quote": "Randomly found by smashing breakable rocks in the final room of the cave"
+    },
+    {
+      "n": 408,
+      "versions": [
+        "x",
+        "y"
+      ],
+      "area": "Ambrette Town",
+      "method": "gift",
+      "lo": 20,
+      "hi": 20,
+      "chance": 100,
+      "conditions": [
+        "Restore Skull Fossil"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Glittering_Cave",
+      "quote": "Randomly found by smashing breakable rocks in the final room of the cave"
+    },
+    {
+      "n": 410,
+      "versions": [
+        "x",
+        "y"
+      ],
+      "area": "Ambrette Town",
+      "method": "gift",
+      "lo": 20,
+      "hi": 20,
+      "chance": 100,
+      "conditions": [
+        "Restore Armor Fossil"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Glittering_Cave",
+      "quote": "Randomly found by smashing breakable rocks in the final room of the cave"
+    },
+    {
+      "n": 564,
+      "versions": [
+        "x",
+        "y"
+      ],
+      "area": "Ambrette Town",
+      "method": "gift",
+      "lo": 20,
+      "hi": 20,
+      "chance": 100,
+      "conditions": [
+        "Restore Cover Fossil"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Glittering_Cave",
+      "quote": "Randomly found by smashing breakable rocks in the final room of the cave"
+    },
+    {
+      "n": 566,
+      "versions": [
+        "x",
+        "y"
+      ],
+      "area": "Ambrette Town",
+      "method": "gift",
+      "lo": 20,
+      "hi": 20,
+      "chance": 100,
+      "conditions": [
+        "Restore Plume Fossil"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Glittering_Cave",
+      "quote": "Randomly found by smashing breakable rocks in the final room of the cave"
+    },
+    {
+      "n": 138,
+      "versions": [
+        "y"
+      ],
+      "area": "Ambrette Town",
+      "method": "gift",
+      "lo": 20,
+      "hi": 20,
+      "chance": 100,
+      "conditions": [
+        "Restore Helix Fossil"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Glittering_Cave",
+      "quote": "Randomly found by smashing breakable rocks in the final room of the cave"
+    },
+    {
+      "n": 140,
+      "versions": [
+        "y"
+      ],
+      "area": "Ambrette Town",
+      "method": "gift",
+      "lo": 20,
+      "hi": 20,
+      "chance": 100,
+      "conditions": [
+        "Restore Dome Fossil"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Glittering_Cave",
+      "quote": "Randomly found by smashing breakable rocks in the final room of the cave"
+    },
+    {
+      "n": 345,
+      "versions": [
+        "x"
+      ],
+      "area": "Ambrette Town",
+      "method": "gift",
+      "lo": 20,
+      "hi": 20,
+      "chance": 100,
+      "conditions": [
+        "Restore Root Fossil"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Glittering_Cave",
+      "quote": "Randomly found by smashing breakable rocks in the final room of the cave"
+    },
+    {
+      "n": 347,
+      "versions": [
+        "x"
+      ],
+      "area": "Ambrette Town",
+      "method": "gift",
+      "lo": 20,
+      "hi": 20,
+      "chance": 100,
+      "conditions": [
+        "Restore Claw Fossil"
+      ],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Glittering_Cave",
+      "quote": "Randomly found by smashing breakable rocks in the final room of the cave"
+    }
+  ]
 }

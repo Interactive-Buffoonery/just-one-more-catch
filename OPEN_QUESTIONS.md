@@ -359,19 +359,6 @@ its successful generation/check/build as verified game access.
 - **Route 12 shoreline:** verify the near-Shalour shore supports each rod's
   listed species before Surf. Walking/flower/horde/Rock Smash rows wait for
   Surf, while the Rumble-gated Lapras gift does not need Surf itself.
-- **PokeAPI gaps, not fabricated rows:** the cached X/Y data has no NPC-trade
-  rows. Missing acquisitions are Santalune Farfetch'd (Bunnelby), Cyllage
-  Steelix (Luvdisc), Snowbelle Bisharp (Jigglypuff), Shauna's postgame starter
-  (Chespin after Fennekin, Fennekin after Froakie, Froakie after Chespin),
-  Diantha's postgame Ralts, and the hotel Magikarp/Eevee trades. No encounter
-  rows for those trades were added by hand. Sources: In-game trade X/Y
-  section and walkthrough Parts 2, 5, 13 and 16 in SOURCES.md.
-- **Missing restored-fossil gifts:** PokeAPI supplies Tyrunt/Amaura but not
-  restored Aerodactyl, Omanyte, Kabuto, Lileep, Anorith, Cranidos, Shieldon,
-  Tirtouga or Archen gifts. Older fossils except Old Amber are post-League;
-  Root/Claw are X-only and Helix/Dome Y-only. These missing gift rows were
-  not invented, even when a species may have another acquisition. Tyrunt/
-  Amaura are displayed at Ambrette instead of PokeAPI's Glittering Cave.
 - **Choices and online/friend state:** the shared tracker displays starter
   conditions and Safari slot requirements as special text. It does not
   enforce one Kanto starter, one fossil choice, each individual registered
