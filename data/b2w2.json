@@ -442,6 +442,65 @@
         "rood-zorua"
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_7"
+    },
+    {
+      "place": "Nacrene City West Gate",
+      "n": 440,
+      "m": "gift-egg",
+      "needs": [],
+      "show_as": "Nacrene City East Gate",
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_20",
+      "quote": "Talk to the Pokémon Breeder in the east gate when you have space in your party to receive a Pokémon Egg."
+    },
+    {
+      "place": "Unova Route 4",
+      "n": 628,
+      "m": "static",
+      "needs": [],
+      "conditions": [
+        "weekday-monday"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_4",
+      "quote": "A {{p|Braviary}}{{sup/5|W2}}/{{p|Mandibuzz}}{{sup/5|B2}} appears here every Monday{{sup/5|W2}}/Thursday{{sup/5|B2}}."
+    },
+    {
+      "place": "Unova Route 4",
+      "n": 630,
+      "m": "static",
+      "needs": [],
+      "conditions": [
+        "weekday-thursday"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_4",
+      "quote": "A {{p|Braviary}}{{sup/5|W2}}/{{p|Mandibuzz}}{{sup/5|B2}} appears here every Monday{{sup/5|W2}}/Thursday{{sup/5|B2}}."
+    },
+    {
+      "place": "Undella Bay",
+      "n": 593,
+      "m": "static",
+      "versions": [
+        "black-2"
+      ],
+      "needs": [],
+      "conditions": [
+        "weekday-monday"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Undella_Bay",
+      "quote": "A {{p|Jellicent}} appears here every Monday{{sup/5|B2}}/Thursday{{sup/5|W2}}."
+    },
+    {
+      "place": "Undella Bay",
+      "n": 593,
+      "m": "static",
+      "versions": [
+        "white-2"
+      ],
+      "needs": [],
+      "conditions": [
+        "weekday-thursday"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Undella_Bay",
+      "quote": "A {{p|Jellicent}} appears here every Monday{{sup/5|B2}}/Thursday{{sup/5|W2}}."
     }
   ],
   "chapters": [
@@ -790,6 +849,9 @@
     }
   ],
   "evolution_overrides": {
+    "350": {
+      "evo": "Trade holding Prism Scale"
+    },
     "462": {
       "evo": "Level up in Chargestone Cave"
     },

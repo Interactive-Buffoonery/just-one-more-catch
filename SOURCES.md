@@ -2186,6 +2186,14 @@ citations, not an independent access review or gameplay proof.
   for Leafeon; https://bulbapedia.bulbagarden.net/wiki/Twist_Mountain sources
   Ice Rock for Glaceon. No alternate-form catalog is claimed; default
   species sprites/types and the generation-aware PokeAPI type path are used.
+  Milotic: PokeAPI's Feebas chain (https://pokeapi.co/api/v2/evolution-chain/178/)
+  lists beauty 170 and, for the black-white version group, a trade holding
+  Prism Scale; the generator printed only the first. Gen 5 has no way to
+  raise beauty (https://www.serebii.net/blackwhite/evolution.shtml: "this
+  game doesn't feature the Beauty stat in any accessible way"), so the
+  override shows only the trade, matching the Black / White pack.
+  https://bulbapedia.bulbagarden.net/wiki/Unova_Route_1 lists the Prism Scale
+  as a Black 2 / White 2 item (cached line 40: "In the south (requires Surf)").
 - **Artwork:** the existing B2/W2 covers are reused. Static regular/shiny
   art comes from https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon/versions/generation-v/black-white
   for all 649 species. PokeAPI badge images use Basic 34, Toxic 41,
@@ -2199,8 +2207,8 @@ Black 2 / White 2 in OPEN_QUESTIONS.md. Save-file import is not enabled.
 - **Confirmed encounter-source omission:** the cached B2W2 section of
   https://bulbapedia.bulbagarden.net/wiki/In-game_trade#Yancy/Curtis lists
   both contacts' 12 phone-trade rewards. None has a corresponding Nimbasa
-  trade row in these version responses; the exact missing rewards and
-  the seven ordinary raw trade rewards are listed in OPEN_QUESTIONS.md.
+  trade row in these version responses; the rewards are listed in PKHeX
+  (see the PKHeX cross-check below) and the blocker in OPEN_QUESTIONS.md.
 
 - **Outbreak supplements:** `extra_encounters` in `data/b2w2.json` records
   the cached B2/W2 Swarm table entry, source URL, levels, rate and version
@@ -2220,6 +2228,32 @@ Black 2 / White 2 in OPEN_QUESTIONS.md. Save-file import is not enabled.
   places “Trade with a Hiker” under the Route 7 heading (cached lines 50,
   142–143), before Mistralton City resumes at line 241. Its Route 7 label
   agrees with PokeAPI and is retained.
+- **Weekday statics:** `row_needs` in `data/b2w2.json` adds weekday conditions
+  to the Route 4 and Undella Bay static rows.
+  https://bulbapedia.bulbagarden.net/wiki/Unova_Route_4 (cached line 134): "A
+  Braviary (W2)/Mandibuzz (B2) appears here every Monday (W2)/Thursday (B2)."
+  https://bulbapedia.bulbagarden.net/wiki/Undella_Bay (cached line 79): "A
+  Jellicent appears here every Monday (B2)/Thursday (W2)."
+  PKHeX agrees: https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5B2W2.cs#L151-L161
+  (`// HA Jellicent @ Undella Bay Mon Only`, `Thurs Only`; `HA Mandibuzz @
+  Route 4 Thurs Only`, `HA Braviary @ Route 4 Mon Only`).
+- **Happiny Egg label:** https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_20
+  (cached lines 267, 384): "Talk to the Pokémon Breeder in the east gate".
+  https://bulbapedia.bulbagarden.net/wiki/Nacrene_City (cached lines 89-90,
+  180) places the Egg in the gate between Nacrene City and Route 3. The row
+  is displayed as "Nacrene City East Gate" via `show_as`; its chapter and
+  Uxie's separate West Gate row are unchanged.
+- **PKHeX cross-check:** https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5B2W2.cs#L94-L228 (commit
+  `d8ab568695b414853c699fcadc63b7f81d0fccab`) lists B2W2 starters, fossils,
+  gifts, statics, trades and N's Pokémon with levels and location IDs; the
+  location names are in
+  https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Resources/text/locations/gen5/text_bw2_00000_en.txt
+  (line = ID + 1). Facts only were used; nothing was copied. The generated
+  gifts, statics and trades match it on species, level and version, except
+  Route 11's Amoonguss (PKHeX Lv 43, kept at Lv 47 per PokeAPI and the cached
+  Route 11 page) and the Yancy/Curtis and N's Pokémon entries in
+  OPEN_QUESTIONS.md. `squiddonaut/pokeblack` is English Black, not B2W2, so
+  its maps and scripts were not used for Black 2 / White 2 gates.
 ## Platinum
 
 Pack ID `pt`, version `platinum`, encounter code `t`. Platinum is independent
