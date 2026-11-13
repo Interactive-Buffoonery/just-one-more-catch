@@ -37,7 +37,7 @@ const STATUS_TEXT: Record<string, string> = {
   now: "Catchable now",
   soon: "Other time or special",
   later: "Later in the story",
-  other: "Evolve, breed or trade",
+  other: "Evolve or trade, or breed",
   missing: "Missing",
 };
 const SHORT: Record<string, string> = {
@@ -56,7 +56,7 @@ const FILTERS: [string, string, (s: string) => boolean][] = [
 ];
 const SEARCH_ICON = `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
 export const DEX_SIZES: Record<string, [string, string]> = {
-  compact: ["Compact", '<rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/>'],
+  compact: ["Compact", '<path d="M4 4h3v3H4zM10.5 4h3v3h-3zM17 4h3v3h-3zM4 10.5h3v3H4zM10.5 10.5h3v3h-3zM17 10.5h3v3h-3zM4 17h3v3H4zM10.5 17h3v3h-3zM17 17h3v3h-3z"/>'],
   tiles: ["Tiles", '<rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/>'],
   large: ["Large", '<rect x="4" y="4" width="16" height="16"/>'],
   list: ["List", '<path d="M4 5h16M4 12h16M4 19h16"/>'],
@@ -72,13 +72,14 @@ const tile = (p: Species, s: string) => {
     R().trackGenders && hasGenders(p) ? `${genders.size} of 2 genders` : "",
     R().trackForms && available.length > 1 ? `${collectedForms(p).size} of ${available.length} forms` : "",
   ].filter(Boolean).map((text) => `, ${text}`).join("");
-  const short = ui.dexSize !== "large" && (searching() || (s !== "caught" && ["missing", "all"].includes(ui.filter))) && SHORT[s];
-  const typeText = p.types.map(cap).join(" "),
+  const compact = ui.dexSize === "compact";
+  const short = !compact && ui.dexSize !== "large" && (searching() || (s !== "caught" && ["missing", "all"].includes(ui.filter))) && SHORT[s];
+  const typeText = p.types.map(cap).join(" and "),
     place = s === "now" ? p.rows.find((r) => rowStatus(r).s === "now")?.place || "" : "";
   const extra = ui.dexSize === "list" ? `, ${typeText} type${place ? `, ${esc(place)}` : ""}` : ui.dexSize === "large" ? `, ${typeText} type` : "";
   const attrs = `type="button" class="dt${s === "now" ? " n" : ""}${s === "now" || s === "caught" ? "" : " dim"}" data-${ui.bulk ? "toggle" : "open"}="${p.n}" data-k="d${p.n}" ${ui.bulk ? `aria-pressed="${s === "caught"}"` : ""} aria-label="${p.name}, number ${num(p)}, ${STATUS_TEXT[s]}${extra}${progress}"`;
-  const gx = R().trackGenders && hasGenders(p) ? `<span class="gx" aria-hidden="true">${GENDERS.map(([g, symbol]) => `<b class="${genders.has(g) ? "on" : ""}">${symbol}</b>`).join("")}</span>` : "";
-  const forms = R().trackForms && available.length > 1 ? `<i class="fx" aria-hidden="true">${collectedForms(p).size}/${available.length}</i>` : "";
+  const gx = !compact && R().trackGenders && hasGenders(p) ? `<span class="gx" aria-hidden="true">${GENDERS.map(([g, symbol]) => `<b class="${genders.has(g) ? "on" : ""}">${symbol}</b>`).join("")}</span>` : "";
+  const forms = !compact && R().trackForms && available.length > 1 ? `<i class="fx" aria-hidden="true">${collectedForms(p).size}/${available.length}</i>` : "";
   const types = p.types.map((t) => `<span class="type" style="--tc:${TYPE[t]}">${cap(t)}</span>`).join(" ");
   if (ui.dexSize === "list")
     return `<button ${attrs}>${mon(p)}<span class="mid"><span class="nm">${p.name}<small>#${pad(num(p))}</small></span><span class="dmeta">${types}${gx}${forms}</span></span><span class="end"><b>${SHORT[s]}</b>${s === "now" ? `<span>${esc(place)}</span>` : ""}</span></button>`;
