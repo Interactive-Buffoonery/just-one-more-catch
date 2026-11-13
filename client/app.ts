@@ -318,6 +318,10 @@ function render() {
 }
 
 let saveTimer: any, undoTimer: any;
+function hideToast() {
+  ui.undo = null;
+  $("#toast").innerHTML = "";
+}
 function showSaveError(msg: string) {
   ui.saveError = msg;
   render();
@@ -380,10 +384,7 @@ function toggleCaught(n: number) {
   ui.undo = { n, had, msg: `${p.name} ${had ? "unmarked" : "caught"}` };
   $("#live").textContent = ui.undo.msg;
   clearTimeout(undoTimer);
-  undoTimer = setTimeout(() => {
-    ui.undo = null;
-    render();
-  }, 5000);
+  undoTimer = setTimeout(hideToast, 5000);
 }
 
 async function download(kind: "json" | "csv") {
@@ -841,10 +842,7 @@ function flash(msg: string) {
   ui.undo = { msg };
   $("#live").textContent = msg;
   clearTimeout(undoTimer);
-  undoTimer = setTimeout(() => {
-    ui.undo = null;
-    render();
-  }, 8000);
+  undoTimer = setTimeout(hideToast, 8000);
   render();
 }
 let pendingRun: string | null = null;
