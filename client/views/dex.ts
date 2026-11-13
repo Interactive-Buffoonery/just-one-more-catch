@@ -103,7 +103,7 @@ export function dexGrid() {
           list.filter((x) => !here(x.p)),
         )
       : section(t ? "Results" : "", list)) ||
-    `<p class="muted dexnone">${t ? 'No matches</p><button type="button" class="quietbtn" data-clearsearch="1">Clear</button><p hidden>' : "Nothing here"}</p>`
+    `<div class="dexnone"><p class="muted">${t ? "No matches" : "Nothing here"}</p>${t ? '<button type="button" class="quietbtn" data-clearsearch="1">Clear</button>' : ""}</div>`
   );
 }
 export function Dex() {
