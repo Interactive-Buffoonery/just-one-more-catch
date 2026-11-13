@@ -12,7 +12,7 @@ assert(mon(483).rows.every(r => r.v === 'd'));
 assert(mon(484).rows.every(r => r.v === 'p'));
 assert(mon(434).rows.every(r => r.v === 'd'));
 assert(mon(431).rows.every(r => r.v === 'p'));
-assert.equal(mon(487).rows.length, 0); // Known PokeAPI gap; do not synthesize a Giratina row.
+assert.deepEqual(mon(487).rows.map(r => [r.place, r.m, r.lo, r.hi, r.c, r.v, r.chap, r.need]), [["Turnback Cave", "static", 70, 70, 100, "dp", 14, ["Elite Four"]]]);
 for (const n of [491, 492, 493]) assert.equal(mon(n).rows.length, 0);
 for (const p of game.dex) {
   for (const prefix of ['', 'shiny/']) assert(existsSync(`public/sprites/dp/${prefix}${p.n}.png`));
