@@ -59,6 +59,7 @@ test("replace rotates the bearer token atomically and stop removes it", async ()
   const first = await owner.action(api.shares.publish, input);
   expect(first.token).toMatch(/^[A-Za-z0-9_-]{43}$/);
   expect(await owner.query(api.shares.status, { runId })).toEqual(first);
+  await owner.mutation(api.runs.save, { id: runId, state: '{"caught":[1,25]}' });
   const second = await owner.action(api.shares.replace, { ...input, expectedRevision: 1 });
   expect(second.token).not.toBe(first.token);
   expect(second.revision).toBe(2);

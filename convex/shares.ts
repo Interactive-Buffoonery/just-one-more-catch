@@ -44,14 +44,19 @@ export const commit = internalMutation({
     const run = await mine(ctx, runId);
     await rememberIdentity(ctx);
     checkRevision(run.shareRevision, expectedRevision);
-    const state = await ctx.db.query("states").withIndex("by_run", q => q.eq("run", runId)).unique();
-    const fresh = projectionOf(state?.state ?? "{}", run.version as VersionId);
-    const preview = validateProjection(projection);
-    if (!preview || canonical(preview) !== canonical(fresh))
-      throw new ConvexError({ code: "SHARE_PREVIEW_MISMATCH", projection: fresh });
     if (!/^[A-Za-z0-9_-]{43}$/.test(token)) throw new Error("Invalid share token");
     const row = await ctx.db.query("shares").withIndex("by_runId", q => q.eq("runId", runId)).unique();
     if (replace && !row) throw new ConvexError({ code: "SHARE_REVISION_CONFLICT" });
+    const stored = row && validateProjection(row.projection);
+    if (replace && !stored) throw new ConvexError({ code: "SHARE_REVISION_CONFLICT" });
+    let fresh = stored as ShareProjection;
+    if (!replace) {
+      const state = await ctx.db.query("states").withIndex("by_run", q => q.eq("run", runId)).unique();
+      fresh = projectionOf(state?.state ?? "{}", run.version as VersionId);
+      const preview = validateProjection(projection);
+      if (!preview || canonical(preview) !== canonical(fresh))
+        throw new ConvexError({ code: "SHARE_PREVIEW_MISMATCH", projection: fresh });
+    }
     const nextToken = row && !replace ? row.token : token;
     if (nextToken !== row?.token && await ctx.db.query("shares").withIndex("by_token", q => q.eq("token", nextToken)).unique())
       throw new Error("Share token collision");
