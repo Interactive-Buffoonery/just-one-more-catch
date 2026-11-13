@@ -16,7 +16,7 @@ from urllib.parse import unquote
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 POKEAPI = os.path.join(ROOT, ".cache", "pokeapi")
 WIKI = os.path.join(ROOT, ".cache", "bulbapedia")
-PACKS = ["crystal", "hgss", "frlg", "usum", "pt"]
+PACKS = ["rs", "crystal", "hgss", "frlg", "usum", "bw", "xy", "dp", "b2w2", "pt"]
 
 
 def nice(slug):
@@ -44,19 +44,92 @@ def areas(pack):
             for v in a["version_details"]:
                 if v["version"]["name"] not in game["versions"]:
                     continue
+                if any((loc == place or loc.startswith(place + " ")) and v["version"]["name"] not in allowed
+                       for place, allowed in game.get("area_versions", {}).items()):
+                    continue
                 for d in v["encounter_details"]:
+                    method = d["method"]["name"]
+                    if method in game.get("drop_methods", []):
+                        continue
+                    if any(g["n"] == n and (loc == g["place"] or loc.startswith(g["place"] + " "))
+                           and g.get("m", method) == method and v["version"]["name"] in g.get("versions", game["versions"])
+                           for g in game.get("drop_rows", [])):
+                        continue
                     out.setdefault(loc, set()).add((n, name, d["method"]["name"]))
     return game, out
 
 
 def candidates(area, pack):
     """Bulbapedia titles to try for an area, most specific first."""
+    area = area.removeprefix("Unova ") if pack == "bw" else area
+    if pack == "dp":
+        area = re.sub(r"^Sinnoh ", "", area)
+        if area.startswith("Victory Road"):
+            return ["Victory Road (Sinnoh)"]
+        if area.startswith("Pokemon League"):
+            return ["Pokémon League (Sinnoh)"]
+        if area.startswith("Roaming Sinnoh"):
+            return ["Roaming Pokémon"]
+        if area.startswith("Sinnoh Pokemart") or area == "Pokemart":
+            return ["Pokémon Diamond and Pearl Versions"]
+        if area.startswith("Ruin Maniac Cave"):
+            return ["Maniac Tunnel"]
+        if area.startswith("Mt. Coronet"):
+            return ["Mount Coronet"]
     a = area.replace(" Of ", " of ").replace(" The ", " the ").replace("Pokemon", "Pokémon")
     for x, y in [("Ss Anne", "S.S. Anne"), ("Dragons Den", "Dragon's Den"), ("Digletts", "Diglett's"),
                  ("Team Rocket Hq", "Team Rocket HQ"), ("Silph Co", "Silph Co."), ("Kirks House", "Kirk's House"),
                  ("Bills House", "Bill's House"), ("Groundon", "Groudon"), ("Hauoli", "Hau'oli"), ("Ulaula", "Ula'ula"),
                  ("Kalae", "Kala'e"), ("Team Rockets Castle", "Team Rocket's Castle"), ("Trainers School", "Trainers' School")]:
         a = a.replace(x, y)
+    if pack == "rs":
+        a = re.sub(r"^Hoenn ", "", a)
+        if a.startswith("Route 119 Weather Institute"):
+            return ["Weather Institute", "Walkthrough:Pokémon Ruby and Sapphire/Part 11"]
+        if a == "Roaming Hoenn":
+            return ["Roaming Pokémon"]
+        if a == "Mirage Island":
+            return ["Mirage Island (Generation III)"]
+        if a.startswith("Victory Road"):
+            return ["Victory Road (Hoenn)"]
+        if a.startswith("Safari Zone"):
+            return ["Hoenn Safari Zone"]
+        if a.startswith("Route "):
+            return ["Hoenn " + re.match(r"Route \d+", a)[0]]
+    if pack == "bw":
+        if a.startswith("Victory Road") or a.startswith("Trial Chamber"):
+            return ["Victory Road (Black and White)"]
+        if a.startswith("Challengers Cave"):
+            return ["Challenger's Cave"]
+        if a.startswith("Guidance Chamber"):
+            return ["Mistralton Cave"]
+        if a.startswith("Ns Castle"):
+            return ["N's Castle"]
+    if pack == "xy":
+        a = re.sub(r"^Kalos ", "", a)
+        if a.startswith("Friend Safari"):
+            return ["Friend Safari"]
+        if a == "Berry Fields":
+            return ["Berry fields (Kalos)"]
+        if a == "Sea Spirits Den":
+            return ["Sea Spirit's Den"]
+        if a == "Team Flare Secret Hq":
+            return ["Walkthrough:Pokémon X and Y/Part 11"]
+        if a.startswith("Victory Road"):
+            return ["Victory Road (Kalos)"]
+        if a.startswith("Unknown Dungeon"):
+            return ["Unknown Dungeon (Kalos)"]
+    if pack == "b2w2":
+        if a.startswith("Unova Route "):
+            return ["Unova Route " + re.search(r"Unova Route (\d+)", a)[1]]
+        if a.startswith("Unova Victory Road"):
+            return ["Victory Road (Black 2 and White 2)"]
+        if a in ("Iron Room", "Glacier Room", "Rocky Mountain Room"):
+            return ["Underground Ruins"]
+        if a == "Guidance Chamber":
+            return ["Mistralton Cave"]
+        if a == "Nature Sanctuary":
+            return ["Nature Preserve"]
     if pack == "pt":
         a = re.sub(r"^Sinnoh ", "", a)
         for prefix, title in [("Mt. Coronet", "Mount Coronet"), ("Victory Road", "Victory Road (Sinnoh)"),
@@ -68,7 +141,7 @@ def candidates(area, pack):
     route = re.match(r"(?:Sea )?Route (\d+)", a)
     if route:
         n = int(route.group(1))
-        return [f"{'Sinnoh' if pack == 'pt' else 'Alola' if pack == 'usum' else 'Johto' if 29 <= n <= 48 else 'Kanto'} Route {n}"]
+        return [f"{'Sinnoh' if pack in ('dp', 'pt') else 'Unova' if pack == 'bw' else 'Kalos' if pack == 'xy' else 'Alola' if pack == 'usum' else 'Johto' if 29 <= n <= 48 else 'Kanto'} Route {n}"]
     if a.startswith("Safari Zone"):
         return ["Johto Safari Zone" if pack == "hgss" else "Kanto Safari Zone"]
     if a.endswith(" Chamber"):
@@ -90,10 +163,12 @@ SPECIFIC = {"Pokémon Mansion": "Pokémon Mansion (Kanto)", "Underground Path": 
 
 def page_for(area, pack, resolved):
     for t in candidates(area, pack):
-        if pack == "pt" and os.path.exists(wiki_path(t)):
+        if pack in ("bw", "xy", "dp", "b2w2", "pt") and os.path.exists(wiki_path(t)):
             return t
         if resolved.get(t):
             return SPECIFIC.get(resolved[t], resolved[t])
+    if pack == "rs":
+        return next((t for t in candidates(area, pack) if os.path.exists(wiki_path(t))), None)
     return None
 
 

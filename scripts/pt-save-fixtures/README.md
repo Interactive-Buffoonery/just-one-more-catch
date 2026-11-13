@@ -1,6 +1,6 @@
 # Platinum save-import fixtures
 
-Opt-in validation of unchanged reader 0.1.2 and the built website. Generated
+Opt-in validation of vendored reader 0.1.3 and the built website. Generated
 saves and receipts stay in ignored `.cache/pt-save-tests/`. No personal saves,
 ROMs or downloaded fixtures are used. This separate directory can land beside
 Diamond/Pearl import PR #112.
@@ -56,12 +56,12 @@ Pinned Core source references:
 - `Saves/Util/SaveUtil.cs`: footer size/signature detection.
 
 `SAV4.SecondsToStart` reads adventure info + `0x34`. Caught DP/Pt fixtures
-populate it and empty fixtures leave zero. Reader 0.1.2 omits both; Platinum
+populate it and empty fixtures leave zero. Reader 0.1.3 omits both; Platinum
 uses import day. Pt epoch/calendar bounds, invalid values, leap days and
 exported recorded dates need separate checks before extending the allowlist.
 HGSS date support is covered by the reader's existing regression matrix.
 
-Reader source remains `8cc08fd58b9b148ecba9c9ef262703559e1979e1`. No reader,
+Vendored reader source: `d666c67dc4d6d11603cdf50b13f4c431c0b95668` (0.1.3). No reader,
 package, lockfile or tarball change is needed. Permitted real exports,
 legitimate in-game zero-caught saves, regional/corrupt/modified variants,
 live signed-in imports, mobile Safari and physical mobile performance remain

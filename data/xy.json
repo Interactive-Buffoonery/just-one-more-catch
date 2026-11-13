@@ -1,0 +1,1093 @@
+{
+  "versions": {
+    "x": "X",
+    "y": "Y"
+  },
+  "pokedex": [
+    12,
+    13,
+    14
+  ],
+  "species": 721,
+  "gen": "generation-vi",
+  "historical_pre_evolutions": true,
+  "keep_floors": true,
+  "drop": [
+    "^Roaming Kalos$"
+  ],
+  "rename": {
+    "Kalos Route 1": "Route 1",
+    "Kalos Route 2": "Route 2",
+    "Kalos Route 3": "Route 3",
+    "Kalos Route 4": "Route 4",
+    "Kalos Route 5": "Route 5",
+    "Kalos Route 6": "Route 6",
+    "Kalos Route 7": "Route 7",
+    "Kalos Route 8": "Route 8",
+    "Kalos Route 9": "Route 9",
+    "Kalos Route 10": "Route 10",
+    "Kalos Route 11": "Route 11",
+    "Kalos Route 12": "Route 12",
+    "Kalos Route 13": "Route 13",
+    "Kalos Route 14": "Route 14",
+    "Kalos Route 15": "Route 15",
+    "Kalos Route 16": "Route 16",
+    "Kalos Route 17": "Route 17",
+    "Kalos Route 18": "Route 18",
+    "Kalos Route 19": "Route 19",
+    "Kalos Route 20": "Route 20",
+    "Kalos Route 21": "Route 21",
+    "Kalos Route 22": "Route 22",
+    "Kalos Berry Fields": "Berry Fields",
+    "Kalos Victory Road Outside": "Victory Road Outside",
+    "Kalos Victory Road Unknown Area 322": "Victory Road Unknown Area 322",
+    "Kalos Victory Road Unknown Area 324": "Victory Road Unknown Area 324",
+    "Kalos Victory Road Unknown Area 326": "Victory Road Unknown Area 326",
+    "Kalos Victory Road Unknown Area 328": "Victory Road Unknown Area 328"
+  },
+  "needs": {
+    "Friend Safari": {
+      "needs": [
+        "friend-safari-ready"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Friend_Safari",
+      "quote": "Safaris for any Friends that are successfully registered"
+    },
+    "Unknown Dungeon": {
+      "needs": [
+        "Elite Four",
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_13",
+      "quote": "only allows Champions to enter"
+    },
+    "Terminus Cave Zygardes Chamber": {
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Terminus_Cave",
+      "quote": "they are not allowed to enter Zygarde's chamber until after entering the [[Hall of Fame]]"
+    }
+  },
+  "row_needs": [
+    {
+      "place": "Kalos Route 7",
+      "n": 143,
+      "m": "static",
+      "needs": [
+        "poke-flute-recovered"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "only a [[Poké Flute]] can wake it"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 54,
+      "m": "horde",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 79,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 79,
+      "m": "yellow-flowers",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 102,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 102,
+      "m": "yellow-flowers",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 127,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 127,
+      "m": "yellow-flowers",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 128,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 128,
+      "m": "yellow-flowers",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 128,
+      "m": "horde",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 179,
+      "m": "horde",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 187,
+      "m": "horde",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 214,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 214,
+      "m": "yellow-flowers",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 235,
+      "m": "walk",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 235,
+      "m": "yellow-flowers",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 235,
+      "m": "purple-flowers",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 241,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 241,
+      "m": "yellow-flowers",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 241,
+      "m": "horde",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 278,
+      "m": "horde",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 313,
+      "m": "walk",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 313,
+      "m": "yellow-flowers",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 313,
+      "m": "purple-flowers",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 314,
+      "m": "walk",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 314,
+      "m": "yellow-flowers",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 314,
+      "m": "purple-flowers",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 315,
+      "m": "walk",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 315,
+      "m": "yellow-flowers",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 315,
+      "m": "purple-flowers",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 315,
+      "m": "horde",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 417,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 417,
+      "m": "yellow-flowers",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 441,
+      "m": "walk",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 441,
+      "m": "yellow-flowers",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 453,
+      "m": "walk",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 453,
+      "m": "yellow-flowers",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 453,
+      "m": "purple-flowers",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 557,
+      "m": "rock-smash",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 580,
+      "m": "walk",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 580,
+      "m": "yellow-flowers",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 580,
+      "m": "purple-flowers",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 669,
+      "m": "walk",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 669,
+      "m": "yellow-flowers",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 669,
+      "m": "purple-flowers",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 682,
+      "m": "walk",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 682,
+      "m": "yellow-flowers",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 682,
+      "m": "purple-flowers",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 684,
+      "m": "walk",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 684,
+      "m": "yellow-flowers",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 7",
+      "n": 684,
+      "m": "purple-flowers",
+      "needs": [
+        "snorlax-cleared"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "quote": "A {{p|Snorlax}} has fallen asleep on the bridge"
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 688,
+      "m": "rock-smash",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "The other side of the route is decorated by fields of grass and yellow flowers."
+    },
+    {
+      "place": "Glittering Cave",
+      "n": 696,
+      "m": "gift",
+      "needs": [
+        "jaw-fossil-restored"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_5",
+      "quote": "Speak to the assistant who now stands at the counter to restore any new Fossils.",
+      "show_as": "Ambrette Town"
+    },
+    {
+      "place": "Glittering Cave",
+      "n": 698,
+      "m": "gift",
+      "needs": [
+        "sail-fossil-restored"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_5",
+      "quote": "Speak to the assistant who now stands at the counter to restore any new Fossils.",
+      "show_as": "Ambrette Town"
+    },
+    {
+      "place": "Tower Of Mastery",
+      "n": 448,
+      "m": "gift",
+      "needs": [
+        "Rumble",
+        "mega-ring-demonstration"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_6",
+      "quote": "to officially prove yourself, you must defeat Korrina at the Gym"
+    },
+    {
+      "place": "Kalos Route 12",
+      "n": 131,
+      "m": "gift",
+      "needs": [
+        "Rumble"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12",
+      "quote": "after the player has earned the {{badge|Rumble}}, will give them his {{p|Lapras}}"
+    },
+    {
+      "place": "Sea Spirits Den",
+      "n": 144,
+      "m": "static",
+      "needs": [
+        "Elite Four",
+        "bird-sightings",
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_17",
+      "quote": "After encountering the Pokémon eleven different times, it will travel to the [[Sea Spirit's Den]]"
+    },
+    {
+      "place": "Sea Spirits Den",
+      "n": 145,
+      "m": "static",
+      "needs": [
+        "Elite Four",
+        "bird-sightings",
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_17",
+      "quote": "After encountering the Pokémon eleven different times, it will travel to the [[Sea Spirit's Den]]"
+    },
+    {
+      "place": "Sea Spirits Den",
+      "n": 146,
+      "m": "static",
+      "needs": [
+        "Elite Four",
+        "bird-sightings",
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_17",
+      "quote": "After encountering the Pokémon eleven different times, it will travel to the [[Sea Spirit's Den]]"
+    },
+    {
+      "place": "Lumiose City",
+      "n": 1,
+      "m": "gift",
+      "needs": [
+        "sycamore-battle"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon",
+      "quote": "Given after beating Professor Sycamore in a battle"
+    },
+    {
+      "place": "Lumiose City",
+      "n": 4,
+      "m": "gift",
+      "needs": [
+        "sycamore-battle"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon",
+      "quote": "Given after beating Professor Sycamore in a battle"
+    },
+    {
+      "place": "Lumiose City",
+      "n": 7,
+      "m": "gift",
+      "needs": [
+        "sycamore-battle"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon",
+      "quote": "Given after beating Professor Sycamore in a battle"
+    },
+    {
+      "place": "Team Flare Secret Hq",
+      "n": 716,
+      "m": "static",
+      "needs": [
+        "mascot-chamber-open"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_11",
+      "quote": "leaving you to take out the rest one by one"
+    },
+    {
+      "place": "Team Flare Secret Hq",
+      "n": 717,
+      "m": "static",
+      "needs": [
+        "mascot-chamber-open"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_11",
+      "quote": "leaving you to take out the rest one by one"
+    }
+  ],
+  "chapters": [
+    {
+      "title": "Begin in Aquacorde",
+      "needs": [],
+      "places": [
+        "Aquacorde Town",
+        "Route 2",
+        "Santalune Forest",
+        "Route 3",
+        "Route 22"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_2"
+    },
+    {
+      "title": "Lumiose and Parfum Palace",
+      "needs": [
+        "Bug"
+      ],
+      "places": [
+        "Route 4",
+        "Lumiose City",
+        "Route 5",
+        "Route 6",
+        "Parfum Palace",
+        "Berry Fields",
+        "Route 7"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4"
+    },
+    {
+      "title": "Beyond Snorlax",
+      "needs": [
+        "Bug",
+        "snorlax-cleared"
+      ],
+      "places": [
+        "Connecting Cave",
+        "Route 8",
+        "Ambrette Town",
+        "Route 9",
+        "Glittering Cave",
+        "Cyllage City"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_5"
+    },
+    {
+      "title": "The road to Shalour",
+      "needs": [
+        "Cliff"
+      ],
+      "places": [
+        "Route 10",
+        "Route 11",
+        "Reflection Cave",
+        "Shalour City",
+        "Tower Of Mastery",
+        "Route 12"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_6"
+    },
+    {
+      "title": "Across Route 12",
+      "needs": [
+        "surf"
+      ],
+      "places": [
+        "Azure Bay"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_7"
+    },
+    {
+      "title": "Lumiose Badlands",
+      "needs": [
+        "Plant"
+      ],
+      "places": [
+        "Route 13"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_7"
+    },
+    {
+      "title": "Laverre Nature Trail",
+      "needs": [
+        "Voltage",
+        "lysandre-cafe"
+      ],
+      "places": [
+        "Route 14",
+        "Laverre City"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_9"
+    },
+    {
+      "title": "Beyond the Poké Ball Factory",
+      "needs": [
+        "factory-saved"
+      ],
+      "places": [
+        "Route 15",
+        "Route 16",
+        "Lost Hotel",
+        "Frost Cavern"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_10"
+    },
+    {
+      "title": "Mamoswine Road",
+      "needs": [
+        "frost-cavern-saved"
+      ],
+      "places": [
+        "Route 17"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_10"
+    },
+    {
+      "title": "The ultimate weapon",
+      "needs": [
+        "Psychic"
+      ],
+      "places": [
+        "Team Flare Secret Hq"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_11"
+    },
+    {
+      "title": "After Team Flare",
+      "needs": [
+        "flare-defeated"
+      ],
+      "places": [
+        "Route 18",
+        "Terminus Cave",
+        "Couriway Town",
+        "Route 19",
+        "Route 20",
+        "Pokemon Village",
+        "Route 21"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_13"
+    },
+    {
+      "title": "Victory Road",
+      "needs": [
+        "Iceberg"
+      ],
+      "places": [
+        "Victory Road"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_14"
+    },
+    {
+      "title": "Champion of Kalos",
+      "needs": [
+        "Elite Four"
+      ],
+      "places": [
+        "Friend Safari",
+        "Sea Spirits Den",
+        "Unknown Dungeon",
+        "Terminus Cave Zygardes Chamber"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_17"
+    }
+  ],
+  "events": [
+    {
+      "id": "poke-flute-recovered",
+      "label": "Recover the Poké Flute",
+      "q": "Did you recover the Poké Flute at Parfum Palace?",
+      "chap": 1,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4"
+    },
+    {
+      "id": "snorlax-cleared",
+      "label": "Clear Snorlax from the bridge",
+      "q": "Did you battle Snorlax and clear the Route 7 bridge?",
+      "chap": 1,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4",
+      "after": [
+        "poke-flute-recovered"
+      ]
+    },
+    {
+      "id": "jaw-fossil-restored",
+      "label": "Restore the Jaw Fossil",
+      "q": "Did you choose the Jaw Fossil and restore it at the Ambrette Fossil Lab?",
+      "chap": 2,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_5"
+    },
+    {
+      "id": "sail-fossil-restored",
+      "label": "Restore the Sail Fossil",
+      "q": "Did you choose the Sail Fossil and restore it at the Ambrette Fossil Lab?",
+      "chap": 2,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_5"
+    },
+    {
+      "id": "lysandre-cafe",
+      "label": "Visit Lysandre Café after the Lumiose Gym",
+      "q": "Did you visit Lysandre Café after earning the Voltage Badge?",
+      "chap": 5,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_8"
+    },
+    {
+      "id": "factory-saved",
+      "label": "Save the Poké Ball Factory",
+      "q": "Did you defeat Team Flare at the Poké Ball Factory?",
+      "chap": 6,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_9"
+    },
+    {
+      "id": "frost-cavern-saved",
+      "label": "Help Abomasnow in Frost Cavern",
+      "q": "Did you defeat Team Flare and help Abomasnow in Frost Cavern?",
+      "chap": 7,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_10"
+    },
+    {
+      "id": "flare-defeated",
+      "label": "Defeat Lysandre at the secret HQ",
+      "q": "Did you defeat Lysandre for the final time at Team Flare Secret HQ?",
+      "chap": 9,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_11"
+    },
+    {
+      "id": "bird-sightings",
+      "label": "Encounter the roaming bird eleven times",
+      "q": "Did the legendary bird move to Sea Spirit’s Den after eleven sightings?",
+      "chap": 12,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_17"
+    },
+    {
+      "id": "friend-safari-ready",
+      "label": "Register a friend for Friend Safari",
+      "q": "Do you have a registered friend’s Safari available in Kiloude City?",
+      "chap": 12,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_16"
+    },
+    {
+      "id": "sycamore-battle",
+      "label": "Battle Professor Sycamore",
+      "q": "Did you battle Professor Sycamore in his Lumiose lab?",
+      "chap": 1,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon"
+    },
+    {
+      "id": "mega-ring-demonstration",
+      "label": "Complete Korrina’s Mega Evolution battle",
+      "q": "Did you receive the Mega Ring and battle Korrina atop the Tower of Mastery?",
+      "chap": 3,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_6"
+    },
+    {
+      "id": "mascot-chamber-open",
+      "label": "Clear the mascot’s guards in the secret HQ",
+      "q": "Did you defeat the Admins guarding the legendary Pokémon in Team Flare Secret HQ?",
+      "chap": 9,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_11"
+    }
+  ],
+  "evolution_overrides": {
+    "26": "Use Thunder Stone",
+    "470": "Level up at the Moss Rock on Route 20",
+    "471": "Level up at the Ice Rock in Frost Cavern",
+    "700": "Level up with a Fairy-type move and two Pokémon-Amie affection hearts",
+    "462": "Level up on Route 13",
+    "476": "Level up on Route 13",
+    "675": "Lv 32 with a Dark-type Pokémon in the party",
+    "687": "Lv 30 while holding the Nintendo 3DS upside down",
+    "706": "Lv 50 in rain"
+  },
+  "obtainable_forms": {
+    "479": [
+      "rotom",
+      "rotom-heat",
+      "rotom-wash",
+      "rotom-frost",
+      "rotom-fan",
+      "rotom-mow"
+    ],
+    "666": [
+      "vivillon-meadow",
+      "vivillon-icy-snow",
+      "vivillon-polar",
+      "vivillon-tundra",
+      "vivillon-continental",
+      "vivillon-garden",
+      "vivillon-elegant",
+      "vivillon-modern",
+      "vivillon-marine",
+      "vivillon-archipelago",
+      "vivillon-high-plains",
+      "vivillon-sandstorm",
+      "vivillon-river",
+      "vivillon-monsoon",
+      "vivillon-savanna",
+      "vivillon-sun",
+      "vivillon-ocean",
+      "vivillon-jungle"
+    ],
+    "669": [
+      "flabebe-red",
+      "flabebe-yellow",
+      "flabebe-orange",
+      "flabebe-blue",
+      "flabebe-white"
+    ],
+    "670": [
+      "floette-red",
+      "floette-yellow",
+      "floette-orange",
+      "floette-blue",
+      "floette-white"
+    ],
+    "671": [
+      "florges-red",
+      "florges-yellow",
+      "florges-orange",
+      "florges-blue",
+      "florges-white"
+    ],
+    "710": [
+      "pumpkaboo-average",
+      "pumpkaboo-small",
+      "pumpkaboo-large",
+      "pumpkaboo-super"
+    ],
+    "711": [
+      "gourgeist-average",
+      "gourgeist-small",
+      "gourgeist-large",
+      "gourgeist-super"
+    ]
+  },
+  "traded_forms": {
+    "666": [
+      "vivillon-icy-snow",
+      "vivillon-polar",
+      "vivillon-tundra",
+      "vivillon-continental",
+      "vivillon-garden",
+      "vivillon-elegant",
+      "vivillon-modern",
+      "vivillon-marine",
+      "vivillon-archipelago",
+      "vivillon-high-plains",
+      "vivillon-sandstorm",
+      "vivillon-river",
+      "vivillon-monsoon",
+      "vivillon-savanna",
+      "vivillon-sun",
+      "vivillon-ocean",
+      "vivillon-jungle"
+    ]
+  },
+  "condition_replacements": {
+    "trash-can-type-tuesday": "weekday-tuesday",
+    "trash-can-type-thursday": "weekday-thursday"
+  }
+}

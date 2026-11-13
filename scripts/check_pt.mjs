@@ -34,7 +34,7 @@ for (const place of ['Before Pillar 1', 'Between Pillars 1 And 2', 'Between Pill
 
 const source = readFileSync('client/game.ts', 'utf8');
 const packs = readFileSync('client/packs.ts', 'utf8');
-const platinum = runInNewContext(stripTypeScriptTypes(packs.slice(packs.indexOf('const PLATINUM:'), packs.indexOf('const USUM:'))) + '\nPLATINUM');
+const platinum = runInNewContext(stripTypeScriptTypes(packs.match(/^const PLATINUM:[\s\S]*?^};/m)[0]) + '\nPLATINUM');
 const run = { caught: new Set(), badges: new Set(['Elite Four']), kit: new Set(['poke-radar', 'defog', 'surf']), events: new Set() };
 const context = {
   R: () => run, P: () => platinum, EVENTS: Object.fromEntries(game.events.map(e => [e.id, e])),

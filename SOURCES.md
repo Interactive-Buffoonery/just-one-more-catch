@@ -56,6 +56,21 @@ from PokeAPI and needs no source.
 - https://strategywiki.org/wiki/Pok%C3%A9mon_Ultra_Sun_and_Ultra_Moon
 - The Official Alola Region Strategy Guide (2017): `Pokèmon Ultra Sun & Pokèmon Ultra Moon The Official Alola Region Strategy Guide fix.pdf`
 
+### USUM ambush terrain and Machamp review
+
+The USUM sections of the location pages linked in `data/usum.json`'s
+`area_methods` identify rustling grass/trees/bushes, dirt/sand clouds,
+flying shadows, Dividing Peak Tunnel shadows and water splashes. These
+place/species overrides correct PokeAPI's shared bubbling-spots bucket;
+fishing methods retain their rod requirement. See `docs/usum-access-audit.md`
+for the complete row inventory and cache limitations.
+
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ultra_Sun_and_Ultra_Moon/Part_21
+  sails to Poni after clearing Aether Paradise.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ultra_Sun_and_Ultra_Moon/Part_22
+  registers Machamp Shove at Ancient Poni Path. Machamp areas therefore also
+  require the existing Aether event, including the earlier Lush Jungle cave.
+
 ## Obtainable form catalog
 
 `obtainable_forms` in each pack is an allowlist of PokeAPI pokemon-form
@@ -771,6 +786,762 @@ Advance game. Ruby and Sapphire remain separate Coming Soon entries.
   connection reaches at most x=41; grass begins at x=49, beyond westbound
   ledges. Its encounters therefore stay with the later Route 122 approach.
 
+## Ruby and Sapphire (`rs`)
+
+Original Game Boy Advance versions `ruby` / `sapphire`, encounter codes `R` /
+`S`. The 13 chapters, 19 events and area/row requirements in `data/rs.json`
+were sourced separately from Emerald. Each entry links its relevant source.
+
+- PokeAPI cached encounters, original Hoenn numbering (202), national bound
+  (386), generation-III types and species:
+  https://pokeapi.co/api/v2/pokedex/4/ and cached Pokémon encounter endpoints.
+  The supplied cache lacked `pokedex_4.json`; only that response was fetched.
+  No bulk PokeAPI fetch or scripted Bulbapedia request was made.
+- Cached walkthrough:
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire
+  Parts 1–3 establish Route 101 starters (Treecko, Torchic, Mudkip), the
+  opening through Rustboro, the Slakoth-for-Makuhita trade, Rusturf Tunnel,
+  Peeko and the Devon Letter. Part 4 establishes Dewford/Route 106, every
+  Granite Cave floor and Steven's Letter delivery before Briney's Slateport
+  destination; Flash is helpful for navigation, not an entry requirement.
+  Parts 5–6 establish Route 109, Slateport, the Museum, Route 110, Mauville,
+  Route 117 and the west shore of Route 118. Parts 7–8 establish Rock Smash
+  through Route 111 to Route 112, Fiery Path, Fallarbor, Route 114 and Meteor
+  Falls. Part 9 establishes the version-specific boss at Mt. Chimney,
+  Jagged Pass, Lavaridge's Wynaut Egg and Go-Goggles after Flannery.
+- Part 10: desert access requires Go-Goggles; the Root/Claw Fossils are a
+  choice, revived at Devon into Lileep/Anorith. Norman and Wally's father
+  provide Surf access; Wattson gives the Basement Key after the Balance
+  Badge. New Mauville's entrance precedes its locked inner door.
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_10
+- Part 8 explicitly says Route 115's only tall grass is in the north and
+  cannot be reached without Surf. Fishing remains available earlier.
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_8
+- Route 118: west beach is reachable from Mauville; the inlet separates it
+  from the eastern tall grass. Only walking rows receive a Surf gate.
+  https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_118
+- Part 11: Route 119, Weather Institute rescue and Castform, Fortree's
+  Pikachu-for-Skitty trade, and Devon Scope. The bridge Grunts block Fortree
+  until rescue; the Scope clears the Route 120 bridge. Ordinary wild
+  Kecleon rows do not require the Scope; its static encounters do.
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_11
+- Part 12: Route 121, Safari Zone (northwest Mach Bike, northeast Acro Bike),
+  Mt. Pyre and Route 122/123. Route 123's eastern grass is reached from Route
+  122; its westward ledges lead to the Berry Master's western terminus.
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_12
+  https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_123
+- Parts 13–14: submarine theft unlocks the Lilycove hideout; Ruby uses Magma
+  and Sapphire Aqua. Defeating Tabitha/Matt releases the eastern ocean
+  blocker. Parts 15–18 establish Mossdeep, Dive, Shoal Cave, Seafloor Cavern,
+  Sootopolis and the Cave of Origin (Groudon in Ruby, Kyogre in Sapphire),
+  Wallace's Rain Badge, Routes 129–131, Mirage Island and Pacifidlog's
+  Bellossom-for-Corsola trade. Part 19 establishes Routes 132–134 and the
+  Sealed Chamber; Part 20 establishes the individual Regi puzzles and
+  western sea routes/Abandoned Ship (reachable with Surf before the League).
+  Each relevant part is linked in the pack config. The three chamber-open
+  events represent completion of their full puzzle, including the Sealed
+  Chamber, instead of pretending that reaching a location unlocks a Regi.
+- Meteor Falls' back rooms and Bagon room need Surf + Waterfall:
+  https://bulbapedia.bulbagarden.net/wiki/Meteor_Falls
+  Part 15's Shoal Cave Chamber 4 requires Strength before descending into
+  the ice room (PokeAPI B3F). Part 21 describes Victory Road: B1F is reachable
+  before its boulders, while the described descent to B2F uses Strength and
+  Rock Smash. Earliest B2F alternatives remain a manual checkpoint.
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_21
+- Sky Pillar is postgame in R/S: “blocked off by walls of rocks until the
+  player enters the Hall of Fame.” Mach Bike is needed past 1F, including
+  Rayquaza's apex. Part 23 gives the floor route and roaming TV report:
+  Latios in Ruby, Latias in Sapphire, without Emerald's red/blue choice.
+  https://bulbapedia.bulbagarden.net/wiki/Sky_Pillar
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_23
+- Badges/leaders and field HMs are sourced from walkthrough Parts 3, 4, 6,
+  9, 10, 11, 15 and 17 plus the Badge page. Cut/Stone, Flash/Knuckle,
+  Rock Smash/Dynamo, Strength/Heat, Surf/Balance, Fly/Feather, Dive/Mind,
+  Waterfall/Rain. Wallace is Gym Leader and Steven the Champion (Part 22).
+  The pack exposes catch-relevant tools and both Rydel bikes (Part 6).
+  https://bulbapedia.bulbagarden.net/wiki/Badge
+- RTC with no changing overworld lighting or time-specific wild encounter
+  tables: https://bulbapedia.bulbagarden.net/wiki/Time (Generation III).
+  Berries, Shoal Cave's six-hour tides and Mirage Island use the clock.
+  No `nightFrom` or invented day/night conditions are added. Automatic tide
+  restrictions are not modelled; see OPEN_QUESTIONS.md.
+- Original source, pinned to pret/pokeruby
+  `5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f`:
+  https://github.com/pret/pokeruby/tree/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f
+  No decompilation build, ROM or emulator was used. Relative paths below
+  refer to this revision:
+  - `src/pokemon_menu.c`: `sFieldMoveFuncs` and badge-index check confirm
+    the HM badge mapping independently of Emerald.
+  - `include/pokemon.h`: `struct BoxPokemon boxes[14][30]` supplies box limits.
+  - `data/maps/DewfordTown/scripts.inc`: `FLAG_DELIVERED_STEVEN_LETTER`
+    controls the Slateport destination.
+  - `data/maps/SlateportCity_OceanicMuseum_2F/scripts.inc` sets
+    `FLAG_HIDE_EVIL_TEAM_ROUTE110` after Stern's rescue.
+  - `data/maps/Route119_WeatherInstitute_2F/scripts.inc`: rescue clears
+    `FLAG_HIDE_EVIL_TEAM_WEATHER_INSTITUTE` and gives level-25 Castform.
+  - `data/maps/RustboroCity_DevonCorp_2F/scripts.inc`: revival consumes the
+    Root/Claw Fossil; `LavaridgeTown/scripts.inc` gives Wynaut's Egg;
+    `MossdeepCity_StevensHouse/scripts.inc` and `map.json` gate Beldum with
+    `FLAG_SYS_GAME_CLEAR` / its hidden object flag.
+  - `src/trade.c` and Rustboro/Fortree/Pacifidlog house scripts supply the
+    three trades. Required offered species are retained as PokeAPI conditions;
+    no badge proxy is added to these trades.
+  - `data/maps/SlateportCity_Harbor/scripts.inc` clears the two hideout
+    blockers after the submarine theft. `data/scripts/static_pokemon.inc`
+    places level-30 Electrode in the hideout in both versions. PokeAPI also
+    incorrectly tags the Ruby Magma hideout with Sapphire; `area_versions`
+    restricts Magma to Ruby and Aqua to Sapphire, following the cached
+    Team Magma Hideout / Team Aqua Hideout location articles.
+  - `data/maps/NewMauville_Inside/scripts.inc` has three level-25 Voltorb
+    statics and no Electrode static. PokeAPI's erroneous New Mauville
+    Electrode `static` row is excluded with the sourced `drop_rows` config;
+    its wild walking rows and the correct hideout statics remain intact.
+  - `data/maps/LilycoveCity_Harbor/scripts.inc`: the special voyage checks
+    `FLAG_SYS_GAME_CLEAR`, the actual Eon Ticket and its distribution flag.
+    `SouthernIsland_Interior/scripts.inc` selects the opposite Eon Pokémon.
+    Historical distribution availability is not implied by tracking it.
+  - `src/wild_encounter.c`: `FishingWildEncounter` checks Feebas before the
+    rod-specific table. Any rod works, using existing method support.
+  - `src/data/wild_encounters.json`: Route 130's land tables contain only
+    Wynaut. The cached Hoenn Route 130 article labels these grass encounters
+    as Mirage Island. Drop PokeAPI's duplicate Route 130 walking row so
+    Wynaut keeps the existing Mirage Island gate:
+    https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_130
+  - `src/data/pokemon/evolution.h`, `src/pokemon_3.c`, and
+    `src/evolution_scene.c` establish historical evolution text overrides:
+    original stones/friendship/beauty, Espeon noon–midnight, Umbreon
+    midnight–noon, and Nincada's level-20 empty-party-slot Shedinja.
+    Later-generation babies are excluded as pre-evolutions by generation.
+- No alternate form catalog is added: battle-only Castform transformations
+  and Spinda personality markings are excluded under the existing catalog
+  policy. Sprite source (all 386 regular and shiny files downloaded):
+  https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon/versions/generation-iii/ruby-sapphire
+  Existing Hoenn badges, kit icons and `public/covers/ru.jpg` / `sa.jpg` are
+  reused. The cover URLs are already recorded under Box art.
+- The access-audit helper now resolves all 103 R/S encounter areas from the
+  supplied cache, including Hoenn routes, Victory Road, Safari Zone and the
+  Weather Institute walkthrough fallback. This implementation's source pass
+  is not the independent Opus review or cartridge/browser verification.
+  No second scanned-guide source was consulted; see OPEN_QUESTIONS.md.
+## Black and White (`bw`)
+
+Original Black (`black`, code `k`) and White (`white`, code `w`), not B2W2.
+The supplied Bulbapedia raw-wikitext cache was read locally. No Bulbapedia
+requests or bulk PokeAPI fetch were made. Individual `src` and `quote` fields
+in `data/bw.json` record chapter, area, event and row evidence.
+
+### Metadata and assets
+
+- https://bulbapedia.bulbagarden.net/wiki/Pokémon_Black_and_White_Versions
+  identifies Nintendo DS, generation V, Unova, 156 introduced Pokémon and
+  the national bound of 649. The original Unova dex includes Victini #000:
+  https://bulbapedia.bulbagarden.net/wiki/List_of_Pokémon_by_Unova_Pokédex_number_in_Pokémon_Black_and_White
+  https://pokeapi.co/api/v2/pokedex/8/
+  The generator and regional visibility/counting now accept zero as a dex
+  number. Existing pack generation was checked byte-for-byte.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_1
+  sources Nuvema Town and Snivy/Tepig/Oshawott starter gifts. The gift choice
+  remains the existing shared starter interaction.
+- https://www.serebii.net/blackwhite/gyms.shtml and walkthrough parts 2–11:
+  Trio/Cilan-Chili-Cress, Basic/Lenora, Insect/Burgh, Bolt/Elesa,
+  Quake/Clay, Jet/Skyla, Freeze/Brycen, Legend/Drayden (Black) or Iris (White).
+  Shared pack leader labels show both version possibilities.
+- https://bulbapedia.bulbagarden.net/wiki/HM#Generation_V
+  and https://bulbapedia.bulbagarden.net/wiki/Badge#Unova_League
+  explicitly say badges are not needed for field HMs in generation V.
+  `hm` is empty. Cut, Surf, Strength and Waterfall remain checklist items;
+  Rock Smash is not a field move here. Fly, Flash and Dive do not open any
+  separately represented encounter area in this dataset and are not kit
+  requirements. Dive's Abyssal Ruins has no wild encounter table.
+- https://bulbapedia.bulbagarden.net/wiki/Pokémon_Storage_System
+  gives 8/16/24 boxes of 30; the tracker uses the maximum 24. This page also
+  sources the full-party/full-720-box-slots exception for the castle dragon.
+- https://bulbapedia.bulbagarden.net/wiki/Time#Generation_V
+  says seasons change monthly, time intervals vary with season, and wild
+  Pokémon no longer vary with time of day. No fixed `nightFrom` is invented.
+  PokeAPI season conditions remain visible as "Spring only", etc.; the
+  tracker does not automatically evaluate seasons against the clock.
+  The supplied `Season` cache page is about the anime, so it was not used
+  as game-mechanic evidence.
+- https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon/versions/generation-v/black-white
+  supplies both regular and shiny sprites 1–649, including the selected
+  cosmetic forms. Downloaded and centred, with ring-fit data regenerated.
+  https://github.com/PokeAPI/sprites/tree/master/sprites/badges supplies
+  Unova badge sprites 33–40. Existing `bl.jpg` and `w.jpg` are reused; their
+  libretro source URLs are recorded in the Box art section above.
+  Cover legendary typings provide the two colour-ring pairs.
+
+### Chapters, physical access and story events
+
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White
+  and its parts 1–18 give the story sequence. Chapter grouping is a tracker
+  convenience, not a claim that all optional visits occur in guide order.
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_8 and
+  https://bulbapedia.bulbagarden.net/wiki/Unova_Route_9 establish that Tubeline
+  Bridge blocks Route 9 until receiving the Light Stone/Dark Stone.
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_10
+  sources Lenora handing over the stone at Nacrene Museum after Relic Castle.
+- https://bulbapedia.bulbagarden.net/wiki/Dreamyard
+  separates the monkey gift outside the ruins from grass behind Cut. The
+  basement and southern dark grass open after N and Ghetsis via the fence
+  gap beside the tree, without Cut. Part 13 says
+  the static Musharna is Friday-only after the main story. PokeAPI's B1F
+  static omits Friday; a sourced row condition adds it and labels the
+  encounter Dreamyard. Both cached static representations remain.
+  Gift Pansage/Pansear/Panpour depend on Tepig/Oshawott/Snivy respectively;
+  sourced per-row conditions add the missing PokeAPI starter qualifiers.
+- https://bulbapedia.bulbagarden.net/wiki/Pinwheel_Forest
+  explicitly permits the exterior before Basic, but blocks the interior
+  until Basic. The east interior opens with the Bicycle; Rumination Field
+  opens after battling Cobalion. The latter is an event, not a badge proxy.
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_5
+  blocks the drawbridge until Elesa; Route 5 itself is listed with Nimbasa.
+  https://bulbapedia.bulbagarden.net/wiki/Unova_Route_16
+  allows the ordinary Lostlorn path immediately from Nimbasa but requires
+  Strength for dark grass. Marvelous Bridge waits for the postgame.
+  Route 6 is grouped with Driftveil before defeating Clay; the web at
+  Chargestone Cave is a separate Clay event, sourced by walkthrough part 7.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_8
+  gives Surf after the Jet-badge Cheren battle, and opens Routes 17/18,
+  P2 Laboratory and Mistralton Cave. Surf side areas use a kit requirement,
+  rather than inventing badge permission for a traded Surf user.
+  https://bulbapedia.bulbagarden.net/wiki/Mistralton_Cave
+  requires Surf to enter; the part-8 boulder path requires Strength for
+  Guidance Chamber and Cobalion. Cobalion's static is displayed there even
+  though PokeAPI places it under the cave-wide area.
+- https://bulbapedia.bulbagarden.net/wiki/Dragonspiral_Tower
+  permits the entrance before Freeze, but the ramp to the interior and
+  outer grassland appears after Freeze. N awakening the dragon is a separate
+  event, sourced by walkthrough part 9.
+- https://bulbapedia.bulbagarden.net/wiki/Relic_Castle
+  and walkthrough parts 5, 10 and 13 distinguish the initial two floors,
+  deeper story floors after N awakens the dragon, and the postgame maze and
+  Volcarona chamber. Cached encounter tables identify A as 1F/B1F (19–22),
+  B as the deeper Krokorok/Cofagrigus table (34–37), C as the postgame maze,
+  D as the Claydol/Volcarona rooms. Lettered areas stay distinct.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_11
+  sources Route 10, the eight badge-check gates, Victory Road and the
+  Strength boulder before Trial Chamber. Ordinary Victory Road rooms are
+  not blanket-gated by optional Surf/Strength. Unknown PokeAPI room labels
+  are retained without pretending to know their floor mapping.
+  https://bulbapedia.bulbagarden.net/wiki/Victory_Road_(Black_and_White)
+  requires the Cobalion encounter before Trial Chamber. PokeAPI's Terrakion
+  in "4F Middle Room" is displayed as Trial Chamber with these prerequisites.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_12
+  places the version-specific Reshiram/Zekrom catch in N's Castle after the
+  Elite Four, before N/Ghetsis and the credits. `Elite Four` alone therefore
+  does not open the postgame: the `ghetsis` event is also required.
+  Dragonspiral Tower's fallback dragon additionally requires confirming
+  that the castle catch was deferred by full storage.
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_11
+  explicitly blocks the eastern circuit until Team Plasma is stopped.
+  Walkthrough parts 16–18 cover Village Bridge, Routes 11–15, Giant Chasm,
+  Undella and Marvelous Bridge. They are not delayed until the Alder rematch
+  merely because the walkthrough visits them afterward. Route 11 dark
+  grass uses Surf/Waterfall, while its initial grass remains accessible.
+- https://bulbapedia.bulbagarden.net/wiki/Challenger's_Cave
+  requires defeating the Elite Four and Team Plasma; the ordinary entrance
+  floors have no blanket Surf gate. Full lowest-floor traversal needs Surf,
+  but the source does not prove that the first encounter tile does.
+- https://bulbapedia.bulbagarden.net/wiki/Abundant_Shrine
+  requires Surf and Waterfall. Landorus also needs both roamers in the
+  party, with the own-version roamer bearing the player's Trainer ID.
+- https://bulbapedia.bulbagarden.net/wiki/Giant_Chasm
+  sources the central-pond snow event that opens Kyurem's cave. This is not
+  B2W2's Plasma Frigate or DNA Splicers quest.
+
+### Gifts, special encounters, forms and missing data
+
+- https://bulbapedia.bulbagarden.net/wiki/Phenomenon
+  says rustling grass, dust clouds, flying shadows and rippling water only
+  appear after the first badge. Early phenomenon rows explicitly need Trio;
+  later chapters already imply it. Fishing ripples need Super Rod, water
+  ripples need Surf. Dark grass is a separate walking method.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_13
+  gives Looker's Super Rod and Cedric's National Mode after the credits.
+  Fishing requires the Super Rod kit item; national visibility follows the
+  shared Elite Four switch, with postgame areas additionally requiring N
+  and Ghetsis. That visibility simplification is listed in open questions.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_5
+  sources Cover/Plume choice and Nacrene revival. Part 14 sources the seven
+  older fossils from the Twist Mountain worker in the postgame. PokeAPI's
+  exact fossil item conditions are retained. Part 8 sources the Route 18
+  Larvesta Egg; part 18 sources the Marvelous Bridge Magikarp seller.
+- https://bulbapedia.bulbagarden.net/wiki/Liberty_Garden
+  requires the discontinued event Liberty Pass for Victini. This is an
+  explicit event checklist, not an assertion that the pass is still issued.
+- https://bulbapedia.bulbagarden.net/wiki/Castelia_City
+  requires a fateful-encounter Celebi and spare Poké Ball for Zorua.
+  https://bulbapedia.bulbagarden.net/wiki/Lostlorn_Forest
+  requires an event Shiny legendary beast to trigger Zoroark.
+- https://www.serebii.net/blackwhite/evolution.shtml
+  sources Chargestone Magnezone/Probopass, Pinwheel Leafeon, Twist Mountain
+  Glaceon, Prism Scale Milotic, and Karrablast/Shelmet trade partners. These
+  are pack-local overrides of modern PokeAPI evolution-chain text.
+- https://www.serebii.net/blackwhite/forms.shtml
+  sources both Basculin stripes (including the opposite stripe in rippling
+  water), all seasonal Deerling/Sawsbuck and Route 9 appliance Rotom.
+  These are collectible persistent forms; battle-only Darmanitan Zen Mode
+  and Meloetta transformations are excluded. No Therian forms or fused
+  Kyurem from B2W2 are added. The older transfer-only cosmetic catalog is
+  not claimed complete; see open questions.
+- https://bulbapedia.bulbagarden.net/wiki/Black_City and
+  https://bulbapedia.bulbagarden.net/wiki/White_Forest
+  distinguish the version-dependent settlements. PokeAPI supplies no White
+  Forest encounters for White in this cache. No Black City wild encounters
+  or fabricated White Forest rows are added.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_11
+  describes releasing Tornadus (Black) or Thundurus (White) at Route 7 after
+  Legend. The cache instead places each at the nonexistent-for-BW "Team
+  Flare Secret HQ" with method `static`. That erroneous location is dropped,
+  and the absent roaming route tables are reported, not reconstructed.
+- No `npc-trade` rows, swarm conditions, White Forest area or Desert Resort
+  Darmanitan statues are supplied for these versions. Cached encounter
+  endpoints for species 1–649 were inspected across all their varieties.
+  Full gap details and remaining physical-access questions are in
+  `OPEN_QUESTIONS.md` and `docs/bw-access-audit.md`.
+
+No save-file mappings or reader-support claims were added. No BW pret source
+was available in the listed pret repositories, and no decompilation or game
+was built. There was one source/terrain review in this implementation; the
+coordinator's independent Opus review and browser/gameplay QA remain pending.
+## X and Y (`xy`)
+
+Pack `xy`, versions `x`/`y`, encounter codes `X`/`Y`. Nintendo 3DS,
+Generation VI, Kalos. This is a provisional tracking pack: missing source rows
+and access questions are listed under X/Y in OPEN_QUESTIONS.md. No file-import
+mapping, save-reader support claim, deployment or gameplay validation is added.
+
+### Metadata and regional numbering
+
+- https://bulbapedia.bulbagarden.net/wiki/Pokémon_X_and_Y
+  identifies platform, generation and region. Walkthrough Part 1 identifies
+  Aquacorde's choice of Chespin, Fennekin or Froakie; that gift location is the
+  tracker start (not the player's house in Vaniville).
+- https://bulbapedia.bulbagarden.net/wiki/List_of_Pokémon_by_Central_Kalos_Pokédex_number
+- https://bulbapedia.bulbagarden.net/wiki/List_of_Pokémon_by_Coastal_Kalos_Pokédex_number
+- https://bulbapedia.bulbagarden.net/wiki/List_of_Pokémon_by_Mountain_Kalos_Pokédex_number
+  The sections contain 153, 153 and 151 species respectively, including the
+  three optional Central mythical species. Regional scope is therefore 457,
+  National scope 721 (through Volcanion). PokeAPI dex IDs 12/13/14 supply the
+  section order. The single integer `j` field uses a tracker-specific combined
+  index: Central 1–153, Coastal 154–306, Mountain 307–457. These are not the
+  game's three separately restarting display numbers. No section is dropped.
+- https://bulbapedia.bulbagarden.net/wiki/Badge#Kalos_League
+  provides all eight badge/leader pairs and Cut/Bug, Strength/Cliff,
+  Surf/Rumble, Waterfall/Iceberg. Badges are required in Generation VI.
+  Rock Smash is a TM and has no badge requirement here. Fly is not modeled
+  as a catch-access tool. Rods, Cut, Rock Smash, Strength, Surf and Waterfall
+  are the existing kit controls; acquisition remains player-reported.
+- https://bulbapedia.bulbagarden.net/wiki/HM
+- https://bulbapedia.bulbagarden.net/wiki/Time#Generation_VI
+  sources the 3DS clock and night beginning at 21:00. The shared tracker has
+  three clock periods; it does not separately display the game's evening.
+- https://bulbapedia.bulbagarden.net/wiki/Pokémon_Storage_System
+  gives Gen VI maximum capacity of 31 boxes × 30; boxes expand during play,
+  with the final box unlocked by capturing the mascot. The tracker exposes
+  maximum capacity and does not implement dynamic box unlocking.
+
+### Progression and special rows
+
+The full cached walkthrough was used, not mechanics inferred from another pack:
+https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y
+
+`src` fields on every chapter, event and row gate identify the relevant part.
+These are cached locally as `Walkthrough:Pokémon X and Y_Part N.wiki`.
+
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_1
+  sources the starter gift and journey's beginning.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_2
+  sources Route 2, Santalune Forest, Route 3 and the Bug Badge/Route 4 order.
+  Route 22's early Santalune entrance is retained in the initial chapter.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_3
+  sources southern Lumiose, Sycamore's Kanto starter choice and Route 5.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_4
+  sources Route 6/Parfum Palace and the flute. Snorlax's static requires the
+  recovered flute; ordinary Route 7 encounters and Connecting Cave onward
+  require clearing the bridge. Connecting Cave's southern shortcut precedes
+  Strength, so the combined area has no blanket Strength gate.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_5
+  sources upper Route 8, Ambrette, Route 9, Glittering Cave, lower Route 8,
+  Cyllage, Strength and Cliff. Each fossil gift requires choosing and restoring
+  that fossil. PokeAPI places these gifts in Glittering Cave; row `show_as`
+  correctly displays their restoration at Ambrette Town without inventing rows.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_6
+  sources Routes 10/11, Reflection Cave, Shalour and Tower of Mastery. Lucario
+  requires Rumble and the subsequent Mega Ring demonstration battle.
+- https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_12
+  says Lapras requires Rumble and the grass/flowers are across the water.
+  The Route 12 area opens from Shalour before Rumble; Lapras is gated
+  individually. Walking, flower, horde and Rock Smash rows require Surf.
+  Fishing retains the earliest near-Shalour shoreline access.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_7
+  sources Surf across Route 12, Azure Bay, Coumarine and Plant/Route 13.
+- https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_14
+  says entry requires Voltage and the Lysandre Café visit; both are modeled.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_8
+  sources that café visit after Lumiose Gym.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_9
+- https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_15
+  source Laverre, the factory battle and its removal of the Route 15 guards,
+  Lost Hotel and Route 16. Trash-can weekday conditions are PokeAPI's own
+  values, translated to the existing weekday syntax rather than guessed.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_10
+  sources Frost Cavern, the upset Mamoswine blocking Route 17, freeing
+  Abomasnow, Anistar and Psychic. Freeing Abomasnow is a separate event.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_11
+  sources Lysandre Labs, the secret HQ and mascot capture before the final
+  Lysandre battle. The mascot rows require clearing its guards in the HQ basement,
+  after the Labs and the first HQ Lysandre battle. The final-battle event opens the following chapter.
+- https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_18
+  explicitly requires defeating Lysandre for the final time to remove its
+  workers. Routes 18/19, Couriway, Terminus, Snowbelle, Route 20 and Pokémon
+  Village follow this event, not just Psychic as a badge proxy.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_12
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_13
+- https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_21
+  source the southern journey and Snowbelle's west connection. Route 21 is
+  modeled before Iceberg; Victory Road itself requires all eight badges.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_14
+- https://bulbapedia.bulbagarden.net/wiki/Victory_Road_(Kalos)
+  sources Victory Road's all-eight-badges guard. Full exploration needs HMs,
+  but that does not establish the first encounter tile in each opaque PokeAPI
+  area; those finer gates remain explicitly open questions.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_16
+- https://bulbapedia.bulbagarden.net/wiki/Friend_Safari
+  source post-League Kiloude and friend registration. Source slot conditions
+  are retained on every row: slots 1/2 need a registered friend; slot 3 needs
+  that friend's Hall of Fame and a simultaneous PSS session. The cache notes
+  that after Nintendo Network's shutdown third-slot activation requires local
+  play. This pack exposes only the cached PokeAPI Safari rows, and does not
+  promise access to every Safari type/species. Conditions display as special
+  availability, not ordinary unconditional encounters.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_X_and_Y/Part_17
+  sources post-Champion birds, eleven sightings, Sea Spirit's Den capture,
+  Surf to Mewtwo and the Terminus return. PokeAPI's starter condition is
+  retained: Chespin → Articuno, Fennekin → Zapdos, Froakie → Moltres.
+  Roaming Kalos static rows are deliberately excluded because the bird flees
+  immediately; the catchable Den rows remain. This removes no catchable site.
+- https://bulbapedia.bulbagarden.net/wiki/Terminus_Cave
+  explicitly restricts Zygarde's chamber until the Hall of Fame. Ordinary
+  Terminus rooms remain in the Route 18 chapter; the final chamber is postgame.
+- https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon#Pokémon_X_and_Y
+- https://bulbapedia.bulbagarden.net/wiki/In-game_trade#Pokémon_X_and_Y
+  identify the PokeAPI omissions recorded in OPEN_QUESTIONS.md. No invented
+  encounter rows were substituted for missing trades or restored fossils.
+
+### Historical evolution, forms and artwork
+
+- https://www.serebii.net/xy/evolution.shtml
+  sources Pangoro's Dark-type party member, Inkay's upside-down console,
+  Sylveon's Fairy move plus two Pokémon-Amie hearts, and Sliggoo's rain.
+- https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_13
+  sources Magneton/Nosepass evolving in its magnetic field.
+- https://bulbapedia.bulbagarden.net/wiki/Kalos_Route_20
+- https://bulbapedia.bulbagarden.net/wiki/Frost_Cavern
+  source Leafeon's Moss Rock and Glaceon's Ice Rock. These override modern
+  PokeAPI location text and later stone methods. Raichu uses the Thunder
+  Stone as in the cached evolution chain; its Alolan evolution is not used.
+- https://www.serebii.net/xy/forms.shtml
+  sources the five flower colours, all four Pumpkaboo/Gourgeist sizes,
+  Vivillon's 18 ordinary regional patterns, and Rotom's appliance changes
+  in Sycamore's lab. Form IDs/labels/art come from cached PokeAPI responses.
+  Meadow is the tracker baseline; the other 17 Vivillon patterns are marked
+  traded, matching the existing catalog convention rather than inferring the
+  user's console region. Eternal Floette, distributed Vivillon patterns,
+  Mega/battle-only forms and Furfrou trims are excluded by existing policy.
+  Other older transferable form families await a separate sourced catalog
+  pass; they are not silently presented as fully verified.
+- https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon
+  supplies the static default/shiny fallback for all 721 national species,
+  matching the existing USUM static-art approach rather than claiming these
+  are native animated 3DS models. All 1,442 base PNGs plus catalog form PNGs
+  are downloaded and centered with `scripts/fetch_sprites.py`. Kalos badge
+  artwork uses PokeAPI badge IDs 41–48, in gym order.
+- Existing `public/covers/x.jpg` and `yy.jpg` are reused unchanged; their
+  libretro source URLs are recorded in the box-art section above. The public
+  page is `/x-y/`, and Y uses `YY` to avoid Yellow's `Y` cover code.
+
+No Gen VI pret decompilation scripts or scanned X/Y guide were used. Cached
+Bulbapedia is the access source, with the two fetched Serebii pages above for
+forms and new evolutions. Independent review and browser/gameplay checks remain
+separate requirements; automated generation is not proof of physical access.
+
+Coverage accounting: the prior 358 X / 357 Y raw Pokémon endpoint counts
+include Basculin blue-striped and three additional Pumpkaboo size IDs. These
+collapse to their parent species under the existing species-centric model:
+354 X / 353 Y species, 362 in their union. No ordinary encounter species was
+removed by that normalization. Roaming-bird rows alone are intentionally
+excluded as described above. Final output has 989 distinct merged rows;
+941 apply to X and 940 to Y, across 78 retained encounter areas, 13 chapters
+and 13 events. The shared clock's 10:00 morning cutoff remains a documented
+presentation limitation; the cached rows contain no ordinary time conditions.
+## Diamond and Pearl (`dp`)
+
+Encounter rows, species types, levels, rates, version membership, encounter
+conditions and evolution text come from the pre-cached PokeAPI responses,
+processed by `scripts/build_data.py dp`. Regional ordering uses PokeAPI
+Pokédex 5 (`original-sinnoh`, 151 entries); the national catalog ends at 493.
+No encounter rows were transcribed from a guide. The following cached
+Bulbapedia articles were read as raw wikitext; URLs identify the source pages.
+Each hand-written gate/event also carries its source in `data/dp.json`.
+
+- Chapter sequence and starter choice/location:
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl
+  Parts 1–4 cover Twinleaf, Lake Verity (Turtwig, Chimchar, Piplup), Jubilife,
+  Oreburgh and the Old Rod. Parts 5–7 cover Rock Smash north through Route
+  204, Mars clearing Route 205, the Friday Drifloon, Eterna, Explorer Kit,
+  Cut, Jupiter's Bicycle reward and Wayward Cave. Its basement requires
+  Strength in D/P; Platinum's earlier access does not apply.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_8
+  and Parts 9–13 cover Hearthome's Happiny Egg, Good Rod on Route 209,
+  Strength at Lost Tower, Solaceon, the southern routes, Defog in the Great
+  Marsh, SecretPotion and Celestic's Surf. Defog helps visibility on Route
+  210 but is not required to proceed; no blanket Defog gate is applied.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_14
+  and Parts 15–20 cover Surf to Canalave, Riley's Egg after the Grunts,
+  Strength through northern Mt. Coronet, Icicle Badge opening Lake Acuity,
+  Galactic HQ, the summit's Surf/Rock Climb route, Cyrus before Dialga or
+  Palkia, the Route 222 power outage ending, and Waterfall to Victory Road.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_22
+  establishes Oak's National Dex upgrade after seeing the required 150
+  Sinnoh species (Manaphy is optional), Poké Radar, swarms and dual-slot
+  encounters after that upgrade. The National Dex is an explicit event,
+  separate from Hall of Fame; D/P conditions do not use the shared
+  "After the Elite Four" display shortcut. Five individual GBA cartridge
+  conditions remain attached to their original rows, rather than inventing
+  one combined encounter method. Parts 23–26 establish Battle Zone access,
+  the mainland's National Dex guard, Super Rod and Buck returning the Magma
+  Stone before Heatran, plus Rock Smash/Strength within Stark Mountain.
+- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Part_28
+  and Parts 29–30 source the lake guardians after Cyrus, speaking to Mesprit
+  before it roams, Cresselia's Fullmoon Island encounter after the nightmare
+  quest, Rotom's National Dex/night restriction, Snowpoint Temple's Hall of
+  Fame/National Dex entrance and Strength to B5F, Regigigas needing all three
+  Regis, and the eastern Victory Road/Route 224 opening. Giratina is described
+  here but absent from PokeAPI's D/P encounter responses; no row is invented.
+- https://bulbapedia.bulbagarden.net/wiki/Mount_Coronet
+  explicitly places the Galactic-HQ mural blocker before 3F.
+  https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_206
+  sources Cut to the encounter area below Cycling Road.
+  https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_207
+  sources the Bicycle slope above its early grass and the later Honey Tree.
+  https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_218
+  places the encounter grass/tree beyond Surf while early fishing remains
+  available from Jubilife's shore.
+  https://bulbapedia.bulbagarden.net/wiki/Eterna_Forest
+  puts its Honey Tree on the Cut bypass.
+  https://bulbapedia.bulbagarden.net/wiki/Ravaged_Path
+  distinguishes the early cave entrance from Rock Smash traversal/water.
+  https://bulbapedia.bulbagarden.net/wiki/Sendoff_Spring
+  specifies Hall of Fame access in D/P.
+- https://bulbapedia.bulbagarden.net/wiki/Badge#Sinnoh_League
+  gives D/P leaders and field-move badges: Coal/Roark/Rock Smash,
+  Forest/Gardenia/Cut, Cobble/Maylene/Fly, Fen/Crasher Wake/Defog,
+  Relic/Fantina/Surf, Mine/Byron/Strength, Icicle/Candice/Rock Climb,
+  Beacon/Volkner/Waterfall. Platinum's swapped Surf/Defog badges do not apply.
+  https://bulbapedia.bulbagarden.net/wiki/Time gives Gen IV morning
+  04:00–09:59, day 10:00–19:59 and night 20:00–03:59.
+  https://bulbapedia.bulbagarden.net/wiki/Pokémon_Storage_System gives
+  18 boxes of 30. https://bulbapedia.bulbagarden.net/wiki/List_of_Pokémon_by_Sinnoh_Pokédex_number
+  confirms the original 151-entry regional dex.
+- https://bulbapedia.bulbagarden.net/wiki/Gift_Pokémon sources Bebe's
+  National Dex Eevee; the walkthrough sources the two gift Eggs.
+  https://bulbapedia.bulbagarden.net/wiki/Pokémon_Diamond_and_Pearl_Versions
+  sources Manaphy's Pokémon Ranger transfer; an explicit received-Egg event
+  prevents it appearing as an ordinary freely available gift.
+  https://bulbapedia.bulbagarden.net/wiki/In-game_trade sources NPC trades;
+  PokeAPI retains the requested-species conditions and version membership.
+  The walkthrough Part 8 Hallowed Tower section sources Spiritomb's Odd
+  Keystone and 32 Underground player conversations; these remain conditions
+  on its original PokeAPI static rather than an invented gift.
+- https://bulbapedia.bulbagarden.net/wiki/Fossil and
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Diamond_and_Pearl/Underground
+  source the Explorer Kit, Diamond's local Skull Fossils/Pearl's Armor
+  Fossils, and the five older fossils after the National Dex. PokeAPI offers
+  both revival gifts in both versions subject to their held fossil; traded
+  fossil items can be revived, so these gift rows are not version-filtered.
+  A second source confirms item/species revival pairs and item possession:
+  https://github.com/pret/pokediamond/blob/b623abef1b4dfe204ca50aab42447ac00c134290/arm9/src/scrcmd_fossils.c
+- https://bulbapedia.bulbagarden.net/wiki/Honey_Tree sources the six-hour
+  wait, 24-hour expiration and groups A/B/C. PokeAPI group rates remain
+  conditional table rates, not overall per-tree probabilities.
+  https://bulbapedia.bulbagarden.net/wiki/Great_Marsh sources daily selections
+  and the National Dex expansion; raw daily-slot conditions remain visible.
+  https://bulbapedia.bulbagarden.net/wiki/Trophy_Garden sources Backlot's
+  National Dex guests and the last two daily selections remaining available.
+  https://bulbapedia.bulbagarden.net/wiki/Poké_Radar and
+  https://bulbapedia.bulbagarden.net/wiki/Roaming_Pokémon provide mechanic
+  cross-checks. This pack has no Platinum-only roaming legendary birds.
+- https://bulbapedia.bulbagarden.net/wiki/Solaceon_Ruins sources Unown's
+  letter chambers and the upper !/? room through Maniac Tunnel.
+  https://www.serebii.net/games/forms.shtml cross-checks Burmy's three
+  terrain cloaks, permanent Wormadam cloaks and western/eastern Shellos and
+  Gastrodon. These plus Unown are the local form catalogs. Rotom appliances,
+  Origin Giratina and Sky Shaymin are not enabled for original D/P.
+- https://bulbapedia.bulbagarden.net/wiki/Newmoon_Island,
+  https://bulbapedia.bulbagarden.net/wiki/Flower_Paradise and
+  https://bulbapedia.bulbagarden.net/wiki/Hall_of_Origin establish that the
+  corresponding D/P event items were never legitimately distributed.
+  Their PokeAPI encounter areas are excluded; external distribution/trade
+  availability does not create native encounter rows.
+- Art: https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon/versions/generation-iv/diamond-pearl
+  supplies regular/shiny art and form sprites. Sinnoh badge sprites use
+  PokeAPI IDs 25–32; Fly/Defog use its Flying-type TM icon. Existing sourced
+  `public/covers/d.jpg` and `p.jpg` are reused. Save import stays disabled.
+## Black 2 / White 2 (`b2w2`)
+
+Implementation sources were read from the supplied `.cache/bulbapedia/*.wiki`
+raw wikitext, not fetched from Bulbapedia. The walkthrough index is:
+https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2
+Each chapter, event, area requirement and added row requirement carries a
+specific `src` in `data/b2w2.json`. `docs/b2w2-access.md` inventories all 137
+PokeAPI areas with cached location-source matches. These are implementation
+citations, not an independent access review or gameplay proof.
+
+- **Encounters and regional numbers:** cached PokeAPI species 1–649,
+  their `pokemon/<id>/encounters` responses, evolution chains, and
+  https://pokeapi.co/api/v2/pokedex/9/ (`updated-unova`). Preserve both
+  versions separately, including levels, rates, seasons, Phenomenon methods,
+  Hidden Grotto tables, gifts and trades. Missing outbreak tables are supplemented from the cached location pages, with per-row provenance (see below).
+  The regional list has 301 entries numbered **000–300**, including Victini;
+  `0` must be treated as a real regional number. National bound is 649.
+- **Game, platform, region, beginning and starters:**
+  https://bulbapedia.bulbagarden.net/wiki/Pokémon_Black_and_White_Versions_2
+  and walkthrough Parts 1–2 establish Nintendo DS, Generation V, Unova,
+  Aspertia City and Snivy/Tepig/Oshawott. The game article's regional Pokédex
+  section states 301 species numbered 0–300. Gen V's final National species
+  is Genesect, as confirmed by cached species 649's Generation V record:
+  https://pokeapi.co/api/v2/pokemon-species/649/
+- **Badges, leaders and field moves:**
+  https://bulbapedia.bulbagarden.net/wiki/Badge (Unova/B2W2 table) gives
+  Cheren/Basic, Roxie/Toxic, Burgh/Insect, Elesa/Bolt, Clay/Quake,
+  Skyla/Jet, Drayden/Legend and Marlon/Wave. The page's HM discussion
+  explicitly excepts Generation V from badge requirements. Thus `hm: {}`
+  is deliberate; possession of the relevant move/tool is still needed.
+  https://bulbapedia.bulbagarden.net/wiki/HM supports Cut, Surf, Strength
+  and Waterfall; Fly and Dive are omitted from encounter requirements
+  because no generated ordinary encounter method needs them. The Super Rod
+  is Looker's post-League gift (walkthrough Part 16).
+- **Storage and clock:**
+  https://bulbapedia.bulbagarden.net/wiki/Pokémon_Storage_System
+  (Generation V) gives 30 per box and expansion from 8 through 16 to 24;
+  the tracker models the final capacity, 24 × 30.
+  https://bulbapedia.bulbagarden.net/wiki/Time (Generation V) states that
+  encounter species no longer vary by time of day and seasons change each
+  month. No fixed `nightFrom` is assigned. Seasonal encounter conditions are
+  retained as PokeAPI labels, not automatically filtered by host date.
+  https://bulbapedia.bulbagarden.net/wiki/Phenomenon and
+  https://bulbapedia.bulbagarden.net/wiki/Hidden_Grotto source the method
+  labels; no extra encounters or regeneration simulation are invented.
+- **Early journey (Parts 1–8):** Parts 1–2 cover Route 19, Floccesy,
+  Route 20/Ranch and Cheren. Part 3 covers Virbank, Roxie, Route 20 Plasma
+  and the boat to Castelia. Part 4 covers Castelia Sewers and the southern
+  Relic Passage entrance. Part 5 covers Colress clearing Route 4, the desert,
+  Relic Castle and Nimbasa approaches. Parts 6–7 cover Elesa, Charles and
+  Driftveil Drawbridge; Part 7 also sources Rood's Zorua gift. Part 8 covers
+  Clay, the Driftveil Tournament/Plasma Frigate, the northern Relic Passage
+  approach and Strength access toward Relic Castle. Fine-grained early
+  access to some sections remains provisional as listed in OPEN_QUESTIONS.
+- **Midgame (Parts 9–13):** Part 9 sources Route 6, Surf into Mistralton
+  Cave, Strength toward Guidance Chamber, Chargestone Cave, Mistralton and
+  Route 7. Part 10 covers Skyla; Part 11 the flight to Lentimas, Reversal
+  Mountain, Strange House/Lunar Wing and Undella; Part 12 the eastern route
+  chain; Part 13 Opelucid's Plasma attack, Humilau, Route 22 and the Colress
+  Machine. https://bulbapedia.bulbagarden.net/wiki/Unova_Route_22 explicitly
+  places Terrakion after the Wave Badge. The Deerling gift is also present
+  with its Quake-Badge condition in the cached PokeAPI row.
+- **Seaside / endgame:**
+  https://bulbapedia.bulbagarden.net/wiki/Seaside_Cave describes the Rocky
+  blockage until Plasma leaves Opelucid; Surf is needed to explore.
+  Part 14 sources the Colress Machine's Crustle, seaside Frigate visit,
+  Giant Chasm interior and Ghetsis. Part 15 sources Route 23 and Victory
+  Road. No catchable fused Kyurem is invented for the story battle.
+  https://bulbapedia.bulbagarden.net/wiki/Unova_Route_21 sources Surf there.
+- **Early optional side areas:**
+  https://bulbapedia.bulbagarden.net/wiki/Unova_Route_14 and Part 18
+  establish the waterfall approach to Abundant Shrine; the Route 14 gate
+  toward White Forest/Black City is postgame, not the entire route. The
+  Shrine is therefore in the eastern chapter with Surf/Waterfall, not
+  blanket postgame. Hidden Grotto's location table specifically requires
+  Surf for Floccesy Ranch, Route 3's pond, Route 6 by Mistralton Cave and
+  inner Pinwheel Forest. Other grotto rows retain their parent area's gate.
+- **Postgame access (Parts 16–22):** Part 16 establishes the League return,
+  National Dex, Amanita's Eevee, Cave of Being and the lake guardians;
+  Part 17 Clay Tunnel, Underground Ruins and Twist Mountain/Icirrus;
+  Part 18 the southeast/Marvelous Bridge; Part 19 N and Dragonspiral Tower;
+  Part 20 Dreamyard, Striaton, Route 3 and Wellspring; Part 21 Accumula,
+  Route 1 and ocean routes; Part 22 Nature Preserve and Heatran.
+  Postgame locations use the Elite Four milestone; special encounters also
+  have their own requirements. No wild tables exist for Black Tower,
+  White Treehollow or Plasma Frigate in these cached version responses.
+- **Legendaries / gifts:** Part 16 requires releasing the lake guardians
+  from Cave of Being (Surf + Waterfall) before their individual encounters.
+  Part 19 gives Zekrom in Black 2 / Reshiram in White 2 after N's castle,
+  then Kyurem after battling that dragon (the stricter PokeAPI capture condition is retained pending resolution in OPEN_QUESTIONS.md). Part 20 gives Latios in Black 2 /
+  Latias in White 2 in Dreamyard, with Cut. Dreamyard’s fence gap reaches the basement without Cut (location article, Geography).
+  Part 22 gives Heatran after taking Route 18's Magma Stone (Part 21) to
+  Reversal Mountain. Part 18 gives Cresselia at Marvelous Bridge with the
+  Lunar Wing from Strange House. https://bulbapedia.bulbagarden.net/wiki/Floccesy_Town
+  sources Benga's Area-10 reward: shiny Gible in Black 2 / Dratini in White 2.
+  Part 21 sources the second Accumula trade after the first trade and battle.
+  Other ordinary gifts, fossils and trades retain their raw PokeAPI method,
+  item conditions and version, and the cited chapter access; see gaps below.
+- **Keys and legendary giants:**
+  https://bulbapedia.bulbagarden.net/wiki/Underground_Ruins and Part 17
+  establish Surf/Strength approach, the hidden switch, Regirock and the
+  Iron Key (Black 2) / Iceberg Key (White 2). Opposite keys can be shared,
+  so key activation is an explicit event rather than an absolute version
+  exclusion. Regigigas needs all three giants in the party, in postgame
+  Twist Mountain with Strength. `iron-room` has no separate cached article;
+  its parent Underground Ruins is the source, not an invented room page.
+- **Nature Preserve:**
+  https://bulbapedia.bulbagarden.net/wiki/Nature_Preserve sources Juniper's
+  Permit for seeing the regional Dex excluding Mythical Pokémon, then
+  Skyla's flight. Nature Sanctuary is PokeAPI's name for this same location;
+  the pack displays Nature Preserve. Its shiny Haxorus remains PokeAPI's
+  static encounter, not a fabricated separate shiny form.
+- **Evolution overrides:**
+  https://bulbapedia.bulbagarden.net/wiki/Chargestone_Cave sources the
+  magnetic evolution location for Magneton/Nosepass;
+  https://bulbapedia.bulbagarden.net/wiki/Pinwheel_Forest sources Moss Rock
+  for Leafeon; https://bulbapedia.bulbagarden.net/wiki/Twist_Mountain sources
+  Ice Rock for Glaceon. No alternate-form catalog is claimed; default
+  species sprites/types and the generation-aware PokeAPI type path are used.
+- **Artwork:** the existing B2/W2 covers are reused. Static regular/shiny
+  art comes from https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon/versions/generation-v/black-white
+  for all 649 species. PokeAPI badge images use Basic 34, Toxic 41,
+  Insect 35, Bolt 36, Quake 37, Jet 38, Legend 40 and Wave 42.
+  Source: https://github.com/PokeAPI/sprites/tree/master/sprites/badges
+
+No second independent source or original-game script audit was available for
+this implementation. Room mappings, incomplete raw encounters, weekday
+restrictions, forms and earliest-tile uncertainties are recorded under
+Black 2 / White 2 in OPEN_QUESTIONS.md. Save-file import is not enabled.
+- **Confirmed encounter-source omission:** the cached B2W2 section of
+  https://bulbapedia.bulbagarden.net/wiki/In-game_trade#Yancy/Curtis lists
+  both contacts' 12 phone-trade rewards. None has a corresponding Nimbasa
+  trade row in these version responses; the exact missing rewards and
+  the seven ordinary raw trade rewards are listed in OPEN_QUESTIONS.md.
+
+- **Outbreak supplements:** `extra_encounters` in `data/b2w2.json` records
+  the cached B2/W2 Swarm table entry, source URL, levels, rate and version
+  flags for each of 23 species (19 encounter rows per version). Sources:
+  Abundant Shrine, Desert Resort, Dreamyard, Reversal Mountain and Unova
+  Routes 1, 3, 5–9, 11–13, 15–16, 18, 20 and 22, each linked on its row.
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16
+  places the National Dex upgrade and daily outbreaks after the League.
+  All rows require `Elite Four` and carry a daily-outbreak condition; gate
+  bulletin boards identify the active location, which the app does not predict.
+  Route 8’s Quagsire table has 40% in spring/summer/autumn and no winter
+  encounter; its row preserves that restriction. Each row retains its source
+  URL in generated output. PokeAPI outbreak tables, if added, retire the
+  corresponding supplemental version/location/method table.
+- **Gigalith trade review:**
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_10
+  places “Trade with a Hiker” under the Route 7 heading (cached lines 50,
+  142–143), before Mistralton City resumes at line 241. Its Route 7 label
+  agrees with PokeAPI and is retained.
 ## Platinum
 
 Pack ID `pt`, version `platinum`, encounter code `t`. Platinum is independent

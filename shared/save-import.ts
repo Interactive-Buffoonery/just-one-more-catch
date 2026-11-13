@@ -1,6 +1,10 @@
 import { VERSION_IDS, type VersionId } from "./versions";
 
 export const IMPORT_SPECIES_LIMITS: Record<VersionId, number> = {
+  x: 721,
+  y: 721,
+  "black-2": 649,
+  "white-2": 649,
   platinum: 493,
   red: 151,
   blue: 151,
@@ -8,11 +12,17 @@ export const IMPORT_SPECIES_LIMITS: Record<VersionId, number> = {
   gold: 251,
   silver: 251,
   crystal: 251,
+  ruby: 386,
+  sapphire: 386,
   emerald: 386,
   firered: 386,
   leafgreen: 386,
+  diamond: 493,
+  pearl: 493,
   heartgold: 493,
   soulsilver: 493,
+  black: 649,
+  white: 649,
   ultrasun: 807,
   ultramoon: 807,
   "firered-switch": 386,

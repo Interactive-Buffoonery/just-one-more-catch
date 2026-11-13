@@ -13,13 +13,12 @@ const BALL = '<span class="si-ball" aria-hidden="true"><svg viewBox="0 0 48 48">
 const LOCK = '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="7" width="11" height="7.5" rx="2" fill="currentColor"/><path d="M5 7V5a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
 const TICK = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const WARN = '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="currentColor"/><path d="M8 4v5" stroke="var(--bg)" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="11.6" r="1.1" fill="var(--bg)"/></svg>';
-const WORKS = `<p class="eyebrow">Works with</p><div class="tags">${["Red", "Blue", "Yellow", "Gold", "Silver", "Crystal", "FireRed", "LeafGreen", "Emerald", "Platinum", "HeartGold", "SoulSilver", "Ultra Sun", "Ultra Moon"].map((g) => `<span class="tag plain">${g}</span>`).join("")}</div>`;
+const WORKS = `<p class="eyebrow">Works with</p><div class="tags">${["Red", "Blue", "Yellow", "Gold", "Silver", "Crystal", "FireRed", "LeafGreen", "Ruby", "Sapphire", "Emerald", "HeartGold", "SoulSilver", "Ultra Sun", "Ultra Moon", "Black", "White", "X", "Y", "Diamond", "Pearl", "Black 2", "White 2", "Platinum"].map((g) => `<span class="tag plain">${g}</span>`).join("")}</div>`;
 const NOT_NOW = '<button class="app-quiet si-wide" data-import-action="close">Not now</button>';
 const VERSION_MAP: Record<string, VersionId[]> = {
   RD: ["red"], BU: ["blue"], YW: ["yellow"], GD: ["gold"], SI: ["silver"],
   C: ["crystal"], FR: ["firered", "firered-switch"], LG: ["leafgreen", "leafgreen-switch"], E: ["emerald"],
-  Pt: ["platinum"],
-  HG: ["heartgold"], SS: ["soulsilver"], US: ["ultrasun"], UM: ["ultramoon"],
+  R: ["ruby"], S: ["sapphire"], HG: ["heartgold"], SS: ["soulsilver"], B: ["black"], W: ["white"], US: ["ultrasun"], UM: ["ultramoon"], X: ["x"], Y: ["y"], D: ["diamond"], P: ["pearl"], B2: ["black-2"], W2: ["white-2"], Pt: ["platinum"],
 };
 
 type Snapshot = {
