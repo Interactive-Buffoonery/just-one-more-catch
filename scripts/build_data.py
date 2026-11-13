@@ -131,7 +131,8 @@ def rows_for(encounters, version, n):
                 continue
             for d in v["encounter_details"]:
                 src = d["method"]["name"]
-                if src in GAME.get("drop_methods", []):
+                if any(rule == src if isinstance(rule, str) else matches(loc, rule["place"]) and src in rule["methods"]
+                       for rule in GAME.get("drop_methods", [])):
                     continue
                 cond = sorted(GAME.get("condition_replacements", {}).get(c["name"], c["name"]) for c in d["condition_values"] if c["name"] not in DEFAULT_COND)
                 m = GAME.get("methods", {}).get(src, src)

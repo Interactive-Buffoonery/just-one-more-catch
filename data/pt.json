@@ -14,7 +14,13 @@
     "^Sinnoh Pokemart$"
   ],
   "drop_methods": [
-    "pokemon-ranger"
+    "pokemon-ranger",
+    {
+      "place": "Turnback Cave After Pillar 3",
+      "methods": ["walk"],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Turnback_Cave",
+      "quote": "it is not used and is thus not encounterable through regular gameplay"
+    }
   ],
   "rename": {
     "Sinnoh Route 203": "Route 203",
@@ -239,9 +245,11 @@
     },
     "Sinnoh Pokemon League": {
       "needs": [
-        "surf"
+        "surf",
+        "waterfall"
       ],
-      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Platinum/Part_19"
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Platinum/Part_19",
+      "quote": "Climb the waterfall to the {{OBP|Pokémon League|Sinnoh}} and enter the Pokémon Center."
     },
     "Stark Mountain": {
       "needs": [

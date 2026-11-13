@@ -797,6 +797,13 @@ of Diamond/Pearl; none of their chapter or HM assumptions were substituted.
   Sunyshore/Beacon/Waterfall and Victory Road. Parts 21–26 cover National
   Dex mechanics, postgame caves/legendaries, Battle Zone and Stark Mountain.
   `src` links use the canonical `/Part_N` URL for the cached `_Part N` file.
+- Review corrections use cached location pages:
+  https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_223
+  https://bulbapedia.bulbagarden.net/wiki/Sinnoh_Route_205
+  Route 223 and walkthrough Part 19 put the League above a waterfall.
+  Turnback Cave's fourth wild table is explicitly unused in regular play;
+  its Giratina static is retained. Route 205's grunts block north of the
+  stream, but south-bank fishing remains a gameplay check in OPEN_QUESTIONS.md.
 - Additional area-specific access evidence (not merely route order):
   https://bulbapedia.bulbagarden.net/wiki/Wayward_Cave
   https://bulbapedia.bulbagarden.net/wiki/Lost_Tower

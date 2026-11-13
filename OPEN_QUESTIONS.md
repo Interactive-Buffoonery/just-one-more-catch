@@ -197,6 +197,22 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Platinum (`pt`)
 
+- Route 205 South fishing before clearing the Windworks needs a gameplay
+  check: obtain the Old Rod at the Route 218 gate, then try fishing from the
+  south bank before crossing the blocked bridge. The cached Sinnoh Route
+  205 page says the grunts block only north of the stream; walkthrough Part
+  2 confirms the early Old Rod, and Part 3 reaches the bridge before Mars.
+  None explicitly confirms a usable fishing tile on the south bank. Rod
+  rows remain in chapter 2 with the grass and Honey tree pending that check.
+- Turnback Cave's unused fourth wild table (After Pillar 3, levels 45–48)
+  is excluded; its level-47 Giratina static is retained. The cached Turnback
+  Cave page explicitly says the fourth table is never used in regular play.
+  The separate pillar-room tables still need a room/script cross-check:
+  PokeAPI's Pillar 1 exactly duplicates Before Pillar 1; Pillar 2 exactly
+  duplicates Between Pillars 2 And 3; Pillar 3 has similar species/rates to
+  that latter table but differs in several levels. The page does not settle
+  whether those pillar-room encounters are used, so all three are retained.
+
 - Independent terrain/access review remains outstanding. The cached
   walkthrough and location pages source the gates, but no emulator or
   collision-map traversal was performed. Specifically review Mt. Coronet's

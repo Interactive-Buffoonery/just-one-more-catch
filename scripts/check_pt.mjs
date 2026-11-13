@@ -22,6 +22,16 @@ for (const p of game.dex) for (const r of p.rows) {
   assert.notEqual(r.m, 'pokemon-ranger');
 }
 
+const rows = game.dex.flatMap(p => p.rows);
+const league = rows.filter(r => r.place === 'Pokémon League');
+assert.ok(league.length > 0);
+for (const r of league) assert.ok(needs(r).includes('surf') && needs(r).includes('waterfall'));
+assert.ok(!rows.some(r => r.place === 'Turnback Cave After Pillar 3' && r.m === 'walk'));
+assert.ok(mon(487).rows.some(r => r.place === 'Turnback Cave After Pillar 3' && r.m === 'static' && r.lo === 47));
+for (const place of ['Before Pillar 1', 'Between Pillars 1 And 2', 'Between Pillars 2 And 3', 'Pillar 1', 'Pillar 2', 'Pillar 3']) {
+  assert.ok(rows.some(r => r.place === `Turnback Cave ${place}` && r.m === 'walk'));
+}
+
 const source = readFileSync('client/game.ts', 'utf8');
 const packs = readFileSync('client/packs.ts', 'utf8');
 const platinum = runInNewContext(stripTypeScriptTypes(packs.slice(packs.indexOf('const PLATINUM:'), packs.indexOf('const USUM:'))) + '\nPLATINUM');
