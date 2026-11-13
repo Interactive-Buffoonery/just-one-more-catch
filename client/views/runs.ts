@@ -38,10 +38,15 @@ export const cover = (
   alt = `${v.name} box art`,
 ) =>
   `<img class="cover ${cls}" src="${imageUrl(`/covers/${v.cover ?? v.short.toLowerCase()}.jpg`)}" alt="${alt}" width="46" height="46">`;
+const startChoices = `<a class="app-quiet start-import" href="/import/" data-tab="import"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="var(--surface)"/><path d="M4 24a20 20 0 0 1 40 0z" fill="var(--pink)"/><circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="4"/><path d="M4 24h13M31 24h13" stroke="currentColor" stroke-width="4"/><circle cx="24" cy="24" r="7" fill="var(--surface)" stroke="currentColor" stroke-width="4"/></svg>Import a save</a><button class="app-quiet" data-close="1">No thank you, just browsing!</button>`;
+export const confirmPair = (ids: string[]) => `<div class="pickbody vpick"><h2 class="lg" id="sheet-title">Which version?</h2><div class="vchoice">${ids.map((id) => {
+  const v = verOf(id);
+  return `<button class="vc" data-confirmrun="${esc(id)}" data-game="${esc(id)}">${cover(v, "", "")}<b class="lg">${esc(v.name)}${v.platform ? `<span class="sr"> (${esc(v.platform)})</span>` : ""}</b></button>`;
+}).join("")}</div><div class="hv-actions start-choices">${startChoices}</div></div>`;
 export const confirmGame = (id: string, customize = false) => {
   const v = verOf(id);
   if (customize) return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">Customize your ${esc(v.name)}${v.platform ? ` (${esc(v.platform)})` : ""} playthrough?</h2><div class="hv-actions"><button class="app-primary" data-custom="1">Customize</button><button class="app-quiet" data-close="1">Not now</button></div><p class="small muted">You can update your playthrough at any time using Customize on the ${isGuest() ? "Dex tab" : "Journey or Dex tab"}.</p></div>`;
-  return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">Start ${esc(v.name)}${v.platform ? ` (${esc(v.platform)})` : ""}?</h2><div class="hv-actions start-choices"><button class="app-primary" data-confirmrun="${esc(id)}">Start a new playthrough</button><a class="app-quiet start-import" href="/import/" data-tab="import"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="var(--surface)"/><path d="M4 24a20 20 0 0 1 40 0z" fill="var(--pink)"/><circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="4"/><path d="M4 24h13M31 24h13" stroke="currentColor" stroke-width="4"/><circle cx="24" cy="24" r="7" fill="var(--surface)" stroke="currentColor" stroke-width="4"/></svg>Import a save</a><button class="app-quiet" data-close="1">No thank you, just browsing!</button></div></div>`;
+  return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">Start ${esc(v.name)}${v.platform ? ` (${esc(v.platform)})` : ""}?</h2><div class="hv-actions start-choices"><button class="app-primary" data-confirmrun="${esc(id)}">Start a new playthrough</button>${startChoices}</div></div>`;
 };
 export const dash: { slot?: string; shelf: string } = { shelf: "Unplayed" };
 const soonCover = (g: Soon) =>
@@ -53,12 +58,12 @@ const titleTile = (title: (VersionId | Soon)[], tag: string) => {
       names = soon.map((g) => g.name).join(" / ");
     return `<div class="pt soon" role="group" aria-label="${esc(names)}, Coming soon"><span class="duo">${soon.map(soonCover).join("")}</span><span class="pt-sub"><span class="con">${esc(tag)}</span>${esc(soon[0].region)}</span><b class="lg">${esc(names)}</b></div>`;
   }
-  return `<div class="pt">${live.map((id) => `<i data-game="${id}"></i>`).join("")}<span class="duo">${live.map((id) => `<span data-game="${id}">${cover(VERSIONS[id], "", "")}</span>`).join("")}</span><span class="pt-sub"><span class="con">${esc(tag)}</span>${esc(VERSIONS[live[0]].pack.region)}</span><span class="fl">${live
+  return `<button class="pt" ${live.length === 1 ? `data-newrun="${live[0]}" data-game="${live[0]}"` : `data-pair="${live.join(",")}"`} data-k="new-${live[0]}">${live.map((id) => `<i data-game="${id}"></i>`).join("")}<span class="duo">${live.map((id) => `<span data-game="${id}">${cover(VERSIONS[id], "", "")}</span>`).join("")}</span><span class="pt-sub"><span class="con">${esc(tag)}</span>${esc(VERSIONS[live[0]].pack.region)}</span><b class="nms lg">${live
     .map((id) => {
       const v = VERSIONS[id];
-      return `<button class="pill lg" data-newrun="${id}" data-game="${id}" data-k="new-${id}">${esc(v.name)}${v.platform ? `<span class="sr"> (${esc(v.platform)})</span>` : ""}</button>`;
+      return `<span>${esc(v.name)}${v.platform ? `<span class="sr"> (${esc(v.platform)})</span>` : ""}</span>`;
     })
-    .join("")}</span></div>`;
+    .join("<em>/</em>")}</b></button>`;
 };
 const shelves = () => {
   const has = new Set((bridge.runs || []).map((r) => r.version as string)),

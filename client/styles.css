@@ -335,7 +335,7 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .app .shelves button{border:0;background:none;border-radius:99px;min-height:40px;padding:9px 16px;font-weight:800;font-size:14px;color:var(--soft)}
 .shelves b{margin-left:6px;color:var(--teal)}
 .app .shelves [aria-pressed=true]{background:var(--surface);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.12)}
-.ptgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 10px;align-items:start}
+.ptgrid{align-items:stretch;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 10px;align-items:start}
 @container (min-width:520px){.ptgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @container (min-width:900px){.ptgrid{grid-template-columns:repeat(5,minmax(0,1fr))}}
 .pt{position:relative;isolation:isolate;display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0;padding:16px 8px 12px;border-radius:18px;overflow:hidden;color:#211b12;text-align:center}
@@ -349,14 +349,11 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .duo>:last-child:not(:only-child){transform:translateX(-14%) rotate(5deg)}
 .pt-sub{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;align-items:center;font-size:13px;font-weight:600;color:rgba(33,27,18,.75)}
 .con{background:rgba(255,255,255,.75);color:#211b12;border-radius:6px;padding:1px 7px;font-size:11px;font-weight:800}
-.fl{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:4px}
-.app .pill{border:0;border-radius:99px;min-height:40px;padding:4px 16px 0;font-size:15px;color:#211b12;background:var(--g);box-shadow:0 3px 0 rgba(33,27,18,.22)}
-.app .pill:hover{box-shadow:0 3px 0 rgba(33,27,18,.22),inset 0 0 0 2px rgba(33,27,18,.5)}
 .pt.soon{background:var(--bg);color:var(--soft)}
 .pt.soon .cover{filter:grayscale(.9) opacity(.55);box-shadow:none}
 .pt.soon .pt-sub{color:var(--soft)}
 .pt.soon .con{background:var(--surface);color:var(--soft)}
-.pt.soon b{font-size:15px;line-height:1.1;margin-top:4px}
+.pt.soon b{font-size:15px;line-height:1.1;margin-top:auto}
 @media (max-width:759px){
   .dash{grid-template-columns:minmax(0,1fr) auto}
   .dash>.chip{grid-column:2}
@@ -378,7 +375,6 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 }
 @media (max-width:450px){
   .duo{height:80px}.duo .cover{height:62px}.duo>:only-child .cover{height:74px}
-  .app .pill{font-size:13px;padding:4px 12px 0}
   .shelves button{padding:9px 11px;font-size:13px}
   .pslot:not([aria-pressed=true],.new) .nm{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .app .pslot:not([aria-pressed=true],.new){padding-right:0}
@@ -751,3 +747,16 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
 .app .toptabs .tlock-top{display:inline-grid;vertical-align:-1px;margin-left:5px;color:var(--soft)}
 .app .toptabs .tlock-top svg{width:12px;height:12px}
 .tabbar .tlock i svg{width:10px;height:10px;padding:0;background:none!important}
+
+.app button.pt{border:0;font:inherit;cursor:pointer;box-shadow:0 4px 0 rgba(33,27,18,.16);transition:translate .15s,box-shadow .15s}
+.app button.pt:hover,.app button.pt:focus-visible{translate:0 -3px;box-shadow:0 7px 0 rgba(33,27,18,.2),0 0 0 3px #211b12;outline:0}
+.pt .nms{display:flex;flex-wrap:wrap;justify-content:center;align-content:center;gap:2px 6px;min-height:calc(2.1em + 2px);margin-top:auto;font-size:17px;line-height:1.05}
+.pt .nms span{white-space:nowrap}
+.pt .nms em{font-style:normal;opacity:.45}
+.vchoice{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 4px}
+.pickbody.vpick .hv-actions{margin-top:8px}
+.app .vc{display:grid;justify-items:center;gap:10px;border:0;border-radius:16px;padding:16px 10px 12px;background:color-mix(in srgb,var(--g) 40%,#fff);color:#211b12;font:inherit;cursor:pointer;box-shadow:0 4px 0 var(--g-deep)}
+.app .vc:hover,.app .vc:focus-visible{outline:0;box-shadow:0 4px 0 var(--g-deep),0 0 0 3px #211b12}
+.vc .cover{height:110px;width:auto;border-radius:6px;box-shadow:4px 4px 0 var(--g-deep)}
+.vc b{font-size:19px}
+@media (max-width:450px){.pt .nms{font-size:14px}.vc .cover{height:84px}}

@@ -26,13 +26,13 @@ const ctx = {
   summarize: () => ctx.bridge.runs.find(r => r.id === ctx.run.id).summary, dumpRun: () => null, R: () => null, guestRows: () => [], moving: false, waitingNote: () => '',
   MAX_RUNS: 1000, AVATARS: [], isAvatar: () => false,
 };
-const view = runInNewContext(stripTypeScriptTypes(source.slice(source.indexOf('const badgeCount'), source.indexOf('function emailLine'))).replace(/export /g, '') + '\n({dash, titleTile, picker, stats, Runs, confirmGame})', ctx);
+const view = runInNewContext(stripTypeScriptTypes(source.slice(source.indexOf('const badgeCount'), source.indexOf('function emailLine'))).replace(/export /g, '') + '\n({dash, titleTile, picker, stats, Runs, confirmGame, confirmPair})', ctx);
 
 for (const [i, t] of titles.entries()) {
   const html = view.titleTile(t, 'Tag');
   const live = t.filter(g => typeof g === 'string');
-  assert.equal((html.match(/<button /g) || []).length, live.length);
-  for (const id of live) assert.match(html, new RegExp(`data-newrun="${id}"`));
+  assert.equal((html.match(/<button /g) || []).length, live.length ? 1 : 0);
+  if (live.length) assert.match(html, new RegExp(live.length === 1 ? `data-newrun="${live[0]}"` : `data-pair="${live.join(",")}"`));
   if (!live.length) assert.match(html, /^<div class="pt soon" role="group" aria-label="[^"]+, Coming soon">/, `soon title ${i}`);
 }
 assert.match(view.titleTile(['firered-switch', 'leafgreen-switch'], 'Switch'), /FireRed<span class="sr"> \(Switch\)<\/span>/);
@@ -43,7 +43,7 @@ assert.deepEqual(shelfNames(), ['Unplayed', 'Soon']);
 ctx.bridge.runs = [row('a', 'heartgold', '2026-11-10T00:00:00Z')];
 assert.deepEqual(shelfNames(), ['Unplayed', 'Played', 'Soon']);
 view.dash.shelf = 'Played';
-assert.match(view.picker(), /data-newrun="soulsilver"/, 'played title offers its other flavor');
+assert.match(view.picker(), /data-pair="heartgold,soulsilver"/, 'played title offers its other flavor');
 assert.doesNotMatch(view.picker(), /data-newrun="red"/);
 view.dash.shelf = 'Unplayed';
 
@@ -56,7 +56,7 @@ assert.match(view.stats([summary(3, ['Elite Four'])]), /<b>1<\/b> Champion/);
 ctx.bridge.runs = [];
 const fresh = view.Runs();
 assert.doesNotMatch(fresh, /class="rail"|class="stats"/);
-assert.match(fresh, /data-newrun="heartgold"/);
+assert.match(fresh, /data-pair="heartgold,soulsilver"/);
 
 ctx.bridge.runs = [row('a', 'heartgold', '2026-11-10T00:00:00Z', {caught: 140}), row('b', 'red', '2026-11-12T00:00:00Z'), row('c', 'emerald', '2026-11-01T00:00:00Z')];
 const slots = html => [...html.matchAll(/data-slot="(\w+)"[^>]*aria-pressed="(\w+)"/g)].map(m => m[1] + (m[2] === 'true' ? '*' : ''));
@@ -73,7 +73,7 @@ assert.deepEqual(slots(view.Runs()), ['b', 'a', 'c', 'new*']);
 assert.match(view.Runs(), /data-newrun="yellow"/);
 ctx.MAX_RUNS = 3;
 assert.match(view.Runs(), /You have 3 playthroughs/);
-assert.doesNotMatch(view.Runs(), /data-newrun/);
+assert.doesNotMatch(view.Runs(), /data-newrun|data-pair/);
 
 const confirm = view.confirmGame;
 assert.match(confirm('heartgold'), /Start HeartGold\?/);
@@ -90,3 +90,9 @@ assert.match(app, /if \(d\.slot\) dash\.slot = d\.slot/);
 assert.match(app, /if \(d\.shelf\) dash\.shelf = d\.shelf/);
 assert.equal((source.match(/<a class="chip" href="\/import\/" data-tab="import"/g) || []).length, 1, 'Import a save must be a real link to the /import/ page');
 console.log('dashboard ok');
+
+const pair = view.confirmPair(["red", "blue"]);
+assert.match(pair, /Which version\?/);
+for (const id of ["red", "blue"]) assert.equal(pair.split(`data-confirmrun="${id}"`).length - 1, 1);
+assert.match(pair, /href="\/import\/"/);
+assert.match(pair, /data-close=/);
