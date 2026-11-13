@@ -749,7 +749,7 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
 .app .toptabs .tlock-top svg{width:12px;height:12px}
 .tabbar .tlock i svg{width:10px;height:10px;padding:0;background:none!important}
 
-.app button.pt{border:0;font:inherit;cursor:pointer;box-shadow:0 4px 0 rgba(33,27,18,.16);transition:translate .15s,box-shadow .15s}
+.app button.pt{border:0;font:inherit;color:#211b12;cursor:pointer;box-shadow:0 4px 0 rgba(33,27,18,.16);transition:translate .15s,box-shadow .15s}
 .app button.pt:hover,.app button.pt:focus-visible{translate:0 -3px;box-shadow:0 7px 0 rgba(33,27,18,.2),0 0 0 3px #211b12;outline:0}
 .pt .nms{display:flex;flex-wrap:wrap;justify-content:center;align-content:center;gap:2px 6px;min-height:calc(2.1em + 2px);margin-top:auto;font-size:17px;line-height:1.05}
 .pt .nms span{white-space:nowrap}
