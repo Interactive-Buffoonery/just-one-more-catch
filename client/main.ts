@@ -22,6 +22,7 @@ async function startContact() {
   const convex = new ConvexClient(import.meta.env.VITE_CONVEX_URL);
   let session: Promise<Clerk> | undefined;
   mountContact(async (input) => {
+    let signedIn = false;
     if (/(?:^|;\s*)__client_uat(?:_[^=]*)?=(?!0(?:;|$))[^;]/.test(document.cookie) || session) {
       await withTimeout(
           (async () => {
@@ -40,12 +41,13 @@ async function startContact() {
             await new Promise<void>((resolve, reject) => {
               convex.setAuth(
                 ({ forceRefreshToken }) => sessionToken(c, forceRefreshToken),
-                (ok) => ok ? resolve() : reject(new Error("Session couldn't be restored")),
+                (ok) => { if (ok) { signedIn = true; resolve(); } else reject(new Error("Session couldn't be restored")); },
               );
             });
           })(), 10000, "Session timed out");
     }
-    return convex.mutation(api.runs.contact, input);
+    const token = signedIn ? undefined : await (await import("./verification")).verificationToken("contact");
+    return convex.action(api.runs.contact, { ...input, token });
   });
 }
 
@@ -132,7 +134,12 @@ async function startTracker() {
   };
 
   const bridge = (): Bridge => ({
-    track: (name, version) => { void convex.mutation(api.events.track, { name, version }).catch(() => {}); },
+    track: (name, version) => {
+      void (async () => {
+        const token = auth.isAuthenticated ? undefined : await (await import("./verification")).verificationToken("analytics");
+        await convex.action(api.events.track, { name, version, token });
+      })().catch(() => {});
+    },
     auth,
     runs: auth.isAuthenticated ? runs : [],
     avatar: auth.isAuthenticated ? avatar : null,
@@ -203,7 +210,7 @@ async function startTracker() {
         history.replaceState(null, "", location.pathname + location.search);
     },
     signOut: () => void clerk?.signOut(),
-    createRun: (version) => convex.mutation(api.runs.create, { version }),
+    createRun: (version, expectedUserId) => convex.mutation(api.runs.create, { version, expectedUserId }),
     importRun: async (version, caught, importId, startedAt) => {
       const session = clerk?.session, target = auth.userId;
       if (!session || !target || !auth.isAuthenticated) throw new Error("Sign in first");
@@ -221,19 +228,23 @@ async function startTracker() {
         await importer.close();
       }
     },
-    saveRun: (id, state) => convex.mutation(api.runs.save, { id, state }),
+    saveRun: (id, state, expectedUserId) => convex.mutation(api.runs.save, { id, state, expectedUserId }),
     deleteRun: (id) => convex.mutation(api.runs.remove, { id }),
-    setStart: (id, startedAt) =>
-      convex.mutation(api.runs.setStart, { id, startedAt }),
+    setStart: (id, startedAt, expectedUserId) =>
+      convex.mutation(api.runs.setStart, { id, startedAt, expectedUserId }),
     deleteAccount: async () => {
       await convex.mutation(api.runs.deleteAccount, {});
       await clerk?.user?.delete();
     },
-    contact: (input) => convex.mutation(api.runs.contact, input),
+    contact: async (input) => {
+      const token = auth.isAuthenticated ? undefined : await (await import("./verification")).verificationToken("contact");
+      return convex.action(api.runs.contact, { ...input, token });
+    },
     pairCode,
     clearPairCode,
     startPairing: async (onState) => {
-      const { id, code, secret, expiresAt } = await convex.mutation(api.pairing.start, { label: deviceLabel() });
+      const token = auth.isAuthenticated ? undefined : await (await import("./verification")).verificationToken("pairing");
+      const { id, code, secret, expiresAt } = await convex.action(api.pairing.start, { label: deviceLabel(), token });
       const release = () => { void convex.mutation(api.pairing.finish, { id, secret }).catch(() => {}); };
       let done = false;
       const expiry = setTimeout(() => {

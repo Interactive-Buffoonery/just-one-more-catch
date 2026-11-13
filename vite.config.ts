@@ -4,6 +4,16 @@ import { imageVersions } from "./scripts/image-versions.ts";
 import { saveReaderAssets } from "./scripts/save-reader-assets.ts";
 
 const reader = saveReaderAssets();
+const releaseConfig: Plugin = {
+  name: "release-config",
+  apply: "build",
+  configResolved(config) {
+    if (process.env.JOMC_RELEASE !== "1") return;
+    const key = config.env.VITE_TURNSTILE_SITE_KEY?.trim();
+    if (!key || /^[123]x0+/.test(key))
+      throw new Error("Set a production VITE_TURNSTILE_SITE_KEY before releasing. Test keys are not allowed.");
+  },
+};
 
 // The static host has no SPA fallback, so /import/ gets its own copy of the app page.
 const importPage: Plugin = {
@@ -25,7 +35,7 @@ export default defineConfig({
     __IMAGE_VERSIONS__: JSON.stringify(imageVersions()),
     __SAVE_READER_VERSION__: JSON.stringify(reader.version),
   },
-  plugins: [reader.plugin, importPage],
+  plugins: [reader.plugin, importPage, releaseConfig],
   build: {
     rolldownOptions: {
       input: ["index.html", "contact/index.html"],

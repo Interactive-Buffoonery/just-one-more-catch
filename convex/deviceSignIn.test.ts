@@ -50,7 +50,7 @@ afterEach(() => {
 describe("pairing", () => {
   it("starts with a readable code and reports pending to the secret holder", async () => {
     const t = setup();
-    const p = await t.mutation(api.pairing.start, {
+    const p = await t.withIdentity(player).action(api.pairing.start, {
       label: "Chrome on Android",
     });
     expect(p.code).toMatch(
@@ -77,7 +77,7 @@ describe("pairing", () => {
   it("expires after ten minutes and deletes the row", async () => {
     vi.useFakeTimers();
     const t = setup();
-    const p = await t.mutation(api.pairing.start, { label: "Device" });
+    const p = await t.withIdentity(player).action(api.pairing.start, { label: "Device" });
     vi.advanceTimersByTime(PAIRING_MS - 1000);
     expect(
       await t.query(api.pairing.status, { id: p.id, secret: p.secret }),
@@ -105,7 +105,7 @@ describe("pairing", () => {
     stubClerk(() => ({
       json: { object: "sign_in_token", token: "ticket_123", status: "pending" },
     }));
-    const p = await t.mutation(api.pairing.start, { label: "Device" });
+    const p = await t.withIdentity(player).action(api.pairing.start, { label: "Device" });
     await expect(
       t.action(api.pairing.approve, { code: p.code }),
     ).rejects.toThrow("Sign in first");
@@ -158,7 +158,7 @@ describe("pairing", () => {
       json: { errors: [{ message: "internal detail" }] },
     }));
     vi.spyOn(console, "error").mockImplementation(() => {});
-    const p = await t.mutation(api.pairing.start, { label: "Device" });
+    const p = await t.withIdentity(player).action(api.pairing.start, { label: "Device" });
     await expect(
       t.withIdentity(player).action(api.pairing.approve, { code: p.code }),
     ).rejects.toThrow(/^(?!.*internal detail).*Couldn't approve/);
@@ -176,7 +176,7 @@ describe("pairing", () => {
   it("fails and releases the claim when the pairing expires during approval", async () => {
     vi.useFakeTimers();
     const t = setup();
-    const p = await t.mutation(api.pairing.start, { label: "Device" });
+    const p = await t.withIdentity(player).action(api.pairing.start, { label: "Device" });
     stubClerk(() => {
       vi.setSystemTime(Date.now() + PAIRING_MS);
       return { json: { token: "ticket_late" } };
@@ -201,7 +201,7 @@ describe("pairing", () => {
 
   it("lets only the current claim release a pairing", async () => {
     const t = setup();
-    const p = await t.mutation(api.pairing.start, { label: "Device" });
+    const p = await t.withIdentity(player).action(api.pairing.start, { label: "Device" });
     const claimed = await t
       .withIdentity(player)
       .mutation(internal.pairing.claim, { code: p.code });
@@ -219,7 +219,7 @@ describe("pairing", () => {
   it("stops calling Clerk once approve attempts run out", async () => {
     const t = setup();
     stubClerk(() => ({ json: { token: "ticket_123" } }));
-    const p = await t.mutation(api.pairing.start, { label: "Device" });
+    const p = await t.withIdentity(player).action(api.pairing.start, { label: "Device" });
     const guesser = t.withIdentity(stranger);
     for (let i = 0; i < 10; i++)
       expect(
@@ -236,7 +236,7 @@ describe("pairing", () => {
 
   it("shows a denial to the device", async () => {
     const t = setup();
-    const p = await t.mutation(api.pairing.start, { label: "Device" });
+    const p = await t.withIdentity(player).action(api.pairing.start, { label: "Device" });
     expect(
       await t.withIdentity(player).mutation(api.pairing.deny, { code: p.code }),
     ).toEqual({ status: "ok" });
@@ -245,7 +245,7 @@ describe("pairing", () => {
     ).toEqual({ status: "denied" });
   });
 
-  it("limits code guesses per player and starts globally", async () => {
+  it("limits code guesses and starts independently per player", async () => {
     const t = setup();
     const guesser = t.withIdentity(stranger);
     const results = [];
@@ -264,10 +264,11 @@ describe("pairing", () => {
     ).toEqual({ status: "missing" });
 
     for (let i = 0; i < 20; i++)
-      await t.mutation(api.pairing.start, { label: "Device" });
+      await t.withIdentity(player).action(api.pairing.start, { label: "Device" });
     await expect(
-      t.mutation(api.pairing.start, { label: "Device" }),
+      t.withIdentity(player).action(api.pairing.start, { label: "Device" }),
     ).rejects.toThrow();
+    await expect(t.withIdentity(stranger).action(api.pairing.start, { label: "Other device" })).resolves.toHaveProperty("code");
   });
 });
 

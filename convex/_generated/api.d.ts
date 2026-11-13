@@ -10,12 +10,15 @@
 
 import type * as auth from "../auth.js";
 import type * as contactSpam from "../contactSpam.js";
+import type * as crons from "../crons.js";
 import type * as devices from "../devices.js";
 import type * as email from "../email.js";
 import type * as events from "../events.js";
 import type * as pairing from "../pairing.js";
+import type * as quotaKeys from "../quotaKeys.js";
 import type * as runs from "../runs.js";
 import type * as stats from "../stats.js";
+import type * as verification from "../verification.js";
 
 import type {
   ApiFromModules,
@@ -26,12 +29,15 @@ import type {
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   contactSpam: typeof contactSpam;
+  crons: typeof crons;
   devices: typeof devices;
   email: typeof email;
   events: typeof events;
   pairing: typeof pairing;
+  quotaKeys: typeof quotaKeys;
   runs: typeof runs;
   stats: typeof stats;
+  verification: typeof verification;
 }>;
 
 /**

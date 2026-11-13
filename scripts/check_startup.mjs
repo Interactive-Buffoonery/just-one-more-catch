@@ -35,6 +35,7 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
     constructor() { clients.push(this); }
     async close() { this.closed = true; }
     setAuth(token, onAuth) { this.tokenProvider = token; Promise.resolve(token({})).then(t => { authenticated = !!t; onAuth?.(!!t); }); }
+    action(api, input) { return this.mutation(api, input); }
     mutation(api, input) { mutations.push({input, authenticated}); return Promise.resolve({ok:true}); }
     onUpdate() { return () => {}; }
   }
@@ -53,6 +54,10 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
       if (name === './app' || name === './contact') {
         const exports = name === './app' ? {mount:(el,b)=>bridges.push(b),update:b=>bridges.push(b)} : {mountContact:send=>contacts.push(send)};
         const m=makeModule(name,exports);
+        await m.link(()=>{}); await m.evaluate(); return m;
+      }
+      if (name === './verification') {
+        const m=makeModule(name,{verificationToken:async ()=>'verified-token'});
         await m.link(()=>{}); await m.evaluate(); return m;
       }
       imports.push(name);
@@ -87,6 +92,7 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
       assert.equal(mutations[0].authenticated,!!user,'signed-in messages must retain account ownership');
       assert.equal(imports.length,cookie?2:0,'guest messages must not need Clerk');
       assert.equal(mutations[0].input.message,'Hello');
+      assert.equal(mutations[0].input.token,user?undefined:'verified-token','guests must obtain verification before sending');
     }
     return;
   }

@@ -1,3 +1,4 @@
+import { touchQuota } from "./quotaKeys";
 import { HOUR, MINUTE, RateLimiter } from "@convex-dev/rate-limiter";
 import { v } from "convex/values";
 import { components, internal } from "./_generated/api";
@@ -10,6 +11,7 @@ import {
   type MutationCtx,
   type QueryCtx,
 } from "./_generated/server";
+import { verifiedVisitor } from "./verification";
 import { clerkApi, identityOf } from "./auth";
 
 export const CODE_ALPHABET = "BCDFGHJKLMNPQRSTVWXZ";
@@ -71,16 +73,25 @@ async function heldPairing(ctx: QueryCtx, id: string, secret: string) {
 const cleanLabel = (label: string) =>
   label.trim().slice(0, 60) || "Another device";
 
-export const start = mutation({
-  args: { label: v.string() },
-  returns: v.object({
-    id: v.string(),
-    code: v.string(),
-    secret: v.string(),
-    expiresAt: v.number(),
-  }),
-  handler: async (ctx, { label }) => {
-    await limits.limit(ctx, "pairingStart", { throws: true });
+const started = v.object({
+  id: v.string(), code: v.string(), secret: v.string(), expiresAt: v.number(),
+});
+export const start = action({
+  args: { label: v.string(), token: v.optional(v.string()) },
+  returns: started,
+  handler: async (ctx, { label, token }): Promise<{ id: string; code: string; secret: string; expiresAt: number }> => {
+    const visitor = await verifiedVisitor(ctx, token, "pairing");
+    return ctx.runMutation(internal.pairing.create, { label, visitor });
+  },
+});
+export const create = internalMutation({
+  args: { label: v.string(), visitor: v.optional(v.string()) },
+  returns: started,
+  handler: async (ctx, { label, visitor }) => {
+    const me = await identityOf(ctx);
+    if (!me && !visitor) throw new Error("Verification required");
+    await touchQuota(ctx, me?.tokenIdentifier ?? visitor!);
+    await limits.limit(ctx, "pairingStart", { key: me?.tokenIdentifier ?? visitor, throws: true });
     let code = randomCode();
     while (
       await ctx.db

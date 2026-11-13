@@ -122,3 +122,48 @@ pnpm run deploy
   the build doesn't contain the live (`pk_live_`) key.
 - Uploads `dist/` to the Cloudflare Worker with `wrangler deploy`. Run
   `pnpm exec wrangler login` once first.
+
+## Analytics
+
+Browser event counts are approximate: verified visitors can still forge events.
+Telemetry has a daily cap of 100 events per account or verified browser visitor,
+with a burst limit of 10 per minute for each.
+Contact counts are recorded only when a message is accepted. Raw event records
+expire after 90 days; an hourly job removes expired records in batches of 100.
+The stats report uses the same 90-day window. Rate-limit keys and their component
+records are removed hourly after two days without activity, longer than any of
+these quota windows.
+
+## Anonymous write protection
+
+Guest contact submissions, device pairing starts and anonymous analytics
+writes require Cloudflare Turnstile. The browser loads the widget only when one of these actions starts.
+The backend verifies each single-use token with Cloudflare and checks its
+hostname, action and visitor value before an internal mutation writes data.
+Missing configuration or failed verification rejects the request. Signed-in
+requests use the verified Clerk account and do not need Turnstile.
+
+Before releasing these changes:
+
+- Create a Managed Turnstile widget for `justonemorecatch.app`, and a separate
+  development widget for local testing.
+- Add the public `VITE_TURNSTILE_SITE_KEY` to the matching `.env.production` or
+  `.env.local` build settings.
+- Set `TURNSTILE_SECRET_KEY` in the matching Convex deployment. Keep it out of
+  frontend environment variables and source control.
+- Set `TURNSTILE_HOSTNAMES` in Convex to the comma-separated exact hostnames
+  allowed for that deployment: `justonemorecatch.app` for production and
+  `localhost` for local development. Never allow local/test hosts in production.
+- `build:prod` rejects missing Turnstile site keys and Cloudflare test keys.
+- Release frontend and backend together, then verify guest contact, pairing and analytics
+  with real Turnstile tokens. Existing tabs need to reload because these public
+  functions changed from mutations to actions.
+
+Contact allows two messages immediately, then replenishes three per hour per
+account or verified browser visitor. Pairing allows 20 starts immediately,
+then replenishes 60 per minute per account or verified browser visitor.
+These callers have separate allowances. Browser visitor values are random and
+persisted locally; they are not a person or device identity. Clearing storage
+can rotate the value, but each anonymous write still needs a fresh successful
+Turnstile check. Anonymous analytics remains approximate and rate limited. Failed analytics
+verification drops the event without blocking guest play.
