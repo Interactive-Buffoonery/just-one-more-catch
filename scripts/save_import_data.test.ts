@@ -79,3 +79,19 @@ test("GB identities retain paired choices and exclude unsupported Green", async 
     expect(caughtForPack(s, version, data).caught).toEqual([]);
   }
 });
+
+test.each([["OR", "omega-ruby"], ["AS", "alpha-sapphire"]] as const)("%s imports only its own Hoenn remake", async (identity, version) => {
+  const data = await VERSIONS[version].pack.load();
+  const s = snapshot([identity]);
+  expect(importVersions(s)).toEqual([version]);
+  expect(IMPORT_SPECIES_LIMITS[version]).toBe(721);
+  expect(IMPORT_SPECIES_LIMITS[version]).toBe(VERSIONS[version].pack.national);
+  s.pokedex.caughtSpecies = [721, 650, 25, 650, 722];
+  expect(caughtForPack(s, version, data)).toEqual({ caught: [25, 650, 721], skipped: 1, partial: false });
+  s.pokedex.caughtSpecies = [];
+  expect(caughtForPack(s, version, data).caught).toEqual([]);
+  for (const other of ["OR", "AS", "ORAS", "X", "Y", "XY", "R", "S", "RS", "E"].filter(other => other !== identity)) {
+    expect(importVersions(snapshot([other]))).not.toContain(version);
+    expect(() => caughtForPack(snapshot([other]), version, data)).toThrow();
+  }
+});

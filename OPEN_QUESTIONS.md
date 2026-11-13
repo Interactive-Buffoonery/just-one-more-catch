@@ -197,6 +197,15 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Omega Ruby and Alpha Sapphire (`oras`)
 
+- **Save imports:** synthetic ORAS/XY caught/empty saves verify distinct titles
+  and complete National Dex flags through native Core, raw bits and published
+  reader 0.1.2 WASM. Real cartridge/emulator exports, a legitimate in-game
+  zero-caught save, regional/modified/corrupt variants beyond fixtures, live
+  account imports, encrypted backup extraction, mobile Safari and physical
+  mobile performance remain unverified. Gen VI recorded dates need separate
+  epoch/calendar, invalid-value, leap-day and export checks. See
+  `docs/save-import.md` for #111/#107 integration and reproduction.
+
 - **Upstream coverage remains partial.** The pack now fills missing ORAS
   tables from cached Bulbapedia location pages, keeping PokeAPI primary per
   version/area/method. The generated rows retain provenance. Rebuild after
