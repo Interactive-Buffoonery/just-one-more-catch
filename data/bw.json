@@ -275,7 +275,8 @@
       "places": [
         "Route 10",
         "Victory Road",
-        "Trial Chamber"
+        "Trial Chamber",
+        "Roaming Unova"
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_11",
       "quote": "The Badge Check Gates are the final man-made obstacle standing between you and the Pokémon League. Each Badge opens a different gate, and the rooms between are designed in a style reminiscent of each Gym. Show your Badges to the eight guards, and Victory Road stands tall before you."
@@ -409,6 +410,22 @@
       "chap": 12,
       "src": "https://bulbapedia.bulbagarden.net/wiki/Giant_Chasm",
       "quote": "When the {{player}} reaches the pond in the middle of the crater, the forest will freeze and be completely covered in snow, thus giving the player access to the cave {{p|Kyurem}} is hiding. Once the player has captured or defeated Kyurem and left the area, the snow will disappear, and the northern portion of the caves [[List of unrevisitable locations|will no longer be accessible]]. If Kyurem is defeated, however, the area will become accessible again after entering the [[Hall of Fame]] once more and returning to the pond in the center of the crater."
+    },
+    {
+      "id": "rage-candy-bar",
+      "label": "Get a RageCandyBar",
+      "q": "Do you have a RageCandyBar to wake a Desert Resort statue?",
+      "chap": 3,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Desert_Resort",
+      "quote": "A [[Rage Candy Bar|RageCandyBar]] must be used in order to battle them."
+    },
+    {
+      "id": "roamer-released",
+      "label": "Release the Route 7 roamer",
+      "q": "After earning the Legend Badge, did you hear the Route 7 house story and see Tornadus or Thundurus fly away?",
+      "chap": 10,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Roaming_Pokémon#Generation_V",
+      "quote": "Upon exiting the house, the player will be approached by the respective Pokémon, which will then fly off and will roam around [[Unova]] until being caught or defeated."
     }
   ],
   "row_needs": [
@@ -1076,6 +1093,150 @@
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
       "quote": "{{catch/entry5|515|Panpour|yes|yes|yes|Gift|10|all={{tt|One|From a girl if the player started with Snivy}}|type1=Water}}"
+    },
+    {
+      "place": "Nacrene City",
+      "n": 548,
+      "m": "npc-trade",
+      "versions": [
+        "black"
+      ],
+      "needs": [],
+      "conditions": [
+        "trade-cottonee"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Nacrene_City",
+      "quote": "{{catch/entry5|548|Petilil|yes|no|no|Trade|15|all=One|tradenum=546|tradename=Cottonee|type1=grass}}"
+    },
+    {
+      "place": "Nacrene City",
+      "n": 546,
+      "m": "npc-trade",
+      "versions": [
+        "white"
+      ],
+      "needs": [],
+      "conditions": [
+        "trade-petilil"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Nacrene_City",
+      "quote": "{{catch/entry5|546|Cottonee|no|yes|no|Trade|15|all=One|tradenum=548|tradename=Petilil|type1=grass}}"
+    },
+    {
+      "place": "Driftveil City",
+      "n": 550,
+      "m": "npc-trade",
+      "versions": [
+        "black",
+        "white"
+      ],
+      "needs": [],
+      "conditions": [
+        "trade-minccino"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Driftveil_City",
+      "quote": "{{Catch/entry5|550|Basculin|yes|no|no|Trade|25|all=One|type1=Water|tradename=Minccino|tradenum=572|form=Red-Striped}}\n{{Catch/entry5|550B|Basculin|no|yes|no|Trade|25|all=One|type1=Water|tradename=Minccino|tradenum=572|form=Blue-Striped}}"
+    },
+    {
+      "place": "Unova Route 7",
+      "n": 587,
+      "m": "npc-trade",
+      "versions": [
+        "black",
+        "white"
+      ],
+      "needs": [],
+      "conditions": [
+        "trade-boldore"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_7",
+      "quote": "{{catch/entry5|587|Emolga|yes|yes|no|Trade|30|all=One|type1=electric|type2=flying|tradename=Boldore|tradenum=525}}"
+    },
+    {
+      "place": "Unova Route 15",
+      "n": 479,
+      "m": "npc-trade",
+      "versions": [
+        "black",
+        "white"
+      ],
+      "needs": [
+        "Elite Four",
+        "ghetsis"
+      ],
+      "conditions": [
+        "trade-ditto"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_15",
+      "quote": "{{Catch/entry5|479|Rotom|yes|yes|no|Trade|60|all=One|type1=Electric|type2=Ghost|tradenum=132|tradename=Ditto}}"
+    },
+    {
+      "place": "Undella Town",
+      "n": 446,
+      "m": "npc-trade",
+      "versions": [
+        "black",
+        "white"
+      ],
+      "needs": [
+        "Elite Four",
+        "ghetsis"
+      ],
+      "conditions": [
+        "trade-cinccino",
+        "season-summer"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/In-game_trade#Pokémon_Black_and_White",
+      "quote": "| [[Undella Town]]<br><small>({{season|summer}})</small>"
+    },
+    {
+      "place": "Desert Resort",
+      "n": 555,
+      "m": "static",
+      "versions": [
+        "black",
+        "white"
+      ],
+      "needs": [
+        "rage-candy-bar"
+      ],
+      "conditions": [],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Desert_Resort",
+      "quote": "Five {{p|Darmanitan}} can be found here on the first visit. A [[Rage Candy Bar|RageCandyBar]] must be used in order to battle them. If defeated or run from, they respawn after entering the [[Hall of Fame]]."
+    },
+    {
+      "place": "Roaming Unova",
+      "n": 641,
+      "m": "roaming-grass",
+      "versions": [
+        "black"
+      ],
+      "needs": [
+        "Legend",
+        "roamer-released"
+      ],
+      "conditions": [
+        "Follow stormy weather on gate bulletin boards"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Roaming_Pokémon#Generation_V",
+      "quote": "In {{game|Black and White|s}}, after obtaining the {{Badge|Legend}}, when entering the [[gate]] leading to {{rt|10|Unova}}, the woman behind the desk will alert the player about the big storm on {{rt|7|Unova}}. {{p|Tornadus}}{{sup/5|B}} or {{p|Thundurus}}{{sup/5|W}} will make the weather more extreme in {{rt|7|Unova}} when entering the route. Heading towards the second house on the route will cause an old lady to come out and pull the player in. She will then recite the story of either {{p|Tornadus}}{{sup/5|B}} or {{p|Thundurus}}{{sup/5|W}}. Upon exiting the house, the player will be approached by the respective Pokémon, which will then fly off and will roam around [[Unova]] until being caught or defeated. Wherever these Pokémon appear will be subject to weather identified as \"stormy\" by the bulletin boards in [[gate]]s. Only these two Pokémon can cause stormy weather (which manifests as {{weather|rain}} in-battle), so they can be tracked down using the bulletin boards."
+    },
+    {
+      "place": "Roaming Unova",
+      "n": 642,
+      "m": "roaming-grass",
+      "versions": [
+        "white"
+      ],
+      "needs": [
+        "Legend",
+        "roamer-released"
+      ],
+      "conditions": [
+        "Follow stormy weather on gate bulletin boards"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Roaming_Pokémon#Generation_V",
+      "quote": "In {{game|Black and White|s}}, after obtaining the {{Badge|Legend}}, when entering the [[gate]] leading to {{rt|10|Unova}}, the woman behind the desk will alert the player about the big storm on {{rt|7|Unova}}. {{p|Tornadus}}{{sup/5|B}} or {{p|Thundurus}}{{sup/5|W}} will make the weather more extreme in {{rt|7|Unova}} when entering the route. Heading towards the second house on the route will cause an old lady to come out and pull the player in. She will then recite the story of either {{p|Tornadus}}{{sup/5|B}} or {{p|Thundurus}}{{sup/5|W}}. Upon exiting the house, the player will be approached by the respective Pokémon, which will then fly off and will roam around [[Unova]] until being caught or defeated. Wherever these Pokémon appear will be subject to weather identified as \"stormy\" by the bulletin boards in [[gate]]s. Only these two Pokémon can cause stormy weather (which manifests as {{weather|rain}} in-battle), so they can be tracked down using the bulletin boards."
     }
   ],
   "drop_rows": [
@@ -1150,5 +1311,148 @@
       "evo": "Trade for Karrablast",
       "src": "https://www.serebii.net/blackwhite/evolution.shtml"
     }
-  }
+  },
+  "bulbapedia_gap_fill": "data/bw-bulbapedia.json",
+  "extra_encounters": [
+    {
+      "n": 548,
+      "versions": [
+        "black"
+      ],
+      "area": "Nacrene City",
+      "method": "npc-trade",
+      "lo": 15,
+      "hi": 15,
+      "chance": 100,
+      "conditions": [],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Nacrene_City",
+      "quote": "{{catch/entry5|548|Petilil|yes|no|no|Trade|15|all=One|tradenum=546|tradename=Cottonee|type1=grass}}"
+    },
+    {
+      "n": 546,
+      "versions": [
+        "white"
+      ],
+      "area": "Nacrene City",
+      "method": "npc-trade",
+      "lo": 15,
+      "hi": 15,
+      "chance": 100,
+      "conditions": [],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Nacrene_City",
+      "quote": "{{catch/entry5|546|Cottonee|no|yes|no|Trade|15|all=One|tradenum=548|tradename=Petilil|type1=grass}}"
+    },
+    {
+      "n": 550,
+      "versions": [
+        "black",
+        "white"
+      ],
+      "area": "Driftveil City",
+      "method": "npc-trade",
+      "lo": 25,
+      "hi": 25,
+      "chance": 100,
+      "conditions": [],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Driftveil_City",
+      "quote": "{{Catch/entry5|550|Basculin|yes|no|no|Trade|25|all=One|type1=Water|tradename=Minccino|tradenum=572|form=Red-Striped}}\n{{Catch/entry5|550B|Basculin|no|yes|no|Trade|25|all=One|type1=Water|tradename=Minccino|tradenum=572|form=Blue-Striped}}"
+    },
+    {
+      "n": 587,
+      "versions": [
+        "black",
+        "white"
+      ],
+      "area": "Unova Route 7",
+      "method": "npc-trade",
+      "lo": 30,
+      "hi": 30,
+      "chance": 100,
+      "conditions": [],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_7",
+      "quote": "{{catch/entry5|587|Emolga|yes|yes|no|Trade|30|all=One|type1=electric|type2=flying|tradename=Boldore|tradenum=525}}"
+    },
+    {
+      "n": 479,
+      "versions": [
+        "black",
+        "white"
+      ],
+      "area": "Unova Route 15",
+      "method": "npc-trade",
+      "lo": 60,
+      "hi": 60,
+      "chance": 100,
+      "conditions": [],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_15",
+      "quote": "{{Catch/entry5|479|Rotom|yes|yes|no|Trade|60|all=One|type1=Electric|type2=Ghost|tradenum=132|tradename=Ditto}}"
+    },
+    {
+      "n": 446,
+      "versions": [
+        "black",
+        "white"
+      ],
+      "area": "Undella Town",
+      "method": "npc-trade",
+      "lo": 60,
+      "hi": 60,
+      "chance": 100,
+      "conditions": [],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/In-game_trade#Pokémon_Black_and_White",
+      "quote": "| [[Undella Town]]<br><small>({{season|summer}})</small>"
+    },
+    {
+      "n": 555,
+      "versions": [
+        "black",
+        "white"
+      ],
+      "area": "Desert Resort",
+      "method": "static",
+      "lo": 35,
+      "hi": 35,
+      "chance": 100,
+      "conditions": [],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Desert_Resort",
+      "quote": "Five {{p|Darmanitan}} can be found here on the first visit. A [[Rage Candy Bar|RageCandyBar]] must be used in order to battle them. If defeated or run from, they respawn after entering the [[Hall of Fame]]."
+    },
+    {
+      "n": 641,
+      "versions": [
+        "black"
+      ],
+      "area": "Roaming Unova",
+      "method": "roaming-grass",
+      "lo": 40,
+      "hi": 40,
+      "chance": 100,
+      "conditions": [],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Roaming_Pokémon#Generation_V",
+      "quote": "In {{game|Black and White|s}}, after obtaining the {{Badge|Legend}}, when entering the [[gate]] leading to {{rt|10|Unova}}, the woman behind the desk will alert the player about the big storm on {{rt|7|Unova}}. {{p|Tornadus}}{{sup/5|B}} or {{p|Thundurus}}{{sup/5|W}} will make the weather more extreme in {{rt|7|Unova}} when entering the route. Heading towards the second house on the route will cause an old lady to come out and pull the player in. She will then recite the story of either {{p|Tornadus}}{{sup/5|B}} or {{p|Thundurus}}{{sup/5|W}}. Upon exiting the house, the player will be approached by the respective Pokémon, which will then fly off and will roam around [[Unova]] until being caught or defeated. Wherever these Pokémon appear will be subject to weather identified as \"stormy\" by the bulletin boards in [[gate]]s. Only these two Pokémon can cause stormy weather (which manifests as {{weather|rain}} in-battle), so they can be tracked down using the bulletin boards."
+    },
+    {
+      "n": 642,
+      "versions": [
+        "white"
+      ],
+      "area": "Roaming Unova",
+      "method": "roaming-grass",
+      "lo": 40,
+      "hi": 40,
+      "chance": 100,
+      "conditions": [],
+      "src": "bulbapedia",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Roaming_Pokémon#Generation_V",
+      "quote": "In {{game|Black and White|s}}, after obtaining the {{Badge|Legend}}, when entering the [[gate]] leading to {{rt|10|Unova}}, the woman behind the desk will alert the player about the big storm on {{rt|7|Unova}}. {{p|Tornadus}}{{sup/5|B}} or {{p|Thundurus}}{{sup/5|W}} will make the weather more extreme in {{rt|7|Unova}} when entering the route. Heading towards the second house on the route will cause an old lady to come out and pull the player in. She will then recite the story of either {{p|Tornadus}}{{sup/5|B}} or {{p|Thundurus}}{{sup/5|W}}. Upon exiting the house, the player will be approached by the respective Pokémon, which will then fly off and will roam around [[Unova]] until being caught or defeated. Wherever these Pokémon appear will be subject to weather identified as \"stormy\" by the bulletin boards in [[gate]]s. Only these two Pokémon can cause stormy weather (which manifests as {{weather|rain}} in-battle), so they can be tracked down using the bulletin boards."
+    }
+  ]
 }

@@ -1096,16 +1096,59 @@ in `data/bw.json` record chapter, area, event and row evidence.
   distinguish the version-dependent settlements. PokeAPI supplies no White
   Forest encounters for White in this cache. No Black City wild encounters
   or fabricated White Forest rows are added.
-- https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_11
-  describes releasing Tornadus (Black) or Thundurus (White) at Route 7 after
-  Legend. The cache instead places each at the nonexistent-for-BW "Team
-  Flare Secret HQ" with method `static`. That erroneous location is dropped,
-  and the absent roaming route tables are reported, not reconstructed.
-- No `npc-trade` rows, swarm conditions, White Forest area or Desert Resort
-  Darmanitan statues are supplied for these versions. Cached encounter
-  endpoints for species 1–649 were inspected across all their varieties.
-  Full gap details and remaining physical-access questions are in
-  `OPEN_QUESTIONS.md` and `docs/bw-access-audit.md`.
+### Supplemental trades, statues and roamers
+
+The existing gap-fill path supplies these rows without changing shared code.
+The empty `data/bw-bulbapedia.json` opts in; explicit rows are in
+`extra_encounters`, and prerequisites are in `row_needs`. NPC trades retain
+partner conditions; Munchlax also retains `season-summer`. The RageCandyBar
+checklist does not assume the item can only be obtained after Ghetsis.
+Roamers use one region-wide entry per version, not a fictitious fixed Route 7
+capture. Legend and the house-story release are separate prerequisites.
+
+- [PKHeX trades, pinned lines 197–214](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5BW.cs#L197-L214):
+  species, fixed levels and versions agree with the cached Bulbapedia trade
+  table (lines 1328–1454):
+  https://bulbapedia.bulbagarden.net/wiki/In-game_trade#Pokémon_Black_and_White
+  Petilil L15 Black / Cottonee L15 White at Nacrene for the opposite species;
+  Basculin L25 at Driftveil for Minccino (Red-Striped Black, Blue-Striped White);
+  Emolga L30 on Route 7 for Boldore; Rotom L60 on Route 15 for Ditto;
+  Munchlax L60 at Undella for Cinccino, summer only.
+- Location-table cross-checks (BW sections, not their sequels):
+  https://bulbapedia.bulbagarden.net/wiki/Nacrene_City (lines 173–174),
+  https://bulbapedia.bulbagarden.net/wiki/Driftveil_City (lines 213–214),
+  https://bulbapedia.bulbagarden.net/wiki/Unova_Route_7 (lines 27, 204),
+  https://bulbapedia.bulbagarden.net/wiki/Unova_Route_15 (lines 21, 73),
+  https://bulbapedia.bulbagarden.net/wiki/Undella_Town (lines 84, 117).
+  Existing chapter access is preserved: Nacrene after Trio; Driftveil after
+  Bolt; Route 7 after Quake and Clay clearing the web; Route 15 and Undella
+  after the Elite Four and Ghetsis.
+- [PKHeX Darmanitan, pinned line 166](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5BW.cs#L166)
+  confirms level 35, Desert Resort and Hidden Ability. The cached second
+  source, https://bulbapedia.bulbagarden.net/wiki/Desert_Resort, lines 112–124,
+  gives five statues on the first visit, level 35 and a required RageCandyBar.
+- [PKHeX Tornadus, pinned line 186](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5BW.cs#L186)
+  and [Thundurus, pinned line 192](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5BW.cs#L192)
+  confirm level 40, roaming and version exclusivity. Cached
+  https://bulbapedia.bulbagarden.net/wiki/Roaming_Pokémon#Generation_V,
+  lines 323–359, independently gives both versions/levels, Legend and the
+  Route 7 house-story trigger, region-wide movement and stormy bulletin boards.
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_11,
+  lines 220–225, agrees on Legend, release, level 40 and storm tracking.
+
+Cached Bulbapedia snapshots used above are pinned here by SHA-256 so the
+line references identify the inspected content (no live revision ID is
+available in the cache):
+
+- `In-game trade.wiki`: `9cd662a7192e6d1e4d40da5bd9575eb63c22e0c85638e530bc586c8d60b7dd10`
+- `Nacrene City.wiki`: `2dc3c9b0b4fe9d7e4f1a6a204d76482894c83de291209fb21b9d742b6c6991bf`
+- `Driftveil City.wiki`: `fe183437e9553f43bc458279e7e6916da46b30b7a8a4bd73ff5886d5ffd927e6`
+- `Unova Route 7.wiki`: `40922e825d2a4bed724cf01538d6e03f4de158a2704fb2c049aa6c8e928939cc`
+- `Unova Route 15.wiki`: `eb72dc9ac1e47ce956ce383dff7577ae6499433d9005576c6b68960ff65dea00`
+- `Undella Town.wiki`: `de6033c2ceb7dcdf45e111a5c68c25bc2e534fb3b6eae427f1e4bc68af55c30f`
+- `Desert Resort.wiki`: `38ec34aa040f007debda943125f12bf7200cf41774ff1629a94fdf80525d7ecc`
+- `Roaming Pokémon.wiki`: `c9ad7646efe50bde1b0e875a2e330c8c37aa766babf69243bac66dccd301edb5`
+- `Walkthrough:Pokémon Black and White_Part 11.wiki`: `df150c8d085d80264698a949e316e9bd01597c944d264105737e385f3b712797`
 
 No save-file mappings or reader-support claims were added. No BW pret source
 was available in the listed pret repositories, and no decompilation or game

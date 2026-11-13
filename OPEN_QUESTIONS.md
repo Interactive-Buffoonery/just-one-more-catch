@@ -270,25 +270,16 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 This pack is integrated with provisional access details; it is not a certified
 complete representation of all original BW acquisition methods.
 
-- **PokeAPI gaps:** no White Forest area/encounters in White, no NPC-trade
-  rows in either version, no swarm conditions, and no Desert Resort Zen Mode
-  Darmanitan statue encounter. Sources now agree on the missing facts: PKHeX
-  [trades](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5BW.cs#L197-L214)
-  (Emolga L30, Rotom L60, Munchlax L60, Petilil L15 B, Cottonee L15 W,
-  Basculin L25) and [Darmanitan L35](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5BW.cs#L166), plus Bulbapedia's
-  Desert Resort and swarm tables. Trades, statics and White Forest stay open
-  because the BW pack has no way to add hand-written encounter rows (only ORAS
-  uses `bulbapedia_gap_fill` with a candidates file). Swarms could reuse the
-  B2W2 `extra_encounters` outbreak path (`daily-outbreak` only) once each
-  route's swarm is sourced. Do not add rows to Black City for White Forest.
-- **Roamers:** the cache places Tornadus (Black) and Thundurus (White) at
-  `team-flare-secret-hq-area`, method `static`. That location is excluded.
-  PKHeX lists [Tornadus](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5BW.cs#L186) and
-  [Thundurus](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5BW.cs#L192) as level 40 roamers; Bulbapedia's Roaming Pokemon page gives a time-of-day
-  route schedule. Adding them needs a hand-written row feature for BW.
-  Walkthrough part 11 sources their Route 7 release after Legend. Landorus
-  remains represented with the both-roamers/own-Trainer-ID party gate, but
-  this pack cannot guide catching the roamers themselves.
+- **PokeAPI gaps:** White Forest encounters and swarm conditions remain absent.
+  The existing gap-fill format now supplies the six NPC-trade species and
+  Desert Resort's level 35 Darmanitan statues, with trade partners, Munchlax's
+  summer restriction and the RageCandyBar prerequisite. White Forest needs
+  two-source population tables; swarms need two-source route/species tables.
+  Do not add rows to Black City for White Forest.
+- **Roamers:** Tornadus (Black) and Thundurus (White) now appear at level 40
+  under Roaming Unova after Legend and the Route 7 release. Gate bulletin
+  boards identify their stormy-weather route. Exact time-of-day route filtering
+  remains unmodeled; the broad roaming entry does not claim a fixed catch site.
 - **Victory Road unknown rooms:** PokeAPI has `unknown-area-53` through
   `unknown-area-66` (with gaps) and `1f-unknown-room`. Their room identities
   and first encounter tiles need a map/script or game audit. They retain
