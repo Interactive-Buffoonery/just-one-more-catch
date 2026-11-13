@@ -988,7 +988,7 @@
         "trade-haunter"
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Tapu_Village",
-      "quote": "{{Catch/entry7|075A|Graveler|yes|yes|Trade|32|all=...|tradenum=093|tradename=Haunter|type1=Rock|type2=Electric|alliesna=N/A|form=Alolan Form}}"
+      "quote": "{{Catch/entry7|075A|Graveler|yes|yes|Trade|32|all={{tt|One|Evolves into Golem immediately upon trade. Registers both Graveler and Golem into the Pokédex.}}|tradenum=093|tradename=Haunter|type1=Rock|type2=Electric|alliesna=N/A|form=Alolan Form}}"
     },
     {
       "place": "Seafolk Village",
