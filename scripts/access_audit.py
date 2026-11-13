@@ -16,7 +16,7 @@ from urllib.parse import unquote
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 POKEAPI = os.path.join(ROOT, ".cache", "pokeapi")
 WIKI = os.path.join(ROOT, ".cache", "bulbapedia")
-PACKS = ["rs", "crystal", "hgss", "frlg", "usum", "bw", "xy", "dp", "b2w2", "pt", "sm"]
+PACKS = ["rs", "crystal", "hgss", "frlg", "usum", "bw", "xy", "dp", "b2w2", "pt", "sm", "oras"]
 
 
 def nice(slug):
@@ -33,6 +33,7 @@ def as_list(v):
 def areas(pack):
     game = json.load(open(os.path.join(ROOT, "data", pack + ".json")))
     out = {}
+    covered = set()
     for n in range(1, game["species"] + 1):
         sp = json.load(open(os.path.join(POKEAPI, f"pokemon_species_{n}.json")))
         name = next(x["name"] for x in sp["names"] if x["language"]["name"] == "en")
@@ -51,11 +52,19 @@ def areas(pack):
                     method = d["method"]["name"]
                     if method in game.get("drop_methods", []):
                         continue
-                    if any(g["n"] == n and (loc == g["place"] or loc.startswith(g["place"] + " "))
+                    if any(g["n"] == n and (loc == g["place"] if g.get("exact") else loc == g["place"] or loc.startswith(g["place"] + " "))
                            and g.get("m", method) == method and v["version"]["name"] in g.get("versions", game["versions"])
                            for g in game.get("drop_rows", [])):
                         continue
                     out.setdefault(loc, set()).add((n, name, d["method"]["name"]))
+                    covered.add((v["version"]["name"], loc, d["method"]["name"]))
+    if pack == "oras":
+        from bulbapedia_encounters import gap_fill
+        supplement = json.load(open(os.path.join(ROOT, game["bulbapedia_gap_fill"])))
+        for r in gap_fill(supplement, covered) + game.get("extra_encounters", []):
+            sp = json.load(open(os.path.join(POKEAPI, f"pokemon_species_{r['n']}.json")))
+            name = next(x["name"] for x in sp["names"] if x["language"]["name"] == "en")
+            out.setdefault(r["area"], set()).add((r["n"], name, r["method"]))
     return game, out
 
 
@@ -146,7 +155,13 @@ def candidates(area, pack):
     route = re.match(r"(?:Sea )?Route (\d+)", a)
     if route:
         n = int(route.group(1))
-        return [f"{'Sinnoh' if pack in ('dp', 'pt') else 'Unova' if pack == 'bw' else 'Kalos' if pack == 'xy' else 'Alola' if pack in ('usum', 'sm') else 'Johto' if 29 <= n <= 48 else 'Kanto'} Route {n}"]
+        return [f"{'Hoenn' if pack == 'oras' else 'Sinnoh' if pack in ('dp', 'pt') else 'Unova' if pack == 'bw' else 'Kalos' if pack == 'xy' else 'Alola' if pack in ('usum', 'sm') else 'Johto' if 29 <= n <= 48 else 'Kanto'} Route {n}"]
+    if a.startswith("Hoenn Safari Zone") or (pack == "oras" and a.startswith("Safari Zone")):
+        return ["Hoenn Safari Zone"]
+    if pack == "oras" and a.startswith("Hoenn Route "):
+        return ["Hoenn Route " + re.search(r"\d+", a)[0]]
+    if pack == "oras" and a.startswith("Hoenn Victory Road"):
+        return ["Victory Road (Hoenn)"]
     if a.startswith("Safari Zone"):
         return ["Johto Safari Zone" if pack == "hgss" else "Kanto Safari Zone"]
     if a.endswith(" Chamber"):
@@ -167,6 +182,8 @@ SPECIFIC = {"Pokémon Mansion": "Pokémon Mansion (Kanto)", "Underground Path": 
 
 
 def page_for(area, pack, resolved):
+    if pack == "oras" and ("Victory Road" in area):
+        return "Victory Road (Hoenn)"
     for t in candidates(area, pack):
         if pack in ("bw", "xy", "dp", "b2w2", "pt") and os.path.exists(wiki_path(t)):
             return t

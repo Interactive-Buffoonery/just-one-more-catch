@@ -45,4 +45,11 @@ for place, version, n in [
 build.GAME["drop_rows"].append({"place": "New Mauville", "n": 101, "m": "static"})
 build.rows_for(encounters("new-mauville-area"), "ruby", 101)
 assert build.drop_hits == {0, 1}, "Overlapping exclusions must each record a hit"
-print("row exclusions: species, method, version and area matching ok")
+build.GAME["drop_rows"] = [{"place": "New Mauville", "n": 101, "m": "static", "exact": True}]
+build.drop_hits.clear()
+assert [r["m"] for r in build.rows_for(encounters("new-mauville-area"), "ruby", 101)] == ["walk"]
+assert build.drop_hits == {0}
+build.drop_hits.clear()
+assert len(build.rows_for(encounters("new-mauville-entrance"), "ruby", 101)) == 2
+assert not build.drop_hits, "An exact exclusion must not match a neighbouring area"
+print("row exclusions: species, method, version, prefix, exact and overlapping matching ok")

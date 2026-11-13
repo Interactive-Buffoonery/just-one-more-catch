@@ -60,8 +60,8 @@ Pinned Core source references:
 - `Saves/Util/SaveUtil.cs`: sizes and BEEF footer detection.
 
 The reader's existing native/browser matrix also tests Gen VII leap days,
-calendar bounds and zero/out-of-range date omission. Reader source remains
-`8cc08fd58b9b148ecba9c9ef262703559e1979e1`; no source, package, lockfile or
+calendar bounds and zero/out-of-range date omission. Vendored reader source:
+`d666c67dc4d6d11603cdf50b13f4c431c0b95668` (0.1.3); no source, package, lockfile or
 vendored tarball change is needed. Its regression assets must match the installed
 vendor package byte for byte.
 

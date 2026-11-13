@@ -13,6 +13,8 @@ export const VERSION_IDS = [
   "ruby",
   "sapphire",
   "emerald",
+  "omega-ruby",
+  "alpha-sapphire",
   "firered",
   "leafgreen",
   "diamond",

@@ -123,8 +123,10 @@ test.each([["X", "x"], ["Y", "y"]] as const)("%s imports only its Kalos title", 
   }
 });
 
-test("other Gen VI identities never map to Kalos games", () => {
-  expect(importVersions(snapshot(["OR", "AS", "ORAS", "XY"]))).toEqual([]);
+test("Gen VI identities keep Kalos and Hoenn titles separate", () => {
+  expect(importVersions(snapshot(["OR"]))).toEqual(["omega-ruby"]);
+  expect(importVersions(snapshot(["AS"]))).toEqual(["alpha-sapphire"]);
+  expect(importVersions(snapshot(["ORAS", "XY"]))).toEqual([]);
 });
 
 test.each(["diamond", "pearl"] as const)("%s imports paired DP National Dex history", async version => {
@@ -197,6 +199,22 @@ test.each([["SN", "sun", 802], ["MN", "moon", 802], ["US", "ultrasun", 807], ["U
   s.pokedex.caughtSpecies = [];
   expect(caughtForPack(s, version, data).caught).toEqual([]);
   for (const other of ["SN", "MN", "US", "UM", "SM", "USUM"].filter(other => other !== identity)) {
+    expect(importVersions(snapshot([other]))).not.toContain(version);
+    expect(() => caughtForPack(snapshot([other]), version, data)).toThrow();
+  }
+});
+
+test.each([["OR", "omega-ruby"], ["AS", "alpha-sapphire"]] as const)("%s imports only its own Hoenn remake", async (identity, version) => {
+  const data = await VERSIONS[version].pack.load();
+  const s = snapshot([identity]);
+  expect(importVersions(s)).toEqual([version]);
+  expect(IMPORT_SPECIES_LIMITS[version]).toBe(721);
+  expect(IMPORT_SPECIES_LIMITS[version]).toBe(VERSIONS[version].pack.national);
+  s.pokedex.caughtSpecies = [721, 650, 25, 650, 722];
+  expect(caughtForPack(s, version, data)).toEqual({ caught: [25, 650, 721], skipped: 1, partial: false });
+  s.pokedex.caughtSpecies = [];
+  expect(caughtForPack(s, version, data).caught).toEqual([]);
+  for (const other of ["OR", "AS", "ORAS", "X", "Y", "XY", "R", "S", "RS", "E"].filter(other => other !== identity)) {
     expect(importVersions(snapshot([other]))).not.toContain(version);
     expect(() => caughtForPack(snapshot([other]), version, data)).toThrow();
   }

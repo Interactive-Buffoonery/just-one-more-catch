@@ -33,6 +33,7 @@ ART = {
     "hgss": "pokemon/versions/generation-iv/heartgold-soulsilver/",
     "sm": "pokemon/",
     "usum": "pokemon/",
+    "oras": "pokemon/",
 }
 # PokeAPI badge IDs: Kanto 1–8, Johto 9–16, Hoenn 17–24, Sinnoh 25–32, in gym order
 BADGES = ["Boulder", "Cascade", "Thunder", "Rainbow", "Soul", "Marsh", "Volcano", "Earth",

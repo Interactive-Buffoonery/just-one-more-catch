@@ -487,7 +487,42 @@ const SM: Pack = {
   boxes: [32, 30],
 };
 
+const ORAS: Pack = {
+  load: () => import("./data/oras").then((m) => m.default),
+  art: "oras",
+  region: "Hoenn",
+  regional: 211,
+  national: 721,
+  start: "Route 101",
+  starters: [252, 255, 258],
+  badges: [
+    ["Stone", "Roxanne"], ["Knuckle", "Brawly"], ["Dynamo", "Wattson"],
+    ["Heat", "Flannery"], ["Balance", "Norman"], ["Feather", "Winona"],
+    ["Mind", "Tate & Liza"], ["Rain", "Wallace"],
+  ],
+  kit: [
+    ["old-rod", "Old Rod"], ["good-rod", "Good Rod"], ["super-rod", "Super Rod"],
+    ["cut-hm", "Cut"], ["rock-smash", "Rock Smash"], ["strength", "Strength"],
+    ["surf", "Surf"], ["dive", "Dive"], ["waterfall", "Waterfall"],
+    ["mach-bike", "Mach Bike"], ["acro-bike", "Acro Bike"],
+  ],
+  hm: {
+    "cut-hm": "Stone", "rock-smash": "Dynamo", strength: "Heat",
+    surf: "Balance", dive: "Mind", waterfall: "Rain",
+  },
+  nightFrom: 21,
+  boxes: [31, 30],
+};
+
 export const VERSIONS: Record<VersionId, Version> = {
+  "omega-ruby": {
+    name: "Omega Ruby", short: "OR", code: "o", gen: "Gen 6",
+    pack: ORAS, other: "Alpha Sapphire", ring: ["ground", "fire"],
+  },
+  "alpha-sapphire": {
+    name: "Alpha Sapphire", short: "AS", code: "a", gen: "Gen 6",
+    pack: ORAS, other: "Omega Ruby", ring: ["water", "dragon"],
+  },
   platinum: {
     name: "Platinum", short: "PT", code: "t", gen: "Gen 4",
     pack: PLATINUM, ring: ["ghost", "dragon"],
@@ -660,10 +695,7 @@ export const CONSOLES: { name: string; tag: string; titles: (VersionId | Soon)[]
   ] },
   { name: "Nintendo 3DS", tag: "3DS", titles: [
     ["x", "y"],
-    [
-      { name: "Omega Ruby", short: "OR", color: "#c8323c", region: "Hoenn" },
-      { name: "Alpha Sapphire", short: "AS", color: "#2f5fb3", region: "Hoenn" },
-    ],
+    ["omega-ruby", "alpha-sapphire"],
     ["sun", "moon"],
     ["ultrasun", "ultramoon"],
   ] },

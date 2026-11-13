@@ -49,6 +49,7 @@ export const METHOD: Record<string, [string, string | null]> = {
   "honey-tree": ["Honey tree (wait 6 hours)", "honey"],
   "pokemon-ranger": ["Pokémon Ranger gift", null],
   "hidden-grotto": ["Hidden Grotto", null],
+  flocks: ["Soaring flock", null],
   seaweed: ["Underwater", "dive"],
   "feebas-tile-fishing": ["Feebas fishing tiles", "old-rod"],
   "devon-scope": ["Devon Scope", null],

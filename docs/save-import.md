@@ -32,6 +32,7 @@ Website game support is an explicit adapter in `client/save-import.ts`:
 | X / Y | X / Y (individual stored title) |
 | B2 / W2 | Black 2 / White 2 (individual stored title; excludes B / W) |
 | SN / MN | Sun / Moon (individual stored title) |
+| OR / AS | Omega Ruby / Alpha Sapphire (individual stored title) |
 | US / UM | Ultra Sun / Ultra Moon |
 
 The parser can read more games than the website offers. A readable unsupported
@@ -240,7 +241,7 @@ species retained after removal from storage. The fixtures include starter
 stages and National Dex boundaries 649/650 and 721. Three seen-only species
 exercise female and shiny regions and stay uncaught. Both titles import and
 reload exact caught state, preserving existing runs and input bytes. Zero-filled
-and truncated files create nothing. Other Gen VI identities remain unmapped.
+and truncated files create nothing. Omega Ruby and Alpha Sapphire map only to their own Hoenn titles; combined identity labels remain unmapped.
 
 Gen VI exposes `GameTime6.SecondsToStart`, but reader 0.1.3 does not allowlist
 this layout for dates. Populated and zero fields both omit `startDate` through
@@ -432,6 +433,57 @@ in `scripts/check_save_import.test.ts`, appended mapping tests in
 and in `OPEN_QUESTIONS.md`. Keep both sets of adapters, tests and verification
 notes. The fixture directories are separate. Neither import needs a reader or
 vendor change.
+## Omega Ruby/Alpha Sapphire verification
+
+ORAS uses unchanged reader 0.1.3. The pack base already supplies the 721-species
+limits in `IMPORT_SPECIES_LIMITS`; tests keep them equal to the pack's National
+Dex limit. Exact `OR`/`AS` mappings remain separate from X/Y (`X`/`Y`) and
+original Ruby/Sapphire (`R`/`S`). Mapping tests reject every sibling, combined
+identity and original Hoenn title as an ORAS import.
+
+Eight serialized synthetic fixtures cover caught and empty saves for OR, AS,
+X and Y. Native Core, independent raw caught/seen/title/date-field reads and
+published WASM agree on individual titles, complete National Dex coverage and
+20 caught species retained after removal from storage. Starter stages, 649/650
+and 721 are included; three seen-only species exercise female/shiny regions.
+All serialized checksums pass and party/boxes are empty. Zero-filled and
+truncated files fail. Input buffers and file digests remain unchanged.
+
+Guest browser checks cover both ORAS titles, empty previews at 390px, selection
+and misleading `.srm` drop, counts, import-day dates, creation/reload,
+cancellation, storage failure/retry, duplicate confirmation, navigation and
+preparation failure/retry/cancellation. All four X/Y fixtures parse with their
+own identities and create nothing on this branch. No save uploads occur.
+Gen VI adventure-start fields are deliberately omitted by reader 0.1.3 for
+both populated and zero values; imports use import day. Gen VI epoch/calendar
+bounds, invalid values, leap days and exported recorded-date behavior need
+separate verification before enabling recorded dates.
+
+Reproduce with [the ORAS fixture README](../scripts/oras-save-fixtures/README.md).
+Validation passed: `pnpm check`, `pnpm build`,
+`pnpm exec tsc --noEmit -p convex/tsconfig.json`, `pnpm test:convex` (92 tests),
+16 guest scenarios, the Emerald regression (13 guest scenarios), 44 native
+reader tests, SDK types, five SDK tests and the reader browser regression.
+Reader assets and SDK output match the installed vendor package byte for byte.
+No reader source, dependency, lockfile or vendored tarball changes are needed.
+
+These are structural parser fixtures, not in-game exports. Permitted real
+cartridge/emulator exports, a legitimate in-game zero-caught save,
+regional/modified/corrupt variants beyond these fixtures, live signed-in
+imports, encrypted console backup extraction, mobile Safari and physical
+mobile performance remain unverified.
+
+Integration with X/Y import PR #111 overlaps the Works with list and nearby
+`VERSION_MAP` context in `client/save-import.ts`, the guest test parameter list,
+appended mapping tests and nearby documentation insertions. Keep both adapters,
+721-species limits and test sets. Replace #111's assertion that all OR/AS
+identities are unsupported with an assertion that they never map to `x`/`y`;
+its per-title rejection tests remain valid. Set `XY_IMPORTS=1` when rerunning
+the ORAS harness against the combined build to require exact X/Y imports.
+Original Ruby/Sapphire PR #107 has similar adapter/test/documentation overlaps;
+retain its distinct `R`/`S` choices and 386-species limits. Fixture directories
+are separate and require no reader changes. Re-run both PRs' checks after
+resolving integration conflicts; this branch does not include either PR.
 
 ## Adding a ROM hack
 

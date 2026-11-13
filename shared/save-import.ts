@@ -15,6 +15,8 @@ export const IMPORT_SPECIES_LIMITS: Record<VersionId, number> = {
   ruby: 386,
   sapphire: 386,
   emerald: 386,
+  "omega-ruby": 721,
+  "alpha-sapphire": 721,
   firered: 386,
   leafgreen: 386,
   diamond: 493,
