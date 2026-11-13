@@ -1250,8 +1250,9 @@ These are cached locally as `Walkthrough:Pokémon X and Y_Part N.wiki`.
   - Hotel Magikarp (for Gyarados) and Eevee (any Pokémon):
     https://bulbapedia.bulbagarden.net/wiki/Ambrette_Town ("speaking to the
     Hiker or Maid on the second floor of Hotel Ambrette for the fourth time").
-    The same offers repeat in Hotel Cyllage and the Couriway hotel; the earliest
-    hotel, Ambrette's, is used.
+    The same offers repeat in Hotel Cyllage and the Couriway hotel. The same
+    page says these travelers also rotate through Camphrier Town's hotel, which
+    no cached page confirms for the trade; Ambrette is used until one does.
   - Shauna's starter at Vaniville Town and Diantha's Ralts at Lumiose City,
     both after the credits: Walkthrough Part 16 ("Once the credits have ended",
     "asks to trade Pokémon with you", "offers a level 5 Ralts"). Rows need the
@@ -1261,7 +1262,12 @@ These are cached locally as `Walkthrough:Pokémon X and Y_Part N.wiki`.
     Old Amber before the Hall of Fame; Skull, Armor, Cover and Plume Fossils
     in both versions, Dome and Helix in Y only, Root and Claw in X only, all
     after it) and https://bulbapedia.bulbagarden.net/wiki/Fossil ("The
-    resulting Pokémon are level 20"). Rows need Rock Smash; postgame fossils
+    resulting Pokémon are level 20"). Serebii agrees on every gate and
+    version: https://www.serebii.net/pokearth/kalos/glitteringcave.shtml
+    ("Old Amber Rock Smash", "Dome Fossil Rock Smash - Postgame - Y Only",
+    "Root Fossil Rock Smash - Postgame - X Only", "Skull Fossil Rock Smash -
+    Postgame") and https://www.serebii.net/pokearth/kalos/ambrettetown.shtml
+    (all eleven revived at level 20). Rows need Rock Smash; postgame fossils
     also need the Elite Four.
 
 ### Historical evolution, forms and artwork

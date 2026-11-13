@@ -347,11 +347,15 @@ its successful generation/check/build as verified game access.
   tile and the Frost Cavern Ice Rock room behind Surf. The main chapters are
   sourced; finer Surf/Strength/Rock Smash/Waterfall gates stay unverified.
   Checked and not enough: pk3DS
-  ([`6daaca9`](https://github.com/kwsch/pk3DS/tree/6daaca934ca2284a73ab743bf89c848c57cd9de1/pk3DS.Core/Legality/Tables6.cs))
+  ([`6daaca9`](https://github.com/kwsch/pk3DS/blob/6daaca934ca2284a73ab743bf89c848c57cd9de1/pk3DS.Core/Legality/Tables6.cs))
   has no X/Y zone-name table, and PKHeX's location text
   ([`d8ab568`](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Resources/text/locations/gen6/text_xy_00000_en.txt))
   names whole caves by met-location ID, not PokeAPI's numbered areas.
   Needs X/Y map or encounter-file data that links these numbers to rooms.
+- **Hotel trades:** the Magikarp and Eevee trades are shown at Hotel Ambrette.
+  The Ambrette Town page says the same travelers also rotate through Camphrier
+  Town's hotel, one chapter earlier. Confirm the Hiker and Maid trade there
+  before moving the rows.
 - **Terminus side chambers:** map PokeAPI B1F Left/Right to the small exterior
   entrances versus the main dungeon. The location page says small chamber
   one needs Rock Smash, but does not map its label to these API areas.
