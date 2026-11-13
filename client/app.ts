@@ -413,13 +413,9 @@ async function onClick(e: MouseEvent) {
   }
   const d = t.dataset;
   if (d.dexsize && ["compact", "tiles", "large", "list"].includes(d.dexsize)) {
-    const key = document.querySelector<HTMLElement>(".dt:focus")?.dataset.k;
     ui.dexSize = d.dexsize;
     store.set("jomc.dexSize", ui.dexSize);
     render();
-    const tile = key ? document.querySelector<HTMLElement>(`[data-k="${key}"]`) : null;
-    tile?.focus();
-    tile?.scrollIntoView({block:"nearest"});
     return;
   }
   if (d.clearsearch) {
