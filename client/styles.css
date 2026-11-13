@@ -885,12 +885,12 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
   .dexhead+.bar{grid-column:1/-1;margin:0;height:4px}
   .dextop{grid-column:1/-1;display:flex;align-items:center;gap:6px;position:sticky;top:0;z-index:5;background:var(--bg)}
   .dextop .filters{margin:0;flex:1;min-width:210px;gap:1px;padding:2px}
-  .app .filters button{min-height:36px;font-size:10px}
-  .filters button b{font-size:12px}
+  .app .dextop .filters button{min-height:36px;font-size:10px}
+  .dextop .filters button b{font-size:12px}
   .dextools{margin:0;flex:1;flex-wrap:nowrap;gap:3px}
   .dextools .search{flex-basis:auto;min-width:80px}
-  .app .search input{font-size:12px;padding-left:26px}
-  .search svg{left:6px}
+  .app .dextop .search input{font-size:12px;padding-left:26px}
+  .dextop .search svg{left:6px}
   .app .dexsizes button{width:25px;padding:3px}
   .tooltext,.nowlong{display:none}
   .toolicon,.nowshort{display:inline}
