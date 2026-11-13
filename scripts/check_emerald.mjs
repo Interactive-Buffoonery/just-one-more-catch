@@ -29,6 +29,11 @@ assert.ok(mon(374).rows.every(r => needs(r).includes('Elite Four')));
 assert.ok(mon(384).rows.every(r => needs(r).includes('rayquaza') && needs(r).includes('mach-bike')));
 assert.ok(mon(371).rows.every(r => needs(r).includes('waterfall')));
 assert.ok(mon(349).rows.some(r => r.m === 'feebas-tile-fishing' && r.c === 50));
+// PokeAPI lists Mirage Island's walking table under Route 130 too.
+const wildWynaut = mon(360).rows.filter(r => r.m === 'walk');
+assert.equal(wildWynaut.length, 1);
+assert.equal(wildWynaut[0].place, 'Mirage Island');
+assert.ok(needs(wildWynaut[0]).includes('mirage'));
 for (const n of [27, 328]) assert.ok(mon(n).rows.filter(r => r.place === 'Mirage Tower').every(r => !needs(r).includes('mach-bike')));
 assert.ok(mon(81).rows.filter(r => r.place === 'New Mauville Entrance').every(r => !needs(r).includes('basement-key')));
 for (const n of [380, 381]) assert.ok(mon(n).rows.filter(r => r.place === 'Southern Island').every(r => needs(r).includes(n === 380 ? 'tv-blue' : 'tv-red')));
@@ -69,6 +74,21 @@ const hasCode = source.slice(source.indexOf('export function has('), source.inde
 const methods = source.slice(source.indexOf('export const METHOD:'), source.indexOf('export const ONE_TIME')).replace('export ', '');
 const rowCode = source.slice(source.indexOf('export function rowStatus('), source.indexOf('export function howElse(')).replace('export ', '');
 const status = runInNewContext(stripTypeScriptTypes(hasCode + methods + rowCode) + '\nrowStatus', context);
+run.kit.add('surf');
+run.badges.add('Balance');
+run.events.add('aqua-hideout');
+assert.equal(status(wildWynaut[0]).need, 'mirage');
+run.events.add('mirage');
+assert.equal(status(wildWynaut[0]).s, 'now');
+run.events.delete('mirage');
+const wynautEgg = mon(360).rows.find(r => r.m === 'gift-egg');
+assert.ok(wynautEgg);
+run.events.add('chimney');
+assert.equal(status(wynautEgg).s, 'now');
+run.events.delete('chimney');
+run.kit.delete('surf');
+run.badges.delete('Balance');
+run.events.delete('aqua-hideout');
 run.kit.add('rock-smash');
 const rock = mon(74).rows.find(r => r.place === 'Route 111' && r.m === 'rock-smash');
 assert.equal(status(rock).need, 'rock-smash');
@@ -90,4 +110,4 @@ for (const rod of ['old-rod', 'good-rod', 'super-rod']) {
   assert.equal(status(feebas).s, 'now');
   run.kit.delete(rod);
 }
-console.log('Emerald runtime rules: HM badges and Feebas with any rod ok');
+console.log('Emerald runtime rules: Mirage Island, HM badges and Feebas with any rod ok');
