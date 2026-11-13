@@ -260,6 +260,21 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 [data-game=gold]{--g:#f3cf77;--g-deep:#c09a35}
 [data-game=silver]{--g:#d5d9e4;--g-deep:#9298ad}
 [data-game=emerald]{--g:#9fdcae;--g-deep:#4f9a64}
+[data-game=ruby]{--g:#ec7a72;--g-deep:#b13d36}
+[data-game=sapphire]{--g:#86a9e8;--g-deep:#3f66b0}
+[data-game=diamond]{--g:#a7c3e8;--g-deep:#5a82b4}
+[data-game=pearl]{--g:#efb8cc;--g-deep:#b8738f}
+[data-game=platinum]{--g:#c0bccd;--g-deep:#77708f}
+[data-game=black]{--g:#8a8e99;--g-deep:#43474f}
+[data-game=white]{--g:#e8e6df;--g-deep:#a8a598}
+[data-game=black-2]{--g:#7f9bb5;--g-deep:#3a5874}
+[data-game=white-2]{--g:#eebfa8;--g-deep:#b47a5f}
+[data-game=x]{--g:#8bbbe8;--g-deep:#3d73aa}
+[data-game=y]{--g:#f08f8f;--g-deep:#b2444a}
+[data-game=omega-ruby]{--g:#e8726a;--g-deep:#a3342c}
+[data-game=alpha-sapphire]{--g:#79a3e3;--g-deep:#2f5da3}
+[data-game=sun]{--g:#f7b864;--g-deep:#c47b22}
+[data-game=moon]{--g:#ae9fe8;--g-deep:#6b5bb8}
 .dash{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:0 12px}
 .dash>h1.lg{font-size:clamp(28px,6vw,40px);line-height:1;margin:8px 0 18px}
 .dash>.chip{grid-column:3;grid-row:1}
