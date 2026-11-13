@@ -62,7 +62,8 @@ in `.cache/journal-screenshots`). Run `pnpm check`, `pnpm test:convex`, `pnpm ch
 check. Drive Journey and Dashboard entry, create/edit/delete/undated notes,
 acquisition correction/clearing/removal, duplicate records, caught toggles/undo,
 export, account switching and guest migration. Verify keyboard dismissal, focus,
-scroll restoration and overflow at 390px and desktop in both themes. Browser
+scroll restoration, Dashboard focus after Escape/Done, a deferred Journal load
+that must preserve a newer start-date editor, and overflow at 390px and desktop in both themes. Browser
 fixtures test the actual renderer with isolated Bridge data; cloud persistence
 needs a signed-in deployment check before release.
 

@@ -59,6 +59,7 @@ let creating = false;
 let pickOpenedAt = 0;
 let opening: string | null = null;
 let openSeq = 0;
+let sheetSeq = 0;
 let saveImport: SaveImport;
 let importPage: HTMLElement;
 let pendingImport = false;
@@ -122,6 +123,7 @@ function fillSheet(s: any) {
 }
 // A closed dialog fires "close" a task later; finish that sheet before showing the next one.
 function showSheet(s: any, fill?: () => void) {
+  sheetSeq++;
   const open = $("#sheet").open;
   if (!open) finishSheet();
   if (s.hist) pushSheet(s.kind);
@@ -606,10 +608,10 @@ async function onClick(e: MouseEvent) {
     const row = bridge.runs?.find(row => row.id === d.journal);
     if (!row) return;
     root.querySelectorAll<HTMLDetailsElement>("details.ptmenu[open]").forEach(el => el.open = false);
-    const owner = bridge.auth.userId, tab = ui.tab;
+    const owner = bridge.auth.userId, tab = ui.tab, intent = sheetSeq;
     const ready = () => {
-      if (run?.id === row.id && bridge.auth.userId === owner && ui.tab === tab && !isGuest())
-        openSheet({ kind: "journal", k: tab === "journey" ? "journal" : `journal-${row.id}` });
+      if (sheetSeq === intent && run?.id === row.id && bridge.auth.userId === owner && ui.tab === tab && !isGuest())
+        openSheet({ kind: "journal", k: tab === "journey" ? "journal" : `run-options-${row.id}` });
     };
     if (run?.id === row.id) ready();
     else { flushSave(); useRun(row, false, false, ready); }

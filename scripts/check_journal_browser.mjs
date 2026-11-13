@@ -10,7 +10,7 @@ console.log("Chromium ready");
 try {
 for (const width of [390,1280]) for (const colorScheme of ['light','dark']) {
  const ctx=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce',colorScheme,timezoneId: colorScheme === 'dark' ? 'Pacific/Honolulu' : 'Pacific/Kiritimati'});
- console.log('Context',width); const page=await ctx.newPage(); const errors=[];
+ console.log('Context',width); const page=await ctx.newPage(); page.setDefaultTimeout(10000); const errors=[];
  page.on('pageerror', e=>errors.push(e.message));
  page.on('dialog', d=>d.accept());
  await page.goto(`${origin}/scripts/fixtures/journal.html`);
@@ -50,7 +50,7 @@ for (const width of [390,1280]) for (const colorScheme of ['light','dark']) {
  await page.locator('[data-savemon]').click();
  assert.match(await page.locator('.journal-list').allTextContents().then(x=>x.join(' ')),/Route 22/);
  await page.locator('[data-close]').filter({visible:true}).click();
- await page.waitForFunction(()=>!document.querySelector('#sheet').open);
+ await page.waitForFunction(()=>!document.querySelector('#sheet').open && qa.game.ui.sheet===null);
  assert.equal(await page.evaluate(()=>scrollY), y);
  assert.equal(await page.evaluate(()=>document.activeElement.dataset.k),'journal');
  await page.locator('[data-tab="boxes"]').filter({visible:true}).click();
@@ -62,17 +62,24 @@ for (const width of [390,1280]) for (const colorScheme of ['light','dark']) {
  await page.locator('#f-how').selectOption('caught');
  assert.equal(await page.locator('#acquisition-day-label').textContent(),'Caught on');
  await page.locator('[data-savemon]').click();
- await page.waitForFunction(()=>!document.querySelector('#sheet').open);
+ await page.waitForFunction(()=>!document.querySelector('#sheet').open && qa.game.ui.sheet===null);
  await page.locator('[data-tab="playthroughs"]').filter({visible:true}).last().click();
  await page.locator('[data-slot="qa"]').click();
  await page.locator('.ptmenu summary').click();
  await page.locator('[data-journal="qa"]').click();
+ await page.keyboard.press('Escape');
+ await page.waitForFunction(()=>!document.querySelector('#sheet').open && qa.game.ui.sheet===null);
+ assert.equal(await page.evaluate(()=>document.activeElement.dataset.k),'run-options-qa');
+ await page.keyboard.press('Enter');
+ await page.locator('[data-journal="qa"]').focus();
+ await page.keyboard.press('Enter');
  assert.equal(await page.locator('.journal-row').count(),4);
  await page.locator('.journal-row').filter({hasText:'Corrected memory'}).click();
  await page.locator('[data-deletejournalnote]').click();
  assert.equal(await page.locator('.journal-row').count(),3);
  await page.locator('[data-close]').filter({visible:true}).click();
- await page.waitForFunction(()=>!document.querySelector('#sheet').open);
+ await page.waitForFunction(()=>!document.querySelector('#sheet').open && qa.game.ui.sheet===null);
+ assert.equal(await page.evaluate(()=>document.activeElement.dataset.k),'run-options-qa');
  await page.locator('[data-tab="journey"]').filter({visible:true}).click();
  await page.locator('[data-catch]').first().click();
  assert.equal(await page.evaluate(()=>qa.game.R().journalEntries.length),1);
@@ -91,7 +98,7 @@ for (const width of [390,1280]) for (const colorScheme of ['light','dark']) {
  assert.match(await page.locator('.journal-row').allTextContents().then(x=>x.join(' ')),/A memory/);
  // Opening a different run from Dashboard loads its own journal.
  await page.locator('[data-close]').filter({visible:true}).click();
- await page.waitForFunction(()=>!document.querySelector('#sheet').open);
+ await page.waitForFunction(()=>!document.querySelector('#sheet').open && qa.game.ui.sheet===null);
  await page.locator('[data-tab="playthroughs"]').filter({visible:true}).last().click();
  await page.locator('[data-slot="other"]').click();
  await page.locator('.ptmenu summary').click();
@@ -99,10 +106,37 @@ for (const width of [390,1280]) for (const colorScheme of ['light','dark']) {
  assert.equal(await page.locator('.journal-row').count(),1);
  assert.match(await page.locator('.journal-row').textContent(),/Other run only/);
  assert.equal(await page.locator('.journal-day').textContent(),'Date unknown');
+ // A slow journal request must not replace a subsequently opened editor.
+ await page.locator('[data-close]').filter({visible:true}).click();
+ await page.waitForFunction(()=>!document.querySelector('#sheet').open && qa.game.ui.sheet===null);
+ await page.evaluate(()=>{const get=qa.b.getState;qa.b.getState=id=>new Promise(resolve=>{qa.finishLoad=()=>{qa.b.getState=get;resolve(qa.states[id])}})});
+ await page.locator('[data-slot="qa"]').click();
+ await page.locator('.ptmenu summary').click();
+ await page.locator('[data-journal="qa"]').click();
+ await page.waitForFunction(()=>typeof qa.finishLoad==='function');
+ await page.locator('.ptmenu summary').click();
+ await page.locator('[data-startsheet="qa"]').click();
+ await page.evaluate(()=>{const calendar=document.querySelector('calendar-date');calendar.value='2022-02-02';calendar.dispatchEvent(new Event('change'));qa.finishLoad();});
+ await page.waitForFunction(()=>qa.game.run?.id==='qa');
+ await page.getByRole('heading',{name:'Start date',exact:true}).waitFor();
+ assert.equal(await page.locator('#started').inputValue(),'2022-02-02');
+ await page.locator('[data-close]').filter({visible:true}).click();
+ await page.waitForFunction(()=>!document.querySelector('#sheet').open && qa.game.ui.sheet===null);
+ await page.locator('.ptmenu summary').click();
+ await page.locator('[data-journal="qa"]').click();
+ // Clearing optional acquisition fields removes only that individual's row.
+ await page.locator('[data-editmon="2"]').click();
+ await page.locator('details.acquisition summary').click();
+ await page.locator('#f-how').selectOption('');
+ await page.locator('#f-day').fill('');
+ await page.locator('#f-place').fill('');
+ await page.locator('[data-savemon]').click();
+ assert.equal(await page.locator('.journal-row').count(),2);
+ assert.equal(await page.evaluate(()=>qa.game.R().mons.length),2);
  // Auth changes must close a private editor before another account sees it.
- await page.locator('[data-journalnote="other-note"]').click();
+ await page.locator('[data-journalnote="note-1"]').click();
  await page.evaluate(()=>qa.update({...qa.b,auth:{...qa.b.auth,userId:'other'},runs:[]}));
- await page.waitForFunction(()=>!document.querySelector('#sheet').open);
+ await page.waitForFunction(()=>!document.querySelector('#sheet').open && qa.game.ui.sheet===null);
  assert.equal(await page.locator('#sheetbody').textContent(),'');
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
  assert.deepEqual(errors,[]);
