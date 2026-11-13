@@ -1810,7 +1810,8 @@ claim that every obtainable Pokémon or condition is represented.
   Offered species and levels (9, 16, 22, 27, 32, 43, 59):
   https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen7/Encounters7SM.cs#L128-L138
   (`TradeGift_SM`). The existing Zygarde gift row (levels 30 and 50) matches
-  PKHeX's two Zygarde gift levels, with the Cell forms assembled afterwards:
+  PKHeX's two Zygarde gift levels at Route 16 (location 118), each for
+  both forms:
   https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen7/Encounters7SM.cs#L42-L50
   and walkthrough Part 18.
 

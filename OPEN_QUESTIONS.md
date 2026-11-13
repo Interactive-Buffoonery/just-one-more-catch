@@ -682,6 +682,12 @@ The initial pack is partial. Its sourced access work list is
   A hand-added gift row would unblock it. Poké Pelago contains only
   Ula'ula/Poni/Champion-stage areas (https://bulbapedia.bulbagarden.net/wiki/Poké_Pelago).
   Marshadow is a distribution-only dex entry without an encounter row.
+- **Zygarde level/form granularity:** the single gift row (Lv. 30-50)
+  opens at 10 Cells. Walkthrough Part 18 lists Lv. 30 before Champion and
+  Lv. 50 after, and the 50% Forme needs 50 Cells. PKHeX confirms both
+  levels for both forms at Route 16:
+  https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen7/Encounters7SM.cs#L42-L50 .
+  Splitting by level and form needs per-form gift rows.
 - **Fossil granularity:** all four fossil revival species occur in both
   cached versions; ownership events permit a traded fossil. Only
   Skull/Cover are sold in Sun and Armor/Plume in Moon. Foreign fossil
