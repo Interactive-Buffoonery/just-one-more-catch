@@ -261,6 +261,16 @@ The source was read without building it. Paths below are relative to that tree.
   and `text/*Gym.asm` source Brock/Boulder, Misty/Cascade, Lt. Surge/Thunder,
   Erika/Rainbow, Koga/Soul, Sabrina/Marsh, Blaine/Volcano, Giovanni/Earth.
 
+### Dock departure timing follow-up
+
+- [VermilionDock.asm, lines 1–11 and 39–40](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/VermilionDock.asm#L1-L40):
+  `CheckEventReuseHL EVENT_GOT_HM01` followed by `ret z` prevents departure
+  before collecting HM01; the departure routine sets `EVENT_SS_ANNE_LEFT`.
+  [VermilionCity.asm, lines 177–180](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/VermilionCity.asm#L177-L180)
+  checks that departure flag before admitting the player. This establishes
+  the departure trigger, not a complete Super Rod acquisition/access route;
+  the timing question remains open and encounter data is unchanged.
+
 ### Gifts, statics, trades and generation differences
 
 - https://www.serebii.net/yellow/gift.shtml plus `scripts/OaksLab.asm`:

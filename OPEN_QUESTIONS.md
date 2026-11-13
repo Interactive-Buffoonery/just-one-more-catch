@@ -41,14 +41,15 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Yellow implementation handoff
 
-- **S.S. Anne dock timing:** its three Super Rod rows (72, 90, 120) remain
-  timing-dependent. The guard refuses re-entry after the ship leaves, but the
-  review did not settle whether departure can be avoided until the Super Rod
-  is acquired. Do not call the encounters impossible or add an unsupported
-  monotonic gate. Test obtaining the rod while preserving dock access, then
-  confirm the three rows and post-departure refusal. Source:
-  [Vermilion City](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/VermilionCity.asm),
-  `CheckEvent EVENT_SS_ANNE_LEFT` / `.ship_departed`.
+- **S.S. Anne dock timing:** departure requires HM01: the pinned
+  [dock script](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/VermilionDock.asm#L1-L11)
+  returns before departure when `EVENT_GOT_HM01` is unset; departure sets
+  `EVENT_SS_ANNE_LEFT` at line 40. This narrows the remaining question to
+  obtaining the Super Rod while preserving dock access (including how Cut is
+  supplied). The three Super Rod rows (72, 90, 120) remain unchanged. Verify
+  that complete route and fishing positions before settling availability;
+  post-departure access remains refused by the
+  [guard](https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/scripts/VermilionCity.asm#L177-L180).
 
 - **Safari interior paths:** the full pinned Yellow source has interior maps,
   but the independent reviews did not settle the on-foot collision path to
