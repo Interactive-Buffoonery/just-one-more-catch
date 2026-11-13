@@ -269,3 +269,14 @@ The initial pack is partial. Its sourced access work list is
 - No browser, physical game, account sync, save-file import, live hosted
   deployment or visual sprite review was run. Run the manual per-version
   checklist in the access note before claiming gameplay verification.
+
+
+## Sun/Moon save imports (`sm`)
+
+- Synthetic SM and USUM caught/empty saves verify distinct titles, National Dex
+  flags and recorded/absent dates through native Core, raw bits and reader 0.1.2
+  WASM. Obtain permitted real cartridge/emulator exports and a legitimate
+  in-game zero-caught save. Regional/modified/corrupt variants beyond fixtures,
+  live account imports, encrypted backup extraction, mobile Safari and physical
+  mobile performance remain separate checks. See `docs/save-import.md` and
+  `scripts/sm-save-fixtures/README.md` for reproduction and #111 integration.
