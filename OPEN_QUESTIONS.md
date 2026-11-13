@@ -510,12 +510,8 @@ and the 137-area work list in `docs/b2w2-access.md`.
   cached B2W2 rows; do not borrow its Black/White tables or gates. Its B2W2
   absence/inaccessibility and any proposed Lostlorn key rule need the game's
   own evidence before adding anything.
-- **Weekdays and respawns:** raw PokeAPI static rows do not encode all
-  weekday rules. The cached Route 4 page describes Monday Braviary (White 2)
-  and Thursday Mandibuzz (Black 2); Undella Bay describes Monday Jellicent
-  (Black 2), Thursday Jellicent (White 2). These rows currently have their
-  chapter/method gates but no weekday filter. Legendary retry conditions
-  remain descriptive raw conditions rather than a model of each retry flag.
+- **Legendary retries:** legendary retry conditions remain descriptive raw
+  conditions rather than a model of each retry flag.
 - **Seasons:** seasonal raw encounter conditions are preserved and named,
   but are not filtered by the computer's calendar. Castelia Sewers water
   level and winter-only physical paths need separate room evidence. The
@@ -526,23 +522,41 @@ and the 137-area work list in `docs/b2w2-access.md`.
 - **PokeAPI coverage:** all 137 supplied areas and their B2/W2 rows are
   integrated, plus 23 sourced outbreak species (19 rows per version). There are no catchable-area rows for
   Plasma Frigate, N's Castle, Black Tower or White Treehollow; their story
-  and Benga reward are represented by events/Floccesy gift rows. The cache
-  does not supply the complete Yancy/Curtis phone-trade sequence: do not
-  claim all in-game trades are covered. All requested outbreak species were confirmed in cached B2/W2 Swarm
+  and Benga reward are represented by events/Floccesy gift rows. All requested outbreak species were confirmed in cached B2/W2 Swarm
   tables; none were left out. Daily location selection is not predicted.
-  Verify Memory Link's N Pokémon and other conditional gifts before claiming
-  completeness. Ordinary gifts/fossils retain raw item conditions and their
+  Ordinary gifts/fossils retain raw item conditions and their
   chapter gates, not a full inventory/phone/day-counter simulation.
-- **Location labeling:** PokeAPI calls the Nacrene gift gate West Gate,
-  whereas the walkthrough describes the Happiny Egg at the east gate.
-  Preserve the raw area label pending a species-specific display mapping;
-  do not move Uxie's separate western encounter with it.
+  PKHeX's gift, static and trade tables for B2W2 (https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5B2W2.cs#L94-L184)
+  agree with the generated rows' species, levels and version splits, apart
+  from the entries below and Route 11's Amoonguss (PKHeX Lv 43; PokeAPI and
+  the cached Unova Route 11 page Lv 47, so the data is unchanged).
+- **Memory Link N's Pokémon:** PKHeX lists 14 of N's Pokémon as B2W2 gifts
+  (https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5B2W2.cs#L165-L181): Purrloin (Route 2, Lv 7), Pidove, Timburr and Tympole
+  (Pinwheel Forest, Lv 13), Woobat (Wellspring Cave, Lv 55), Sandile, Darumaka,
+  Darmanitan, Scraggy and Sigilyph (Desert Resort, Lv 22-35), Boldore, Joltik,
+  Ferroseed and Klink (Chargestone Cave, Lv 28), plus Zorua (Driftveil City,
+  Lv 25, already modelled as Rood's gift). Bulbapedia's Memory Link page says
+  the player must have beaten N and Ghetsis in a linked Black or White save
+  (`.cache/bulbapedia/Memory Link.wiki`, "N's Pokémon" section). The
+  trigger for each is not in either source, and a linked-save condition
+  cannot be expressed in the pack. Needs a Memory Link event/condition and
+  hand-added gift rows before these can be added.
+- **Yancy/Curtis phone trades:** PKHeX confirms the 12 rewards per contact, all
+  Lv 50 with Hidden Abilities (Yancy https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5B2W2.cs#L203-L214, Curtis #L217-L228).
+  Bulbapedia's In-game trade page (cached line 1596) says they unlock in
+  Nimbasa City after returning the Dropped Item and calling the owner 15
+  times, then offer one Pokémon per day in a fixed order; Yancy or Curtis
+  depends on player gender. Blocked: `scripts/build_data.py` only accepts
+  outbreak rows in `extra_encounters` (line 68), so trade rows cannot be
+  hand-added. Needs generic hand-added `npc-trade` rows with an unlock event
+  and a player-gender condition. The generated trade rewards are Alakazam/Ambipom
+  (Accumula), Tangrowth (Humilau), Rotom (Route 15), Gigalith (Route 7),
+  Cottonee (White 2, Route 4) and Petilil (Black 2, Route 4); PKHeX agrees
+  with their levels and versions.
 - **Forms and evolution:** no complete seasonal Deerling/Sawsbuck, Basculin
   color, gender, Therian, Kyurem-fusion or other alternate-form collection
   catalog is included. Default species art/types are used. External Dream
   Radar/transfer/event distributions are not invented as local encounters.
-  PokeAPI's Milotic evolution text prefers beauty and omits its alternative
-  Prism Scale trade; historical alternatives need a sourced override.
   Audit all remaining evolution text independently before claiming full
   historical evolution coverage.
 - **Verification limits:** no original-game script/decompilation review,
@@ -550,19 +564,6 @@ and the 137-area work list in `docs/b2w2-access.md`.
   tested. No second independent source was available. The independent
   review should examine every area and gift/static/trade, not treat a
   cached article match, generator check or build as gameplay proof.
-
-  The missing phone trades are specifically all 12 rewards for each contact:
-  Yancy: Meowth, Wobbuffet, Ralts, Shieldon, Rhyhorn, West Sea Shellos,
-  Mawile, Spiritomb, Snorlax, Teddiursa, Spinda and Togepi;
-  Curtis: Mankey, Wobbuffet, Ralts, Cranidos, Rhyhorn, East Sea Shellos,
-  Sableye, Spiritomb, Snorlax, Phanpy, Spinda and Togepi.
-  Source: https://bulbapedia.bulbagarden.net/wiki/In-game_trade#Yancy/Curtis
-  The only generated trade rewards are Alakazam/Ambipom (Accumula),
-  Tangrowth (Humilau), Rotom (Route 15), Gigalith (Route 7), Cottonee
-  (White 2, Route 4) and Petilil (Black 2, Route 4). The phone trades have
-  no raw encounter rows in either version; this is a confirmed omission,
-  not a proposed gate for invented rows.
-
 - **Kyurem trigger conflict:** retain `catch-n-dragon` and PokeAPI’s
   `other-captured-reshiram-or-zekrom` condition until gameplay/scripts settle
   whether catching is required or battling/encountering is enough.
