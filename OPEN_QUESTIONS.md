@@ -197,6 +197,13 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Platinum (`pt`)
 
+- **Save imports:** synthetic Pt/DP/HGSS caught/empty fixtures agree through
+  native Core, raw flags and reader 0.1.2 WASM. Obtain permitted real exports
+  and legitimate in-game zero-caught saves. Pt recorded-date epoch/bounds,
+  invalid values, leap days and exported dates need separate verification;
+  imports use import day. Regional/corrupt/modified variants, live account
+  imports, mobile Safari and physical mobile performance remain unverified.
+
 - Route 205 South fishing before clearing the Windworks needs a gameplay
   check: obtain the Old Rod at the Route 218 gate, then try fishing from the
   south bank before crossing the blocked bridge. The cached Sinnoh Route

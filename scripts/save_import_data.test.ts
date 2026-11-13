@@ -79,3 +79,23 @@ test("GB identities retain paired choices and exclude unsupported Green", async 
     expect(caughtForPack(s, version, data).caught).toEqual([]);
   }
 });
+
+test("Platinum imports only its own Gen IV National Dex history", async () => {
+  const data = await VERSIONS.platinum.pack.load();
+  const s = snapshot(["Pt"]);
+  expect(importVersions(s)).toEqual(["platinum"]);
+  expect(IMPORT_SPECIES_LIMITS.platinum).toBe(493);
+  expect(IMPORT_SPECIES_LIMITS.platinum).toBe(VERSIONS.platinum.pack.national);
+  s.pokedex.caughtSpecies = [493, 387, 25, 387, 494];
+  expect(caughtForPack(s, "platinum", data)).toEqual({ caught: [25, 387, 493], skipped: 1, partial: false });
+  s.pokedex.caughtSpecies = [];
+  expect(caughtForPack(s, "platinum", data).caught).toEqual([]);
+  for (const other of ["D", "P", "DP", "HG", "SS", "HGSS"]) {
+    expect(importVersions(snapshot([other]))).not.toContain("platinum");
+    expect(() => caughtForPack(snapshot([other]), "platinum", data)).toThrow();
+  }
+  for (const version of importVersions(snapshot(["D", "P", "HG", "SS"]))) {
+    const otherData = await VERSIONS[version].pack.load();
+    expect(() => caughtForPack(s, version, otherData)).toThrow();
+  }
+});
