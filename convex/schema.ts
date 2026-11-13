@@ -4,6 +4,8 @@ import { v } from "convex/values";
 // ponytail: a playthrough's whole state (badges, caught, boxes) is one JSON string; split out a mons table if it outgrows a document
 export const eventName = v.union(v.literal("guest_run_created"), v.literal("guest_run_moved"), v.literal("export_used"), v.literal("contact_sent"));
 
+export const saveLink = v.object({ salt: v.string(), fingerprint: v.string(), playSeconds: v.optional(v.number()) });
+
 export default defineSchema({
   quotaKeys: defineTable({ key: v.string(), expiresAt: v.number() })
     .index("by_key", ["key"]).index("by_expiresAt", ["expiresAt"]),
@@ -12,6 +14,7 @@ export default defineSchema({
   runs: defineTable({
     owner: v.string(),
     version: v.string(),
+    saveLink: v.optional(saveLink),
     importId: v.optional(v.string()),
     summary: v.object({
       badges: v.array(v.string()),

@@ -133,6 +133,22 @@ async function startTracker() {
     storePairCode(null);
   };
 
+  // Keep retries bound to the session that confirmed the import.
+  async function pinned<T>(call: (c: ConvexClient) => Promise<T>, timeout: string) {
+    const session = clerk?.session, target = auth.userId;
+    if (!session || !target || !auth.isAuthenticated) throw new Error("Sign in first");
+    const client = new ConvexClient(import.meta.env.VITE_CONVEX_URL);
+    client.setAuth(({ forceRefreshToken }) =>
+      clerk?.user?.id === target && clerk.session?.id === session.id
+        ? sessionToken({ session }, forceRefreshToken)
+        : Promise.resolve(null));
+    try {
+      return await withTimeout(call(client), 30000, timeout);
+    } finally {
+      void client.close().catch(() => {});
+    }
+  }
+
   const bridge = (): Bridge => ({
     track: (name, version) => {
       void (async () => {
@@ -210,24 +226,14 @@ async function startTracker() {
         history.replaceState(null, "", location.pathname + location.search);
     },
     signOut: () => void clerk?.signOut(),
-    createRun: (version, expectedUserId) => convex.mutation(api.runs.create, { version, expectedUserId }),
-    importRun: async (version, caught, importId, startedAt) => {
-      const session = clerk?.session, target = auth.userId;
-      if (!session || !target || !auth.isAuthenticated) throw new Error("Sign in first");
-      // Keep retries bound to the session that confirmed the import.
-      const importer = new ConvexClient(import.meta.env.VITE_CONVEX_URL);
-      importer.setAuth(({ forceRefreshToken }) =>
-        clerk?.user?.id === target && clerk.session?.id === session.id
-          ? sessionToken({ session }, forceRefreshToken)
-          : Promise.resolve(null));
-      try {
-        return await withTimeout(
-          importer.mutation(api.runs.importCaught, { version, caught, importId, startedAt }),
-          30000, "Import timed out");
-      } finally {
-        await importer.close();
-      }
-    },
+    createRun: (version, expectedUserId, link) => convex.mutation(api.runs.create, { version, expectedUserId, link }),
+    importRun: (version, caught, importId, startedAt, link) => pinned((c) =>
+      c.mutation(api.runs.importCaught, { version, caught, importId, startedAt, link }), "Import timed out"),
+    saveLinks: (version) => convex.query(api.runs.saveLinks, { version }),
+    refreshRun: (id, caught, link, startedAt) => pinned((c) =>
+      c.mutation(api.runs.refreshCaught, { id, caught, link, startedAt }), "Refresh timed out"),
+    undoRefresh: (id, added, startedAt, link, expectedUserId) =>
+      convex.mutation(api.runs.undoRefresh, { id, added, startedAt, link, expectedUserId }),
     saveRun: (id, state, expectedUserId) => convex.mutation(api.runs.save, { id, state, expectedUserId }),
     deleteRun: (id) => convex.mutation(api.runs.remove, { id }),
     setStart: (id, startedAt, expectedUserId) =>

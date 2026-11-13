@@ -1,12 +1,13 @@
 import { action, internalMutation, mutation, query, type MutationCtx, type QueryCtx } from "./_generated/server";
 import { internal } from "./_generated/api";
 import type { Doc, Id } from "./_generated/dataModel";
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { MAX_RUN_BYTES, MAX_RUNS, runBytes } from "../shared/limits";
 import { summarize } from "../shared/summary";
 import { VERSION_IDS } from "../shared/versions";
 import { isAvatar } from "../shared/avatars";
-import { importCaughtState, validateImportId, validateImportStart } from "../shared/save-import";
+import { importCaughtState, validateImportId, validateImportStart, validateSaveLink, mergeSaveLink, mergeCaughtState, sameSaveLink, unmergeCaughtState, DIFFERENT_SAVE, RUN_MOVED } from "../shared/save-import";
+import { saveLink } from "./schema";
 
 import { sendContact } from "./contactSpam";
 import { verifiedVisitor } from "./verification";
@@ -14,6 +15,7 @@ import { identityOf } from "./auth";
 import { preserveJournal, validateJournal } from "../shared/journal";
 // Each run can carry up to MAX_RUN_BYTES, so batches stay well under the 16 MiB per-call read limit
 const BATCH = 16;
+const linkValidator = v.optional(saveLink);
 
 async function owner(ctx: QueryCtx, expectedUserId?: string) {
   const me = await identityOf(ctx);
@@ -50,10 +52,11 @@ async function dropRun(ctx: MutationCtx, run: Id<"runs">) {
   await ctx.db.delete(run);
 }
 
-async function mine(ctx: QueryCtx, id: string, expectedUserId?: string) {
+async function mine(ctx: QueryCtx, id: string, expectedUserId?: string, missing = new Error("Not your playthrough")) {
+  const who = await owner(ctx, expectedUserId);
   const runId = ctx.db.normalizeId("runs", id);
   const run = runId && (await ctx.db.get(runId));
-  if (!run || run.owner !== (await owner(ctx, expectedUserId))) throw new Error("Not your playthrough");
+  if (!run || run.owner !== who) throw missing;
   return run;
 }
 
@@ -81,20 +84,22 @@ export const get = query({
 });
 
 export const create = mutation({
-  args: { version: v.string(), expectedUserId: v.optional(v.string()) },
-  handler: async (ctx, { version, expectedUserId }) => {
+  args: { version: v.string(), expectedUserId: v.optional(v.string()), link: linkValidator },
+  handler: async (ctx, { version, expectedUserId, link }) => {
+    if (link) validateSaveLink(link);
     const who = await owner(ctx, expectedUserId);
     if (!(VERSION_IDS as readonly string[]).includes(version)) throw new Error("Unknown game");
     if ((await ownedBy(ctx, who)).length >= MAX_RUNS) throw new Error("Too many playthroughs");
-    return (await ctx.db.insert("runs", { owner: who, version, summary: summarize("{}") })) as string;
+    return (await ctx.db.insert("runs", { owner: who, version, saveLink: link, summary: summarize("{}") })) as string;
   },
 });
 
 export const importCaught = mutation({
-  args: { version: v.string(), caught: v.array(v.number()), importId: v.string(), startedAt: v.optional(v.number()) },
+  args: { version: v.string(), caught: v.array(v.number()), importId: v.string(), link: linkValidator, startedAt: v.optional(v.number()) },
   returns: v.string(),
-  handler: async (ctx, { version, caught, importId, startedAt }) => {
+  handler: async (ctx, { version, caught, importId, startedAt, link }) => {
     const who = await owner(ctx);
+    if (link) validateSaveLink(link);
     validateImportId(importId);
     validateImportStart(startedAt);
     const state = importCaughtState(version, caught);
@@ -102,12 +107,12 @@ export const importCaught = mutation({
       .withIndex("by_owner_importId", (q) => q.eq("owner", who).eq("importId", importId))
       .unique();
     if (existing) {
-      if (existing.version !== version || (await stateOf(ctx, existing._id))?.state !== state || existing.startedAt !== startedAt)
+      if (!sameSaveLink(existing.saveLink, link) || existing.version !== version || (await stateOf(ctx, existing._id))?.state !== state || existing.startedAt !== startedAt)
         throw new Error("Import ID already used for another playthrough");
       return existing._id as string;
     }
     if ((await ownedBy(ctx, who)).length >= MAX_RUNS) throw new Error("Too many playthroughs");
-    const id = await ctx.db.insert("runs", { owner: who, version, importId, startedAt, summary: summarize(state) });
+    const id = await ctx.db.insert("runs", { owner: who, version, importId, startedAt, saveLink: link, summary: summarize(state) });
     await ctx.db.insert("states", { run: id, state });
     return id as string;
   },
@@ -246,4 +251,46 @@ async function purgeEventsFor(ctx: MutationCtx, who: string) {
 export const purgeEvents = internalMutation({
   args: { owner: v.string() },
   handler: (ctx, { owner }) => purgeEventsFor(ctx, owner),
+});
+
+export const saveLinks = query({
+  args: { version: v.string() },
+  returns: v.array(saveLink.extend({ id: v.string() })),
+  handler: async (ctx, { version }) => {
+    const me = await identityOf(ctx);
+    if (!me) return [];
+    return (await ownedBy(ctx, me.tokenIdentifier)).filter((r) => r.version === version && r.saveLink)
+      .map((r) => ({ id: r._id as string, ...r.saveLink! }));
+  },
+});
+
+export const refreshCaught = mutation({
+  args: { id: v.string(), caught: v.array(v.number()), link: linkValidator, startedAt: v.optional(v.number()) },
+  returns: v.object({ added: v.array(v.number()) }),
+  handler: async (ctx, { id, caught, link, startedAt }) => {
+    const run = await mine(ctx, id, undefined, new ConvexError(RUN_MOVED));
+    validateImportStart(startedAt);
+    let merged;
+    try { merged = mergeSaveLink(run.saveLink, link); }
+    catch (error) { throw (error as Error).message === DIFFERENT_SAVE ? new ConvexError(DIFFERENT_SAVE) : error; }
+    const result = mergeCaughtState((await stateOf(ctx, run._id))?.state ?? "{}", run.version, caught);
+    if (result.added.length) await putState(ctx, run, result.state, { updatedAt: Date.now() });
+    if (!sameSaveLink(merged, run.saveLink) || (startedAt !== undefined && startedAt !== run.startedAt))
+      await ctx.db.patch(run._id, { saveLink: merged, ...(startedAt !== undefined ? { startedAt } : {}) });
+    return { added: result.added };
+  },
+});
+
+export const undoRefresh = mutation({
+  args: { id: v.string(), added: v.array(v.number()), startedAt: v.optional(v.number()), link: linkValidator, expectedUserId: v.optional(v.string()) },
+  returns: v.null(),
+  handler: async (ctx, { id, added, startedAt, link, expectedUserId }) => {
+    const run = await mine(ctx, id, expectedUserId);
+    validateImportStart(startedAt);
+    if (link) validateSaveLink(link);
+    const state = unmergeCaughtState((await stateOf(ctx, run._id))?.state ?? "{}", added);
+    await putState(ctx, run, state, { updatedAt: Date.now() });
+    await ctx.db.patch(run._id, { saveLink: link, ...(startedAt !== undefined ? { startedAt } : {}) });
+    return null;
+  },
 });

@@ -4,10 +4,10 @@ import { isAvatar } from "../shared/avatars";
 import { preserveJournal } from "../shared/journal";
 import { MAX_RUNS } from "../shared/limits";
 import { summarize } from "../shared/summary";
-import { importCaughtState, validateImportId, validateImportStart } from "../shared/save-import";
+import { importCaughtState, validateImportId, validateImportStart, validateSaveLink, mergeSaveLink, mergeCaughtState, sameSaveLink, unmergeCaughtState, validLink, RUN_MOVED, type SaveLink } from "../shared/save-import";
 
 /* ---- Guest runs live in this browser until sign-in ---- */
-type GuestRow = Omit<RunRow, "summary"> & { state: string; movedTo?: string; moveOwner?: string; importStartedAt?: number };
+type GuestRow = Omit<RunRow, "summary"> & { state: string; saveLink?: SaveLink; movedTo?: string; moveOwner?: string; importStartedAt?: number };
 const GUEST = "jomc.guest";
 let guestMem = "[]";
 export const guestRows = (): GuestRow[] => {
@@ -43,17 +43,19 @@ export function withGuest(b: Bridge, refresh: () => void): Bridge {
     async getState(id) {
       return guestRows().find((g) => g.id === id)?.state ?? "{}";
     },
-    async createRun(version) {
+    async createRun(version, _expectedUserId, link) {
+      if (link) validateSaveLink(link);
       const id = "local-" + Date.now().toString(36);
       setGuestRows([
         ...guestRows(),
-        { id, version, state: "{}", createdAt: new Date().toISOString() },
+        { id, version, saveLink: link, state: "{}", createdAt: new Date().toISOString() },
       ]);
       b.track("guest_run_created", version);
       refresh();
       return id;
     },
-    async importRun(version, caught, importId, startedAt) {
+    async importRun(version, caught, importId, startedAt, link) {
+      if (link) validateSaveLink(link);
       validateImportId(importId);
       validateImportStart(startedAt);
       const state = importCaughtState(version, caught);
@@ -61,7 +63,7 @@ export function withGuest(b: Bridge, refresh: () => void): Bridge {
       const id = "local-import-" + importId;
       const existing = rows.find((row) => row.id === id);
       if (existing) {
-        if (existing.version !== version || existing.state !== state ||
+        if (!sameSaveLink(existing.saveLink, link) || existing.version !== version || existing.state !== state ||
             existing.importStartedAt !== startedAt)
           throw new Error("Import ID already used for another playthrough");
         return id;
@@ -69,13 +71,48 @@ export function withGuest(b: Bridge, refresh: () => void): Bridge {
       if (rows.length >= MAX_RUNS) throw new Error("Too many playthroughs");
       const next = JSON.stringify([
         ...rows,
-        { id, version, state, importStartedAt: startedAt, createdAt: new Date(startedAt ?? Date.now()).toISOString() },
+        { id, version, state, saveLink: link, importStartedAt: startedAt, createdAt: new Date(startedAt ?? Date.now()).toISOString() },
       ]);
       localStorage.setItem(GUEST, next);
       guestMem = next;
       b.track("guest_run_created", version);
       refresh();
       return id;
+    },
+    async saveLinks(version) {
+      return guestRows().filter((r) => r.version === version && validLink(r.saveLink) && !r.movedTo)
+        .map((r) => ({ id: r.id, ...r.saveLink! }));
+    },
+    async refreshRun(id, caught, link, startedAt) {
+      const rows = guestRows();
+      const row = rows.find((r) => r.id === id);
+      if (!row || row.movedTo) throw new Error(RUN_MOVED);
+      validateImportStart(startedAt);
+      const saveLink = mergeSaveLink(validLink(row.saveLink), link);
+      const result = mergeCaughtState(row.state, row.version, caught);
+      const next = JSON.stringify(rows.map((r) => r.id === id ? {
+        ...r, saveLink, ...(result.added.length ? { state: result.state, updatedAt: new Date().toISOString() } : {}),
+        ...(startedAt !== undefined ? { createdAt: new Date(startedAt).toISOString() } : {}),
+      } : r));
+      localStorage.setItem(GUEST, next);
+      guestMem = next;
+      refresh();
+      return { added: result.added };
+    },
+    async undoRefresh(id, added, startedAt, link) {
+      const rows = guestRows();
+      const row = rows.find((r) => r.id === id);
+      if (!row || row.movedTo) throw new Error(RUN_MOVED);
+      validateImportStart(startedAt);
+      if (link) validateSaveLink(link);
+      const state = unmergeCaughtState(row.state, added);
+      const next = JSON.stringify(rows.map((r) => r.id === id ? {
+        ...r, state, saveLink: link, updatedAt: new Date().toISOString(),
+        ...(startedAt !== undefined ? { createdAt: new Date(startedAt).toISOString() } : {}),
+      } : r));
+      localStorage.setItem(GUEST, next);
+      guestMem = next;
+      refresh();
     },
     async saveRun(id, state) {
       const updatedAt = new Date().toISOString();
@@ -139,7 +176,7 @@ export async function moveGuestRuns(
       if (!current()) break;
       if (g.moveOwner !== target) continue;
       if (!g.movedTo && have >= MAX_RUNS) break;
-      const id = g.movedTo || (await raw.createRun(g.version, target));
+      const id = g.movedTo || (await raw.createRun(g.version, target, validLink(g.saveLink)));
       if (!g.movedTo) have++;
       setGuestRows(
         guestRows().map((r) => (r.id === g.id ? { ...r, movedTo: id } : r)),

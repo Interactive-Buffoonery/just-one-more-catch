@@ -124,7 +124,7 @@ const lastPlayed = (iso: string) => {
 };
 const champion = (s: Summary) => s.badges.includes("Elite Four");
 const ptMenu = (row: RunRow, v: (typeof VERSIONS)[VersionId]) =>
-  `<details class="ptmenu"><summary data-k="run-options-${row.id}" aria-label="More options for ${v.name}">···</summary><div class="menu">${!isGuest() ? `<button data-journal="${row.id}" data-k="journal-${row.id}">Journal</button>` : ""}<button data-download="playthrough" data-export-run="${row.id}" ${ui.export ? "disabled" : ""}>Download playthrough (CSV)</button><button data-download="journal" data-export-run="${row.id}" ${ui.export ? "disabled" : ""}>Download journal (CSV)</button><button data-startsheet="${row.id}">Change start date</button><button data-delrun="${row.id}">Delete playthrough</button></div></details>`;
+  `<details class="ptmenu"><summary data-k="run-options-${row.id}" aria-label="More options for ${v.name}">···</summary><div class="menu">${!isGuest() ? `<button data-journal="${row.id}" data-k="journal-${row.id}">Journal</button>` : ""}<button data-download="playthrough" data-export-run="${row.id}" ${ui.export ? "disabled" : ""}>Download playthrough (CSV)</button><button data-download="journal" data-export-run="${row.id}" ${ui.export ? "disabled" : ""}>Download journal (CSV)</button><button data-refresh="${row.id}">Refresh from a save</button><button data-startsheet="${row.id}">Change start date</button><button data-delrun="${row.id}">Delete playthrough</button></div></details>`;
 const meter = (n: number, of: number) =>
   `<span class="meter" aria-hidden="true"><i style="width:${(n / of) * 100}%"></i></span>`;
 const badgeGroups = (p: Pack): [string, string[][]][] => [

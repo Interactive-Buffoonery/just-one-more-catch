@@ -1,3 +1,4 @@
+import type { SaveLink } from "../shared/save-import";
 import type { FunctionReturnType } from "convex/server";
 import type { api } from "../convex/_generated/api";
 import { Summary } from "../shared/summary";
@@ -69,8 +70,11 @@ export type Bridge = {
   mountSignIn(el: HTMLDivElement): boolean;
   unmountSignIn(el: HTMLDivElement): void;
   signOut(): void;
-  createRun(version: string, expectedUserId?: string): Promise<string>;
-  importRun(version: string, caught: number[], importId: string, startedAt?: number): Promise<string>;
+  saveLinks(version: string): Promise<({ id: string } & SaveLink)[]>;
+  refreshRun(id: string, caught: number[], link?: SaveLink, startedAt?: number): Promise<{ added: number[] }>;
+  undoRefresh(id: string, added: number[], startedAt?: number, link?: SaveLink, expectedUserId?: string): Promise<unknown>;
+  createRun(version: string, expectedUserId?: string, link?: SaveLink): Promise<string>;
+  importRun(version: string, caught: number[], importId: string, startedAt?: number, link?: SaveLink): Promise<string>;
   saveRun(id: string, state: string, expectedUserId?: string): Promise<unknown>;
   deleteRun(id: string): Promise<unknown>;
   setStart(id: string, startedAt: number, expectedUserId?: string): Promise<unknown>;

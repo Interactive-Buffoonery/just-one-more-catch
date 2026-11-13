@@ -4,6 +4,7 @@ import "./styles.css";
 import "./save-import.css";
 import { withTimeout } from "./async";
 import { SaveImport } from "./save-import";
+import type { SaveLink } from "../shared/save-import";
 import { $, announce, esc, root, setRoot } from "./dom";
 import { caughtCsv, fetchStates, jsonParts, playthroughCsv, saveFile } from "./export";
 import {
@@ -63,6 +64,7 @@ let sheetSeq = 0;
 let saveImport: SaveImport;
 let importPage: HTMLElement;
 let pendingImport = false;
+let refreshTarget: string | undefined;
 const IMPORT_PATH = /^\/import\/?$/;
 function useRun(row: RunRow, start = false, customize = false, ready?: () => void) {
   const v = verOf(row.version);
@@ -284,7 +286,7 @@ function render() {
     if (ui.tab === from) history.replaceState(history.state, "", url);
     else history.pushState({ from }, "", url);
   }
-  document.title = onImport ? "Import a save | Just One More Catch" : "Just One More Catch";
+  document.title = onImport ? `${refreshTarget || saveImport.refreshing ? "Refresh from a save" : "Import a save"} | Just One More Catch` : "Just One More Catch";
   if (!signedIn) ui.devices = ui.devicesError = undefined;
   else if (
     SETTINGS.includes(ui.tab) &&
@@ -295,11 +297,13 @@ function render() {
     void loadDevices();
   shownTab = ui.tab;
   const leftImport = !onImport && saveImport.isOpen && importPage.contains(document.activeElement);
+  const leftRefresh = leftImport && saveImport.refreshing;
   if (!onImport) closeImport();
   const importLive = onImport && saveImport.isOpen;
   if (onImport && !importLive && !loading) {
     $("#view").replaceChildren(importPage);
-    saveImport.open();
+    saveImport.open(refreshTarget);
+    refreshTarget = undefined;
   } else if (!importLive) $("#view").innerHTML = loading
     ? `<p class="muted" style="text-align:center;padding-top:40px">Loading…</p>`
     : needsGame && ui.loadError
@@ -325,7 +329,7 @@ function render() {
     ? `<nav class="tabbar${!isGuest() && run?.view === "dexonly" ? " four" : ""}" aria-label="Sections">${tabButtons(true)}<button class="tab-settings" data-tab="settings" data-k="tab-settings"${here}>${SETTINGS_ICON}<span>Settings</span></button></nav>`
     : "";
   $("#toast").innerHTML = ui.undo
-    ? `<div class="toast">${ui.undo.msg}${ui.undo.n ? `<button data-undo="1">Undo</button>` : ""}</div>`
+    ? `<div class="toast"><span id="toast-msg">${ui.undo.msg}</span>${ui.undo.restore || ui.undo.n ? `<button data-undo="1" data-k="toast-undo" aria-describedby="toast-msg">Undo</button>` : ""}</div>`
     : "";
   if (
     (typeof ui.sheet === "number" ||
@@ -333,7 +337,8 @@ function render() {
     $("#sheet").open
   )
     fillSheet(ui.sheet);
-  if (leftImport) root.querySelector<HTMLElement>('[data-k="import-save"]')?.focus({ preventScroll: true });
+  if (leftRefresh) focusCard(leftRefresh);
+  else if (leftImport) root.querySelector<HTMLElement>('[data-k="import-save"]')?.focus({ preventScroll: true });
   if (k)
     (
       root.querySelector(`[data-k="${k}"]`) ||
@@ -341,13 +346,22 @@ function render() {
     )?.focus();
 }
 
-let saveTimer: any, undoTimer: any;
+let saveTimer: any, undoTimer: any, undoing = false;
 function hideToast() {
   const n = ui.undo?.n,
+    refreshed = ui.undo?.run,
     inToast = $("#toast").contains(document.activeElement);
   ui.undo = null;
   $("#toast").innerHTML = "";
-  if (inToast) ($(`[data-k="d${n}"]`) || $("#dexq"))?.focus();
+  if (inToast && refreshed) focusCard(refreshed);
+  else if (inToast) ($(`[data-k="d${n}"]`) || $("#dexq"))?.focus();
+}
+function focusCard(id: string) {
+  const summary = $(`[data-refresh="${id}"]`)?.closest("details")?.querySelector("summary");
+  if (summary) return summary.focus();
+  const h1 = $("#view h1");
+  h1?.setAttribute("tabindex", "-1");
+  h1?.focus();
 }
 function showSaveError(msg: string) {
   ui.saveError = msg;
@@ -394,6 +408,12 @@ async function saveBeforeImport() {
   if (state === ui.saved) return;
   await withTimeout(bridge.saveRun(id, state), 30000, "Saving timed out");
   if (run?.id === id) ui.saved = state;
+}
+async function undoRefresh(id: string, added: number[], previousStart?: number, previousLink?: SaveLink, expectedUserId?: string) {
+  await saveBeforeImport();
+  await bridge.undoRefresh(id, added, previousStart, previousLink, expectedUserId);
+  const row = bridge.runs?.find((r) => r.id === id);
+  if (row && (run?.id === id || opening === id)) useRun(row);
 }
 function toggleCaught(n: number) {
   const p = byN[n],
@@ -606,6 +626,31 @@ async function onClick(e: MouseEvent) {
       if (d.stay) ui.undo = null;
       else ui.tab = !isGuest() && run?.view === "journey" ? "journey" : "dex";
       render();
+    }
+    return;
+  }
+  if (d.refresh) {
+    flushSave();
+    refreshTarget = d.refresh;
+    ui.tab = "import";
+    ui.undo = null;
+    render();
+    scrollTo(0, 0);
+    return;
+  }
+  if (d.undo && ui.undo?.restore) {
+    if (undoing) return;
+    const { restore, run: id } = ui.undo;
+    undoing = true;
+    clearTimeout(undoTimer);
+    try {
+      await restore();
+      if (ui.undo?.restore === restore) hideToast();
+      announce("Undone");
+    } catch {
+      flash("Couldn't undo the refresh.", restore, id);
+    } finally {
+      undoing = false;
     }
     return;
   }
@@ -908,8 +953,8 @@ function applyTheme() {
 let raw: Bridge;
 const refresh = () => queueMicrotask(() => update(raw));
 
-function flash(msg: string) {
-  ui.undo = { msg };
+function flash(msg: string, restore?: () => Promise<void>, run?: string) {
+  ui.undo = { msg, restore, run };
   $("#live").textContent = msg;
   clearTimeout(undoTimer);
   undoTimer = setTimeout(hideToast, 8000);
@@ -918,6 +963,7 @@ function flash(msg: string) {
 let pendingRun: string | null = null;
 function closeImport() {
   saveImport.close();
+  refreshTarget = undefined;
   if (pendingImport) {
     pendingImport = false;
     pendingRun = null;
@@ -928,6 +974,7 @@ function syncRuns() {
   const rows = bridge.runs;
   if (bridge.auth.isLoading || !rows) return;
   if (bridge.auth.isAuthenticated) {
+    if (ui.undo?.run?.startsWith("local-")) hideToast();
     void moveGuestRuns(raw, flash, (guestId, id) => {
       if (store.get("jomc.run") === guestId) pendingRun = id;
     });
@@ -987,6 +1034,22 @@ export function mount(el: HTMLElement, b: Bridge) {
       }
       flash(!current ? "Caught Pokémon imported." : bridge.auth.isAuthenticated ? "Caught Pokémon imported. Saved to your account." : "Caught Pokémon imported. Saved only in this browser.");
     },
+    refreshed: (id, added, previousStart, previousLink, current) => {
+      const row = bridge.runs?.find((r) => r.id === id);
+      if (run?.id === id) {
+        clearTimeout(saveTimer);
+        for (const n of added) run.caught.add(n);
+        scheduleSave(0);
+      } else if (row && (current || opening === id)) useRun(row);
+      if (current) {
+        if (IMPORT_PATH.test(location.pathname)) history.replaceState(null, "", "/");
+        ui.tab = "playthroughs";
+        scrollTo(0, 0);
+      }
+      const refreshedBy = bridge.auth.userId;
+      flash(added.length ? `Added ${added.length} caught Pokémon` : "Start date updated", () => undoRefresh(id, added, previousStart, previousLink, refreshedBy), id);
+      if (current) $("[data-undo]")?.focus();
+    },
     dismiss: () => {
       ui.tab = "playthroughs";
       ui.undo = null;
@@ -1009,6 +1072,18 @@ export function mount(el: HTMLElement, b: Bridge) {
   applyTheme();
   darkMQ.addEventListener("change", applyTheme);
   el.addEventListener("click", onClick);
+  const toast = $("#toast") as HTMLElement;
+  const holdToast = () => ui.undo?.restore && clearTimeout(undoTimer);
+  const releaseToast = (e: Event) => {
+    if (!ui.undo?.restore || undoing || toast.matches(":hover") ||
+      toast.contains(e.type === "focusout" ? ((e as FocusEvent).relatedTarget as Node) : document.activeElement)) return;
+    clearTimeout(undoTimer);
+    undoTimer = setTimeout(hideToast, 8000);
+  };
+  toast.addEventListener("mouseenter", holdToast);
+  toast.addEventListener("focusin", holdToast);
+  toast.addEventListener("mouseleave", releaseToast);
+  toast.addEventListener("focusout", releaseToast);
   el.addEventListener(
     "toggle",
     (e) => {

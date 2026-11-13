@@ -6,8 +6,10 @@ export const setRoot = (el: HTMLElement) => {
 export const $ = (s: string) => root.querySelector(s) as any;
 // Cleared first so the same message is read again when repeated.
 export const announce = (msg: string) => {
-  $("#live").textContent = "";
-  requestAnimationFrame(() => ($("#live").textContent = msg));
+  const live = root?.querySelector("#live");
+  if (!live) return;
+  live.textContent = "";
+  requestAnimationFrame(() => (live.textContent = msg));
 };
 export const esc = (v: unknown) =>
   String(v).replace(

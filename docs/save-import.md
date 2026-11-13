@@ -8,8 +8,11 @@ playthroughs stay untouched.
 
 The raw save and its file name never leave the browser and are not stored in
 localStorage, Convex or analytics. Only the selected website game and sorted
-National Pokédex IDs and the selected playthrough start date are persisted. Story progress, boxes, forms, gender flags,
-notes, trainer details and play time are not imported. A Pokémon remains caught
+National Pokédex IDs and the selected playthrough start date are persisted. The
+reader also returns the trainer ID, trainer name and play time. These stay in the
+browser; only a salted PBKDF2 fingerprint of the ID and name and the play time
+(`playSeconds`) are stored with the playthrough. Story progress, boxes, forms,
+gender flags and notes are not imported. A Pokémon remains caught
 if its Pokédex flag is set, even after evolving, trading or releasing it.
 
 ## Supported games and identity
@@ -91,11 +94,11 @@ local release tarball under `vendor/`; it does not load a CDN parser. It exposes
 The dedicated host exports inspection only. The existing upstream editor APIs,
 submodule revisions and main branch remain intact in the fork.
 
-Release 0.1.3 pins source commit `d666c67dc4d6d11603cdf50b13f4c431c0b95668`.
+Release 0.1.4 pins source commit `15367a1ed2856d8af893213b0232e942a1691075`.
 The tarball SHA-256 is
-`11016383aa45921f63ef7865f5ceb7bb6a0be1a5f49190d20dad929a5694aafe`.
-Runtime assets total 20,149,470 bytes before compression, 5,630,447 with gzip,
-or 3,699,350 with Brotli. Source archives are separate optional downloads and
+`ac8707f525c5ec62e8a01174dec52aae94bca8bf4fcc8c462a71be25deb4d0b1`.
+Runtime assets total 20,138,224 bytes before compression, 5,630,031 with gzip,
+or 3,701,280 with Brotli. Source archives are separate optional downloads and
 are not fetched during import. These are transfer sizes, not peak memory.
 
 `vite.config.ts` uses `scripts/save-reader-assets.ts` to copy the package assets
@@ -137,6 +140,25 @@ it. Account imports use a separate Convex connection whose token provider stays
 bound to the session that confirmed the import; retries cannot silently move to
 a different account. A request already accepted by the original account can
 finish there. The UI reports that outcome instead of opening it in a new account.
+
+## Refresh from a save
+
+"Refresh from a save" in a playthrough's card menu opens `/import/` for that run.
+The save's game must match the run's game. A refresh only adds caught species;
+it never unmarks Pokémon or touches notes, boxes, forms or story progress. The
+player can also take the save's recorded start date. Pending edits finish
+first, and `api.runs.refreshCaught` (or the guest path) applies the change in
+one write. A toast offers Undo, which restores the previous caught list, start
+date and save link in one write through `api.runs.undoRefresh`.
+
+The save link is a random per-playthrough salt, a PBKDF2-SHA-256 fingerprint
+(100,000 iterations) of the game, trainer ID and normalized trainer name, and
+the highest play time seen. The first refresh or import with trainer data links
+the run. A later save with a different fingerprint stops with "This is a
+different save"; one with less play time shows a warning and can still be
+added. Saves without readable trainer data refresh without linking. On a plain
+import, a save whose fingerprint matches a linked run offers to update that run
+instead of creating a new one.
 
 ## Adding a future official game
 
