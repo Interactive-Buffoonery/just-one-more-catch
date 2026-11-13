@@ -29,6 +29,23 @@ export let EVENTS: Record<string, GameData["events"][number]> = {};
 let LATER: Record<string, GameData["events"][number][]> = {};
 export const METHOD: Record<string, [string, string | null]> = {
   walk: ["Walking", null],
+  "dark-grass": ["Dark grass", null],
+  "grass-spots": ["Rustling grass", null],
+  "cave-spots": ["Dust cloud", null],
+  "bridge-spots": ["Flying shadow", null],
+  "surf-spots": ["Rippling water (Surf)", "surf"],
+  "super-rod-spots": ["Rippling water (fishing)", "super-rod"],
+  horde: ["Horde encounter", null],
+  "yellow-flowers": ["Yellow flowers", null],
+  "purple-flowers": ["Purple flowers", null],
+  "red-flowers": ["Red flowers", null],
+  "rough-terrain": ["Rough terrain", null],
+  "ground-ambush": ["Ground ambush", null],
+  "ceiling-ambush": ["Ceiling ambush", null],
+  "sky-ambush": ["Sky ambush", null],
+  "rustling-bush-ambush": ["Rustling bush", null],
+  "trash-can-ambush": ["Shaking trash can", null],
+
   "honey-tree": ["Honey Tree", null],
   "pokemon-ranger": ["Pokémon Ranger gift", null],
   seaweed: ["Underwater", "dive"],
@@ -52,6 +69,14 @@ export const METHOD: Record<string, [string, string | null]> = {
   fishing: ["Fishing", "fishing-rod"],
   "bubbling-spots": ["Bubbling fishing spot", "fishing-rod"],
   "sos-from-bubbling-spot": ["SOS at a bubbling spot", "fishing-rod"],
+  "dirt-cloud": ["Dirt cloud ambush", null],
+  "sand-cloud": ["Sand cloud ambush", null],
+  "rustling-grass": ["Rustling grass ambush", null],
+  "rustling-tree": ["Rustling tree ambush", null],
+  "rustling-bush": ["Rustling bush ambush", null],
+  "flying-shadow": ["Flying shadow ambush", null],
+  "water-splash": ["Water splash ambush", "surf"],
+  "cave-shadow": ["Cave shadow ambush", null],
   sos: ["SOS call", null],
   "island-scan": ["Island Scan", "island-scan"],
   "berry-trees": ["Berry tree", null],
@@ -94,6 +119,11 @@ const STORY: Record<string, string> = {
   "story-progress-vermilion-copycat": "After returning Copycat's doll",
   "story-progress-receive-tm-from-claire": "After Clair's TM",
   "story-progress-returned-machine-part": "After returning the Machine Part",
+  "friend-safari-slot-1": "Registered friend’s Safari: slot 1",
+  "friend-safari-slot-2": "Registered friend’s Safari: slot 2",
+  "friend-safari-slot-3": "Friend’s third Safari slot unlocked (Hall of Fame and shared PSS session)",
+  "other-found-11-times-roaming": "After eleven roaming encounters",
+  "trash-can-type-daily": "Daily shaking trash can",
   "other-received-kanto-starter": "After getting a Kanto starter",
   "other-event-arceus-in-party": "Event Arceus in your party",
   "other-snorlax-11-beat-league": "After the Elite Four",
@@ -127,6 +157,8 @@ const STORY: Record<string, string> = {
 export const cap = (s: string) => s[0].toUpperCase() + s.slice(1);
 function specialLabel(c: string) {
   if (STORY[c]) return STORY[c];
+  if (c.startsWith("season-")) return `${cap(c.slice(7))} only`;
+  if (c === "special-encounter-couldnt-capture-before") return "If the earlier catch was deferred";
   let m = c.match(/^great-marsh-daily-slot-(\d+)-of-32$/);
   if (m) return "Great Marsh daily Pokémon";
   m = c.match(/^johto-safari-blocks-(\w+)-min-(\d+)$/);
@@ -413,15 +445,15 @@ export const R = () => run as Run;
 export const ver = () => verOf(R().version);
 export const P = () => ver().pack;
 export const e4 = () => R().badges.has("Elite Four");
-export const visible = (p: Species) => !!p.j || e4();
+export const visible = (p: Species) => p.j != null || e4();
 export const dexList = () =>
   DEX.filter(visible).sort((a, b) =>
     e4() ? a.n - b.n : (a.j as number) - (b.j as number),
   );
-export const num = (p: Species) => (e4() || !p.j ? p.n : p.j);
+export const num = (p: Species) => (e4() || p.j == null ? p.n : p.j);
 export const pad = (n: number) => String(n).padStart(3, "0");
 export const regionalCaught = () =>
-  [...R().caught].filter((n) => byN[n]?.j).length;
+  [...R().caught].filter((n) => byN[n]?.j != null).length;
 
 export const gameTime = () => {
   const h = gameNow(R().clock).hour,

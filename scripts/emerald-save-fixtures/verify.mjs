@@ -72,7 +72,7 @@ async function choose(page, name, drop = false) {
     node.dispatchEvent(new DragEvent('drop', { bubbles: true, cancelable: true, dataTransfer: transfer }));
   }, [...fs.readFileSync(file)]);
   else await page.locator('input[type=file]').setInputFiles(file);
-  await page.waitForFunction(() => document.querySelector('[data-import-action=format], [data-import-action=create], .si-oops'), null, { timeout: 60000 });
+  await page.waitForFunction(() => document.querySelector('[data-import-action=format], [data-import-action=version], [data-import-action=create], .si-oops'), null, { timeout: 60000 });
   if (await page.locator('[data-format=pkhex]').count()) await page.locator('[data-format=pkhex]').click();
 }
 const results = [];
@@ -117,7 +117,11 @@ try {
     const { context, page, errors, writes } = await setup(isEmpty(name));
     try {
       await choose(page, name === 'cancel' ? 'caught' : name, name === 'rotated');
-      if ([...invalid, 'ruby-sapphire'].includes(name)) {
+      if (name === 'ruby-sapphire') {
+        await page.locator('[data-version=ruby]').waitFor();
+        assert.equal(await page.locator('[data-version=sapphire]').count(), 1);
+        assert.equal(await page.locator('[data-import-action=create]').count(), 0);
+      } else if (invalid.includes(name)) {
         await page.locator('.si-oops').waitFor();
         assert.equal(await page.locator('[data-import-action=create]').count(), 0);
       } else {

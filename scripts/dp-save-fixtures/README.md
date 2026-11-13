@@ -1,6 +1,6 @@
 # Diamond/Pearl save-import fixtures
 
-Opt-in validation of unchanged reader 0.1.2 and the built website. Generated
+Opt-in validation of vendored reader 0.1.3 and the built website. Generated
 saves and receipts stay in ignored `.cache/dp-save-tests/`. No personal saves,
 ROMs or downloaded fixtures are used.
 
@@ -55,7 +55,7 @@ Pinned Core source references:
 - `Saves/Substructures/PokeDex/Zukan4.cs`: National Dex bits and seen regions.
 - `Saves/Util/SaveUtil.cs`: format-specific footer size/signature detection.
 
-DP exposes `SecondsToStart` at general block + `0x34`, but reader 0.1.2 omits
+DP exposes `SecondsToStart` at general block + `0x34`, but reader 0.1.3 omits
 dates for DP and Pt. Caught fixtures populate it; empty fixtures leave it zero.
 Both must omit `startDate`. HGSS fixtures leave it zero; their existing date
 support is covered separately by the reader's regression matrix. DP epoch,
