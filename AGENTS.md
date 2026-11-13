@@ -12,6 +12,7 @@
 - Game data: never write gates, times, locations or story steps from memory. Every hand-written row needs a source listed in SOURCES.md; if the sources don't settle it, add it to OPEN_QUESTIONS.md instead. Use the `add-game`, `audit-access` and `read-guide` skills.
 - Bulbapedia blocks automated fetches. Use the `read-guide` skill or Serebii instead, and list anything left unverified in your report.
 - Before mocking up a UI change, screenshot the live page at 390px and desktop widths and build the mockup from those screenshots.
+- Before `pnpm run deploy`, add a dated entry to public/whats-new/index.html for anything players would notice. Game data fixes get one line per game with its box art; skip fixes players would not notice. Sarah approves all What's New wording before it ships.
 - Deploys are manual. After `pnpm run deploy`, report the deployed commit SHA and the top line of `pnpm exec wrangler deployments list`, and name any merged PRs that are not deployed yet.
 - After a deploy that touches Clerk, `convex/auth.config.ts` or sign-in code, sign in on https://justonemorecatch.app and make one signed-in change, such as the theme, before reporting done.
 - Save fixtures need .NET 10. Install it per user with Microsoft's `dotnet-install.sh --channel 10.0` (into `~/.dotnet`), not the Homebrew cask, which stops at a password prompt.
