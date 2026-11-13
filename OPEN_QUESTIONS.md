@@ -197,6 +197,15 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 
 ## Diamond and Pearl (`dp`)
 
+- **Save imports:** synthetic DP caught/empty fixtures agree through native
+  Core, independent raw bits and published reader 0.1.2 WASM. The title remains
+  a required Diamond/Pearl choice; tested Platinum and HGSS layouts stay
+  separate. Obtain permitted real cartridge/emulator exports and a legitimate
+  in-game zero-caught save. Live account imports, mobile Safari and physical
+  mobile performance remain unverified. DP adventure-start date import needs
+  separate epoch/bounds, invalid-value, leap-day and exported-date checks;
+  imports use import day until those checks are complete.
+
 - **Route 205 South:** the cached Route 205 description places the first
   grass and Honey Tree across the bridge blocked until Valley Windworks is
   freed. Keep the walking/tree rows gated; a blanket move to chapter 1 would

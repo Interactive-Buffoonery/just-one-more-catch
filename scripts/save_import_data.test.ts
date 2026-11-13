@@ -79,3 +79,27 @@ test("GB identities retain paired choices and exclude unsupported Green", async 
     expect(caughtForPack(s, version, data).caught).toEqual([]);
   }
 });
+
+test.each(["diamond", "pearl"] as const)("%s imports paired DP National Dex history", async version => {
+  const data = await VERSIONS[version].pack.load();
+  const s = snapshot(["D", "P"]);
+  expect(importVersions(s)).toEqual(["diamond", "pearl"]);
+  s.pokedex.caughtSpecies = [493, 387, 25, 387, 494];
+  expect(caughtForPack(s, version, data)).toEqual({ caught: [25, 387, 493], skipped: 1, partial: false });
+  s.pokedex.caughtSpecies = [];
+  expect(caughtForPack(s, version, data).caught).toEqual([]);
+  for (const other of ["Pt", "HG", "SS", "HGSS", "DP"]) {
+    expect(() => caughtForPack(snapshot([other]), version, data)).toThrow();
+  }
+});
+
+test("Gen IV identities keep DP, Platinum and HGSS separate", async () => {
+  expect(importVersions(snapshot(["Pt", "DP", "HGSS"]))).toEqual([]);
+  expect(importVersions(snapshot(["D"]))).toEqual(["diamond"]);
+  expect(importVersions(snapshot(["P"]))).toEqual(["pearl"]);
+  expect(importVersions(snapshot(["HG", "SS"]))).toEqual(["heartgold", "soulsilver"]);
+  for (const version of ["heartgold", "soulsilver"] as const) {
+    const data = await VERSIONS[version].pack.load();
+    expect(() => caughtForPack(snapshot(["D", "P"]), version, data)).toThrow();
+  }
+});
