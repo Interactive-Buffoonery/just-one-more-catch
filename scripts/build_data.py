@@ -74,6 +74,7 @@ PLACES = [(p, i) for i, c in enumerate(GAME["chapters"]) for p in c["places"]]
 unmatched = set()
 need_hits = set()
 row_hits = set()
+drop_hits = set()
 
 
 def chapter_of(place):
@@ -158,14 +159,28 @@ def rows_for(encounters, version, n):
                 src = d["method"]["name"]
                 if src in GAME.get("drop_methods", []):
                     continue
-                cond = sorted(GAME.get("condition_replacements", {}).get(c["name"], c["name"]) for c in d["condition_values"] if c["name"] not in DEFAULT_COND)
+                drops = {i for i, g in enumerate(GAME.get("drop_rows", []))
+                         if g["n"] == n and matches(loc, g["place"]) and g.get("m", src) == src
+                         and version in g.get("versions", VERSIONS)}
+                drop_hits.update(drops)
+                if drops:
+                    continue
+                raw_cond = [c["name"] for c in d["condition_values"]]
+                condition_needs = GAME.get("condition_needs", {})
+                cond = sorted(GAME.get("condition_replacements", {}).get(c, c) for c in raw_cond
+                              if c not in DEFAULT_COND and c not in GAME.get("drop_conditions", [])
+                              and (c not in condition_needs or c in GAME.get("keep_conditions", [])))
                 m = GAME.get("methods", {}).get(src, src)
-                extra = list(d.get("needs", []))
+                for override in GAME.get("area_methods", []):
+                    if matches(loc, override["place"]) and n in override.get("species", [n]):
+                        m = override["methods"].get(src, m)
+                extra = list(d.get("needs", [])) + [need for c in raw_cond for need in condition_needs.get(c, [])]
                 row_place = place
                 for i, g in enumerate(GAME.get("row_needs", [])):
-                    if g["n"] == n and matches(loc, g["place"]) and g.get("m", m) == m and version in g.get("versions", VERSIONS):
+                    if g["n"] == n and (loc == g["place"] if g.get("exact_place") else matches(loc, g["place"])) and g.get("m", m) == m and version in g.get("versions", VERSIONS):
                         row_hits.add(i)
                         extra += g["needs"]
+                        cond = sorted(set(cond + g.get("conditions", [])) - set(g.get("remove_conditions", [])))
                         row_place = g.get("show_as", row_place)
                 need = tuple(dict.fromkeys(area_need + extra)) or None
                 k = (row_place, m, need, tuple(cond), d.get("src"), d.get("url"))
@@ -251,8 +266,22 @@ def species(n, johto):
     }
 
 
+def regional_dex(ids):
+    ids = ids if isinstance(ids, list) else [ids]
+    result = {}
+    offset = 0
+    for dex_id in ids:
+        entries = cached(f"pokedex_{dex_id}")["pokemon_entries"]
+        for e in entries:
+            n = int(e["pokemon_species"]["url"].rstrip("/").split("/")[-1])
+            assert n not in result, f"Species {n} appears in multiple regional sections"
+            result[n] = offset + e["entry_number"]
+        offset += len(entries)
+    return result
+
+
 if __name__ == "__main__":
-    johto = {int(e["pokemon_species"]["url"].rstrip("/").split("/")[-1]): e["entry_number"] for e in cached(f"pokedex_{GAME['pokedex']}")["pokemon_entries"]}
+    johto = regional_dex(GAME["pokedex"])
     dex = [species(n, johto) for n in range(1, GAME["species"] + 1)]
     if unmatched:
         sys.exit("No chapter for: " + ", ".join(sorted(unmatched)))
@@ -262,6 +291,7 @@ if __name__ == "__main__":
     ids = {e["id"] for e in events}
     assert len(ids) == len(events), "duplicate event id"
     assert not set(range(len(GAME.get("row_needs", [])))) - row_hits, f"row_needs match no row: {[g for i, g in enumerate(GAME['row_needs']) if i not in row_hits]}"
+    assert not set(range(len(GAME.get("drop_rows", [])))) - drop_hits, f"drop_rows match no row: {[g for i, g in enumerate(GAME['drop_rows']) if i not in drop_hits]}"
     for e in events:
         assert re.fullmatch(r"[a-z][a-z0-9-]*", e["id"]), f"event id must be a lowercase slug: {e['id']}"
         assert 0 <= e["chap"] < len(GAME["chapters"]), f"{e['id']}: no chapter {e['chap']}"

@@ -26,6 +26,9 @@ and `read-guide` for independent access verification and scanned guide evidence.
 
 1. Write `data/<pack>.json`: versions, Pokédex, generation, species bound,
    chapters, events, area and row gates, mappings, and any form catalogs.
+   Sourced `row_needs` entries may also add `conditions` when the cached
+   encounter omits a prerequisite (for example, a weekday or starter choice).
+   These additions are scoped to the matching species, place, method and version.
    Existing packs are structural examples only. Inspect raw PokeAPI rows for
    each version; preserve odds, levels, time conditions and distinct areas.
 2. Register the pack and versions in `client/packs.ts` and

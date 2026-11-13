@@ -1,6 +1,6 @@
 # Black 2/White 2 save-import fixtures
 
-Opt-in validation of the unchanged published reader 0.1.2 and built website.
+Opt-in validation of the unchanged published reader 0.1.3 and built website.
 Generated saves and receipts stay in ignored `.cache/b2w2-save-tests/`. These
 fixtures use no personal saves, ROMs or downloaded game data.
 
@@ -53,13 +53,13 @@ Pinned Core source references:
 - `Saves/Util/SaveUtil.cs`: distinct BW/B2W2 footer detection.
 - `Saves/Substructures/Gen5/AdventureInfo5.cs`: 64-bit `SecondsToStart`.
 
-Gen V exposes an adventure-start field, but reader 0.1.2 intentionally omits it.
+Gen V exposes an adventure-start field, but reader 0.1.3 intentionally omits it.
 Caught fixtures populate that field and empty fixtures leave it zero; the worker
 must omit `startDate` for both. Epoch, valid bounds, leap days, invalid-value
 handling and exported recorded-date behavior have not been verified for a Gen V
 reader allowlist. Use import day until that separate verification is complete.
 
 No reader source, package, lockfile or vendored tarball changes are needed.
-Reader source remains `8cc08fd58b9b148ecba9c9ef262703559e1979e1`.
+Vendored reader source: `d666c67dc4d6d11603cdf50b13f4c431c0b95668` (0.1.3).
 Permitted real cartridge/emulator exports, a legitimate in-game zero-caught save,
 live signed-in imports and mobile Safari remain separate checks.

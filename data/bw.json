@@ -1,0 +1,1157 @@
+{
+  "versions": {
+    "black": "k",
+    "white": "w"
+  },
+  "pokedex": 8,
+  "species": 649,
+  "gen": "generation-v",
+  "keep_floors": true,
+  "drop": [
+    "^Team Flare Secret Hq"
+  ],
+  "rename": {
+    "Unova Route 1": "Route 1",
+    "Unova Route 2": "Route 2",
+    "Unova Route 3": "Route 3",
+    "Unova Route 4": "Route 4",
+    "Unova Route 5": "Route 5",
+    "Unova Route 6": "Route 6",
+    "Unova Route 7": "Route 7",
+    "Unova Route 8": "Route 8",
+    "Unova Route 9": "Route 9",
+    "Unova Route 10": "Route 10",
+    "Unova Route 11": "Route 11",
+    "Unova Route 12": "Route 12",
+    "Unova Route 13": "Route 13",
+    "Unova Route 14": "Route 14",
+    "Unova Route 15": "Route 15",
+    "Unova Route 16": "Route 16",
+    "Unova Route 17": "Route 17",
+    "Unova Route 18": "Route 18",
+    "Unova Victory Road Unknown Area 63": "Victory Road Unknown Area 63",
+    "Unova Victory Road Unknown Area 61": "Victory Road Unknown Area 61",
+    "Unova Victory Road Unknown Area 65": "Victory Road Unknown Area 65",
+    "Unova Victory Road Outside": "Victory Road Outside",
+    "Unova Victory Road Unknown Area 59": "Victory Road Unknown Area 59",
+    "Unova Route 10 Victory Road Gate": "Route 10 Victory Road Gate",
+    "Unova Victory Road Unknown Area 54": "Victory Road Unknown Area 54",
+    "Unova Victory Road 1F Unknown Room": "Victory Road 1F Unknown Room",
+    "Unova Victory Road Unknown Area 60": "Victory Road Unknown Area 60",
+    "Unova Victory Road Unknown Area 62": "Victory Road Unknown Area 62",
+    "Unova Victory Road Unknown Area 66": "Victory Road Unknown Area 66",
+    "Unova Victory Road Unknown Area 57": "Victory Road Unknown Area 57",
+    "Unova Victory Road 4F Middle Room": "Victory Road 4F Middle Room",
+    "Unova Victory Road Unknown Area 53": "Victory Road Unknown Area 53",
+    "Unova Victory Road Unknown Area 64": "Victory Road Unknown Area 64",
+    "Unova Victory Road Unknown Area 55": "Victory Road Unknown Area 55",
+    "Ns Castle Throne Room": "N's Castle Throne Room",
+    "Challengers Cave 1F": "Challenger's Cave 1F",
+    "Challengers Cave B1F": "Challenger's Cave B1F",
+    "Challengers Cave B2F": "Challenger's Cave B2F"
+  },
+  "needs": {
+    "Dreamyard B1F": {
+      "needs": [
+        "Elite Four",
+        "ghetsis"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "In {{game|Black and White|s}}, the {{player}} encounters some {{tc|Team Plasma Grunt}}s here who are kicking a {{p|Munna}} to get its [[Dream Mist]]. {{m|Cut}} is required to access the building area. After beating [[Ghetsis]] and [[N]], the orange traffic cone is removed. This allows access to the basement and the other portion of the area, where [[Gorm]] of the [[Seven Sages]] can be found and arrested."
+    },
+    "Abundant Shrine": {
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Abundant_Shrine",
+      "quote": "The '''Abundant Shrine''' (Japanese: '''{{tt|ほうじょうの社|ほうじょうのやしろ}}''' ''Fertility Shrine'') is a location within the eastern half of the [[Unova]] [[region]]. It is connected to {{rt|14|Unova}} at its southern exit and can only be accessed via {{m|Surf}} and {{m|Waterfall}}. The land surrounding the actual shrine is a field of mounds of soil and a few bodies of water."
+    },
+    "Guidance Chamber": {
+      "needs": [
+        "surf",
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_8",
+      "quote": "Go south and push the boulder to the hole in the floor. Walk east past {{tc|Hiker}} Hugh and move the second boulder to the next hole. Head north along the east wall to fight {{tc|Hiker}} Clarke, and pick up the [[Max Repel]]. Grab the [[Hyper Potion]] to the northwest, and move the third boulder into place to create a shortcut. Climb the stairway to the second floor."
+    },
+    "Pinwheel Forest Rumination Field": {
+      "needs": [
+        "cobalion-battle",
+        "bicycle"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Pinwheel_Forest",
+      "quote": "In Pokémon Black and White, the east portion of the inner forest is initially blocked by an old man, and goes away after the player obtains the [[Bicycle]]. At the deep end of this area holds the entrance to Rumination Field where the Legendary Pokémon {{p|Virizion}} resides; this area is only accessible after the player battles {{p|Cobalion}}."
+    },
+    "Mistralton Cave": {
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Mistralton_Cave",
+      "quote": "'''Mistralton Cave''' (Japanese: '''フキヨセの{{tt|洞穴|ほらあな}}''' ''Fukiyose Cave'') is a cave located on {{rt|6|Unova}} in the western half of the [[Unova]] [[region]]. It can be accessed by using {{m|Surf}} from Route 6; in {{B2W2}}, Mistralton Cave can also be accessed via the [[Clay Tunnel]]'s western terminus. {{m|Flash}} is needed to fully illuminate the cave. "
+    },
+    "Giant Chasm Forest Cave": {
+      "needs": [
+        "kyurem-snow"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Giant_Chasm",
+      "quote": "When the {{player}} reaches the pond in the middle of the crater, the forest will freeze and be completely covered in snow, thus giving the player access to the cave {{p|Kyurem}} is hiding. Once the player has captured or defeated Kyurem and left the area, the snow will disappear, and the northern portion of the caves [[List of unrevisitable locations|will no longer be accessible]]. If Kyurem is defeated, however, the area will become accessible again after entering the [[Hall of Fame]] once more and returning to the pond in the center of the crater."
+    },
+    "Dragonspiral Tower 7F": {
+      "needs": [
+        "Elite Four",
+        "ghetsis",
+        "dragon-deferred"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Pokémon_Storage_System",
+      "quote": "This unlock requirement cannot be bypassed with Pokémon Bank or Pokémon HOME. This ensures that the player will be able to (and forced to) catch the required Legendary Pokémon, unlike in [[Pokémon Black and White Versions|Pokémon Black and White]] where the otherwise mandatory catching of {{p|Reshiram}}{{sup/5|B}}/{{p|Zekrom}}{{sup/5|W}} can be bypassed by completely filling the party and all 720 spaces in the storage system beforehand."
+    },
+    "Trial Chamber": {
+      "needs": [
+        "cobalion-battle",
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Victory_Road_(Black_and_White)",
+      "quote": "In {{game|Black and White|s}}, the '''Trial Chamber''' (Japanese: '''{{tt|試練の室|しれんのむろ}}''' ''Trial Room''), home of the [[Legendary Pokémon]] {{p|Terrakion}}, is located here. However, in order to access this area, the {{player}} must have first encountered {{p|Cobalion}}, who resides in [[Mistralton Cave]]."
+    },
+    "Liberty Garden": {
+      "needs": [
+        "liberty-pass"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Liberty_Garden",
+      "quote": "In {{game|Black and White|s}}, the ship will only take the {{player}} if they have the [[Liberty Pass]], which is an {{pkmn2|event}}-exclusive item. On the player's first visit, some members of [[Team Plasma]] are already here upon the player's arrival, and they will battle the player."
+    },
+    "Unova Route 9": {
+      "needs": [
+        "stone-received"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_8",
+      "quote": "In {{2v2|Black|White}}, the entrance to the Tubeline Bridge from this route is blocked by two {{tc|Team Plasma Grunt}}s. They will only disperse once the {{player}} obtains the [[Light Stone]]{{sup/5|Bl}}/[[Dark Stone]]{{sup/5|W}}. Once they have dispersed, [[Bianca]] will meet the player at this position for a battle."
+    }
+  },
+  "chapters": [
+    {
+      "title": "Nuvema to Striaton",
+      "needs": [],
+      "places": [
+        "Nuvema Town",
+        "Route 1",
+        "Route 2",
+        "Striaton City",
+        "Dreamyard"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_2",
+      "quote": "==Striaton City=="
+    },
+    {
+      "title": "Route 3 and Nacrene",
+      "needs": [
+        "Trio"
+      ],
+      "places": [
+        "Route 3",
+        "Wellspring Cave",
+        "Nacrene City",
+        "Pinwheel Forest Outside"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_3",
+      "quote": "==Route 3=="
+    },
+    {
+      "title": "Pinwheel Forest and Castelia",
+      "needs": [
+        "Basic"
+      ],
+      "places": [
+        "Pinwheel Forest Inside",
+        "Castelia City",
+        "Liberty Garden"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Pinwheel_Forest",
+      "quote": "Pinwheel Forest is a vast, forested stretch of land that extends over a large area in southeastern Unova. It is divided into two separate sectors. In Pokémon Black and White, the exterior is the only section of the forest available to explore before obtaining the {{badge|Basic}}, because a group of {{tc|Team Plasma Grunt}}s stand in the way just a few steps into the interior, preventing access to Pokémon living there."
+    },
+    {
+      "title": "Desert Resort and Nimbasa",
+      "needs": [
+        "Insect"
+      ],
+      "places": [
+        "Route 4",
+        "Desert Resort",
+        "Relic Castle A",
+        "Route 5",
+        "Route 16",
+        "Lostlorn Forest"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_5",
+      "quote": "==Route 4=="
+    },
+    {
+      "title": "Driftveil and Route 6",
+      "needs": [
+        "Bolt"
+      ],
+      "places": [
+        "Driftveil Drawbridge",
+        "Driftveil City",
+        "Cold Storage",
+        "Route 6"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_5",
+      "quote": "Driftveil Drawbridge is inaccessible until after the player battles the two Preschoolers{{sup/5|BW}} or [[Charles]]{{sup/5|B2W2}}, both of which can only be battled after [[Elesa]] has been defeated."
+    },
+    {
+      "title": "Chargestone Cave to Mistralton",
+      "needs": [
+        "Quake",
+        "clay-web"
+      ],
+      "places": [
+        "Chargestone Cave",
+        "Route 7",
+        "Celestial Tower"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_7",
+      "quote": "As you approach [[Chargestone Cave]], you find a large {{p|Galvantula}} web blocking the entrance. [[Clay]] shows up with his {{p|Krokorok}} and removes it for you, then hands you {{TM|78|Bulldoze}} as a reward for defeating him at the Gym."
+    },
+    {
+      "title": "Surf detours",
+      "needs": [],
+      "places": [
+        "Route 17",
+        "Route 18",
+        "P2 Laboratory",
+        "Mistralton Cave",
+        "Guidance Chamber",
+        "Pinwheel Forest Rumination Field"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_8",
+      "quote": "Now that you have access to the HM for Surf, you can get some items in places previously visited, and even go to some new ones.",
+      "kit": "surf"
+    },
+    {
+      "title": "Twist Mountain and Icirrus",
+      "needs": [
+        "Jet"
+      ],
+      "places": [
+        "Twist Mountain",
+        "Icirrus City",
+        "Dragonspiral Tower Entrance",
+        "Route 8",
+        "Moor Of Icirrus"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_9",
+      "quote": "==Icirrus City=="
+    },
+    {
+      "title": "Dragonspiral Tower",
+      "needs": [
+        "Freeze"
+      ],
+      "places": [
+        "Dragonspiral Tower"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dragonspiral_Tower",
+      "quote": "In {{game|Black and White|s}}, the first accessible portion of Dragonspiral Tower is the entrance north of Icirrus City, due to the tower itself being surrounded by a moat that cannot be traversed using {{m|Surf}}. After the player obtains the {{badge|Freeze}}, [[Team Plasma]] will break through the wall of the tower with a ramp, giving the player access to the inside of the tower, as well as the previously-inaccessible grassland on the other side of the moat. In {{B2W2}}, the ramp is still there, giving the player immediate access to the tower after reaching Icirrus City."
+    },
+    {
+      "title": "Relic Castle depths and Opelucid",
+      "needs": [
+        "dragon-awakened"
+      ],
+      "places": [
+        "Relic Castle B",
+        "Route 9"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Relic_Castle",
+      "quote": "After [[N]] has awakened {{p|Zekrom}}{{sup/5|Bl}}/{{p|Reshiram}}{{sup/5|W}} at [[Dragonspiral Tower]], the next few floors have been cleared up, allowing the player to venture deeper into the castle, which, at this point, is filled with {{tc|Team Plasma Grunt}}s. At the lowest reachable floor, the player will encounter [[Alder]] and [[Ghetsis]], with the latter giving a brief speech before leaving."
+    },
+    {
+      "title": "Victory Road",
+      "needs": [
+        "Legend"
+      ],
+      "places": [
+        "Route 10",
+        "Victory Road",
+        "Trial Chamber"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_11",
+      "quote": "The Badge Check Gates are the final man-made obstacle standing between you and the Pokémon League. Each Badge opens a different gate, and the rooms between are designed in a style reminiscent of each Gym. Show your Badges to the eight guards, and Victory Road stands tall before you."
+    },
+    {
+      "title": "N's Castle",
+      "needs": [
+        "Elite Four"
+      ],
+      "places": [
+        "N's Castle"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_12",
+      "quote": "==N's Castle=="
+    },
+    {
+      "title": "After Team Plasma",
+      "needs": [
+        "Elite Four",
+        "ghetsis"
+      ],
+      "places": [
+        "Challenger's Cave",
+        "Relic Castle C",
+        "Relic Castle D",
+        "Route 11",
+        "Village Bridge",
+        "Route 12",
+        "Route 13",
+        "Giant Chasm",
+        "Undella Town",
+        "Undella Bay",
+        "Route 14",
+        "Abundant Shrine",
+        "Route 15",
+        "Marvelous Bridge"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_11",
+      "quote": "'''Route 11''' (Japanese: '''{{tt|１１番道路|１１ばんどうろ}}''' ''Route 11'') is a route located in northern [[Unova]], connecting [[Opelucid City]] to the [[Village Bridge]]. In {{2v2|Black|White}}, it cannot be accessed until the {{player}} stops [[Team Plasma]]. In {{B2W2|Black 2 and White 2}}, after Opelucid City is frozen by the [[Plasma Frigate]], part of the road here on Route 11 will also be frozen while the ice remains, forcing the player to slide across the ice to travel to either side."
+    }
+  ],
+  "events": [
+    {
+      "id": "clay-web",
+      "label": "Have Clay clear Chargestone Cave",
+      "q": "Has Clay removed the web at the entrance to Chargestone Cave?",
+      "chap": 4,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_7",
+      "quote": "As you approach [[Chargestone Cave]], you find a large {{p|Galvantula}} web blocking the entrance. [[Clay]] shows up with his {{p|Krokorok}} and removes it for you, then hands you {{TM|78|Bulldoze}} as a reward for defeating him at the Gym."
+    },
+    {
+      "id": "dragon-awakened",
+      "label": "See N awaken the dragon",
+      "q": "Did you see N awaken Zekrom or Reshiram atop Dragonspiral Tower?",
+      "chap": 8,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_9",
+      "quote": "On the top floor, [[N]] is befriending the legendary Pokémon {{p|Zekrom}}{{sup/5|Bl}} / {{p|Reshiram}}{{sup/5|Wh}}. The dragon recognizes N as a hero. N tells you that if you want to stop him, you must become a hero as well. He tells you to look for the other dragon, and flies off with his new ally."
+    },
+    {
+      "id": "stone-received",
+      "label": "Receive the Light Stone or Dark Stone",
+      "q": "Has Lenora given you the Light Stone or Dark Stone at Nacrene Museum?",
+      "chap": 9,
+      "after": [
+        "dragon-awakened"
+      ],
+      "by": "Legend",
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_10",
+      "quote": "When you reach the museum, [[Professor Juniper]], [[Cedric Juniper]], [[Bianca]], and [[Alder]] are waiting for you. The professor says that you are caught up in something serious. [[Lenora]] leaves the museum and hands you the [[Light Stone]]{{sup/5|Bl}}/[[Dark Stone]]{{sup/5|Wh}}. Alder asks if you are ready to battle [[N]] if anything happens to him, and Lenora remembers that \"[[Drayden|those]] [[Iris|two]]\" in [[Opelucid City]] are {{type|Dragon}} specialists. {{m|Fly}} back to [[Icirrus City]] and go northeast to {{rt|8|Unova}}."
+    },
+    {
+      "id": "ghetsis",
+      "label": "Defeat N and Ghetsis",
+      "q": "Did you defeat N and Ghetsis at N's Castle and see the credits?",
+      "chap": 11,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_12",
+      "quote": "Ghetsis can't believe that he, \"the perfect ruler of a perfect new world,\" was defeated. He laughs evilly and then explains that he told N to become the hero. Ghetsis couldn't meet the Legendary dragon because the dragon will only obey someone with a pure heart. Alder and Cheren take him into custody, and N explains that he wanted to battle you again and again because he couldn't believe that your Pokémon were happy with you. You and him walk to the back of the room, where he releases his dragon through the hole in the wall and bids you farewell."
+    },
+    {
+      "id": "cobalion-battle",
+      "label": "Battle Cobalion",
+      "q": "Have you battled Cobalion in Mistralton Cave?",
+      "chap": 6,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_8",
+      "quote": "The old man approaches you after the battle, and says that because {{p|Cobalion}} is starting to trust you, {{p|Terrakion}} and {{p|Virizion}} will give you a chance to battle them, as well. Terrakion is hidden deep in {{OBP|Victory Road|Black and White}}, out of reach for now. Virizion, however, is waiting in Rumination Field, on the eastern side of [[Pinwheel Forest]]."
+    },
+    {
+      "id": "liberty-pass",
+      "label": "Obtain the event Liberty Pass",
+      "q": "Do you have the event-distributed Liberty Pass?",
+      "chap": 2,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Liberty_Garden",
+      "quote": "In {{game|Black and White|s}}, the ship will only take the {{player}} if they have the [[Liberty Pass]], which is an {{pkmn2|event}}-exclusive item. On the player's first visit, some members of [[Team Plasma]] are already here upon the player's arrival, and they will battle the player."
+    },
+    {
+      "id": "event-celebi",
+      "label": "Bring the event Celebi",
+      "q": "Do you have the fateful-encounter Celebi and a spare Poké Ball for Zorua?",
+      "chap": 2,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Castelia_City",
+      "quote": "In Black and White, a girl on the ground floor will tell a story about a Pokémon that can cause {{a|illusion}}s and then show the player a photo of {{p|Zorua}}, thus adding it to the [[Pokédex]]. Next to her is a young boy who does not talk. If the player has a [[fateful encounter]] {{p|Celebi}} in their party and talks to the boy, Celebi will come out of its Poké Ball, and the boy will reveal himself to actually be a {{p|Zorua}}, who will then join the player if they have a {{i|Poké Ball}} to spare."
+    },
+    {
+      "id": "event-beast",
+      "label": "Bring an event Shiny legendary beast",
+      "q": "Have you brought an event Shiny Raikou, Entei or Suicune to Lostlorn Forest?",
+      "chap": 3,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Lostlorn_Forest",
+      "quote": "If the player approaches the trailer here with one of the {{DL|Legendary beasts (M13)|In the games|event}} {{Shiny}} [[Legendary beasts]] here, they will activate a special in-game event. The mysterious, silent woman will emerge from the trailer with a screeching growl and attack the player."
+    },
+    {
+      "id": "landorus-party",
+      "label": "Bring Tornadus and Thundurus",
+      "q": "Are Tornadus and Thundurus in your party, with your own version’s roamer bearing your Trainer ID?",
+      "chap": 12,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Abundant_Shrine",
+      "quote": "A {{p|Landorus}} appears here if both {{p|Tornadus}} and {{p|Thundurus}} are in the party. The Tornadus{{sup/5|B}}/Thundurus{{sup/5|W}} must have the player's [[Trainer ID number]]. If defeated or run from, it respawns after entering the [[Hall of Fame]]."
+    },
+    {
+      "id": "dragon-deferred",
+      "label": "Defer the castle dragon catch",
+      "q": "Did a full party and all 24 full PC boxes prevent you catching the dragon at the castle?",
+      "chap": 11,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Pokémon_Storage_System",
+      "quote": "This unlock requirement cannot be bypassed with Pokémon Bank or Pokémon HOME. This ensures that the player will be able to (and forced to) catch the required Legendary Pokémon, unlike in [[Pokémon Black and White Versions|Pokémon Black and White]] where the otherwise mandatory catching of {{p|Reshiram}}{{sup/5|B}}/{{p|Zekrom}}{{sup/5|W}} can be bypassed by completely filling the party and all 720 spaces in the storage system beforehand."
+    },
+    {
+      "id": "kyurem-snow",
+      "label": "Freeze the Giant Chasm crater",
+      "q": "Have you reached the central pond and covered Giant Chasm in snow?",
+      "chap": 12,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Giant_Chasm",
+      "quote": "When the {{player}} reaches the pond in the middle of the crater, the forest will freeze and be completely covered in snow, thus giving the player access to the cave {{p|Kyurem}} is hiding. Once the player has captured or defeated Kyurem and left the area, the snow will disappear, and the northern portion of the caves [[List of unrevisitable locations|will no longer be accessible]]. If Kyurem is defeated, however, the area will become accessible again after entering the [[Hall of Fame]] once more and returning to the pond in the center of the crater."
+    }
+  ],
+  "row_needs": [
+    {
+      "place": "Mistralton Cave",
+      "n": 638,
+      "m": "static",
+      "needs": [
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_8",
+      "quote": "Pick up a [[Rare Candy]] to the northwest, then go south and drop the final two boulders into position. Head northwest to find {{p|Cobalion}}.",
+      "show_as": "Guidance Chamber"
+    },
+    {
+      "place": "Unova Victory Road 4F Middle Room",
+      "n": 639,
+      "m": "static",
+      "needs": [
+        "cobalion-battle",
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_11",
+      "quote": "Move the boulder into place, then go west. This part of the cave is known as the Trial Chamber.",
+      "show_as": "Trial Chamber"
+    },
+    {
+      "place": "Lostlorn Forest",
+      "n": 571,
+      "m": "static",
+      "needs": [
+        "event-beast"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Lostlorn_Forest",
+      "quote": "If the player approaches the trailer here with one of the {{DL|Legendary beasts (M13)|In the games|event}} {{Shiny}} [[Legendary beasts]] here, they will activate a special in-game event. The mysterious, silent woman will emerge from the trailer with a screeching growl and attack the player."
+    },
+    {
+      "place": "Castelia City",
+      "n": 570,
+      "m": "gift",
+      "needs": [
+        "event-celebi"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Castelia_City",
+      "quote": "In Black and White, a girl on the ground floor will tell a story about a Pokémon that can cause {{a|illusion}}s and then show the player a photo of {{p|Zorua}}, thus adding it to the [[Pokédex]]. Next to her is a young boy who does not talk. If the player has a [[fateful encounter]] {{p|Celebi}} in their party and talks to the boy, Celebi will come out of its Poké Ball, and the boy will reveal himself to actually be a {{p|Zorua}}, who will then join the player if they have a {{i|Poké Ball}} to spare."
+    },
+    {
+      "place": "Abundant Shrine",
+      "n": 645,
+      "m": "static",
+      "needs": [
+        "landorus-party"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Abundant_Shrine",
+      "quote": "A {{p|Landorus}} appears here if both {{p|Tornadus}} and {{p|Thundurus}} are in the party. The Tornadus{{sup/5|B}}/Thundurus{{sup/5|W}} must have the player's [[Trainer ID number]]. If defeated or run from, it respawns after entering the [[Hall of Fame]].",
+      "versions": [
+        "black"
+      ],
+      "remove_conditions": [
+        "special-encounter-couldnt-capture-before"
+      ]
+    },
+    {
+      "place": "Abundant Shrine",
+      "n": 645,
+      "m": "static",
+      "needs": [
+        "landorus-party"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Abundant_Shrine",
+      "quote": "A {{p|Landorus}} appears here if both {{p|Tornadus}} and {{p|Thundurus}} are in the party. The Tornadus{{sup/5|B}}/Thundurus{{sup/5|W}} must have the player's [[Trainer ID number]]. If defeated or run from, it respawns after entering the [[Hall of Fame]].",
+      "versions": [
+        "white"
+      ]
+    },
+    {
+      "place": "Nacrene City",
+      "n": 138,
+      "m": "gift",
+      "needs": [
+        "Elite Four",
+        "ghetsis"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_14",
+      "quote": "Talk to the {{tc|Worker}} on the lowest level of [[Twist Mountain]] to get a [[Fossil]] once every day. The Fossil you receive is random, so you may end up with multiples of each. Visit him every day to get all seven Fossils. The ancient Pokémon can be revived at the Nacrene City Museum."
+    },
+    {
+      "place": "Nacrene City",
+      "n": 140,
+      "m": "gift",
+      "needs": [
+        "Elite Four",
+        "ghetsis"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_14",
+      "quote": "Talk to the {{tc|Worker}} on the lowest level of [[Twist Mountain]] to get a [[Fossil]] once every day. The Fossil you receive is random, so you may end up with multiples of each. Visit him every day to get all seven Fossils. The ancient Pokémon can be revived at the Nacrene City Museum."
+    },
+    {
+      "place": "Nacrene City",
+      "n": 142,
+      "m": "gift",
+      "needs": [
+        "Elite Four",
+        "ghetsis"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_14",
+      "quote": "Talk to the {{tc|Worker}} on the lowest level of [[Twist Mountain]] to get a [[Fossil]] once every day. The Fossil you receive is random, so you may end up with multiples of each. Visit him every day to get all seven Fossils. The ancient Pokémon can be revived at the Nacrene City Museum."
+    },
+    {
+      "place": "Nacrene City",
+      "n": 345,
+      "m": "gift",
+      "needs": [
+        "Elite Four",
+        "ghetsis"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_14",
+      "quote": "Talk to the {{tc|Worker}} on the lowest level of [[Twist Mountain]] to get a [[Fossil]] once every day. The Fossil you receive is random, so you may end up with multiples of each. Visit him every day to get all seven Fossils. The ancient Pokémon can be revived at the Nacrene City Museum."
+    },
+    {
+      "place": "Nacrene City",
+      "n": 347,
+      "m": "gift",
+      "needs": [
+        "Elite Four",
+        "ghetsis"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_14",
+      "quote": "Talk to the {{tc|Worker}} on the lowest level of [[Twist Mountain]] to get a [[Fossil]] once every day. The Fossil you receive is random, so you may end up with multiples of each. Visit him every day to get all seven Fossils. The ancient Pokémon can be revived at the Nacrene City Museum."
+    },
+    {
+      "place": "Nacrene City",
+      "n": 408,
+      "m": "gift",
+      "needs": [
+        "Elite Four",
+        "ghetsis"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_14",
+      "quote": "Talk to the {{tc|Worker}} on the lowest level of [[Twist Mountain]] to get a [[Fossil]] once every day. The Fossil you receive is random, so you may end up with multiples of each. Visit him every day to get all seven Fossils. The ancient Pokémon can be revived at the Nacrene City Museum."
+    },
+    {
+      "place": "Nacrene City",
+      "n": 410,
+      "m": "gift",
+      "needs": [
+        "Elite Four",
+        "ghetsis"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_14",
+      "quote": "Talk to the {{tc|Worker}} on the lowest level of [[Twist Mountain]] to get a [[Fossil]] once every day. The Fossil you receive is random, so you may end up with multiples of each. Visit him every day to get all seven Fossils. The ancient Pokémon can be revived at the Nacrene City Museum."
+    },
+    {
+      "place": "Nacrene City",
+      "n": 564,
+      "m": "gift",
+      "needs": [
+        "Insect"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_5",
+      "quote": "Speak to the {{tc|Backpacker}} on the west side of first floor, right side. She has been carrying around a pair of [[Fossil]]s, and will let you choose one to keep. The [[Cover Fossil]] will become the {{2t|Water|Rock}} {{p|Tirtouga}}, while the [[Plume Fossil]] will become the {{2t|Rock|Flying}} {{p|Archen}}. You can return to the museum in [[Nacrene City]] anytime and talk to the woman near the entrance to resurrect the ancient Pokémon."
+    },
+    {
+      "place": "Nacrene City",
+      "n": 566,
+      "m": "gift",
+      "needs": [
+        "Insect"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_5",
+      "quote": "Speak to the {{tc|Backpacker}} on the west side of first floor, right side. She has been carrying around a pair of [[Fossil]]s, and will let you choose one to keep. The [[Cover Fossil]] will become the {{2t|Water|Rock}} {{p|Tirtouga}}, while the [[Plume Fossil]] will become the {{2t|Rock|Flying}} {{p|Archen}}. You can return to the museum in [[Nacrene City]] anytime and talk to the woman near the entrance to resurrect the ancient Pokémon."
+    },
+    {
+      "place": "Dreamyard",
+      "n": 166,
+      "m": "dark-grass",
+      "needs": [
+        "Elite Four",
+        "ghetsis"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "\n\n"
+    },
+    {
+      "place": "Unova Route 16",
+      "n": 577,
+      "m": "dark-grass",
+      "needs": [
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_16",
+      "quote": "Many people visiting [[Nimbasa City]] stop by at Route 16 to rest. The route contains a grassy area to the north and is surrounded by wooden fences. There are a few buildings that can not be entered at the western end of the route, and the paved path continues eastward past the fenced area to [[Marvelous Bridge]]. The first entrance in the wooden fence can be entered easily, and leads to Lostlorn Forest. It is covered in patches of [[tall grass]]. The second area requires {{m|Strength}}, which then leads to several patches of {{DL|Tall grass|dark grass}}. After passing the fenced area, the {{player}} can continue to Marvelous Bridge."
+    },
+    {
+      "place": "Unova Route 11",
+      "n": 628,
+      "m": "dark-grass",
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_11",
+      "quote": "After heading east from Opelucid City, the player will see a patch of grass to the north, and directly in front of them, a {{tc|Backpacker}}. After facing the Backpacker, there is a {{tc|Pokémon Ranger}} standing on a bridge. After facing the Trainer, a river can be seen. The player can surf north briefly and then go up a {{OBP|waterfall|obstacle}}. There is a patch of tall grass above the waterfall to the left. Or they may surf east, then south and go down another waterfall. Once on land, there are dark patches of grass, another Pokémon Ranger, and the Protector item. Across the bridge, there is a parked trailer. To the right, there is yet another Backpacker, and the route continues to the [[Village Bridge]]."
+    },
+    {
+      "place": "Dreamyard",
+      "n": 49,
+      "m": "dark-grass",
+      "needs": [
+        "Elite Four",
+        "ghetsis"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "\n\n"
+    },
+    {
+      "place": "Unova Route 11",
+      "n": 588,
+      "m": "dark-grass",
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_11",
+      "quote": "After heading east from Opelucid City, the player will see a patch of grass to the north, and directly in front of them, a {{tc|Backpacker}}. After facing the Backpacker, there is a {{tc|Pokémon Ranger}} standing on a bridge. After facing the Trainer, a river can be seen. The player can surf north briefly and then go up a {{OBP|waterfall|obstacle}}. There is a patch of tall grass above the waterfall to the left. Or they may surf east, then south and go down another waterfall. Once on land, there are dark patches of grass, another Pokémon Ranger, and the Protector item. Across the bridge, there is a parked trailer. To the right, there is yet another Backpacker, and the route continues to the [[Village Bridge]]."
+    },
+    {
+      "place": "Dreamyard",
+      "n": 402,
+      "m": "dark-grass",
+      "needs": [
+        "Elite Four",
+        "ghetsis"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "\n\n"
+    },
+    {
+      "place": "Unova Route 11",
+      "n": 591,
+      "m": "dark-grass",
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_11",
+      "quote": "After heading east from Opelucid City, the player will see a patch of grass to the north, and directly in front of them, a {{tc|Backpacker}}. After facing the Backpacker, there is a {{tc|Pokémon Ranger}} standing on a bridge. After facing the Trainer, a river can be seen. The player can surf north briefly and then go up a {{OBP|waterfall|obstacle}}. There is a patch of tall grass above the waterfall to the left. Or they may surf east, then south and go down another waterfall. Once on land, there are dark patches of grass, another Pokémon Ranger, and the Protector item. Across the bridge, there is a parked trailer. To the right, there is yet another Backpacker, and the route continues to the [[Village Bridge]]."
+    },
+    {
+      "place": "Dreamyard",
+      "n": 505,
+      "m": "dark-grass",
+      "needs": [
+        "Elite Four",
+        "ghetsis"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "\n\n"
+    },
+    {
+      "place": "Unova Route 1",
+      "n": 505,
+      "m": "dark-grass",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_8",
+      "quote": "===Route 1 (southwest)==="
+    },
+    {
+      "place": "Unova Route 11",
+      "n": 336,
+      "m": "dark-grass",
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_11",
+      "quote": "After heading east from Opelucid City, the player will see a patch of grass to the north, and directly in front of them, a {{tc|Backpacker}}. After facing the Backpacker, there is a {{tc|Pokémon Ranger}} standing on a bridge. After facing the Trainer, a river can be seen. The player can surf north briefly and then go up a {{OBP|waterfall|obstacle}}. There is a patch of tall grass above the waterfall to the left. Or they may surf east, then south and go down another waterfall. Once on land, there are dark patches of grass, another Pokémon Ranger, and the Protector item. Across the bridge, there is a parked trailer. To the right, there is yet another Backpacker, and the route continues to the [[Village Bridge]]."
+    },
+    {
+      "place": "Unova Route 16",
+      "n": 568,
+      "m": "dark-grass",
+      "needs": [
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_16",
+      "quote": "Many people visiting [[Nimbasa City]] stop by at Route 16 to rest. The route contains a grassy area to the north and is surrounded by wooden fences. There are a few buildings that can not be entered at the western end of the route, and the paved path continues eastward past the fenced area to [[Marvelous Bridge]]. The first entrance in the wooden fence can be entered easily, and leads to Lostlorn Forest. It is covered in patches of [[tall grass]]. The second area requires {{m|Strength}}, which then leads to several patches of {{DL|Tall grass|dark grass}}. After passing the fenced area, the {{player}} can continue to Marvelous Bridge."
+    },
+    {
+      "place": "Dreamyard",
+      "n": 504,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "In {{game|Black and White|s}}, the {{player}} encounters some {{tc|Team Plasma Grunt}}s here who are kicking a {{p|Munna}} to get its [[Dream Mist]]. {{m|Cut}} is required to access the building area. After beating [[Ghetsis]] and [[N]], the orange traffic cone is removed. This allows access to the basement and the other portion of the area, where [[Gorm]] of the [[Seven Sages]] can be found and arrested."
+    },
+    {
+      "place": "Dreamyard",
+      "n": 168,
+      "m": "dark-grass",
+      "needs": [
+        "Elite Four",
+        "ghetsis"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "\n\n"
+    },
+    {
+      "place": "Unova Route 11",
+      "n": 630,
+      "m": "dark-grass",
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_11",
+      "quote": "After heading east from Opelucid City, the player will see a patch of grass to the north, and directly in front of them, a {{tc|Backpacker}}. After facing the Backpacker, there is a {{tc|Pokémon Ranger}} standing on a bridge. After facing the Trainer, a river can be seen. The player can surf north briefly and then go up a {{OBP|waterfall|obstacle}}. There is a patch of tall grass above the waterfall to the left. Or they may surf east, then south and go down another waterfall. Once on land, there are dark patches of grass, another Pokémon Ranger, and the Protector item. Across the bridge, there is a parked trailer. To the right, there is yet another Backpacker, and the route continues to the [[Village Bridge]]."
+    },
+    {
+      "place": "Dreamyard",
+      "n": 531,
+      "m": "grass-spots",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "In {{game|Black and White|s}}, the {{player}} encounters some {{tc|Team Plasma Grunt}}s here who are kicking a {{p|Munna}} to get its [[Dream Mist]]. {{m|Cut}} is required to access the building area. After beating [[Ghetsis]] and [[N]], the orange traffic cone is removed. This allows access to the basement and the other portion of the area, where [[Gorm]] of the [[Seven Sages]] can be found and arrested."
+    },
+    {
+      "place": "Dreamyard",
+      "n": 531,
+      "m": "grass-spots",
+      "needs": [
+        "Trio"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Phenomenon",
+      "quote": "'''Phenomena''' are a method for encountering [[wild Pokémon]] in [[Generation V]]. [[Item]]s can also be obtained from certain phenomena. There are four types of phenomena: rustling grass, dust clouds, flying Pokémon's shadows, and rippling water. Some {{OBP|Pokémon|species}} can only be obtained via this method. Phenomena will only appear after the {{player}} receives their first [[Badge]]."
+    },
+    {
+      "place": "Unova Route 1",
+      "n": 531,
+      "m": "grass-spots",
+      "needs": [
+        "Trio"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Phenomenon",
+      "quote": "'''Phenomena''' are a method for encountering [[wild Pokémon]] in [[Generation V]]. [[Item]]s can also be obtained from certain phenomena. There are four types of phenomena: rustling grass, dust clouds, flying Pokémon's shadows, and rippling water. Some {{OBP|Pokémon|species}} can only be obtained via this method. Phenomena will only appear after the {{player}} receives their first [[Badge]]."
+    },
+    {
+      "place": "Unova Route 2",
+      "n": 531,
+      "m": "grass-spots",
+      "needs": [
+        "Trio"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Phenomenon",
+      "quote": "'''Phenomena''' are a method for encountering [[wild Pokémon]] in [[Generation V]]. [[Item]]s can also be obtained from certain phenomena. There are four types of phenomena: rustling grass, dust clouds, flying Pokémon's shadows, and rippling water. Some {{OBP|Pokémon|species}} can only be obtained via this method. Phenomena will only appear after the {{player}} receives their first [[Badge]]."
+    },
+    {
+      "place": "Dreamyard",
+      "n": 509,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "In {{game|Black and White|s}}, the {{player}} encounters some {{tc|Team Plasma Grunt}}s here who are kicking a {{p|Munna}} to get its [[Dream Mist]]. {{m|Cut}} is required to access the building area. After beating [[Ghetsis]] and [[N]], the orange traffic cone is removed. This allows access to the basement and the other portion of the area, where [[Gorm]] of the [[Seven Sages]] can be found and arrested."
+    },
+    {
+      "place": "Dreamyard",
+      "n": 510,
+      "m": "dark-grass",
+      "needs": [
+        "Elite Four",
+        "ghetsis"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "\n\n"
+    },
+    {
+      "place": "Unova Route 16",
+      "n": 510,
+      "m": "dark-grass",
+      "needs": [
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_16",
+      "quote": "Many people visiting [[Nimbasa City]] stop by at Route 16 to rest. The route contains a grassy area to the north and is surrounded by wooden fences. There are a few buildings that can not be entered at the western end of the route, and the paved path continues eastward past the fenced area to [[Marvelous Bridge]]. The first entrance in the wooden fence can be entered easily, and leads to Lostlorn Forest. It is covered in patches of [[tall grass]]. The second area requires {{m|Strength}}, which then leads to several patches of {{DL|Tall grass|dark grass}}. After passing the fenced area, the {{player}} can continue to Marvelous Bridge."
+    },
+    {
+      "place": "Unova Route 11",
+      "n": 335,
+      "m": "dark-grass",
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_11",
+      "quote": "After heading east from Opelucid City, the player will see a patch of grass to the north, and directly in front of them, a {{tc|Backpacker}}. After facing the Backpacker, there is a {{tc|Pokémon Ranger}} standing on a bridge. After facing the Trainer, a river can be seen. The player can surf north briefly and then go up a {{OBP|waterfall|obstacle}}. There is a patch of tall grass above the waterfall to the left. Or they may surf east, then south and go down another waterfall. Once on land, there are dark patches of grass, another Pokémon Ranger, and the Protector item. Across the bridge, there is a parked trailer. To the right, there is yet another Backpacker, and the route continues to the [[Village Bridge]]."
+    },
+    {
+      "place": "Striaton City",
+      "n": 118,
+      "m": "super-rod-spots",
+      "needs": [
+        "Trio"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Phenomenon",
+      "quote": "'''Phenomena''' are a method for encountering [[wild Pokémon]] in [[Generation V]]. [[Item]]s can also be obtained from certain phenomena. There are four types of phenomena: rustling grass, dust clouds, flying Pokémon's shadows, and rippling water. Some {{OBP|Pokémon|species}} can only be obtained via this method. Phenomena will only appear after the {{player}} receives their first [[Badge]]."
+    },
+    {
+      "place": "Dreamyard",
+      "n": 518,
+      "m": "grass-spots",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "In {{game|Black and White|s}}, the {{player}} encounters some {{tc|Team Plasma Grunt}}s here who are kicking a {{p|Munna}} to get its [[Dream Mist]]. {{m|Cut}} is required to access the building area. After beating [[Ghetsis]] and [[N]], the orange traffic cone is removed. This allows access to the basement and the other portion of the area, where [[Gorm]] of the [[Seven Sages]] can be found and arrested."
+    },
+    {
+      "place": "Dreamyard",
+      "n": 518,
+      "m": "grass-spots",
+      "needs": [
+        "Trio"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Phenomenon",
+      "quote": "'''Phenomena''' are a method for encountering [[wild Pokémon]] in [[Generation V]]. [[Item]]s can also be obtained from certain phenomena. There are four types of phenomena: rustling grass, dust clouds, flying Pokémon's shadows, and rippling water. Some {{OBP|Pokémon|species}} can only be obtained via this method. Phenomena will only appear after the {{player}} receives their first [[Badge]]."
+    },
+    {
+      "place": "Dreamyard",
+      "n": 518,
+      "m": "static",
+      "needs": [
+        "cut-hm",
+        "Elite Four",
+        "ghetsis"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "In {{game|Black and White|s}}, the {{player}} encounters some {{tc|Team Plasma Grunt}}s here who are kicking a {{p|Munna}} to get its [[Dream Mist]]. {{m|Cut}} is required to access the building area. After beating [[Ghetsis]] and [[N]], the orange traffic cone is removed. This allows access to the basement and the other portion of the area, where [[Gorm]] of the [[Seven Sages]] can be found and arrested.",
+      "exact_place": true
+    },
+    {
+      "place": "Unova Route 11",
+      "n": 207,
+      "m": "dark-grass",
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_11",
+      "quote": "After heading east from Opelucid City, the player will see a patch of grass to the north, and directly in front of them, a {{tc|Backpacker}}. After facing the Backpacker, there is a {{tc|Pokémon Ranger}} standing on a bridge. After facing the Trainer, a river can be seen. The player can surf north briefly and then go up a {{OBP|waterfall|obstacle}}. There is a patch of tall grass above the waterfall to the left. Or they may surf east, then south and go down another waterfall. Once on land, there are dark patches of grass, another Pokémon Ranger, and the Protector item. Across the bridge, there is a parked trailer. To the right, there is yet another Backpacker, and the route continues to the [[Village Bridge]]."
+    },
+    {
+      "place": "Dreamyard",
+      "n": 517,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "In {{game|Black and White|s}}, the {{player}} encounters some {{tc|Team Plasma Grunt}}s here who are kicking a {{p|Munna}} to get its [[Dream Mist]]. {{m|Cut}} is required to access the building area. After beating [[Ghetsis]] and [[N]], the orange traffic cone is removed. This allows access to the basement and the other portion of the area, where [[Gorm]] of the [[Seven Sages]] can be found and arrested."
+    },
+    {
+      "place": "Dreamyard",
+      "n": 517,
+      "m": "dark-grass",
+      "needs": [
+        "Elite Four",
+        "ghetsis"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "\n\n"
+    },
+    {
+      "place": "Striaton City",
+      "n": 550,
+      "m": "super-rod-spots",
+      "needs": [
+        "Trio"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Phenomenon",
+      "quote": "'''Phenomena''' are a method for encountering [[wild Pokémon]] in [[Generation V]]. [[Item]]s can also be obtained from certain phenomena. There are four types of phenomena: rustling grass, dust clouds, flying Pokémon's shadows, and rippling water. Some {{OBP|Pokémon|species}} can only be obtained via this method. Phenomena will only appear after the {{player}} receives their first [[Badge]]."
+    },
+    {
+      "place": "Striaton City",
+      "n": 550,
+      "m": "surf-spots",
+      "needs": [
+        "Trio"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Phenomenon",
+      "quote": "'''Phenomena''' are a method for encountering [[wild Pokémon]] in [[Generation V]]. [[Item]]s can also be obtained from certain phenomena. There are four types of phenomena: rustling grass, dust clouds, flying Pokémon's shadows, and rippling water. Some {{OBP|Pokémon|species}} can only be obtained via this method. Phenomena will only appear after the {{player}} receives their first [[Badge]]."
+    },
+    {
+      "place": "Unova Route 1",
+      "n": 550,
+      "m": "super-rod-spots",
+      "needs": [
+        "Trio"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Phenomenon",
+      "quote": "'''Phenomena''' are a method for encountering [[wild Pokémon]] in [[Generation V]]. [[Item]]s can also be obtained from certain phenomena. There are four types of phenomena: rustling grass, dust clouds, flying Pokémon's shadows, and rippling water. Some {{OBP|Pokémon|species}} can only be obtained via this method. Phenomena will only appear after the {{player}} receives their first [[Badge]]."
+    },
+    {
+      "place": "Unova Route 1",
+      "n": 550,
+      "m": "surf-spots",
+      "needs": [
+        "Trio"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Phenomenon",
+      "quote": "'''Phenomena''' are a method for encountering [[wild Pokémon]] in [[Generation V]]. [[Item]]s can also be obtained from certain phenomena. There are four types of phenomena: rustling grass, dust clouds, flying Pokémon's shadows, and rippling water. Some {{OBP|Pokémon|species}} can only be obtained via this method. Phenomena will only appear after the {{player}} receives their first [[Badge]]."
+    },
+    {
+      "place": "Unova Route 16",
+      "n": 574,
+      "m": "dark-grass",
+      "needs": [
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_16",
+      "quote": "Many people visiting [[Nimbasa City]] stop by at Route 16 to rest. The route contains a grassy area to the north and is surrounded by wooden fences. There are a few buildings that can not be entered at the western end of the route, and the paved path continues eastward past the fenced area to [[Marvelous Bridge]]. The first entrance in the wooden fence can be entered easily, and leads to Lostlorn Forest. It is covered in patches of [[tall grass]]. The second area requires {{m|Strength}}, which then leads to several patches of {{DL|Tall grass|dark grass}}. After passing the fenced area, the {{player}} can continue to Marvelous Bridge."
+    },
+    {
+      "place": "Unova Route 1",
+      "n": 350,
+      "m": "super-rod-spots",
+      "needs": [
+        "Trio"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Phenomenon",
+      "quote": "'''Phenomena''' are a method for encountering [[wild Pokémon]] in [[Generation V]]. [[Item]]s can also be obtained from certain phenomena. There are four types of phenomena: rustling grass, dust clouds, flying Pokémon's shadows, and rippling water. Some {{OBP|Pokémon|species}} can only be obtained via this method. Phenomena will only appear after the {{player}} receives their first [[Badge]]."
+    },
+    {
+      "place": "Unova Route 1",
+      "n": 349,
+      "m": "super-rod-spots",
+      "needs": [
+        "Trio"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Phenomenon",
+      "quote": "'''Phenomena''' are a method for encountering [[wild Pokémon]] in [[Generation V]]. [[Item]]s can also be obtained from certain phenomena. There are four types of phenomena: rustling grass, dust clouds, flying Pokémon's shadows, and rippling water. Some {{OBP|Pokémon|species}} can only be obtained via this method. Phenomena will only appear after the {{player}} receives their first [[Badge]]."
+    },
+    {
+      "place": "Unova Route 11",
+      "n": 625,
+      "m": "dark-grass",
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_11",
+      "quote": "After heading east from Opelucid City, the player will see a patch of grass to the north, and directly in front of them, a {{tc|Backpacker}}. After facing the Backpacker, there is a {{tc|Pokémon Ranger}} standing on a bridge. After facing the Trainer, a river can be seen. The player can surf north briefly and then go up a {{OBP|waterfall|obstacle}}. There is a patch of tall grass above the waterfall to the left. Or they may surf east, then south and go down another waterfall. Once on land, there are dark patches of grass, another Pokémon Ranger, and the Protector item. Across the bridge, there is a parked trailer. To the right, there is yet another Backpacker, and the route continues to the [[Village Bridge]]."
+    },
+    {
+      "place": "Unova Route 16",
+      "n": 572,
+      "m": "dark-grass",
+      "needs": [
+        "strength"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_16",
+      "quote": "Many people visiting [[Nimbasa City]] stop by at Route 16 to rest. The route contains a grassy area to the north and is surrounded by wooden fences. There are a few buildings that can not be entered at the western end of the route, and the paved path continues eastward past the fenced area to [[Marvelous Bridge]]. The first entrance in the wooden fence can be entered easily, and leads to Lostlorn Forest. It is covered in patches of [[tall grass]]. The second area requires {{m|Strength}}, which then leads to several patches of {{DL|Tall grass|dark grass}}. After passing the fenced area, the {{player}} can continue to Marvelous Bridge."
+    },
+    {
+      "place": "Unova Route 11",
+      "n": 55,
+      "m": "dark-grass",
+      "needs": [
+        "surf",
+        "waterfall"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_11",
+      "quote": "After heading east from Opelucid City, the player will see a patch of grass to the north, and directly in front of them, a {{tc|Backpacker}}. After facing the Backpacker, there is a {{tc|Pokémon Ranger}} standing on a bridge. After facing the Trainer, a river can be seen. The player can surf north briefly and then go up a {{OBP|waterfall|obstacle}}. There is a patch of tall grass above the waterfall to the left. Or they may surf east, then south and go down another waterfall. Once on land, there are dark patches of grass, another Pokémon Ranger, and the Protector item. Across the bridge, there is a parked trailer. To the right, there is yet another Backpacker, and the route continues to the [[Village Bridge]]."
+    },
+    {
+      "place": "Unova Route 1",
+      "n": 559,
+      "m": "dark-grass",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_8",
+      "quote": "===Route 1 (southwest)==="
+    },
+    {
+      "place": "Dreamyard",
+      "n": 20,
+      "m": "dark-grass",
+      "needs": [
+        "Elite Four",
+        "ghetsis"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "\n\n"
+    },
+    {
+      "place": "Striaton City",
+      "n": 119,
+      "m": "super-rod-spots",
+      "needs": [
+        "Trio"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Phenomenon",
+      "quote": "'''Phenomena''' are a method for encountering [[wild Pokémon]] in [[Generation V]]. [[Item]]s can also be obtained from certain phenomena. There are four types of phenomena: rustling grass, dust clouds, flying Pokémon's shadows, and rippling water. Some {{OBP|Pokémon|species}} can only be obtained via this method. Phenomena will only appear after the {{player}} receives their first [[Badge]]."
+    },
+    {
+      "place": "Unova Route 1",
+      "n": 507,
+      "m": "dark-grass",
+      "needs": [
+        "surf"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_8",
+      "quote": "===Route 1 (southwest)==="
+    },
+    {
+      "place": "Dreamyard",
+      "n": 518,
+      "m": "static",
+      "needs": [
+        "Elite Four",
+        "ghetsis"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_13",
+      "quote": "Pick up the [[Revive]] to the west, then go south to find the next of the sages. Gorm jumps out from behind the wall, and tells you about [[Team Plasma]] and [[N's Castle]]. He gives you {{TM|75|Swords Dance}} before [[Looker]] shows up to arrest him. Head west to find a [[Hyper Potion]], move the boulder to create a shortcut, and go back down to the basement to grab {{TM|85|Dream Eater}} from the north corner. On Fridays only, a {{p|Musharna}} will appear in the eastern patch of grass. This is the only Musharna that can have the [[Hidden Ability]] {{a|Telepathy}}, so make sure to catch it!"
+    },
+    {
+      "place": "Dreamyard B1F",
+      "n": 518,
+      "m": "static",
+      "needs": [
+        "Elite Four",
+        "ghetsis"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_13",
+      "quote": "Pick up the [[Revive]] to the west, then go south to find the next of the sages. Gorm jumps out from behind the wall, and tells you about [[Team Plasma]] and [[N's Castle]]. He gives you {{TM|75|Swords Dance}} before [[Looker]] shows up to arrest him. Head west to find a [[Hyper Potion]], move the boulder to create a shortcut, and go back down to the basement to grab {{TM|85|Dream Eater}} from the north corner. On Fridays only, a {{p|Musharna}} will appear in the eastern patch of grass. This is the only Musharna that can have the [[Hidden Ability]] {{a|Telepathy}}, so make sure to catch it!",
+      "conditions": [
+        "weekday-friday"
+      ],
+      "show_as": "Dreamyard"
+    },
+    {
+      "place": "Dreamyard",
+      "n": 511,
+      "m": "gift",
+      "needs": [],
+      "conditions": [
+        "starter-tepig"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "{{catch/entry5|511|Pansage|yes|yes|yes|Gift|10|all={{tt|One|From a girl if the player started with Tepig}}|type1=Grass}}"
+    },
+    {
+      "place": "Dreamyard",
+      "n": 513,
+      "m": "gift",
+      "needs": [],
+      "conditions": [
+        "starter-oshawott"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "{{catch/entry5|513|Pansear|yes|yes|yes|Gift|10|all={{tt|One|From a girl if the player started with Oshawott}}|type1=Fire}}"
+    },
+    {
+      "place": "Dreamyard",
+      "n": 515,
+      "m": "gift",
+      "needs": [],
+      "conditions": [
+        "starter-snivy"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "{{catch/entry5|515|Panpour|yes|yes|yes|Gift|10|all={{tt|One|From a girl if the player started with Snivy}}|type1=Water}}"
+    }
+  ],
+  "condition_replacements": {
+    "defeated-ghetsis": "story-progress-hall-of-fame"
+  },
+  "obtainable_forms": {
+    "550": [
+      "basculin-red-striped",
+      "basculin-blue-striped"
+    ],
+    "585": [
+      "deerling-spring",
+      "deerling-summer",
+      "deerling-autumn",
+      "deerling-winter"
+    ],
+    "586": [
+      "sawsbuck-spring",
+      "sawsbuck-summer",
+      "sawsbuck-autumn",
+      "sawsbuck-winter"
+    ],
+    "479": [
+      "rotom",
+      "rotom-heat",
+      "rotom-wash",
+      "rotom-frost",
+      "rotom-fan",
+      "rotom-mow"
+    ]
+  },
+  "forms_src": {
+    "src": "https://www.serebii.net/blackwhite/forms.shtml",
+    "note": "Both Basculin stripes, all seasonal Deerling/Sawsbuck, and appliance Rotom. Battle-only Zen Mode and Meloetta transformation excluded. No B2W2 fusions or Therian forms."
+  },
+  "evolution_overrides": {
+    "350": {
+      "evo": "Trade holding Prism Scale",
+      "src": "https://www.serebii.net/blackwhite/evolution.shtml"
+    },
+    "462": {
+      "evo": "Level up in Chargestone Cave",
+      "src": "https://www.serebii.net/blackwhite/evolution.shtml"
+    },
+    "476": {
+      "evo": "Level up in Chargestone Cave",
+      "src": "https://www.serebii.net/blackwhite/evolution.shtml"
+    },
+    "470": {
+      "evo": "Level up near the Moss Rock in Pinwheel Forest",
+      "src": "https://www.serebii.net/blackwhite/evolution.shtml"
+    },
+    "471": {
+      "evo": "Level up near the icy rock in Twist Mountain",
+      "src": "https://www.serebii.net/blackwhite/evolution.shtml"
+    },
+    "589": {
+      "evo": "Trade for Shelmet",
+      "src": "https://www.serebii.net/blackwhite/evolution.shtml"
+    },
+    "617": {
+      "evo": "Trade for Karrablast",
+      "src": "https://www.serebii.net/blackwhite/evolution.shtml"
+    }
+  }
+}

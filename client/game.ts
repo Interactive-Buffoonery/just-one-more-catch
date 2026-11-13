@@ -32,9 +32,22 @@ export const METHOD: Record<string, [string, string | null]> = {
   "dark-grass": ["Dark grass", null],
   "grass-spots": ["Rustling grass", null],
   "cave-spots": ["Dust cloud", null],
-  "bridge-spots": ["Flying Pokémon’s shadow", null],
+  "bridge-spots": ["Flying shadow", null],
   "surf-spots": ["Rippling water (Surf)", "surf"],
-  "super-rod-spots": ["Rippling water (Super Rod)", "super-rod"],
+  "super-rod-spots": ["Rippling water (fishing)", "super-rod"],
+  horde: ["Horde encounter", null],
+  "yellow-flowers": ["Yellow flowers", null],
+  "purple-flowers": ["Purple flowers", null],
+  "red-flowers": ["Red flowers", null],
+  "rough-terrain": ["Rough terrain", null],
+  "ground-ambush": ["Ground ambush", null],
+  "ceiling-ambush": ["Ceiling ambush", null],
+  "sky-ambush": ["Sky ambush", null],
+  "rustling-bush-ambush": ["Rustling bush", null],
+  "trash-can-ambush": ["Shaking trash can", null],
+
+  "honey-tree": ["Honey Tree", null],
+  "pokemon-ranger": ["Pokémon Ranger gift", null],
   "hidden-grotto": ["Hidden Grotto", null],
   seaweed: ["Underwater", "dive"],
   "feebas-tile-fishing": ["Feebas fishing tiles", "old-rod"],
@@ -57,11 +70,20 @@ export const METHOD: Record<string, [string, string | null]> = {
   fishing: ["Fishing", "fishing-rod"],
   "bubbling-spots": ["Bubbling fishing spot", "fishing-rod"],
   "sos-from-bubbling-spot": ["SOS at a bubbling spot", "fishing-rod"],
+  "dirt-cloud": ["Dirt cloud ambush", null],
+  "sand-cloud": ["Sand cloud ambush", null],
+  "rustling-grass": ["Rustling grass ambush", null],
+  "rustling-tree": ["Rustling tree ambush", null],
+  "rustling-bush": ["Rustling bush ambush", null],
+  "flying-shadow": ["Flying shadow ambush", null],
+  "water-splash": ["Water splash ambush", "surf"],
+  "cave-shadow": ["Cave shadow ambush", null],
   sos: ["SOS call", null],
   "island-scan": ["Island Scan", "island-scan"],
   "berry-trees": ["Berry tree", null],
 };
 export const ONE_TIME = new Set([
+  "pokemon-ranger",
   "devon-scope",
   "wailmer-pail",
   "gift",
@@ -100,7 +122,6 @@ const STORY: Record<string, string> = {
   "special-encounter-couldnt-capture-before": "After the League, if not caught earlier",
   "story-progress-juniper-cave-of-being": "Meet the lake guardians in Cave of Being",
   "story-progress-quake-badge": "After the Quake Badge",
-  "other-regirock-regice-registeel-in-party": "Bring Regirock, Regice and Registeel",
   "other-captured-reshiram-or-zekrom": "After catching N’s dragon",
   "item-lunar-wing": "Bring the Lunar Wing",
   "item-dark-stone": "Bring the Dark Stone",
@@ -112,6 +133,11 @@ const STORY: Record<string, string> = {
   "story-progress-vermilion-copycat": "After returning Copycat's doll",
   "story-progress-receive-tm-from-claire": "After Clair's TM",
   "story-progress-returned-machine-part": "After returning the Machine Part",
+  "friend-safari-slot-1": "Registered friend’s Safari: slot 1",
+  "friend-safari-slot-2": "Registered friend’s Safari: slot 2",
+  "friend-safari-slot-3": "Friend’s third Safari slot unlocked (Hall of Fame and shared PSS session)",
+  "other-found-11-times-roaming": "After eleven roaming encounters",
+  "trash-can-type-daily": "Daily shaking trash can",
   "other-received-kanto-starter": "After getting a Kanto starter",
   "other-event-arceus-in-party": "Event Arceus in your party",
   "other-snorlax-11-beat-league": "After the Elite Four",
@@ -130,11 +156,28 @@ const STORY: Record<string, string> = {
   "first-party-pokemon-high-friendship": "Lead Pokémon has high friendship",
   "story-progress-beat-olivias-trial": "After Olivia's grand trial",
   "other-scan-qr-code": "Scan its QR code",
+  "radar-on": "Poké Radar grass",
+  "slot2-ruby": "Ruby in the DS Game Boy Advance slot",
+  "slot2-sapphire": "Sapphire in the DS Game Boy Advance slot",
+  "slot2-emerald": "Emerald in the DS Game Boy Advance slot",
+  "slot2-firered": "FireRed in the DS Game Boy Advance slot",
+  "slot2-leafgreen": "LeafGreen in the DS Game Boy Advance slot",
+  "backlot-mentioned": "Today's or yesterday's Trophy Garden guest",
+  "honey-tree-group-a": "Honey Tree group A (after 6 hours)",
+  "honey-tree-group-b": "Honey Tree group B (after 6 hours)",
+  "honey-tree-group-c": "Munchlax Honey Tree (after 6 hours)",
+  "item-odd-keystone": "Place an Odd Keystone in the Hallowed Tower",
+  "other-talked-to-32-people-underground": "Talk to players 32 times in the Underground",
+  "other-regirock-regice-registeel-in-party": "Regirock, Regice and Registeel in your party",
 };
 export const cap = (s: string) => s[0].toUpperCase() + s.slice(1);
 function specialLabel(c: string) {
   if (STORY[c]) return STORY[c];
-  let m = c.match(/^johto-safari-blocks-(\w+)-min-(\d+)$/);
+  if (c.startsWith("season-")) return `${cap(c.slice(7))} only`;
+  if (c === "special-encounter-couldnt-capture-before") return "If the earlier catch was deferred";
+  let m = c.match(/^great-marsh-daily-slot-(\d+)-of-32$/);
+  if (m) return "Great Marsh daily Pokémon";
+  m = c.match(/^johto-safari-blocks-(\w+)-min-(\d+)$/);
   if (m) return `Safari: ${m[2]}+ ${m[1]} blocks`;
   m = c.match(/^item-(\w+)-fossil$/);
   if (m) return `Bring a ${cap(m[1])} Fossil`;
