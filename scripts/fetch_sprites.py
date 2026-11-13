@@ -20,6 +20,7 @@ UA = {"User-Agent": "just-one-more-catch-data-build"}
 ART = {
     "rs": "pokemon/versions/generation-iii/ruby-sapphire/",
     "bw": "pokemon/versions/generation-v/black-white/",
+    "xy": "pokemon/",
     "emerald": "pokemon/versions/generation-iii/emerald/",
     "gs": "pokemon/versions/generation-ii/gold/transparent/",
     "rb": "pokemon/versions/generation-i/red-blue/transparent/",
@@ -120,6 +121,7 @@ def centre_all():
 if __name__ == "__main__":
     jobs = [(f"{BASE}badges/{i + 1}.png", os.path.join(ROOT, "public", "badges", f"{b.lower()}.png")) for i, b in enumerate(BADGES)]
     jobs += [(f"{BASE}badges/{i}.png", os.path.join(ROOT, "public", "badges", f"{b.lower()}.png")) for i, b in BW_BADGES.items()]
+    jobs += [(f"{BASE}badges/{i + 41}.png", os.path.join(ROOT, "public", "badges", f"{b.lower()}.png")) for i, b in enumerate(["Bug", "Cliff", "Rumble", "Plant", "Voltage", "Fairy", "Psychic", "Iceberg"])]
     jobs += [(f"{BASE}items/{z.lower()}-z--bag.png", os.path.join(ROOT, "public", "badges", f"{z.lower()}.png")) for z in Z_CRYSTALS]
     jobs += [(f"{BASE}items/{src}.png", os.path.join(ROOT, "public", "items", f"{key}.png")) for key, src in ITEMS.items()]
     # Gen 1 has no shiny palette; retain the original art for the tracker’s shiny paths.

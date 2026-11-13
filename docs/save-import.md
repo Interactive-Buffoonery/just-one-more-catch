@@ -27,6 +27,7 @@ Website game support is an explicit adapter in `client/save-import.ts`:
 | E | Emerald |
 | HG / SS | HeartGold / SoulSilver |
 | B / W | Black / White (individual stored title; excludes B2 / W2) |
+| X / Y | X / Y (individual stored title) |
 | US / UM | Ultra Sun / Ultra Moon |
 
 The parser can read more games than the website offers. A readable unsupported
@@ -61,7 +62,7 @@ supports HeartGold/SoulSilver and Sun/Moon/Ultra Sun/Ultra Moon; only the websit
 supported packs can be imported. The source fields are PKHeX's `SecondsToStart`
 with its `DateUtil.GetDateTime2000` conversion. The reader checks each format's
 console calendar bounds and omits uninitialized zero values. Red/Blue/Yellow, Gold/Silver/Crystal and
-FireRed/LeafGreen, Ruby/Sapphire, Emerald and Black/White provide no recorded date through this reader. Missing, invalid
+FireRed/LeafGreen, Ruby/Sapphire, Emerald, Black/White and X/Y provide no recorded date through this reader. Missing, invalid
 or future dates use import day; the preview never invents a recorded date.
 
 The website converts the selected calendar day to local midnight, matching the
@@ -209,7 +210,7 @@ runs and input bytes. Zero-filled and truncated files create nothing.
 
 PKHeX Gen V does expose an adventure-start field: `SAV5.SecondsToStart`
 forwards to the 64-bit `AdventureInfo5.SecondsToStart` at adventure block +
-`0x34` (the generic property narrows it to 32 bits). Reader 0.1.2 does not
+`0x34` (the generic property narrows it to 32 bits). Reader 0.1.3 does not
 allowlist Gen V. Both populated and zero fields omit `startDate` through the
 published worker, so imports use import day. The Gen V epoch, calendar bounds,
 invalid values, leap days and exported recorded-date behavior remain unverified
@@ -223,6 +224,34 @@ failure/retry/cancellation. Existing automated tests cover limits and account
 changes. These are structural fixtures, not cartridge exports or evidence of a
 legitimate in-game zero-caught save. Permitted real saves, a legitimate in-game
 zero-caught save, live signed-in imports and mobile Safari remain unverified.
+## X/Y verification
+
+X/Y uses vendored reader 0.1.3 and the pack's 721-species National Dex limit,
+already present in `IMPORT_SPECIES_LIMITS` on the pack branch. Four serialized
+synthetic 415,232-byte fixtures cover caught and empty saves for both titles.
+Native Core, independent raw-bit reads and the published WASM worker agree on
+individual `X`/`Y` identities, complete National Dex coverage and 20 caught
+species retained after removal from storage. The fixtures include starter
+stages and National Dex boundaries 649/650 and 721. Three seen-only species
+exercise female and shiny regions and stay uncaught. Both titles import and
+reload exact caught state, preserving existing runs and input bytes. Zero-filled
+and truncated files create nothing. Other Gen VI identities remain unmapped.
+
+Gen VI exposes `GameTime6.SecondsToStart`, but reader 0.1.3 does not allowlist
+this layout for dates. Populated and zero fields both omit `startDate` through
+the published worker; imports use import day. Gen VI epoch/calendar bounds,
+invalid values, leap days and exported recorded-date behavior remain unverified
+for date import. No reader source, package, lockfile or tarball changed.
+
+Reproduce with [the X/Y fixture README](../scripts/xy-save-fixtures/README.md).
+The guest browser matrix covers selection/drop, both titles, empty dex at 390px,
+preview counts, import-day fallback, creation/reload, cancellation, storage
+failure/retry, duplicate confirmation, navigation and preparation
+failure/retry/cancellation. Existing automated tests cover limits and account
+changes. These structural fixtures are not in-game exports. Permitted real
+cartridge/emulator exports, a legitimate in-game zero-caught save, live signed-in
+imports, encrypted console backup extraction, mobile Safari and physical mobile
+performance remain unverified.
 
 ## Adding a ROM hack
 

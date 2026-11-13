@@ -235,8 +235,22 @@ def species(n, johto):
     }
 
 
+def regional_dex(ids):
+    ids = ids if isinstance(ids, list) else [ids]
+    result = {}
+    offset = 0
+    for dex_id in ids:
+        entries = cached(f"pokedex_{dex_id}")["pokemon_entries"]
+        for e in entries:
+            n = int(e["pokemon_species"]["url"].rstrip("/").split("/")[-1])
+            assert n not in result, f"Species {n} appears in multiple regional sections"
+            result[n] = offset + e["entry_number"]
+        offset += len(entries)
+    return result
+
+
 if __name__ == "__main__":
-    johto = {int(e["pokemon_species"]["url"].rstrip("/").split("/")[-1]): e["entry_number"] for e in cached(f"pokedex_{GAME['pokedex']}")["pokemon_entries"]}
+    johto = regional_dex(GAME["pokedex"])
     dex = [species(n, johto) for n in range(1, GAME["species"] + 1)]
     if unmatched:
         sys.exit("No chapter for: " + ", ".join(sorted(unmatched)))

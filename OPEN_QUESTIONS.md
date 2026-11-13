@@ -328,3 +328,73 @@ complete representation of all original BW acquisition methods.
   cached sources and corrected: the Route 9 stone gate, Black Landorus's
   deferred-catch condition, and Cut on Dreamyard dark grass/B1F.
   See `docs/bw-access-audit.md` for the reviewer work list.
+## X and Y (`xy`) implementation handoff
+
+- **Save imports:** synthetic X/Y caught/empty files verify individual titles and
+  complete National Dex flags through native Core, independent raw bits and
+  published reader 0.1.3 WASM. Obtain permitted real cartridge/emulator exports
+  and a legitimate in-game zero-caught save. Live account imports, encrypted
+  backup extraction, mobile Safari and physical mobile performance remain
+  unverified. Gen VI adventure-start date import needs separate epoch/bounds,
+  invalid-value, leap-day and exported-date checks; use import day for now.
+
+This is a partial, integrated pack pending independent review. Do not interpret
+its successful generation/check/build as verified game access.
+
+- **Opaque cave areas:** map Glittering Cave IDs 303/304, Reflection Cave
+  305–308, Frost Cavern 313–317 and Victory Road 322/324/326/328 to actual
+  rooms/floors. Distinct source areas are retained. In particular, identify
+  the Frost Cavern Ice Rock room behind Surf; check each Victory Road room's
+  first reachable encounter tile, rather than applying all full-traversal HMs
+  everywhere. The main chapters are sourced; finer Surf/Strength/Rock Smash/
+  Waterfall gates are deliberately unverified, not invented.
+- **Terminus side chambers:** map PokeAPI B1F Left/Right to the small exterior
+  entrances versus the main dungeon. The location page says small chamber
+  one needs Rock Smash, but does not map its label to these API areas.
+  Check the earliest path to B2F and Zygarde as well. Only the sourced
+  Hall-of-Fame restriction is applied to Zygarde's chamber.
+- **Route 21:** confirm access to each purple-flower patch before Iceberg,
+  and which walking/flower rows require Strength. Snowbelle's west connection
+  is sourced, but no whole-route Strength gate is inferred from item puzzles.
+- **Route 12 shoreline:** verify the near-Shalour shore supports each rod's
+  listed species before Surf. Walking/flower/horde/Rock Smash rows wait for
+  Surf, while the Rumble-gated Lapras gift does not need Surf itself.
+- **PokeAPI gaps, not fabricated rows:** the cached X/Y data has no NPC-trade
+  rows. Missing acquisitions are Santalune Farfetch'd (Bunnelby), Cyllage
+  Steelix (Luvdisc), Snowbelle Bisharp (Jigglypuff), Shauna's postgame starter
+  (Chespin after Fennekin, Fennekin after Froakie, Froakie after Chespin),
+  Diantha's postgame Ralts, and the hotel Magikarp/Eevee trades. No encounter
+  rows for those trades were added by hand. Sources: In-game trade X/Y
+  section and walkthrough Parts 2, 5, 13 and 16 in SOURCES.md.
+- **Missing restored-fossil gifts:** PokeAPI supplies Tyrunt/Amaura but not
+  restored Aerodactyl, Omanyte, Kabuto, Lileep, Anorith, Cranidos, Shieldon,
+  Tirtouga or Archen gifts. Older fossils except Old Amber are post-League;
+  Root/Claw are X-only and Helix/Dome Y-only. These missing gift rows were
+  not invented, even when a species may have another acquisition. Tyrunt/
+  Amaura are displayed at Ambrette instead of PokeAPI's Glittering Cave.
+- **Choices and online/friend state:** the shared tracker displays starter
+  conditions and Safari slot requirements as special text. It does not
+  enforce one Kanto starter, one fossil choice, each individual registered
+  friend's Safari type, their League clear, or their PSS recognition. The
+  friend-ready event is a broad player confirmation. Third-slot access now
+  requires local shared play if it was not already unlocked before the
+  online shutdown; verify on actual hardware. Do not promise all Safari
+  species merely because the player has one friend.
+- **Regional numbering:** 457 includes the three optional Central mythicals.
+  The UI's single regional index concatenates all three lists; it does not
+  label Central/Coastal/Mountain or restart each section at 1. A future UI
+  change could expose section-specific numbers; no redesign is included here.
+- **Forms/evolutions:** local flower colours, Pumpkaboo/Gourgeist sizes,
+  Rotom appliances and ordinary Vivillon patterns are sourced. Audit other
+  transferable older form families separately; this catalog is not complete.
+  New Gen VI and known location-evolution overrides are sourced, but the
+  entire inherited national evolution text has not been game-tested.
+- No second independent access review, scanned guide, Gen VI game scripts,
+  browser/picker/guest persistence/account-sync checks, cartridge/emulator
+  gameplay, or save-file import checks were performed. Save-file support is
+  intentionally not enabled. Coordinator owns the independent review/rollup.
+- **Clock presentation:** the existing shared clock changes morning to day
+  at 10:00, whereas X/Y's source says 11:00 and has a separate evening.
+  Night is correctly configured at 21:00. Cached X/Y rows have no ordinary
+  time-of-day encounter conditions, so this does not hide a cached daytime
+  encounter, but precise clock-period UI remains unverified/out of scope.
