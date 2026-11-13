@@ -7,7 +7,7 @@ import { execFileSync } from "node:child_process";
 import { createServer } from "node:http";
 import { createReadStream, existsSync, mkdtempSync, readFileSync, statSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { extname, join, resolve } from "node:path";
+import { extname, join, resolve, sep } from "node:path";
 import { chromium } from "playwright-core";
 
 const base = process.env.BASE ?? "origin/main";
@@ -19,13 +19,14 @@ const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
 function serve(dir) {
   return new Promise((done) => {
     const server = createServer((req, res) => {
-      let file = join(dir, decodeURIComponent(req.url.split("?")[0]));
+      let file = resolve(dir, "." + new URL(req.url, "http://x").pathname);
+      if (file !== dir && !file.startsWith(dir + sep)) return res.writeHead(403).end();
       if (existsSync(file) && statSync(file).isDirectory()) file = join(file, "index.html");
       if (!existsSync(file)) file = join(dir, "index.html");
       res.writeHead(200, { "content-type": mime[extname(file)] ?? "application/octet-stream" });
       createReadStream(file).pipe(res);
     });
-    server.listen(0, () => done(server));
+    server.listen(0, "127.0.0.1", () => done(server));
   });
 }
 
@@ -34,7 +35,7 @@ async function collect(browser, port) {
   for (const route of routes) for (const width of [390, 1280]) for (const colorScheme of ["light", "dark"]) {
     const ctx = await browser.newContext({ viewport: { width, height: 900 }, colorScheme, reducedMotion: "reduce" });
     const page = await ctx.newPage();
-    await page.goto(`http://localhost:${port}${route}`, { waitUntil: "networkidle" });
+    await page.goto(`http://127.0.0.1:${port}${route}`, { waitUntil: "networkidle" });
     await page.waitForTimeout(800);
     out[`${route} ${width} ${colorScheme}`] = await page.evaluate((html) => {
       if (html) document.body.insertAdjacentHTML("beforeend", `<div id="style-diff-fixture">${html}</div>`);
@@ -62,7 +63,7 @@ try {
   run("sh", ["scripts/setup-worktree.sh"], baseDir);
   run("pnpm", ["build"], baseDir);
   run("pnpm", ["build"]);
-  const servers = await Promise.all([serve(join(baseDir, "dist")), serve(resolve("dist"))]);
+  const servers = await Promise.all([serve(resolve(baseDir, "dist")), serve(resolve("dist"))]);
   const browser = await chromium.launch();
   const results = [];
   for (const server of servers) results.push(await collect(browser, server.address().port));
