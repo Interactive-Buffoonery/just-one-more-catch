@@ -1,3 +1,4 @@
+import { withTimeout } from "./async";
 import "@fontsource/jetbrains-mono/latin-500.css";
 import type { Clerk } from "@clerk/clerk-js";
 import { ConvexClient } from "convex/browser";
@@ -22,9 +23,7 @@ async function startContact() {
   let session: Promise<Clerk> | undefined;
   mountContact(async (input) => {
     if (/(?:^|;\s*)__client_uat(?:_[^=]*)?=(?!0(?:;|$))[^;]/.test(document.cookie) || session) {
-      let timer: ReturnType<typeof setTimeout> | undefined;
-      try {
-        await Promise.race([
+      await withTimeout(
           (async () => {
             const c = await (session ??= (async () => {
               const [{ Clerk }, { ui }] = await Promise.all([
@@ -44,14 +43,7 @@ async function startContact() {
                 (ok) => ok ? resolve() : reject(new Error("Session couldn't be restored")),
               );
             });
-          })(),
-          new Promise<never>((_, reject) => {
-            timer = setTimeout(() => reject(new Error("Session timed out")), 10000);
-          }),
-        ]);
-      } finally {
-        clearTimeout(timer);
-      }
+          })(), 10000, "Session timed out");
     }
     return convex.mutation(api.runs.contact, input);
   });
@@ -217,20 +209,15 @@ async function startTracker() {
       if (!session || !target || !auth.isAuthenticated) throw new Error("Sign in first");
       // Keep retries bound to the session that confirmed the import.
       const importer = new ConvexClient(import.meta.env.VITE_CONVEX_URL);
-      let timer: ReturnType<typeof setTimeout> | undefined;
       importer.setAuth(({ forceRefreshToken }) =>
         clerk?.user?.id === target && clerk.session?.id === session.id
           ? sessionToken({ session }, forceRefreshToken)
           : Promise.resolve(null));
       try {
-        return await Promise.race([
+        return await withTimeout(
           importer.mutation(api.runs.importCaught, { version, caught, importId, startedAt }),
-          new Promise<never>((_, reject) => {
-            timer = setTimeout(() => reject(new Error("Import timed out")), 30000);
-          }),
-        ]);
+          30000, "Import timed out");
       } finally {
-        clearTimeout(timer);
         await importer.close();
       }
     },
