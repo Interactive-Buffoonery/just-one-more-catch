@@ -8,6 +8,7 @@ import {
   mutation,
   query,
   type MutationCtx,
+  type QueryCtx,
 } from "./_generated/server";
 import { clerkApi, identityOf } from "./auth";
 
@@ -61,7 +62,7 @@ export const normalizeCode = (input: string) =>
 export const displayCode = (code: string) =>
   `${code.slice(0, 4)}-${code.slice(4)}`;
 
-async function heldPairing(ctx: MutationCtx, id: string, secret: string) {
+async function heldPairing(ctx: QueryCtx, id: string, secret: string) {
   const pairingId = ctx.db.normalizeId("pairings", id);
   const row = pairingId && (await ctx.db.get(pairingId));
   return row && sameText(row.secretHash, await sha256(secret)) ? row : null;
@@ -115,9 +116,8 @@ export const status = query({
     v.object({ status: v.literal("approved"), ticket: v.string() }),
   ),
   handler: async (ctx, { id, secret }) => {
-    const pairingId = ctx.db.normalizeId("pairings", id);
-    const row = pairingId && (await ctx.db.get(pairingId));
-    if (!row || !sameText(row.secretHash, await sha256(secret)))
+    const row = await heldPairing(ctx, id, secret);
+    if (!row)
       return { status: "expired" as const };
     if (row.status === "approved" && row.ticket)
       return { status: "approved" as const, ticket: row.ticket };

@@ -6,7 +6,7 @@ import { runInNewContext } from 'node:vm';
 const game = JSON.parse(readFileSync('client/data/sm.ts', 'utf8').split('export default ')[1].trim().replace(/;$/, ''));
 const source = readFileSync('client/game.ts', 'utf8');
 const packs = readFileSync('client/packs.ts', 'utf8');
-const sm = runInNewContext(stripTypeScriptTypes(packs.slice(packs.indexOf('const SM:'), packs.indexOf('export const VERSIONS'))) + '\nSM');
+const sm = runInNewContext(stripTypeScriptTypes(packs.slice(packs.indexOf('const ALOLA_KIT'), packs.indexOf('const JOHTO_KIT')) + packs.slice(packs.indexOf('const SM:'), packs.indexOf('export const VERSIONS'))) + '\nSM');
 const run = { caught: new Set(), badges: new Set(sm.badges.map(b => b[0])), kit: new Set(sm.kit.map(k => k[0])), events: new Set() };
 const context = {
   R: () => run, P: () => sm, EVENTS: Object.fromEntries(game.events.map(e => [e.id, e])),

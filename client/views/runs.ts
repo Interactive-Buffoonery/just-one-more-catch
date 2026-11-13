@@ -45,8 +45,9 @@ export const confirmPair = (ids: string[]) => `<div class="pickbody vpick"><h2 c
 }).join("")}</div><div class="hv-actions start-choices">${startChoices}</div></div>`;
 export const confirmGame = (id: string, customize = false) => {
   const v = verOf(id);
-  if (customize) return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">Customize your ${esc(v.name)}${v.platform ? ` (${esc(v.platform)})` : ""} playthrough?</h2><div class="hv-actions"><button class="app-primary" data-custom="1">Customize</button><button class="app-quiet" data-close="1">Not now</button></div><p class="small muted">You can update your playthrough at any time using Customize on the ${isGuest() ? "Dex tab" : "Journey or Dex tab"}.</p></div>`;
-  return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">Start ${esc(v.name)}${v.platform ? ` (${esc(v.platform)})` : ""}?</h2><div class="hv-actions start-choices"><button class="app-primary" data-confirmrun="${esc(id)}">Start a new playthrough</button>${startChoices}</div></div>`;
+  const title = `${esc(v.name)}${v.platform ? ` (${esc(v.platform)})` : ""}`;
+  const actions = customize ? `<div class="hv-actions"><button class="app-primary" data-custom="1">Customize</button><button class="app-quiet" data-close="1">Not now</button></div><p class="small muted">You can update your playthrough at any time using Customize on the ${isGuest() ? "Dex tab" : "Journey or Dex tab"}.</p>` : `<div class="hv-actions start-choices"><button class="app-primary" data-confirmrun="${esc(id)}">Start a new playthrough</button>${startChoices}</div>`;
+  return `<div class="pickbody" data-game="${esc(id)}"><span class="gb"><span class="bx">${cover(v, "", "")}</span></span><h2 class="lg" id="sheet-title">${customize ? "Customize your " : "Start "}${title}${customize ? " playthrough?" : "?"}</h2>${actions}</div>`;
 };
 export const dash: { slot?: string; shelf: string } = { shelf: "Unplayed" };
 const soonCover = (g: Soon) =>

@@ -2,6 +2,7 @@
 // main.ts owns auth and server calls and hands them in through the bridge.
 import "./styles.css";
 import "./save-import.css";
+import { withTimeout } from "./async";
 import { SaveImport } from "./save-import";
 import { $, announce, esc, root, setRoot } from "./dom";
 import { caughtCsv, fetchStates, jsonParts, saveFile } from "./export";
@@ -369,15 +370,7 @@ async function saveBeforeImport() {
   if (!run) return;
   const id = run.id, state = dumpRun(run);
   if (state === ui.saved) return;
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  try {
-    await Promise.race([
-      bridge.saveRun(id, state),
-      new Promise<never>((_, reject) => {
-        timer = setTimeout(() => reject(new Error("Saving timed out")), 30000);
-      }),
-    ]);
-  } finally { clearTimeout(timer); }
+  await withTimeout(bridge.saveRun(id, state), 30000, "Saving timed out");
   if (run?.id === id) ui.saved = state;
 }
 function toggleCaught(n: number) {
