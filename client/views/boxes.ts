@@ -119,7 +119,7 @@ export function saveMon() {
     raw = v("f-box").value,
     box = raw === "party" ? "party" : +raw,
     existing = s.id ? R().mons.find((m) => m.id === s.id) : null;
-  if (!v("f-day").reportValidity()) return false;
+  if (!v("f-day").reportValidity()) throw new Error("Choose a valid calendar date");
   const lvl = v("f-lvl").value
     ? Math.min(100, Math.max(1, Math.round(+v("f-lvl").value)))
     : "";
