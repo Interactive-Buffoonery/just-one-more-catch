@@ -44,12 +44,12 @@
     "Hoenn Route 111": "Route 111",
     "Hoenn Route 101": "Route 101",
     "Hoenn Safari Zone Neacro Bike": "Safari Zone northeast",
-    "Hoenn Safari Zone Sw": "Safari Zone Sw",
+    "Hoenn Safari Zone Sw": "Safari Zone southwest",
     "Hoenn Route 113": "Route 113",
     "Hoenn Route 103": "Route 103",
     "Hoenn Route 124": "Route 124",
     "Hoenn Route 110": "Route 110",
-    "Hoenn Safari Zone Se": "Safari Zone Se",
+    "Hoenn Safari Zone Se": "Safari Zone southeast",
     "Hoenn Safari Zone Nwmach Bike": "Safari Zone northwest",
     "Hoenn Route 106": "Route 106",
     "Hoenn Route 124 Underwater": "Route 124 Underwater",
@@ -851,6 +851,13 @@
     }
   },
   "drop_rows": [
+    {
+      "place": "Hoenn Route 130",
+      "n": 360,
+      "m": "walk",
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_130",
+      "quote": "{{Catch/div|land|Mirage Island}}"
+    },
     {
       "place": "New Mauville",
       "n": 101,

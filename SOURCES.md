@@ -887,6 +887,11 @@ were sourced separately from Emerald. Each entry links its relevant source.
     Historical distribution availability is not implied by tracking it.
   - `src/wild_encounter.c`: `FishingWildEncounter` checks Feebas before the
     rod-specific table. Any rod works, using existing method support.
+  - `src/data/wild_encounters.json`: Route 130's land tables contain only
+    Wynaut. The cached Hoenn Route 130 article labels these grass encounters
+    as Mirage Island. Drop PokeAPI's duplicate Route 130 walking row so
+    Wynaut keeps the existing Mirage Island gate:
+    https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_130
   - `src/data/pokemon/evolution.h`, `src/pokemon_3.c`, and
     `src/evolution_scene.c` establish historical evolution text overrides:
     original stones/friendship/beauty, Espeon noon–midnight, Umbreon
