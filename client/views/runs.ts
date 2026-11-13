@@ -142,8 +142,12 @@ const badgeImg = (b: string, size: number, alt = "") =>
 const avatarN = (): number =>
   ui.avatar ?? (isAvatar(bridge.avatar) ? bridge.avatar : 25);
 const avatarName = () => AVATARS.find(([n]) => n === avatarN())?.[1] ?? "";
+const fit = () => {
+  const [l, t, r, b] = AVATARS.find(([n]) => n === avatarN())?.[2] ?? [16, 15, 64, 65];
+  return `--cx:${(l + r) / 2};--cy:${(t + b) / 2};--s:${Math.max(r - l, b - t)}`;
+};
 export const partner = (cls: string) =>
-  `<img class="${cls}" src="${imageUrl(`/sprites/hgss/${avatarN()}.png`)}" alt="" width="80" height="80">`;
+  `<img class="${cls}" src="${imageUrl(`/sprites/hgss/${avatarN()}.png`)}" alt="" width="80" height="80" style="${fit()}">`;
 export const trainerName = () => bridge.auth.displayName || "Trainer";
 const plat = (v: (typeof VERSIONS)[VersionId]) =>
   v.platform ? ` <span class="tag plain">${v.platform}</span>` : "";
