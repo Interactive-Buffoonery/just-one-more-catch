@@ -120,6 +120,13 @@
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Liberty_Garden",
       "quote": "In {{game|Black and White|s}}, the ship will only take the {{player}} if they have the [[Liberty Pass]], which is an {{pkmn2|event}}-exclusive item. On the player's first visit, some members of [[Team Plasma]] are already here upon the player's arrival, and they will battle the player."
+    },
+    "Unova Route 9": {
+      "needs": [
+        "stone-received"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_8",
+      "quote": "In {{2v2|Black|White}}, the entrance to the Tubeline Bridge from this route is blocked by two {{tc|Team Plasma Grunt}}s. They will only disperse once the {{player}} obtains the [[Light Stone]]{{sup/5|Bl}}/[[Dark Stone]]{{sup/5|W}}. Once they have dispersed, [[Bianca]] will meet the player at this position for a battle."
     }
   },
   "chapters": [
@@ -328,6 +335,18 @@
       "quote": "On the top floor, [[N]] is befriending the legendary Pokémon {{p|Zekrom}}{{sup/5|Bl}} / {{p|Reshiram}}{{sup/5|Wh}}. The dragon recognizes N as a hero. N tells you that if you want to stop him, you must become a hero as well. He tells you to look for the other dragon, and flies off with his new ally."
     },
     {
+      "id": "stone-received",
+      "label": "Receive the Light Stone or Dark Stone",
+      "q": "Has Lenora given you the Light Stone or Dark Stone at Nacrene Museum?",
+      "chap": 9,
+      "after": [
+        "dragon-awakened"
+      ],
+      "by": "Legend",
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_10",
+      "quote": "When you reach the museum, [[Professor Juniper]], [[Cedric Juniper]], [[Bianca]], and [[Alder]] are waiting for you. The professor says that you are caught up in something serious. [[Lenora]] leaves the museum and hands you the [[Light Stone]]{{sup/5|Bl}}/[[Dark Stone]]{{sup/5|Wh}}. Alder asks if you are ready to battle [[N]] if anything happens to him, and Lenora remembers that \"[[Drayden|those]] [[Iris|two]]\" in [[Opelucid City]] are {{type|Dragon}} specialists. {{m|Fly}} back to [[Icirrus City]] and go northeast to {{rt|8|Unova}}."
+    },
+    {
       "id": "ghetsis",
       "label": "Defeat N and Ghetsis",
       "q": "Did you defeat N and Ghetsis at N's Castle and see the credits?",
@@ -444,7 +463,26 @@
         "landorus-party"
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Abundant_Shrine",
-      "quote": "A {{p|Landorus}} appears here if both {{p|Tornadus}} and {{p|Thundurus}} are in the party. The Tornadus{{sup/5|B}}/Thundurus{{sup/5|W}} must have the player's [[Trainer ID number]]. If defeated or run from, it respawns after entering the [[Hall of Fame]]."
+      "quote": "A {{p|Landorus}} appears here if both {{p|Tornadus}} and {{p|Thundurus}} are in the party. The Tornadus{{sup/5|B}}/Thundurus{{sup/5|W}} must have the player's [[Trainer ID number]]. If defeated or run from, it respawns after entering the [[Hall of Fame]].",
+      "versions": [
+        "black"
+      ],
+      "remove_conditions": [
+        "special-encounter-couldnt-capture-before"
+      ]
+    },
+    {
+      "place": "Abundant Shrine",
+      "n": 645,
+      "m": "static",
+      "needs": [
+        "landorus-party"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Abundant_Shrine",
+      "quote": "A {{p|Landorus}} appears here if both {{p|Tornadus}} and {{p|Thundurus}} are in the party. The Tornadus{{sup/5|B}}/Thundurus{{sup/5|W}} must have the player's [[Trainer ID number]]. If defeated or run from, it respawns after entering the [[Hall of Fame]].",
+      "versions": [
+        "white"
+      ]
     },
     {
       "place": "Nacrene City",
@@ -548,12 +586,11 @@
       "n": 166,
       "m": "dark-grass",
       "needs": [
-        "cut-hm",
         "Elite Four",
         "ghetsis"
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
-      "quote": "In {{game|Black and White|s}}, the {{player}} encounters some {{tc|Team Plasma Grunt}}s here who are kicking a {{p|Munna}} to get its [[Dream Mist]]. {{m|Cut}} is required to access the building area. After beating [[Ghetsis]] and [[N]], the orange traffic cone is removed. This allows access to the basement and the other portion of the area, where [[Gorm]] of the [[Seven Sages]] can be found and arrested."
+      "quote": "\n\n"
     },
     {
       "place": "Unova Route 16",
@@ -581,12 +618,11 @@
       "n": 49,
       "m": "dark-grass",
       "needs": [
-        "cut-hm",
         "Elite Four",
         "ghetsis"
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
-      "quote": "In {{game|Black and White|s}}, the {{player}} encounters some {{tc|Team Plasma Grunt}}s here who are kicking a {{p|Munna}} to get its [[Dream Mist]]. {{m|Cut}} is required to access the building area. After beating [[Ghetsis]] and [[N]], the orange traffic cone is removed. This allows access to the basement and the other portion of the area, where [[Gorm]] of the [[Seven Sages]] can be found and arrested."
+      "quote": "\n\n"
     },
     {
       "place": "Unova Route 11",
@@ -604,12 +640,11 @@
       "n": 402,
       "m": "dark-grass",
       "needs": [
-        "cut-hm",
         "Elite Four",
         "ghetsis"
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
-      "quote": "In {{game|Black and White|s}}, the {{player}} encounters some {{tc|Team Plasma Grunt}}s here who are kicking a {{p|Munna}} to get its [[Dream Mist]]. {{m|Cut}} is required to access the building area. After beating [[Ghetsis]] and [[N]], the orange traffic cone is removed. This allows access to the basement and the other portion of the area, where [[Gorm]] of the [[Seven Sages]] can be found and arrested."
+      "quote": "\n\n"
     },
     {
       "place": "Unova Route 11",
@@ -627,12 +662,11 @@
       "n": 505,
       "m": "dark-grass",
       "needs": [
-        "cut-hm",
         "Elite Four",
         "ghetsis"
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
-      "quote": "In {{game|Black and White|s}}, the {{player}} encounters some {{tc|Team Plasma Grunt}}s here who are kicking a {{p|Munna}} to get its [[Dream Mist]]. {{m|Cut}} is required to access the building area. After beating [[Ghetsis]] and [[N]], the orange traffic cone is removed. This allows access to the basement and the other portion of the area, where [[Gorm]] of the [[Seven Sages]] can be found and arrested."
+      "quote": "\n\n"
     },
     {
       "place": "Unova Route 1",
@@ -680,12 +714,11 @@
       "n": 168,
       "m": "dark-grass",
       "needs": [
-        "cut-hm",
         "Elite Four",
         "ghetsis"
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
-      "quote": "In {{game|Black and White|s}}, the {{player}} encounters some {{tc|Team Plasma Grunt}}s here who are kicking a {{p|Munna}} to get its [[Dream Mist]]. {{m|Cut}} is required to access the building area. After beating [[Ghetsis]] and [[N]], the orange traffic cone is removed. This allows access to the basement and the other portion of the area, where [[Gorm]] of the [[Seven Sages]] can be found and arrested."
+      "quote": "\n\n"
     },
     {
       "place": "Unova Route 11",
@@ -753,12 +786,11 @@
       "n": 510,
       "m": "dark-grass",
       "needs": [
-        "cut-hm",
         "Elite Four",
         "ghetsis"
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
-      "quote": "In {{game|Black and White|s}}, the {{player}} encounters some {{tc|Team Plasma Grunt}}s here who are kicking a {{p|Munna}} to get its [[Dream Mist]]. {{m|Cut}} is required to access the building area. After beating [[Ghetsis]] and [[N]], the orange traffic cone is removed. This allows access to the basement and the other portion of the area, where [[Gorm]] of the [[Seven Sages]] can be found and arrested."
+      "quote": "\n\n"
     },
     {
       "place": "Unova Route 16",
@@ -821,7 +853,8 @@
         "ghetsis"
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
-      "quote": "In {{game|Black and White|s}}, the {{player}} encounters some {{tc|Team Plasma Grunt}}s here who are kicking a {{p|Munna}} to get its [[Dream Mist]]. {{m|Cut}} is required to access the building area. After beating [[Ghetsis]] and [[N]], the orange traffic cone is removed. This allows access to the basement and the other portion of the area, where [[Gorm]] of the [[Seven Sages]] can be found and arrested."
+      "quote": "In {{game|Black and White|s}}, the {{player}} encounters some {{tc|Team Plasma Grunt}}s here who are kicking a {{p|Munna}} to get its [[Dream Mist]]. {{m|Cut}} is required to access the building area. After beating [[Ghetsis]] and [[N]], the orange traffic cone is removed. This allows access to the basement and the other portion of the area, where [[Gorm]] of the [[Seven Sages]] can be found and arrested.",
+      "exact_place": true
     },
     {
       "place": "Unova Route 11",
@@ -849,12 +882,11 @@
       "n": 517,
       "m": "dark-grass",
       "needs": [
-        "cut-hm",
         "Elite Four",
         "ghetsis"
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
-      "quote": "In {{game|Black and White|s}}, the {{player}} encounters some {{tc|Team Plasma Grunt}}s here who are kicking a {{p|Munna}} to get its [[Dream Mist]]. {{m|Cut}} is required to access the building area. After beating [[Ghetsis]] and [[N]], the orange traffic cone is removed. This allows access to the basement and the other portion of the area, where [[Gorm]] of the [[Seven Sages]] can be found and arrested."
+      "quote": "\n\n"
     },
     {
       "place": "Striaton City",
@@ -973,12 +1005,11 @@
       "n": 20,
       "m": "dark-grass",
       "needs": [
-        "cut-hm",
         "Elite Four",
         "ghetsis"
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
-      "quote": "In {{game|Black and White|s}}, the {{player}} encounters some {{tc|Team Plasma Grunt}}s here who are kicking a {{p|Munna}} to get its [[Dream Mist]]. {{m|Cut}} is required to access the building area. After beating [[Ghetsis]] and [[N]], the orange traffic cone is removed. This allows access to the basement and the other portion of the area, where [[Gorm]] of the [[Seven Sages]] can be found and arrested."
+      "quote": "\n\n"
     },
     {
       "place": "Striaton City",

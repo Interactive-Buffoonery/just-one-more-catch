@@ -824,9 +824,15 @@ in `data/bw.json` record chapter, area, event and row evidence.
 - https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White
   and its parts 1–18 give the story sequence. Chapter grouping is a tracker
   convenience, not a claim that all optional visits occur in guide order.
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_8 and
+  https://bulbapedia.bulbagarden.net/wiki/Unova_Route_9 establish that Tubeline
+  Bridge blocks Route 9 until receiving the Light Stone/Dark Stone.
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_10
+  sources Lenora handing over the stone at Nacrene Museum after Relic Castle.
 - https://bulbapedia.bulbagarden.net/wiki/Dreamyard
   separates the monkey gift outside the ruins from grass behind Cut. The
-  basement and southern dark grass open after N and Ghetsis. Part 13 says
+  basement and southern dark grass open after N and Ghetsis via the fence
+  gap beside the tree, without Cut. Part 13 says
   the static Musharna is Friday-only after the main story. PokeAPI's B1F
   static omits Friday; a sourced row condition adds it and labels the
   encounter Dreamyard. Both cached static representations remain.

@@ -1,13 +1,22 @@
 # Black and White access review handoff
 
-Implementation source review only; independent Opus review is pending.
+Implementation source review with three independent-review findings verified
+against the cached pages and corrected.
 Generated reviewer input: `python3 scripts/access_audit.py areas bw`.
 All 87 retained areas resolve to supplied cached location pages. No browser,
-map collision simulation, cartridge, emulator or second-model proof is claimed.
+map collision simulation, cartridge or emulator proof is claimed.
 
-Implementation validation: `pnpm check` and `pnpm build` pass. All eight
+Implementation validation: `pnpm check`, `pnpm build`, `pnpm test:convex`
+(88 tests), `python3 scripts/check_bw.py` and `node scripts/check_bw.mjs` pass. All eight
 existing pack outputs were rebuilt and remain byte-identical; existing
 sprite-fit entries also remain unchanged. Save-file import is not enabled.
+
+Review corrections: Route 9 additionally requires Lenora's Light Stone/Dark
+Stone (Route 8 bridge blocker; walkthrough part 10). Black Landorus drops the
+incorrect deferred-catch condition and retains the party/Surf/Waterfall gates.
+Dreamyard dark grass and B1F require the postgame without Cut; the fence gap
+bypasses the tree. Cut remains on the aboveground ruins rows, including the
+aboveground Musharna static. Regression checks cover all three corrections.
 
 The chapter and exception evidence is in `data/bw.json` and `SOURCES.md`.
 Unresolved Victory Road labels, combined cave tables and missing acquisition

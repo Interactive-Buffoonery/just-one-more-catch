@@ -234,7 +234,8 @@ complete representation of all original BW acquisition methods.
   B1F), with Friday/Ghetsis omitted from B1F. Both are now Friday/postgame
   gated and displayed as Dreamyard, but are retained as distinct source rows.
   Confirm whether both entries should collapse upstream; dark grass and
-  ordinary ruins grass have separate Cut/postgame needs.
+  ordinary ruins grass have separate needs: dark grass and the basement
+  require the postgame, while grass behind the tree keeps Cut.
 - **National visibility:** the shared UI exposes national species with the
   Elite Four switch, slightly before Cedric's post-credits upgrade. Areas
   after Team Plasma additionally require `ghetsis`; consider a future
@@ -250,7 +251,10 @@ complete representation of all original BW acquisition methods.
   catalogs need game-specific sources and regular/shiny sprite verification.
 - **Review coverage:** all 87 retained encounter areas map to cached source
   pages; walkthrough and important exceptions were inspected once. No
-  independent second-model audit, scanned-guide cross-check, BW script
+  exhaustive independent access audit, scanned-guide cross-check, BW script
   verification, browser/guest/account-sync QA, save-file import, emulator
   or cartridge playthrough was performed. Missing second sources did not
-  block integration. See `docs/bw-access-audit.md` for the reviewer work list.
+  block integration. Three independent-review findings were checked against
+  cached sources and corrected: the Route 9 stone gate, Black Landorus's
+  deferred-catch condition, and Cut on Dreamyard dark grass/B1F.
+  See `docs/bw-access-audit.md` for the reviewer work list.
