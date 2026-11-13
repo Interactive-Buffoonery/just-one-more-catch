@@ -56,8 +56,12 @@ const tile = (p: Species, s: string) => {
   if (viewOf(R()) === "dexonly") s = s === "caught" ? "caught" : "missing";
   const genders = collectedGenders(p),
     available = visibleForms(p);
+  const progress = [
+    R().trackGenders && hasGenders(p) ? `${genders.size} of 2 genders` : "",
+    R().trackForms && available.length > 1 ? `${collectedForms(p).size} of ${available.length} forms` : "",
+  ].filter(Boolean).map((text) => `, ${text}`).join("");
   const short = ((ui.q || "").trim() || ["missing", "all"].includes(ui.filter)) && SHORT[s];
-  return `<button type="button" class="dt${s === "now" ? " n" : ""}${s === "now" || s === "caught" ? "" : " dim"}" data-${ui.bulk ? "toggle" : "open"}="${p.n}" data-k="d${p.n}" ${ui.bulk ? `aria-pressed="${s === "caught"}"` : ""} aria-label="${p.name}, number ${num(p)}, ${STATUS_TEXT[s]}">${mon(p)}<span class="nm">${p.name}</span><span class="no">#${pad(num(p))}${R().trackGenders && hasGenders(p) ? `<span class="gx" aria-label="${genders.size} of 2 genders">${GENDERS.map(([g, symbol, label]) => `<b class="${genders.has(g) ? "on" : ""}" aria-label="${label}${genders.has(g) ? " collected" : " missing"}">${symbol}</b>`).join("")}</span>` : ""}${R().trackForms && available.length > 1 ? `<i>${collectedForms(p).size}/${available.length}</i>` : short ? `<i>${short}</i>` : ""}</span></button>`;
+  return `<button type="button" class="dt${s === "now" ? " n" : ""}${s === "now" || s === "caught" ? "" : " dim"}" data-${ui.bulk ? "toggle" : "open"}="${p.n}" data-k="d${p.n}" ${ui.bulk ? `aria-pressed="${s === "caught"}"` : ""} aria-label="${p.name}, number ${num(p)}, ${STATUS_TEXT[s]}${progress}">${mon(p)}<span class="nm">${p.name}</span><span class="no">#${pad(num(p))}${R().trackGenders && hasGenders(p) ? `<span class="gx" aria-hidden="true">${GENDERS.map(([g, symbol]) => `<b class="${genders.has(g) ? "on" : ""}">${symbol}</b>`).join("")}</span>` : ""}${R().trackForms && available.length > 1 ? `<i aria-hidden="true">${collectedForms(p).size}/${available.length}</i>` : short ? `<i aria-hidden="true">${short}</i>` : ""}</span></button>`;
 };
 const section = (title: string, list: { p: Species; s: string }[]) =>
   list.length
