@@ -707,13 +707,21 @@ Coordinates below are zero-based script tile coordinates, not block coordinates.
   [Blackthorn exits](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/DarkCaveBlackthornEntrance.asm#L65-L67).
 - **Mt. Mortar / Route 42:** from Ecruteak gate arrival (0,8), without Surf,
   the flood follows the western cave entrance through 1F Inside and exits
-  the eastern cave entrance, reaching 16 Route 42 grass cells. It reaches
-  no basement cells. With Surf it reaches B1F via Outside (17,29) ->
-  B1F (19,29), including 175 FLOOR cells, but not Kiyo's platform or
-  1F Inside stairs (9,9). Adding Waterfall reaches 428 upper-floor FLOOR
-  cells and all four tiles adjacent to Kiyo (13,4), without moving boulders.
-  Keep basement Surf, upper-floor Surf + Waterfall and Tyrogue's existing
-  requirements; Route 42 walking encounters need no Surf.
+  the eastern cave entrance, reaching 16 Route 42 grass cells. From there
+  Route 42's northern path (row 4) leads on foot to the middle entrance
+  (28,9), whose arrival (17,33) walks straight up to the B1F ladder
+  (17,29) -> B1F (19,29): 37 B1F FLOOR cells without Surf, next to
+  fishable water. Psypokes agrees that B1F ladder (E) comes out "just above
+  the middle entrance of Mt Mortar". B1F therefore has no Surf place gate;
+  its Surf rows keep Surf through their method. With Surf, B1F grows to
+  175 FLOOR cells but still misses Kiyo's platform and 1F Inside stairs
+  (9,9). Adding Waterfall reaches 428 upper-floor FLOOR cells and all four
+  tiles adjacent to Kiyo (13,4), without moving boulders. Keep upper-floor
+  Surf + Waterfall and Tyrogue's existing requirements; Route 42 walking
+  encounters need no Surf.
+  [middle entrance](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route42.asm#L251), [B1F ladder](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/MountMortar1FOutside.asm#L24-L29),
+  [B1F warps](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/MountMortarB1F.asm#L127-L128),
+  [walkthrough](https://www.psypokes.com/gsc/walkthrough.php?part=12),
   [Route 42 map](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route42.blk), [Route 42 entrances](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route42.asm),
   [1F Outside bytes](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/MountMortar1FOutside.blk),
   [Outside warps](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/MountMortar1FOutside.asm),
@@ -791,7 +799,7 @@ The second pass inspected original scripts rather than accepting terrain-only sh
 - Gold/Silver Route 27: [map warps](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route27.asm) include `warp_event 26, 5, TOHJO_FALLS, 1` and `warp_event 36, 5, TOHJO_FALLS, 2`; walking behind those cave warps was an invalid shortcut in the terrain model.
 - Gold/Silver Kanto shortcut and western approaches: [Victory Road Gate](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/VictoryRoadGate.asm) keeps its east-door Black Belt until `EVENT_FOUGHT_SNORLAX`. [Route 19](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route19.asm) inserts rock blocks until `EVENT_CINNABAR_ROCKS_CLEARED`; merely reaching Fuchsia does not establish sea access. These checks reject the proposed shortcuts, rather than claiming exhaustive gameplay proof of every alternative.
 
-Yellow Cerulean fishing and Gold/Silver Mt. Mortar / Route 1 uncertainties remain in OPEN_QUESTIONS.md. No gate was removed on the basis of these rejected or unresolved flags.
+Yellow Cerulean fishing uncertainties remain in OPEN_QUESTIONS.md; the Gold/Silver Mt. Mortar and Route 1 checks are settled by the static map traces above. No gate was removed on the basis of these rejected or unresolved flags.
 
 ### Gold/Silver: Route 13 grass access
 

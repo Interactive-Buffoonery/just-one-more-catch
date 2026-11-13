@@ -63,13 +63,6 @@
       "src": "https://www.psypokes.com/gsc/walkthrough.php?part=12",
       "quote": "Surf up the Waterfall"
     },
-    "Mt. Mortar B1F": {
-      "needs": [
-        "surf"
-      ],
-      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=12",
-      "quote": "Exit Mt Mortar and re-enter through the middle entrance"
-    },
     "Ice Path B3F": {
       "needs": [
         "strength"
