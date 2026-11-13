@@ -1779,8 +1779,9 @@ claim that every obtainable Pokémon or condition is represented.
     Serebii independently agrees on level, pickup site and Champion gate:
     https://www.serebii.net/sunmoon/qrevents.shtml
   SM opts into an empty gap-fill candidate file plus this explicit gift.
-  The existing Shopping District chapter supplies the place; `row_needs`
-  supplies the Champion gate and the row displays the QR prerequisite.
+  The existing Hau'oli City chapter supplies the place; `row_needs`
+  adds Champion and the `sm-magearna-qr` event, matching USUM's
+  `magearna-qr`.
 - **Clock:** https://bulbapedia.bulbagarden.net/wiki/Time and walkthrough
   Part 1: Sun follows console time; Moon's day/night cycle is 12 hours
   ahead. SM morning begins at 06:00 and night at 18:00. Weekday events

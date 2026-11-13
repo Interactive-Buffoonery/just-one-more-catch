@@ -561,6 +561,14 @@
       "chap": 12,
       "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_24",
       "quote": "When the battle ends, Lusamine attempts to attack on her own. Lillie calls for Nebby's help, and it uses the power of its third eye to repel Lusamine's assault. She and {{p|Nihilego}} split, and her Pokémon returns to its Beast Ball as she falls to the ground. Lillie runs to her mother's side as a group of Nihilego appears and prepares to attack. The Legendary Pokémon rushes in and teleports everyone, including Lusamine and [[Guzma]], back to the [[Altar of the Sunne]]{{sup/7|S}} / [[Altar of the Moone]]{{sup/7|M}}."
+    },
+    {
+      "id": "sm-magearna-qr",
+      "label": "Scan the Magearna QR Code",
+      "q": "Did you scan the Magearna QR Code after becoming Champion?",
+      "chap": 14,
+      "src": "https://bulbanews.bulbagarden.net/w/index.php?title=American_region_Magearna_QR_Code_released&oldid=59354",
+      "quote": "A QR Code to obtain Magearna in American region Pokémon Sun and Moon is now available. The code can only be scanned by players who have already become Champion."
     }
   ],
   "row_needs": [
@@ -1017,7 +1025,8 @@
       "n": 801,
       "m": "gift",
       "needs": [
-        "Elite Four"
+        "Elite Four",
+        "sm-magearna-qr"
       ],
       "src": "https://bulbanews.bulbagarden.net/w/index.php?title=American_region_Magearna_QR_Code_released&oldid=59354",
       "quote": "The code can only be scanned by players who have already become Champion."
@@ -1438,12 +1447,9 @@
       "lo": 50,
       "hi": 50,
       "chance": 100,
-      "conditions": [
-        "Scan the regional Magearna QR Code"
-      ],
       "src": "bulbanews",
       "url": "https://bulbanews.bulbagarden.net/w/index.php?title=American_region_Magearna_QR_Code_released&oldid=59354",
-      "quote": "Level 50; collect from the deliveryman at Antiquities of the Ages after scanning the QR Code as Champion."
+      "quote": "This Magearna is level 50, holds a Bottle Cap, has the Ability Soul-Heart, and knows the moves Fleur Cannon, Flash Cannon, Lucky Chant and Helping Hand. It is in a Cherish Ball and has a Wishing Ribbon.\nAfter scanning the QR Code, the player can collect the Magearna from the deliveryman at the Antiquities of the Ages shop in the Hau'oli City mall."
     }
   ]
 }
