@@ -41,3 +41,21 @@
 .share .gone h1{font-size:34px;line-height:1;margin:8px 0 0}
 .share .gone p{margin:0 0 8px;color:var(--soft)}
 
+
+.linkrow{display:flex;gap:8px;align-items:stretch;margin:0 0 10px}
+.linkrow .url{flex:1;min-width:0;border:1px solid var(--line);border-radius:12px;padding:0 14px;min-height:46px;display:flex;align-items:center;font-size:13px;font-weight:700;color:var(--soft);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.linkrow .url b{color:var(--ink);font-family:inherit}
+.rowbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.share-sheet .more{margin-top:14px;border-top:1px solid var(--line);padding-top:6px}
+.share-sheet .more summary{list-style:none;cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:800;color:var(--soft);font-size:14px}
+.share-sheet .more summary::-webkit-details-marker{display:none}
+.share-sheet .more summary::after{content:"\203A";margin-left:auto;font-size:20px;transition:transform .15s}
+.share-sheet .more[open] summary::after{transform:rotate(90deg)}
+.share-sheet .more .hv-actions{margin-top:4px}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);margin:0 0 8px}
+
+
+.share-stop{background:var(--coral);color:#fff}
+.share-sheet>h2.lg{font-size:30px;line-height:1;margin:0 0 14px}
+.share-sheet .soft{color:var(--soft);font-size:14px}
+.share-sheet .hv-actions{margin-top:16px}
