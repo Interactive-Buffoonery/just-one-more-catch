@@ -1,5 +1,5 @@
-import { MAX_RUN_BYTES, runBytes } from "./limits";
-import { VERSION_IDS, type VersionId } from "./versions";
+import { MAX_RUN_BYTES, runBytes } from "./limits.ts";
+import { VERSION_IDS, type VersionId } from "./versions.ts";
 
 export const IMPORT_SPECIES_LIMITS: Record<VersionId, number> = {
   x: 721,

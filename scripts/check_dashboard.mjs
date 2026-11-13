@@ -4,7 +4,7 @@ import {stripTypeScriptTypes} from 'node:module';
 import {runInNewContext} from 'node:vm';
 const source = readFileSync(new URL('../client/views/runs.ts', import.meta.url), 'utf8');
 const packs = readFileSync(new URL('../client/packs.ts', import.meta.url), 'utf8');
-const {VERSIONS, CONSOLES} = runInNewContext(stripTypeScriptTypes(packs).replace(/^import .*$/gm, '').replace(/^export /gm, '') + '\n({VERSIONS, CONSOLES})');
+const {VERSIONS, CONSOLES} = runInNewContext(stripTypeScriptTypes(readFileSync("shared/milestones.ts", "utf8").split("export const MILESTONES")[0]).replaceAll("export ", "") + stripTypeScriptTypes(packs).replace(/^import .*$/gm, '').replace(/^export /gm, '') + '\n({VERSIONS, CONSOLES})');
 for (const v of Object.values(VERSIONS)) readFileSync(new URL(`../public/covers/${v.cover ?? v.short.toLowerCase()}.jpg`, import.meta.url));
 
 const titles = CONSOLES.flatMap(c => c.titles);
