@@ -9,6 +9,7 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as clerkWebhook from "../clerkWebhook.js";
 import type * as contactSpam from "../contactSpam.js";
 import type * as crons from "../crons.js";
 import type * as devices from "../devices.js";
@@ -31,6 +32,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  clerkWebhook: typeof clerkWebhook;
   contactSpam: typeof contactSpam;
   crons: typeof crons;
   devices: typeof devices;

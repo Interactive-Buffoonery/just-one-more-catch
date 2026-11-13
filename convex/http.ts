@@ -1,5 +1,6 @@
 import { httpRouter } from "convex/server";
-import { httpAction } from "./_generated/server";
+import { validSignature } from "./clerkWebhook";
+import { env, httpAction } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { validateProjection } from "../shared/share-projection";
 
@@ -44,6 +45,28 @@ http.route({
     headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
     headers.set("Access-Control-Allow-Headers", "X-Share-Token");
     return new Response(null, { status: 204, headers });
+  }),
+});
+
+http.route({
+  path: "/clerk-webhook",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    const body = await request.text();
+    if (!await validSignature(request, body, env.CLERK_WEBHOOK_SECRET))
+      return new Response("Invalid signature", { status: 400 });
+    let event: unknown;
+    try { event = JSON.parse(body); }
+    catch { return new Response("Invalid event", { status: 400 }); }
+    if (!event || typeof event !== "object" || !("type" in event) || typeof event.type !== "string")
+      return new Response("Invalid event", { status: 400 });
+    if (event.type === "user.deleted") {
+      if (!("data" in event) || !event.data || typeof event.data !== "object" ||
+        !("id" in event.data) || typeof event.data.id !== "string" || !event.data.id)
+        return new Response("Invalid event", { status: 400 });
+      await ctx.runMutation(internal.clerkWebhook.deleted, { subject: event.data.id });
+    }
+    return new Response(null, { status: 204 });
   }),
 });
 
