@@ -770,3 +770,22 @@ Advance game. Ruby and Sapphire remain separate Coming Soon entries.
   attributes and `include/global.fieldmap.h` collision bits. The western
   connection reaches at most x=41; grass begins at x=49, beyond westbound
   ledges. Its encounters therefore stay with the later Route 122 approach.
+
+## Omega Ruby and Alpha Sapphire coverage audit
+
+- PokeAPI raw encounter table: https://github.com/PokeAPI/pokeapi/blob/master/data/v2/csv/encounters.csv
+  joined to `versions.csv`, `encounter_slots.csv` and `encounter_methods.csv`
+  from the same directory. Version IDs 25 (`omega-ruby`) and 26
+  (`alpha-sapphire`) each have 302 raw slots, 115 distinct location-area IDs
+  and 132 distinct Pokémon IDs. These are raw source counts, not generated
+  tracker rows. Each version has gift 21, gift-egg 2, static 39,
+  devon-scope 6, horde 127, walk 94 and rock-smash 13 slots.
+- API spot checks through `scripts/fetch_pokeapi.py`'s cache reader:
+  https://pokeapi.co/api/v2/pokemon/383/encounters (Groudon: Omega Ruby),
+  https://pokeapi.co/api/v2/pokemon/382/encounters (Kyogre: Alpha Sapphire),
+  https://pokeapi.co/api/v2/pokemon/384/encounters (Rayquaza: both), and
+  https://pokeapi.co/api/v2/pokemon/261/encounters (Poochyena: both).
+- No Surf, Old Rod, Good Rod or Super Rod slots exist for either version
+  in the audited raw table. No DexNav-specific method exists in these rows;
+  this does not establish whether hidden encounters were encoded another way.
+  The pack is not registered while coverage and access remain unresolved.

@@ -194,3 +194,22 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 - Victory Road B2F: does the first reachable encounter tile require Rock
   Smash as well as Strength? Trace the map or check in-game; the walkthrough
   establishes Rock Smash for full traversal, not the earliest encounter.
+
+## Omega Ruby and Alpha Sapphire (`oras`) — implementation blocked
+
+- PokeAPI coverage is partial: each version has 302 raw slots, 115 area IDs
+  and 132 Pokémon IDs, with zero Surf or rod-method encounters. Obtain
+  upstream encounter coverage before generating a complete tracker pack;
+  do not substitute Ruby/Sapphire or Emerald tables. See SOURCES.md for
+  method counts and API spot checks.
+- Audit ordinary walking coverage, DexNav hidden Pokémon and every Mirage
+  spot against ORAS-specific sources; current raw counts alone cannot prove
+  completeness. Determine how random daily Mirage availability and
+  party-dependent legendary requirements fit the tracker before enabling it.
+- All hand-written access remains unverified: chapters, Gen 6 HM badge
+  rules, Soaring/Eon Flute, Delta Episode, legendary prerequisites/version
+  exclusives, gifts (including Cosplay Pikachu, Beldum, Castform), fossils
+  and eggs. No gates were written or inferred from another Hoenn game.
+- No generated pack, registry entries, sprites, covers or save-import
+  support were added. First-pass access, browser/guest persistence,
+  account sync and gameplay verification remain unperformed.
