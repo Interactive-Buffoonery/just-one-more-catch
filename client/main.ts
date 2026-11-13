@@ -203,8 +203,8 @@ async function startTracker() {
         history.replaceState(null, "", location.pathname + location.search);
     },
     signOut: () => void clerk?.signOut(),
-    createRun: (version) => convex.mutation(api.runs.create, { version }),
-    importRun: async (version, caught, importId, startedAt) => {
+    createRun: (version, link) => convex.mutation(api.runs.create, { version, link }),
+    importRun: async (version, caught, importId, startedAt, link) => {
       const session = clerk?.session, target = auth.userId;
       if (!session || !target || !auth.isAuthenticated) throw new Error("Sign in first");
       // Keep retries bound to the session that confirmed the import.
@@ -215,8 +215,26 @@ async function startTracker() {
           : Promise.resolve(null));
       try {
         return await withTimeout(
-          importer.mutation(api.runs.importCaught, { version, caught, importId, startedAt }),
+          importer.mutation(api.runs.importCaught, { version, caught, importId, startedAt, link }),
           30000, "Import timed out");
+      } finally {
+        await importer.close();
+      }
+    },
+    saveLinks: (version) => convex.query(api.runs.saveLinks, { version }),
+    refreshRun: async (id, caught, link, startedAt) => {
+      const session = clerk?.session, target = auth.userId;
+      if (!session || !target || !auth.isAuthenticated) throw new Error("Sign in first");
+      // Keep retries bound to the session that confirmed the import.
+      const importer = new ConvexClient(import.meta.env.VITE_CONVEX_URL);
+      importer.setAuth(({ forceRefreshToken }) =>
+        clerk?.user?.id === target && clerk.session?.id === session.id
+          ? sessionToken({ session }, forceRefreshToken)
+          : Promise.resolve(null));
+      try {
+        return await withTimeout(
+          importer.mutation(api.runs.refreshCaught, { id, caught, link, startedAt }),
+          30000, "Refresh timed out");
       } finally {
         await importer.close();
       }

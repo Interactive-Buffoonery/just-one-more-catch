@@ -3,10 +3,10 @@ import { Bridge, RunRow } from "./types";
 import { isAvatar } from "../shared/avatars";
 import { MAX_RUNS } from "../shared/limits";
 import { summarize } from "../shared/summary";
-import { importCaughtState, validateImportId, validateImportStart } from "../shared/save-import";
+import { importCaughtState, validateImportId, validateImportStart, validateSaveLink, mergeSaveLink, mergeCaughtState, type SaveLink } from "../shared/save-import";
 
 /* ---- Guest runs live in this browser until sign-in ---- */
-type GuestRow = Omit<RunRow, "summary"> & { state: string; movedTo?: string; importStartedAt?: number };
+type GuestRow = Omit<RunRow, "summary"> & { state: string; saveLink?: SaveLink; movedTo?: string; importStartedAt?: number };
 const GUEST = "jomc.guest";
 let guestMem = "[]";
 export const guestRows = (): GuestRow[] => {
@@ -42,17 +42,19 @@ export function withGuest(b: Bridge, refresh: () => void): Bridge {
     async getState(id) {
       return guestRows().find((g) => g.id === id)?.state ?? "{}";
     },
-    async createRun(version) {
+    async createRun(version, link) {
+      if (link) validateSaveLink(link);
       const id = "local-" + Date.now().toString(36);
       setGuestRows([
         ...guestRows(),
-        { id, version, state: "{}", createdAt: new Date().toISOString() },
+        { id, version, saveLink: link, state: "{}", createdAt: new Date().toISOString() },
       ]);
       b.track("guest_run_created", version);
       refresh();
       return id;
     },
-    async importRun(version, caught, importId, startedAt) {
+    async importRun(version, caught, importId, startedAt, link) {
+      if (link) validateSaveLink(link);
       validateImportId(importId);
       validateImportStart(startedAt);
       const state = importCaughtState(version, caught);
@@ -60,7 +62,7 @@ export function withGuest(b: Bridge, refresh: () => void): Bridge {
       const id = "local-import-" + importId;
       const existing = rows.find((row) => row.id === id);
       if (existing) {
-        if (existing.version !== version || existing.state !== state ||
+        if (JSON.stringify(existing.saveLink) !== JSON.stringify(link) || existing.version !== version || existing.state !== state ||
             existing.importStartedAt !== startedAt)
           throw new Error("Import ID already used for another playthrough");
         return id;
@@ -68,13 +70,33 @@ export function withGuest(b: Bridge, refresh: () => void): Bridge {
       if (rows.length >= MAX_RUNS) throw new Error("Too many playthroughs");
       const next = JSON.stringify([
         ...rows,
-        { id, version, state, importStartedAt: startedAt, createdAt: new Date(startedAt ?? Date.now()).toISOString() },
+        { id, version, state, saveLink: link, importStartedAt: startedAt, createdAt: new Date(startedAt ?? Date.now()).toISOString() },
       ]);
       localStorage.setItem(GUEST, next);
       guestMem = next;
       b.track("guest_run_created", version);
       refresh();
       return id;
+    },
+    async saveLinks(version) {
+      return guestRows().filter((r) => r.version === version && r.saveLink && !r.movedTo)
+        .map((r) => ({ id: r.id, ...r.saveLink! }));
+    },
+    async refreshRun(id, caught, link, startedAt) {
+      const rows = guestRows();
+      const row = rows.find((r) => r.id === id);
+      if (!row || row.movedTo) throw new Error("This playthrough moved");
+      validateImportStart(startedAt);
+      const saveLink = mergeSaveLink(row.saveLink, link);
+      const result = mergeCaughtState(row.state, row.version, caught);
+      const next = JSON.stringify(rows.map((r) => r.id === id ? {
+        ...r, state: result.state, saveLink, updatedAt: new Date().toISOString(),
+        ...(startedAt !== undefined ? { createdAt: new Date(startedAt).toISOString() } : {}),
+      } : r));
+      localStorage.setItem(GUEST, next);
+      guestMem = next;
+      refresh();
+      return { added: result.added };
     },
     async saveRun(id, state) {
       const updatedAt = new Date().toISOString();
@@ -129,7 +151,7 @@ export async function moveGuestRuns(
   try {
     for (const g of guestRows()) {
       if (!g.movedTo && have >= MAX_RUNS) break;
-      const id = g.movedTo || (await raw.createRun(g.version));
+      const id = g.movedTo || (await raw.createRun(g.version, g.saveLink));
       if (!g.movedTo) have++;
       setGuestRows(
         guestRows().map((r) => (r.id === g.id ? { ...r, movedTo: id } : r)),

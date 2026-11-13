@@ -1,3 +1,4 @@
+import { MAX_RUN_BYTES, runBytes } from "./limits";
 import { VERSION_IDS, type VersionId } from "./versions";
 
 export const IMPORT_SPECIES_LIMITS: Record<VersionId, number> = {
@@ -52,4 +53,43 @@ export function importCaughtState(version: string, caught: readonly number[]): s
     new Set(caught).size !== caught.length
   ) throw new Error("Invalid caught Pokémon");
   return JSON.stringify({ caught: [...caught].sort((a, b) => a - b) });
+}
+
+export type SaveLink = { salt: string; fingerprint: string; playSeconds?: number };
+
+export function validateSaveLink(link: SaveLink): void {
+  if (!link || !/^[0-9a-f]{32}$/.test(link.salt) ||
+      !/^[0-9a-f]{64}$/.test(link.fingerprint) ||
+      (link.playSeconds !== undefined && (!Number.isSafeInteger(link.playSeconds) || link.playSeconds < 0)))
+    throw new Error("Invalid save link");
+}
+
+const hex = (bytes: Uint8Array) => Array.from(bytes, (n) => n.toString(16).padStart(2, "0")).join("");
+export function newSaveSalt(): string {
+  return hex(crypto.getRandomValues(new Uint8Array(16)));
+}
+export async function saveFingerprint(salt: string, version: string, id32: number, name: string): Promise<string> {
+  return hex(new Uint8Array(await crypto.subtle.digest("SHA-256",
+    new TextEncoder().encode([salt, version, id32, name].join("\n")))));
+}
+
+export function mergeSaveLink(old: SaveLink | undefined, link: SaveLink | undefined): SaveLink | undefined {
+  if (link) validateSaveLink(link);
+  if (!link) return old;
+  if (!old) return link;
+  if (old.salt !== link.salt || old.fingerprint !== link.fingerprint) throw new Error("Different save");
+  const times = [old.playSeconds, link.playSeconds].filter((n): n is number => n !== undefined);
+  return { salt: old.salt, fingerprint: old.fingerprint, ...(times.length ? { playSeconds: Math.max(...times) } : {}) };
+}
+
+export function mergeCaughtState(state: string, version: string, caught: readonly number[]): { state: string; added: number[] } {
+  importCaughtState(version, caught);
+  const parsed = JSON.parse(state);
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("Invalid playthrough state");
+  const existing: number[] = Array.isArray(parsed.caught) ? parsed.caught.filter((n: unknown) => typeof n === "number") : [];
+  const added = caught.filter((n) => !existing.includes(n)).sort((a, b) => a - b);
+  parsed.caught = [...new Set([...existing, ...caught])].sort((a, b) => a - b);
+  const next = JSON.stringify(parsed);
+  if (runBytes(next) > MAX_RUN_BYTES) throw new Error("Playthrough is too large");
+  return { state: next, added };
 }

@@ -10,6 +10,7 @@ export default defineSchema({
   runs: defineTable({
     owner: v.string(),
     version: v.string(),
+    saveLink: v.optional(v.object({ salt: v.string(), fingerprint: v.string(), playSeconds: v.optional(v.number()) })),
     importId: v.optional(v.string()),
     summary: v.object({
       badges: v.array(v.string()),
