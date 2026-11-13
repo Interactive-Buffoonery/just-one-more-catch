@@ -478,8 +478,7 @@ Integration with X/Y import PR #111 overlaps the Works with list and nearby
 appended mapping tests and nearby documentation insertions. Keep both adapters,
 721-species limits and test sets. Replace #111's assertion that all OR/AS
 identities are unsupported with an assertion that they never map to `x`/`y`;
-its per-title rejection tests remain valid. Set `XY_IMPORTS=1` when rerunning
-the ORAS harness against the combined build to require exact X/Y imports.
+its per-title rejection tests remain valid.
 Original Ruby/Sapphire PR #107 has similar adapter/test/documentation overlaps;
 retain its distinct `R`/`S` choices and 386-species limits. Fixture directories
 are separate and require no reader changes. Re-run both PRs' checks after

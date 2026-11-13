@@ -65,10 +65,6 @@ try {
       if (invalid.includes(name)) {
         await page.locator('.si-oops').waitFor();
         assert.equal(await page.locator('[data-import-action=create]').count(), 0);
-      } else if (isXY(name) && !process.env.XY_IMPORTS) {
-        await page.locator('.si-oops').waitFor();
-        assert.equal(await page.locator('[data-import-action=create]').count(), 0);
-        assert.deepEqual(await readRows(page), [old]);
       } else {
         assert.equal(await page.locator('[data-import-action=version]').count(), 0);
         await page.locator('[data-import-action=create]').waitFor();
