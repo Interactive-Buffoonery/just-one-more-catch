@@ -18,6 +18,7 @@ BASE = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/"
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 UA = {"User-Agent": "just-one-more-catch-data-build"}
 ART = {
+    "rs": "pokemon/versions/generation-iii/ruby-sapphire/",
     "emerald": "pokemon/versions/generation-iii/emerald/",
     "gs": "pokemon/versions/generation-ii/gold/transparent/",
     "rb": "pokemon/versions/generation-i/red-blue/transparent/",

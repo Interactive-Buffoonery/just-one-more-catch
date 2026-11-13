@@ -133,6 +133,9 @@ def rows_for(encounters, version, n):
                 src = d["method"]["name"]
                 if src in GAME.get("drop_methods", []):
                     continue
+                if any(g["n"] == n and matches(loc, g["place"]) and g.get("m", src) == src
+                       and version in g.get("versions", VERSIONS) for g in GAME.get("drop_rows", [])):
+                    continue
                 cond = sorted(GAME.get("condition_replacements", {}).get(c["name"], c["name"]) for c in d["condition_values"] if c["name"] not in DEFAULT_COND)
                 m = GAME.get("methods", {}).get(src, src)
                 extra = []

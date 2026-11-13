@@ -236,6 +236,32 @@ const FRLG: Pack = {
   boxes: [14, 30],
 };
 
+const RS: Pack = {
+  load: () => import("./data/rs").then((m) => m.default),
+  art: "rs",
+  region: "Hoenn",
+  regional: 202,
+  national: 386,
+  start: "Route 101",
+  starters: [252, 255, 258],
+  badges: [
+    ["Stone", "Roxanne"], ["Knuckle", "Brawly"], ["Dynamo", "Wattson"],
+    ["Heat", "Flannery"], ["Balance", "Norman"], ["Feather", "Winona"],
+    ["Mind", "Tate & Liza"], ["Rain", "Wallace"],
+  ],
+  kit: [
+    ["old-rod", "Old Rod"], ["good-rod", "Good Rod"], ["super-rod", "Super Rod"],
+    ["cut-hm", "Cut"], ["flash", "Flash"], ["rock-smash", "Rock Smash"],
+    ["strength", "Strength"], ["surf", "Surf"], ["dive", "Dive"],
+    ["waterfall", "Waterfall"], ["mach-bike", "Mach Bike"], ["acro-bike", "Acro Bike"],
+  ],
+  hm: {
+    "cut-hm": "Stone", flash: "Knuckle", "rock-smash": "Dynamo",
+    strength: "Heat", surf: "Balance", dive: "Mind", waterfall: "Rain",
+  },
+  boxes: [14, 30],
+};
+
 const EMERALD: Pack = {
   load: () => import("./data/emerald").then((m) => m.default),
   art: "emerald",
@@ -301,6 +327,14 @@ const USUM: Pack = {
 };
 
 export const VERSIONS: Record<VersionId, Version> = {
+  ruby: {
+    name: "Ruby", short: "RU", code: "R", gen: "Gen 3",
+    pack: RS, other: "Sapphire", ring: ["fire", "ground"],
+  },
+  sapphire: {
+    name: "Sapphire", short: "SA", code: "S", gen: "Gen 3",
+    pack: RS, other: "Ruby", ring: ["water", "ice"],
+  },
   emerald: {
     name: "Emerald", short: "E", code: "e", gen: "Gen 3",
     pack: EMERALD, ring: ["grass", "dragon"],
@@ -408,10 +442,7 @@ export const CONSOLES: { name: string; tag: string; titles: (VersionId | Soon)[]
   { name: "Game Boy", tag: "Game Boy", titles: [["red", "blue"], ["yellow"]] },
   { name: "Game Boy Color", tag: "GB Color", titles: [["gold", "silver"], ["crystal"]] },
   { name: "Game Boy Advance", tag: "GBA", titles: [
-    [
-      { name: "Ruby", short: "RU", color: "#c8323c", region: "Hoenn" },
-      { name: "Sapphire", short: "SA", color: "#2f5fb3", region: "Hoenn" },
-    ],
+    ["ruby", "sapphire"],
     ["firered", "leafgreen"],
     ["emerald"],
   ] },
