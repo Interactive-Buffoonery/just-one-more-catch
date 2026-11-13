@@ -153,28 +153,21 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
   `python3 scripts/access_audit.py areas rs`). All areas have cached source
   pages; Weather Institute uses walkthrough Part 11. No second guide/source
   confirms every access path. No gate was entered without a source, but the
-  following earliest-tile questions need independent map/gameplay proof.
-- **Victory Road B2F:** the forward route in R/S walkthrough Part 21 uses
-  both Strength and Rock Smash; the pack conservatively requires both.
-  Check whether either legitimate approach reaches any B2F encounter tile
-  with Strength alone. B1F is open before its initial boulders. Do not infer
-  this from Emerald's traversal or layout.
-- **Route 123 western approach:** the location article describes westward
-  ledges and the separate Berry Master terminus; the pack keeps encounter
-  grass behind the Route 122 approach (Surf + Devon Scope). Independently
-  trace the original R/S western entrance to confirm no early grass/water
-  encounter tile can be reached. Route 118 walking rows separately need
-  Surf; fishing stays open from the western beach.
-- **Shoal Cave clock:** cached PokeAPI has no time conditions for its named
-  High Tide / Low Tide or basement areas. The clock changes at 03:00, 09:00,
-  15:00, 21:00; low tide is 03:00–09:00 and 15:00–21:00 (Time page).
-  The pack preserves both sets and gates B3F (ice room) with Strength, but
-  cannot automatically hide low-tide rooms or high-tide fishing. A shared
-  tide model, plus original floor-name mapping verification, remains.
-- **Temporary hideout:** Ruby/Sapphire's Lilycove hideout eventually closes
-  after defeating Tate and Liza (Mind Badge; location articles); the tracker
-  models its opening after submarine theft, not loss of access. Verify a shared temporary-area
-  model before claiming all currently available Electrode rows are exact.
+  remaining questions need independent source or gameplay proof.
+- **Shoal Cave clock:** static original-map tracing confirms low tide reaches
+  the entrance, inner, stairs and lower rooms without Strength; Strength
+  opens the lower room's boulder corridor to the ice-room encounter tile
+  (17,11). High-tide layouts reach neither the lower/stairs nor ice rooms.
+  The tide flag updates on qualifying map transitions (low hours 03:00–09:00
+  and 15:00–21:00). A shared tide-state model and PokeAPI floor-name mapping
+  are still needed; preserve current rows. Trace method and pinned files are
+  in SOURCES.md; this is static evidence, not gameplay.
+  https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/src/time_events.c#L54-L91
+- **Temporary hideout:** original Lilycove map scripts replace the hideout
+  entrance with colliding wall tiles once `FLAG_BADGE07_GET` is set.
+  A shared model for access ending after the Mind Badge is still needed
+  before Electrode rows can describe current availability exactly.
+  https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/LilycoveCity/scripts.inc#L30-L56
 - **PokeAPI limits/corrections:** New Mauville's spurious level-30 Electrode
   static is excluded from this pack using the original scripts; Voltorb
   statics and actual hideout Electrode remain. PokeAPI also incorrectly tags

@@ -1162,6 +1162,17 @@ Original Game Boy Advance versions `ruby` / `sapphire`, encounter codes `R` /
 `S`. The 13 chapters, 19 events and area/row requirements in `data/rs.json`
 were sourced separately from Emerald. Each entry links its relevant source.
 
+- Open-question source verification (original R/S, no ROM/build):
+  https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/src/time_events.c#L54-L91
+  `UpdateShoalTideFlag`: hourly table is clear at 03–08 and 15–20;
+  lines 84–90 check the last warp map type before calculating local time
+  and setting/clearing `FLAG_SYS_SHOAL_TIDE`. This narrows the missing tide
+  model: wall-clock time alone does not continuously update the cave.
+  https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/LilycoveCity/scripts.inc#L30-L56
+  Line 31 calls `RemoveEvilTeamBaseEntrance` when `FLAG_BADGE07_GET` is set;
+  lines 49–56 replace entrance tiles with rock walls with collision enabled.
+  This independently confirms closure; no shared access-expiry feature is
+  added by this pack-only investigation.
 - PokeAPI cached encounters, original Hoenn numbering (202), national bound
   (386), generation-III types and species:
   https://pokeapi.co/api/v2/pokedex/4/ and cached Pokémon encounter endpoints.
@@ -1216,7 +1227,8 @@ were sourced separately from Emerald. Each entry links its relevant source.
   Part 15's Shoal Cave Chamber 4 requires Strength before descending into
   the ice room (PokeAPI B3F). Part 21 describes Victory Road: B1F is reachable
   before its boulders, while the described descent to B2F uses Strength and
-  Rock Smash. Earliest B2F alternatives remain a manual checkpoint.
+  Rock Smash. The static original-map trace below independently confirms
+  both are needed for the earliest B2F encounter tile from either entrance.
   https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_21
 - Sky Pillar is postgame in R/S: “blocked off by walls of rocks until the
   player enters the Hall of Fame.” Mach Bike is needed past 1F, including
@@ -1235,6 +1247,83 @@ were sourced separately from Emerald. Each entry links its relevant source.
   Berries, Shoal Cave's six-hour tides and Mirage Island use the clock.
   No `nightFrom` or invented day/night conditions are added. Automatic tide
   restrictions are not modelled; see OPEN_QUESTIONS.md.
+- Original R/S static map trace (no gameplay), using the pinned revision below:
+  a scratch Python decoder, run with `python3 -I`, reads little-endian
+  16-bit layout blocks: metatile ID bits 0–9, collision bits 10–11 and
+  elevation bits 12–15. IDs below 512 use the primary attributes; the rest
+  use secondary attributes. Attribute bits 0–7 select tile behaviour;
+  `sTileBitAttributes` distinguishes encounter land from surfable water.
+  BFS follows cardinal movement, elevation-0 stairs, elevation-15 bridges,
+  directional walls and one-way ledge jumps, map connection offsets and
+  elevation-matched warps. Coordinates here are zero-based map coordinates.
+  - Format and movement definitions:
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/include/global.fieldmap.h#L7-L20
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/src/fieldmap.c#L389-L407
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/src/metatile_behavior.c#L5-L44
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/src/event_object_movement.c#L4460-L4480
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/src/event_object_movement.c#L7485-L7547
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/src/event_object_movement.c#L7586-L7598
+  - Layout dimensions/tilesets come from `data/layouts/layouts.json`;
+    `data/tilesets/metatiles.inc` supplies attribute paths. Decoded inputs:
+    `data/layouts/{VictoryRoad_1F,VictoryRoad_B1F,VictoryRoad_B2F,Route118,Route122,Route123}/map.bin`,
+    `data/tilesets/primary/general/metatile_attributes.bin` and
+    `data/tilesets/secondary/{cave,mauville,lilycove}/metatile_attributes.bin`.
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/layouts/layouts.json
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/tilesets/metatiles.inc
+  - **Victory Road B2F confirmed:** BFS starts separately at 1F's southern
+    (15,40) and northern (39,5) entrances and crosses all reachable ladders.
+    Neither reaches a B2F encounter tile with Strength alone or Rock Smash
+    alone. For these negative checks, NPCs/items are omitted; Strength even
+    removes every boulder, an intentionally more permissive bound than legal
+    pushing. Breakable rocks stay solid without Rock Smash, boulders stay
+    solid without Strength (their flags and positions come from `map.json`).
+    The B1F rock (18,12) blocks the southern Strength-only search; the northern
+    search stops at the rock/boulder pair at (20,25)/(21,25) and
+    (21,26)/(20,26). No scripted B1F map transition removes these blockers.
+    A separate positive BFS retains NPCs/items, pushes boulders one tile at
+    a time into free tiles and permits Rock Smash; it reaches B1F (30,25),
+    warps to B2F (30,25), then steps onto encounter floor (30,26).
+    Positive search restricts boulder displacement to two tiles from their
+    initial positions to keep the scratch search bounded; this restricts
+    witnesses only, not the negative proofs. Existing needs stay unchanged.
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/VictoryRoad_1F/map.json
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/VictoryRoad_B1F/map.json
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/VictoryRoad_B1F/scripts.inc#L1-L2
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/VictoryRoad_B2F/map.json
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/src/field_player_avatar.c#L639-L661
+  - **Route 123 western terminus confirmed:** from Route 118 (0,10), Surf
+    crosses the river and the east connection reaches Route 123, but the
+    search ends at x=41 with zero encounter grass/water tiles and zero land
+    tiles facing fishable water. This remains true with Cut and after
+    omitting every NPC/item/berry tree. West-facing ledges cannot be climbed
+    eastward. From Route 122's northern connection (10,0), the same decoder
+    reaches Route 123 encounter grass and water, including pond (34,4) and
+    fishing shore (33,6). Existing chapter/Scope gate stays unchanged.
+    **Sanity check:** Route 118's western entrance without Surf reaches no
+    encounter grass, but does reach fishing shore (11,15); with Surf it
+    reaches grass (48,10). This agrees with the separately cited Route 118
+    source and existing walking-row Surf gates.
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/Route118/map.json
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/Route122/map.json
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/Route123/map.json
+  - **Shoal Cave narrowed:** decode `data/layouts/ShoalCave_*/map.bin` and
+    the same cave/general attributes. Low-tide entrance (20,30) reaches
+    encounter floor in EntranceRoom, InnerRoom, StairsRoom and LowerRoom
+    without Strength. With Strength, pushing the LowerRoom boulder at
+    (25,3) gives the corridor to warp (28,11), IceRoom (17,10) and encounter
+    floor (17,11), before any ice puzzle is needed. The entrance/inner scripts
+    substitute high-tide layouts 169/170 for low-tide layouts 165/166 while
+    retaining low-tide map events. Repeating the trace with those layouts
+    and enforcing warp elevation reaches neither stairs/lower nor ice rooms.
+    This confirms physical access, but does not establish PokeAPI's floor
+    aliases or supply the missing tide-state model; those remain open.
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/ShoalCave_LowTideEntranceRoom/map.json
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/ShoalCave_LowTideEntranceRoom/scripts.inc#L1-L16
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/ShoalCave_LowTideInnerRoom/map.json
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/ShoalCave_LowTideInnerRoom/scripts.inc#L1-L16
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/ShoalCave_LowTideStairsRoom/map.json
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/ShoalCave_LowTideLowerRoom/map.json
+    https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/ShoalCave_LowTideIceRoom/map.json
 - Original source, pinned to pret/pokeruby
   `5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f`:
   https://github.com/pret/pokeruby/tree/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f
