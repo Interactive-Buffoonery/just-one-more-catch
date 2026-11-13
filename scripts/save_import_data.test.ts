@@ -79,3 +79,17 @@ test("GB identities retain paired choices and exclude unsupported Green", async 
     expect(caughtForPack(s, version, data).caught).toEqual([]);
   }
 });
+
+test.each([["B2", "black-2"], ["W2", "white-2"]] as const)("%s imports only its sequel Unova title", async (identity, version) => {
+  const data = await VERSIONS[version].pack.load();
+  const s = snapshot([identity]);
+  expect(importVersions(s)).toEqual([version]);
+  s.pokedex.caughtSpecies = [649, 495, 25, 495, 650];
+  expect(caughtForPack(s, version, data)).toEqual({ caught: [25, 495, 649], skipped: 1, partial: false });
+  s.pokedex.caughtSpecies = [];
+  expect(caughtForPack(s, version, data).caught).toEqual([]);
+  expect(IMPORT_SPECIES_LIMITS[version]).toBe(VERSIONS[version].pack.national);
+  for (const other of ["B", "W", "BW", "B2W2", identity === "B2" ? "W2" : "B2"]) {
+    expect(() => caughtForPack(snapshot([other]), version, data)).toThrow();
+  }
+});
