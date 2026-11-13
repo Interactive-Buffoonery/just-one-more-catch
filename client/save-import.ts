@@ -1,10 +1,11 @@
-import { esc } from "./dom";
+import { announce, esc } from "./dom";
 import { imageUrl } from "./image-url.ts";
 import { VERSIONS, type GameData } from "./packs";
 import type { Bridge, RunRow } from "./types";
 import type { VersionId } from "../shared/versions";
 import { MAX_RUNS } from "../shared/limits";
-import { newSaveSalt, saveFingerprint, validateImportStart, type SaveLink } from "../shared/save-import";
+import { caughtOf, newSaveSalt, saveFingerprint, validateImportStart, type SaveLink } from "../shared/save-import";
+import type { InspectSuccess } from "@serabi/pokemon-save-reader";
 declare const __SAVE_READER_VERSION__: string;
 
 const MAX_FILE_BYTES = 64 * 1024 * 1024;
@@ -14,6 +15,7 @@ const LOCK = '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="7" wi
 const TICK = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const WARN = '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="currentColor"/><path d="M8 4v5" stroke="var(--bg)" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="11.6" r="1.1" fill="var(--bg)"/></svg>';
 const WORKS = `<p class="eyebrow">Works with</p><div class="tags">${["Red", "Blue", "Yellow", "Gold", "Silver", "Crystal", "FireRed", "LeafGreen", "Ruby", "Sapphire", "Emerald", "HeartGold", "SoulSilver", "Ultra Sun", "Ultra Moon", "Black", "White", "X", "Y", "Diamond", "Pearl", "Black 2", "White 2", "Platinum", "Sun", "Moon", "Omega Ruby", "Alpha Sapphire"].map((g) => `<span class="tag plain">${g}</span>`).join("")}</div>`;
+const CHOOSE_ANOTHER = '<button class="app-quiet si-wide" data-import-action="cancel">Choose another file</button>';
 const NOT_NOW = '<button class="app-quiet si-wide" data-import-action="close">Not now</button>';
 const VERSION_MAP: Record<string, VersionId[]> = {
   RD: ["red"], BU: ["blue"], YW: ["yellow"], GD: ["gold"], SI: ["silver"],
@@ -25,8 +27,8 @@ type Snapshot = {
   status: "ok";
   schemaVersion: number;
   startDate?: string;
-  trainer?: { id32: number; name: string };
-  playSeconds?: number;
+  trainer?: InspectSuccess["trainer"];
+  playSeconds?: InspectSuccess["playSeconds"];
   game: { version: string; versions: string[]; name: string; formatId: string };
   pokedex: { status: string; coverage: string; speciesNamespace: string; caughtSpecies: number[]; warnings: string[] };
 };
@@ -44,7 +46,7 @@ type Options = {
   bridge(): Bridge;
   flush(): Promise<void>;
   complete(id: string, current: boolean): void;
-  refreshed(id: string, added: number[], previousStart: number | undefined, current: boolean): void;
+  refreshed(id: string, added: number[], previousStart: number | undefined, previousLink: SaveLink | undefined, current: boolean): void;
   dismiss(): void;
 };
 export const importTarget = (b: Bridge) => b.auth.isLoading ? "loading" :
@@ -90,17 +92,6 @@ export async function matchingRun(snapshot: Snapshot, version: VersionId, links:
   for (const current of links)
     if ((await newSaveLink(snapshot, version, current.salt))?.fingerprint === current.fingerprint) return current.id;
 }
-export async function undoRefreshRun(bridge: Bridge, id: string, added: number[], previousStart?: number) {
-  const state = JSON.parse(await bridge.getState(id));
-  if (Array.isArray(state.caught)) state.caught = state.caught.filter((n: number) => !added.includes(n));
-  await bridge.saveRun(id, JSON.stringify(state));
-  if (previousStart !== undefined) await bridge.setStart(id, previousStart);
-}
-const caughtIn = (state: string): number[] => {
-  const caught = JSON.parse(state)?.caught;
-  return Array.isArray(caught) ? caught.filter((n: unknown) => typeof n === "number") : [];
-};
-
 const dayOf = (date: Date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 export function importDate(day: string): number | undefined {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return;
@@ -110,6 +101,8 @@ export function importDate(day: string): number | undefined {
   try { validateImportStart(date.getTime()); } catch { return; }
   return date.getTime();
 }
+const recordedStart = (snapshot: Snapshot, today: string) =>
+  typeof snapshot.startDate === "string" && importDate(snapshot.startDate) !== undefined && snapshot.startDate <= today ? snapshot.startDate : undefined;
 const coverOf = (version: VersionId) => imageUrl(`/covers/${VERSIONS[version].cover ?? VERSIONS[version].short.toLowerCase()}.jpg`);
 const longDate = (day: string) => new Date(importDate(day)!).toLocaleDateString(undefined, { dateStyle: "long" });
 type DateSource = "recorded" | "today" | "picked";
@@ -136,7 +129,7 @@ export class SaveImport {
   private committing = false;
   private retry?: () => void;
   private refreshId?: string;
-  private refresh?: RefreshCheck & { row: RunRow; version: VersionId; caught: number[]; added: number[]; have: number; skipped: number; partial: boolean; recordedDay?: string; useDate: boolean };
+  private refresh?: RefreshCheck & { row: RunRow; previous?: SaveLink; version: VersionId; caught: number[]; added: number[]; have: number; skipped: number; partial: boolean; recordedDay?: string; useDate: boolean };
   private match?: RunRow;
   private importLink?: SaveLink;
   constructor(private options: Options) {
@@ -197,6 +190,7 @@ export class SaveImport {
     });
   }
   get isOpen() { return this.active; }
+  get refreshing() { return !!this.refreshId; }
   open(refreshId?: string) {
     this.refreshId = refreshId;
     this.active = true;
@@ -234,8 +228,7 @@ export class SaveImport {
     const heading = host.querySelector<HTMLElement>("#import-title");
     heading?.setAttribute("tabindex", "-1");
     heading?.focus();
-    const live = document.getElementById("live");
-    if (live) live.textContent = title;
+    announce(title);
   }
   private steps(stage: number) {
     return `<ol class="si-steps" aria-label="Import steps">${["Prepare", "Read", "Preview"].map((name, i) => `<li class="${i < stage ? "done" : i === stage ? "on" : ""}"${i === stage ? ' aria-current="step"' : ""}><i aria-hidden="true">${i < stage ? "✓" : i + 1}</i>${name}</li>`).join("")}</ol>`;
@@ -358,7 +351,7 @@ export class SaveImport {
       this.importId = crypto.randomUUID();
       this.confirmedStart = undefined;
       this.importDay = dayOf(new Date());
-      this.recordedDay = typeof snapshot.startDate === "string" && importDate(snapshot.startDate) !== undefined && snapshot.startDate <= this.importDay ? snapshot.startDate : undefined;
+      this.recordedDay = recordedStart(snapshot, this.importDay);
       this.selectedDay = this.recordedDay ?? this.importDay;
       this.dateSource = this.recordedDay ? "recorded" : "today";
       this.importLink = await newSaveLink(snapshot, version);
@@ -411,7 +404,7 @@ export class SaveImport {
       ${this.count(p.version, p.caught.length)}
       ${this.party(p.version, p.caught)}
       ${m ? `<section class="si-start" aria-labelledby="si-match-label"><h2 class="eyebrow" id="si-match-label">Your playthrough</h2><div class="si-start-row"><img class="cover" src="${coverOf(p.version)}" alt="" width="32" height="32"><div class="val">This looks like your ${esc(v.name)} playthrough<small>Started ${longDate(dayOf(new Date(m.createdAt)))} · ${m.summary.caught} caught</small></div></div></section>` : ""}
-      ${this.dateBlock(editing)}
+      ${m ? "" : this.dateBlock(editing)}
       <ul class="si-facts"><li>${LOCK}${PRIVACY}</li><li>${TICK}This tool imports your caught Pokémon${this.dateSource === "recorded" ? " and start date" : ""} only. Story progress and notes aren't imported.</li>${m ? "" : `<li>${TICK}We create a new playthrough with your caught Pokémon marked.</li>`}${this.warnings(p)}</ul>
       ${editing ? "" : m ? `<div class="hv-actions"><button class="app-primary" data-import-action="update">Update it</button><button class="app-quiet" data-import-action="create">Create new playthrough</button></div>` : this.actions("Create new playthrough", "create")}`, "Ready to import");
     if (editing) {
@@ -429,10 +422,11 @@ export class SaveImport {
   }
   private different(title: string) {
     this.retry = undefined;
-    this.show(`<span class="si-oops" aria-hidden="true">!</span><h1 class="lg" id="import-title">${esc(title)}</h1>${this.actions("Import as a new playthrough", "as-new")}`, title);
+    this.show(`<span class="si-oops" aria-hidden="true">!</span><h1 class="lg" id="import-title">${esc(title)}</h1>${this.actions("Import as a new playthrough", "as-new")}${CHOOSE_ANOTHER}`, title);
   }
-  private async prepareRefresh(row: RunRow) {
+  private async prepareRefresh(stale: RunRow) {
     if (!this.snapshot || this.committing) return;
+    const row = this.options.bridge().runs?.find((r) => r.id === stale.id) ?? stale;
     this.refreshId = row.id;
     const seq = ++this.seq, snapshot = this.snapshot, version = row.version as VersionId;
     try {
@@ -444,17 +438,22 @@ export class SaveImport {
         this.problem("Couldn't read caught Pokémon", "This save's Pokédex isn't supported yet. Nothing was imported.", () => this.choose(), "Choose another file");
         return;
       }
-      await this.options.flush();
+      try { await this.options.flush(); }
+      catch {
+        if (this.valid(seq)) this.problem("Couldn't save", "Check your connection or browser storage and try again.", () => void this.prepareRefresh(row));
+        return;
+      }
       const bridge = this.options.bridge();
       const [state, links] = await Promise.all([bridge.getState(row.id), bridge.saveLinks(version)]);
-      const check = await refreshCheck(snapshot, version, links.find((l) => l.id === row.id));
+      const found = links.find((l) => l.id === row.id);
+      const current: SaveLink | undefined = found && { salt: found.salt, fingerprint: found.fingerprint, ...(found.playSeconds !== undefined ? { playSeconds: found.playSeconds } : {}) };
+      const check = await refreshCheck(snapshot, version, current);
       if (!this.valid(seq)) return;
       if (check.status === "different") return this.different("This is a different save");
-      const have = new Set(caughtIn(state));
-      const today = dayOf(new Date());
-      const recordedDay = typeof snapshot.startDate === "string" && importDate(snapshot.startDate) !== undefined && snapshot.startDate <= today &&
-        snapshot.startDate !== dayOf(new Date(row.createdAt)) ? snapshot.startDate : undefined;
-      this.refresh = { ...check, ...fromSave, row, version, added: fromSave.caught.filter((n) => !have.has(n)), have: have.size, recordedDay, useDate: false };
+      const have = new Set(caughtOf(JSON.parse(state)));
+      const recorded = recordedStart(snapshot, dayOf(new Date()));
+      const recordedDay = recorded !== dayOf(new Date(row.createdAt)) ? recorded : undefined;
+      this.refresh = { ...check, ...fromSave, row, previous: current, version, added: fromSave.caught.filter((n) => !have.has(n)), have: have.size, recordedDay, useDate: false };
       this.refreshReady();
     } catch {
       if (this.valid(seq)) this.problem("Couldn't prepare the preview", "The game data may not have loaded. Nothing was imported.", () => void this.prepareRefresh(row));
@@ -481,6 +480,7 @@ export class SaveImport {
     this.committing = true;
     this.options.host.querySelectorAll<HTMLButtonElement | HTMLInputElement>("button, input").forEach((b) => b.disabled = true);
     this.options.host.querySelector("[data-import-action=refresh]")!.textContent = "Adding…";
+    announce("Adding…");
     try {
       await this.options.flush();
       const bridge = this.options.bridge();
@@ -488,16 +488,22 @@ export class SaveImport {
       if (!current()) return;
       const { added } = await bridge.refreshRun(p.row.id, p.caught, p.link, startedAt);
       this.committing = false;
-      this.options.refreshed(p.row.id, added, startedAt === undefined ? undefined : Date.parse(p.row.createdAt), current() && importTarget(this.options.bridge()) === target);
-    } catch {
+      const here = current() && importTarget(this.options.bridge()) === target;
+      if (!added.length && startedAt === undefined) { if (here) void this.prepareRefresh(p.row); return; }
+      this.options.refreshed(p.row.id, added, startedAt === undefined ? undefined : Date.parse(p.row.createdAt), p.previous, here);
+    } catch (error) {
       if (!current()) return;
+      const reason = String((error as { data?: unknown })?.data ?? (error as Error)?.message ?? "");
       if (importTarget(this.options.bridge()) !== target)
         this.problem("Your account changed", "Choose your save again before importing into your current account or browser.", () => this.open(), "Start again");
-      else this.problem("Couldn't add your caught Pokémon", "Your preview is still here. Check your connection or browser storage and try again.", () => this.refreshReady(), "Back to preview");
+      else if (reason.includes("Different save")) this.different("This is a different save");
+      else if (reason.includes("This playthrough moved")) this.problem("Couldn't add your caught Pokémon", "This playthrough isn't here anymore. Nothing was imported.");
+      else this.problem("Couldn't add your caught Pokémon", "Your preview is still here. Check your connection or browser storage and try again.", () => void this.prepareRefresh(p.row), "Back to preview");
     } finally { if (session === this.session) this.committing = false; }
   }
   private problem(title: string, body: string, retry?: () => void, label = "Try again", file = label === "Choose another file") {
     this.retry = retry;
+    if (this.refreshId) body = body.replace("Nothing was imported.", "Nothing was added.");
     this.show(`<span class="si-oops" aria-hidden="true">!</span><h1 class="lg" id="import-title">${esc(title)}</h1><p class="muted">${esc(body)}</p>${file ? WORKS : ""}
       ${retry ? this.actions(label, "retry") : NOT_NOW}
       ${file ? `<p class="small muted si-help">Having trouble with a save file? <a href="/contact/">Contact us</a> with more information and we'll try to help.</p>` : ""}`, title);

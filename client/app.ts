@@ -3,7 +3,8 @@
 import "./styles.css";
 import "./save-import.css";
 import { withTimeout } from "./async";
-import { SaveImport, undoRefreshRun } from "./save-import";
+import { SaveImport } from "./save-import";
+import type { SaveLink } from "../shared/save-import";
 import { $, announce, esc, root, setRoot } from "./dom";
 import { caughtCsv, fetchStates, jsonParts, saveFile } from "./export";
 import {
@@ -263,7 +264,7 @@ function render() {
     if (ui.tab === from) history.replaceState(history.state, "", url);
     else history.pushState({ from }, "", url);
   }
-  document.title = onImport ? "Import a save | Just One More Catch" : "Just One More Catch";
+  document.title = onImport ? `${refreshTarget || saveImport.refreshing ? "Refresh from a save" : "Import a save"} | Just One More Catch` : "Just One More Catch";
   if (!signedIn) ui.devices = ui.devicesError = undefined;
   else if (
     SETTINGS.includes(ui.tab) &&
@@ -305,7 +306,7 @@ function render() {
     ? `<nav class="tabbar${!isGuest() && run?.view === "dexonly" ? " four" : ""}" aria-label="Sections">${tabButtons(true)}<button class="tab-settings" data-tab="settings" data-k="tab-settings"${here}>${SETTINGS_ICON}<span>Settings</span></button></nav>`
     : "";
   $("#toast").innerHTML = ui.undo
-    ? `<div class="toast">${ui.undo.msg}${ui.undo.n || ui.undo.restore ? `<button data-undo="1">Undo</button>` : ""}</div>`
+    ? `<div class="toast">${ui.undo.msg}${ui.undo.restore ? `<button data-undo="1" data-k="toast-undo">Undo</button>` : ui.undo.n ? `<button data-undo="1">Undo</button>` : ""}</div>`
     : "";
   if (
     (typeof ui.sheet === "number" ||
@@ -324,10 +325,19 @@ function render() {
 let saveTimer: any, undoTimer: any;
 function hideToast() {
   const n = ui.undo?.n,
+    refreshed = ui.undo?.run,
     inToast = $("#toast").contains(document.activeElement);
   ui.undo = null;
   $("#toast").innerHTML = "";
-  if (inToast) ($(`[data-k="d${n}"]`) || $("#dexq"))?.focus();
+  if (inToast && refreshed) focusCard(refreshed);
+  else if (inToast) ($(`[data-k="d${n}"]`) || $("#dexq"))?.focus();
+}
+function focusCard(id: string) {
+  const summary = $(`[data-refresh="${id}"]`)?.closest("details")?.querySelector("summary");
+  if (summary) return summary.focus();
+  const h1 = $("#view h1");
+  h1?.setAttribute("tabindex", "-1");
+  h1?.focus();
 }
 function showSaveError(msg: string) {
   ui.saveError = msg;
@@ -375,11 +385,11 @@ async function saveBeforeImport() {
   await withTimeout(bridge.saveRun(id, state), 30000, "Saving timed out");
   if (run?.id === id) ui.saved = state;
 }
-async function undoRefresh(id: string, added: number[], previousStart?: number) {
+async function undoRefresh(id: string, added: number[], previousStart?: number, previousLink?: SaveLink) {
   await saveBeforeImport();
-  await undoRefreshRun(bridge, id, added, previousStart);
+  await bridge.undoRefresh(id, added, previousStart, previousLink);
   const row = bridge.runs?.find((r) => r.id === id);
-  if (row && run?.id === id) useRun(row);
+  if (row && (run?.id === id || opening === id)) useRun(row);
 }
 function toggleCaught(n: number) {
   const p = byN[n],
@@ -598,12 +608,14 @@ async function onClick(e: MouseEvent) {
     return;
   }
   if (d.undo && ui.undo?.restore) {
-    const restore = ui.undo.restore;
+    const { restore, run: id } = ui.undo;
+    clearTimeout(undoTimer);
     ui.undo = null;
     render();
+    focusCard(id);
     try {
       await restore();
-      $("#live").textContent = "Undone";
+      announce("Undone");
     } catch {
       showSaveError("Couldn't undo the refresh.");
     }
@@ -864,8 +876,8 @@ function applyTheme() {
 let raw: Bridge;
 const refresh = () => queueMicrotask(() => update(raw));
 
-function flash(msg: string, restore?: () => Promise<void>) {
-  ui.undo = { msg, restore };
+function flash(msg: string, restore?: () => Promise<void>, run?: string) {
+  ui.undo = { msg, restore, run };
   $("#live").textContent = msg;
   clearTimeout(undoTimer);
   undoTimer = setTimeout(hideToast, 8000);
@@ -885,6 +897,7 @@ function syncRuns() {
   const rows = bridge.runs;
   if (bridge.auth.isLoading || !rows) return;
   if (bridge.auth.isAuthenticated) {
+    if (ui.undo?.run?.startsWith("local-")) hideToast();
     void moveGuestRuns(raw, flash, (guestId, id) => {
       if (store.get("jomc.run") === guestId) pendingRun = id;
     });
@@ -944,14 +957,19 @@ export function mount(el: HTMLElement, b: Bridge) {
       }
       flash(!current ? "Caught Pokémon imported." : bridge.auth.isAuthenticated ? "Caught Pokémon imported. Saved to your account." : "Caught Pokémon imported. Saved only in this browser.");
     },
-    refreshed: (id, added, previousStart, current) => {
+    refreshed: (id, added, previousStart, previousLink, current) => {
       const row = bridge.runs?.find((r) => r.id === id);
-      if (row && (current || run?.id === id)) useRun(row);
+      if (run?.id === id) {
+        clearTimeout(saveTimer);
+        for (const n of added) run.caught.add(n);
+        scheduleSave(0);
+      } else if (row && (current || opening === id)) useRun(row);
       if (current) {
         ui.tab = "playthroughs";
         scrollTo(0, 0);
       }
-      flash(`Added ${added.length} caught Pokémon`, () => undoRefresh(id, added, previousStart));
+      flash(`Added ${added.length} caught Pokémon`, () => undoRefresh(id, added, previousStart, previousLink), id);
+      $("[data-undo]")?.focus();
     },
     dismiss: () => {
       ui.tab = "playthroughs";
@@ -975,6 +993,18 @@ export function mount(el: HTMLElement, b: Bridge) {
   applyTheme();
   darkMQ.addEventListener("change", applyTheme);
   el.addEventListener("click", onClick);
+  const toast = $("#toast") as HTMLElement;
+  const holdToast = () => ui.undo?.restore && clearTimeout(undoTimer);
+  const releaseToast = (e: Event) => {
+    if (!ui.undo?.restore || toast.matches(":hover") ||
+      toast.contains(e.type === "focusout" ? ((e as FocusEvent).relatedTarget as Node) : document.activeElement)) return;
+    clearTimeout(undoTimer);
+    undoTimer = setTimeout(hideToast, 8000);
+  };
+  toast.addEventListener("mouseenter", holdToast);
+  toast.addEventListener("focusin", holdToast);
+  toast.addEventListener("mouseleave", releaseToast);
+  toast.addEventListener("focusout", releaseToast);
   el.addEventListener(
     "toggle",
     (e) => {
