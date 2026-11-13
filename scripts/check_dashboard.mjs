@@ -21,7 +21,7 @@ for (const g of titles.flat().filter(g => typeof g !== 'string')) readFileSync(n
 const game = readFileSync(new URL('../client/game.ts', import.meta.url), 'utf8');
 const badgesWord = runInNewContext(stripTypeScriptTypes(game.slice(game.indexOf('export const badgesWord'), game.indexOf(';', game.indexOf('export const badgesWord')) + 1)).replace('export ', '') + '\nbadgesWord');
 const ctx = {
-  exportError: () => "",
+  SHARE_ICON: "", shareLabel: () => "Share progress", exportError: () => "",
   isGuest: () => !ctx.bridge.auth.isAuthenticated,
   imageUrl: x => x, esc: x => x, $: () => null, VERSIONS, CONSOLES, verOf: v => VERSIONS[v], byN: {}, ui: {},
   badgesWord, badgeName: b => b, startDay: () => '2026-11-01', ymd: () => '2026-11-12',

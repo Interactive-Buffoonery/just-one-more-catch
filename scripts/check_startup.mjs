@@ -51,6 +51,10 @@ async function run({failImport = false, cookie = '', search = '', user = null, s
     context,
     initializeImportMeta(meta) {meta.env={VITE_CONVEX_URL:'https://example.convex.cloud',VITE_CLERK_PUBLISHABLE_KEY:'example'};},
     async importModuleDynamically(name) {
+      if (name === 'convex/browser' || name === '../convex/_generated/api') {
+        const m=makeModule(name,name==='convex/browser'?{ConvexClient}:{api:{runs:{}}});
+        await m.link(()=>{}); await m.evaluate(); return m;
+      }
       if (name === './app' || name === './contact') {
         const exports = name === './app' ? {mount:(el,b)=>bridges.push(b),update:b=>bridges.push(b)} : {mountContact:send=>contacts.push(send)};
         const m=makeModule(name,exports);
