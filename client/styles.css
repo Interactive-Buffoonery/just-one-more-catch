@@ -866,3 +866,24 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
 @media(min-width:560px){.dgrid.list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(min-width:640px){.dgrid.large{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:959px){.dextools .search{flex-basis:calc(100% - 160px)}}
+.nowshort,.toolicon{display:none}
+@media(max-height:480px){
+  section:has(>.dexhead){display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:center}
+  section:has(>.dexhead)>.where-k{grid-column:1;grid-row:1;font-size:11px;margin:0}
+  .dexhead{grid-column:2;grid-row:1;gap:8px}
+  .dexhead h1{font-size:22px;padding:0}
+  .dexcount,.dexcount b{font-size:16px;padding:0}
+  .dexhead+.bar{grid-column:1/-1;margin:0;height:4px}
+  .dextop{grid-column:1/-1;display:flex;align-items:center;gap:6px;position:sticky;top:0;z-index:5;background:var(--bg)}
+  .dextop .filters{margin:0;flex:1;min-width:210px;gap:1px;padding:2px}
+  .app .filters button{min-height:36px;font-size:10px}
+  .filters button b{font-size:12px}
+  .dextools{margin:0;flex:1;flex-wrap:nowrap;gap:3px}
+  .dextools .search{flex-basis:auto;min-width:80px}
+  .app .search input{font-size:12px;padding-left:26px}
+  .search svg{left:6px}
+  .app .dexsizes button{width:25px;padding:3px}
+  .tooltext,.nowlong{display:none}
+  .toolicon,.nowshort{display:inline}
+  .app .dextools .quietbtn{min-width:32px;padding:6px}
+}
