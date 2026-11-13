@@ -700,6 +700,12 @@ Coordinates below are zero-based script tile coordinates, not block coordinates.
   cannot reach Blackthorn-room exit (23,3). Its one-way ledge separates the
   pocket from the main room. Thus this proposed shortcut establishes neither
   early Blackthorn/Route 45 nor early Route 44. Retain their existing gates.
+  Overland, a flood of all Route 29 cells with Surf, Rock Smash, Cut and
+  Strength reaches all 52 Route 46 grass cells but no Route 45 cell: Route
+  46's ledges only hop south. The reverse flood from Blackthorn reaches
+  Route 45, Route 46 and Route 29, confirming the connections are modeled.
+  [Route 46 bytes](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route46.blk),
+  [Route 46 connections](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/maps/attributes.asm#L247-L249).
   Aquatic access is still open; preserve its previous provisional gate.
   [Violet bytes](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/DarkCaveVioletEntrance.blk),
   [Violet warps/rocks](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/DarkCaveVioletEntrance.asm#L33-L48),
@@ -730,8 +736,7 @@ Coordinates below are zero-based script tile coordinates, not block coordinates.
   [upper floor](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/MountMortar2FInside.blk),
   [B1F bytes](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/MountMortarB1F.blk), [Kiyo](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/MountMortarB1F.asm).
 - **Mt. Silver:** Room1 arrival (9,33) reaches Room2 via (15,1) and
-  Room3 via Room2 (11,5) without Surf or Waterfall: respectively 251, 146
-  and 88 FLOOR cells. These correspond to the main 1F/2F/Top encounter
+  Room3 via Room2 (11,5) without Surf or Waterfall. These correspond to the main 1F/2F/Top encounter
   progression; no complete main encounter area waits for either move.
   Item-room warps remain inaccessible, but the pack's merged Mt. Silver
   area already opens at its earliest encounters. No additional gate.

@@ -89,7 +89,8 @@
         "surf"
       ],
       "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/DarkCaveVioletEntrance.asm#L33-L48",
-      "quote": "Static map trace: Surf alone reaches Violet warp (17,1) and 25 Blackthorn-room FLOOR cells from arrival (3,25); no Rock Smash object is crossed."
+      "quote": "warp_event 17,  1, DARK_CAVE_BLACKTHORN_ENTRANCE, 2",
+      "note": "Static map trace: Surf alone reaches Violet warp (17,1) and 25 Blackthorn-room FLOOR cells from arrival (3,25); no Rock Smash object is crossed."
     },
     "Dragons Den": {
       "needs": [
@@ -984,9 +985,9 @@
       "needs": [
         "cut-hm"
       ],
-      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route8.blk",
-      "quote": "Static collision trace: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Cut trees at (27,10) and (21,12).",
-      "note": "Decoded with kanto_collision.asm and home/map.asm player side-wall permissions at the same pinned revision. All walkable boundary cells were also tested as permissive entrances."
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/kanto_collision.asm#L54",
+      "quote": "tilecoll FLOOR, CUT_TREE, WALL, FLOOR ; 35",
+      "note": "Static collision trace of Route8.blk: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Block $35 places Cut trees at (27,10) and (21,12). All walkable boundary cells were also tested as permissive entrances."
     },
     {
       "place": "Route 8",
@@ -995,9 +996,9 @@
       "needs": [
         "cut-hm"
       ],
-      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route8.blk",
-      "quote": "Static collision trace: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Cut trees at (27,10) and (21,12).",
-      "note": "Decoded with kanto_collision.asm and home/map.asm player side-wall permissions at the same pinned revision. All walkable boundary cells were also tested as permissive entrances."
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/kanto_collision.asm#L54",
+      "quote": "tilecoll FLOOR, CUT_TREE, WALL, FLOOR ; 35",
+      "note": "Static collision trace of Route8.blk: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Block $35 places Cut trees at (27,10) and (21,12). All walkable boundary cells were also tested as permissive entrances."
     },
     {
       "place": "Route 8",
@@ -1006,9 +1007,9 @@
       "needs": [
         "cut-hm"
       ],
-      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route8.blk",
-      "quote": "Static collision trace: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Cut trees at (27,10) and (21,12).",
-      "note": "Decoded with kanto_collision.asm and home/map.asm player side-wall permissions at the same pinned revision. All walkable boundary cells were also tested as permissive entrances."
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/kanto_collision.asm#L54",
+      "quote": "tilecoll FLOOR, CUT_TREE, WALL, FLOOR ; 35",
+      "note": "Static collision trace of Route8.blk: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Block $35 places Cut trees at (27,10) and (21,12). All walkable boundary cells were also tested as permissive entrances."
     },
     {
       "place": "Route 8",
@@ -1017,9 +1018,9 @@
       "needs": [
         "cut-hm"
       ],
-      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route8.blk",
-      "quote": "Static collision trace: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Cut trees at (27,10) and (21,12).",
-      "note": "Decoded with kanto_collision.asm and home/map.asm player side-wall permissions at the same pinned revision. All walkable boundary cells were also tested as permissive entrances."
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/kanto_collision.asm#L54",
+      "quote": "tilecoll FLOOR, CUT_TREE, WALL, FLOOR ; 35",
+      "note": "Static collision trace of Route8.blk: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Block $35 places Cut trees at (27,10) and (21,12). All walkable boundary cells were also tested as permissive entrances."
     },
     {
       "place": "Route 8",
@@ -1028,9 +1029,9 @@
       "needs": [
         "cut-hm"
       ],
-      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route8.blk",
-      "quote": "Static collision trace: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Cut trees at (27,10) and (21,12).",
-      "note": "Decoded with kanto_collision.asm and home/map.asm player side-wall permissions at the same pinned revision. All walkable boundary cells were also tested as permissive entrances."
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/kanto_collision.asm#L54",
+      "quote": "tilecoll FLOOR, CUT_TREE, WALL, FLOOR ; 35",
+      "note": "Static collision trace of Route8.blk: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Block $35 places Cut trees at (27,10) and (21,12). All walkable boundary cells were also tested as permissive entrances."
     },
     {
       "place": "Route 8",
@@ -1039,9 +1040,9 @@
       "needs": [
         "cut-hm"
       ],
-      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route8.blk",
-      "quote": "Static collision trace: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Cut trees at (27,10) and (21,12).",
-      "note": "Decoded with kanto_collision.asm and home/map.asm player side-wall permissions at the same pinned revision. All walkable boundary cells were also tested as permissive entrances."
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/kanto_collision.asm#L54",
+      "quote": "tilecoll FLOOR, CUT_TREE, WALL, FLOOR ; 35",
+      "note": "Static collision trace of Route8.blk: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Block $35 places Cut trees at (27,10) and (21,12). All walkable boundary cells were also tested as permissive entrances."
     },
     {
       "place": "Route 8",
@@ -1050,9 +1051,9 @@
       "needs": [
         "cut-hm"
       ],
-      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route8.blk",
-      "quote": "Static collision trace: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Cut trees at (27,10) and (21,12).",
-      "note": "Decoded with kanto_collision.asm and home/map.asm player side-wall permissions at the same pinned revision. All walkable boundary cells were also tested as permissive entrances."
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/kanto_collision.asm#L54",
+      "quote": "tilecoll FLOOR, CUT_TREE, WALL, FLOOR ; 35",
+      "note": "Static collision trace of Route8.blk: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Block $35 places Cut trees at (27,10) and (21,12). All walkable boundary cells were also tested as permissive entrances."
     },
     {
       "place": "Route 8",
@@ -1061,9 +1062,9 @@
       "needs": [
         "cut-hm"
       ],
-      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route8.blk",
-      "quote": "Static collision trace: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Cut trees at (27,10) and (21,12).",
-      "note": "Decoded with kanto_collision.asm and home/map.asm player side-wall permissions at the same pinned revision. All walkable boundary cells were also tested as permissive entrances."
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/kanto_collision.asm#L54",
+      "quote": "tilecoll FLOOR, CUT_TREE, WALL, FLOOR ; 35",
+      "note": "Static collision trace of Route8.blk: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Block $35 places Cut trees at (27,10) and (21,12). All walkable boundary cells were also tested as permissive entrances."
     },
     {
       "place": "Route 8",
@@ -1072,9 +1073,9 @@
       "needs": [
         "cut-hm"
       ],
-      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route8.blk",
-      "quote": "Static collision trace: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Cut trees at (27,10) and (21,12).",
-      "note": "Decoded with kanto_collision.asm and home/map.asm player side-wall permissions at the same pinned revision. All walkable boundary cells were also tested as permissive entrances."
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/kanto_collision.asm#L54",
+      "quote": "tilecoll FLOOR, CUT_TREE, WALL, FLOOR ; 35",
+      "note": "Static collision trace of Route8.blk: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Block $35 places Cut trees at (27,10) and (21,12). All walkable boundary cells were also tested as permissive entrances."
     },
     {
       "place": "Dark Cave Blackthorn City Entrance",
