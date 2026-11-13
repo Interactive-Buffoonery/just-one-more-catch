@@ -194,3 +194,98 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 - Victory Road B2F: does the first reachable encounter tile require Rock
   Smash as well as Strength? Trace the map or check in-game; the walkthrough
   establishes Rock Smash for full traversal, not the earliest encounter.
+
+## Black 2 / White 2 (`b2w2`)
+
+This is a sourced first implementation awaiting independent access review,
+not a claim that all earliest encounter tiles are proven. The supplied cache
+is the encounter source; missing rows were not fabricated. See SOURCES.md
+and the 137-area work list in `docs/b2w2-access.md`.
+
+- **Numbered room mappings:** PokeAPI's Reversal Mountain Unknown Areas
+  48–60, Victory Road 2 Unknown Areas 71–80 / Victory Road 7F, and Castelia
+  Sewers Unknown Area 38 lack an established room-to-map correspondence.
+  They retain their labels and parent journey gates. Independently map
+  each room before assigning additional floor-specific Surf/Strength,
+  seasonal water-level or version-layout restrictions. Relic Castle A/C/D
+  likewise need a precise mapping; C/D currently follow the sourced
+  Strength approach through Relic Passage, A the desert approach.
+- **Earliest tiles:** confirm whether Route 4's first encounter patch is
+  reachable before Colress clears the Crustle (currently the whole route
+  follows that milestone), whether Route 6/Chargestone first tiles precede
+  the Driftveil Frigate sequence (Route 6 currently follows Driftveil,
+  Chargestone follows the Frigate), and whether the PWT entrance to Relic
+  Passage can be used before Clay (currently after Quake). Guidance Chamber
+  has the walkthrough's Surf/Strength route; prove alternative approaches
+  before weakening it. These gates need map/script or in-game evidence,
+  not Black/White assumptions.
+- **Seaside Cave and Giant Chasm:** distinguish any encounter tiles reachable
+  before the Rocky blockage from the rest of Seaside Cave; currently both
+  floors require clearing Opelucid Plasma and Surf. Giant Chasm outside /
+  first approach follows Opelucid; forest/cave/grotto sections follow the
+  seaside Frigate. Check those boundaries against maps. Route 23/Victory
+  Road currently follow Ghetsis without a blanket extra HM requirement;
+  floor-specific encounter tiles still need tracing.
+- **Azelf:** the walkthrough places it on the western Route 23 platform
+  near the Strength puzzle, but does not alone prove Cut/Strength are
+  unavoidable to that tile. Only the established lake-guardian event,
+  League, Surf and Waterfall are applied. Trace the platform approach.
+- **Key System:** `iron-room` has no standalone cached Bulbapedia page.
+  Underground Ruins supports the keys, chambers and giants, but exact
+  PokeAPI Rocky Mountain Room / Iron Room / Glacier Room wild-table mapping
+  still needs independent proof. Both keys can be shared between versions;
+  activation is manual. No Challenger's Cave encounter area exists in these
+  cached B2W2 rows; do not borrow its Black/White tables or gates. Its B2W2
+  absence/inaccessibility and any proposed Lostlorn key rule need the game's
+  own evidence before adding anything.
+- **Weekdays and respawns:** raw PokeAPI static rows do not encode all
+  weekday rules. The cached Route 4 page describes Monday Braviary (White 2)
+  and Thursday Mandibuzz (Black 2); Undella Bay describes Monday Jellicent
+  (Black 2), Thursday Jellicent (White 2). These rows currently have their
+  chapter/method gates but no weekday filter. Legendary retry conditions
+  remain descriptive raw conditions rather than a model of each retry flag.
+- **Seasons:** seasonal raw encounter conditions are preserved and named,
+  but are not filtered by the computer's calendar. Castelia Sewers water
+  level and winter-only physical paths need separate room evidence. The
+  cached `Season` page concerns anime seasons; the actual game-mechanic
+  target is not cached. `Time` and the B2W2 article establish monthly seasons
+  and no time-of-day encounter changes. A second source for each seasonal
+  access exception is still missing.
+- **PokeAPI coverage:** all 137 supplied areas and their B2/W2 rows are
+  integrated (no hand-invented rows). There are no catchable-area rows for
+  Plasma Frigate, N's Castle, Black Tower or White Treehollow; their story
+  and Benga reward are represented by events/Floccesy gift rows. The cache
+  does not supply the complete Yancy/Curtis phone-trade sequence: do not
+  claim all in-game trades are covered. Verify outbreaks, Memory Link's N
+  Pokémon and other conditional gifts against the raw rows before claiming
+  completeness. Ordinary gifts/fossils retain raw item conditions and their
+  chapter gates, not a full inventory/phone/day-counter simulation.
+- **Location labeling:** PokeAPI calls the Nacrene gift gate West Gate,
+  whereas the walkthrough describes the Happiny Egg at the east gate.
+  Preserve the raw area label pending a species-specific display mapping;
+  do not move Uxie's separate western encounter with it.
+- **Forms and evolution:** no complete seasonal Deerling/Sawsbuck, Basculin
+  color, gender, Therian, Kyurem-fusion or other alternate-form collection
+  catalog is included. Default species art/types are used. External Dream
+  Radar/transfer/event distributions are not invented as local encounters.
+  PokeAPI's Milotic evolution text prefers beauty and omits its alternative
+  Prism Scale trade; historical alternatives need a sourced override.
+  Audit all remaining evolution text independently before claiming full
+  historical evolution coverage.
+- **Verification limits:** no original-game script/decompilation review,
+  ROM, emulator, browser/device interaction, account sync or save import was
+  tested. No second independent source was available. The independent
+  review should examine every area and gift/static/trade, not treat a
+  cached article match, generator check or build as gameplay proof.
+
+  The missing phone trades are specifically all 12 rewards for each contact:
+  Yancy: Meowth, Wobbuffet, Ralts, Shieldon, Rhyhorn, West Sea Shellos,
+  Mawile, Spiritomb, Snorlax, Teddiursa, Spinda and Togepi;
+  Curtis: Mankey, Wobbuffet, Ralts, Cranidos, Rhyhorn, East Sea Shellos,
+  Sableye, Spiritomb, Snorlax, Phanpy, Spinda and Togepi.
+  Source: https://bulbapedia.bulbagarden.net/wiki/In-game_trade#Yancy/Curtis
+  The only generated trade rewards are Alakazam/Ambipom (Accumula),
+  Tangrowth (Humilau), Rotom (Route 15), Gigalith (Route 7), Cottonee
+  (White 2, Route 4) and Petilil (Black 2, Route 4). The phone trades have
+  no raw encounter rows in either version; this is a confirmed omission,
+  not a proposed gate for invented rows.

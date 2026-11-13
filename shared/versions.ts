@@ -1,4 +1,6 @@
 export const VERSION_IDS = [
+  "black-2",
+  "white-2",
   "red",
   "blue",
   "yellow",

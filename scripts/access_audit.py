@@ -16,7 +16,7 @@ from urllib.parse import unquote
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 POKEAPI = os.path.join(ROOT, ".cache", "pokeapi")
 WIKI = os.path.join(ROOT, ".cache", "bulbapedia")
-PACKS = ["crystal", "hgss", "frlg", "usum"]
+PACKS = ["b2w2", "crystal", "hgss", "frlg", "usum"]
 
 
 def nice(slug):
@@ -57,6 +57,17 @@ def candidates(area, pack):
                  ("Bills House", "Bill's House"), ("Groundon", "Groudon"), ("Hauoli", "Hau'oli"), ("Ulaula", "Ula'ula"),
                  ("Kalae", "Kala'e"), ("Team Rockets Castle", "Team Rocket's Castle"), ("Trainers School", "Trainers' School")]:
         a = a.replace(x, y)
+    if pack == "b2w2":
+        if a.startswith("Unova Route "):
+            return ["Unova Route " + re.search(r"Unova Route (\d+)", a)[1]]
+        if a.startswith("Unova Victory Road"):
+            return ["Victory Road (Black 2 and White 2)"]
+        if a in ("Iron Room", "Glacier Room", "Rocky Mountain Room"):
+            return ["Underground Ruins"]
+        if a == "Guidance Chamber":
+            return ["Mistralton Cave"]
+        if a == "Nature Sanctuary":
+            return ["Nature Preserve"]
     route = re.match(r"(?:Sea )?Route (\d+)", a)
     if route:
         n = int(route.group(1))
@@ -82,6 +93,8 @@ SPECIFIC = {"Pokémon Mansion": "Pokémon Mansion (Kanto)", "Underground Path": 
 
 def page_for(area, pack, resolved):
     for t in candidates(area, pack):
+        if pack == "b2w2" and os.path.exists(wiki_path(t)):
+            return t
         if resolved.get(t):
             return SPECIFIC.get(resolved[t], resolved[t])
     return None

@@ -6,6 +6,13 @@ import { needLabel } from "../client/need-labels.ts";
 import { readFileSync, writeFileSync, mkdirSync, accessSync, readdirSync } from "node:fs";
 const METHOD: Record<string, [string, string | null]> = {
   walk: ["Walking", null],
+  "dark-grass": ["Dark grass", null],
+  "grass-spots": ["Rustling grass", null],
+  "cave-spots": ["Dust cloud", null],
+  "bridge-spots": ["Flying Pokémon’s shadow", null],
+  "surf-spots": ["Rippling water (Surf)", "surf"],
+  "super-rod-spots": ["Rippling water (Super Rod)", "super-rod"],
+  "hidden-grotto": ["Hidden Grotto", null],
   seaweed: ["Underwater", "dive"],
   "feebas-tile-fishing": ["Feebas fishing tiles", "old-rod"],
   "devon-scope": ["Devon Scope", null],
@@ -36,6 +43,7 @@ import { VERSIONS } from "../client/packs.ts";
 
 const esc = (s: unknown) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
 const games = [
+  ["black-2-white-2", "b2w2", "Unova"],
   ["emerald", "emerald", "Hoenn"],
   ["red-blue", "rb", "Kanto"],
   ["yellow", "yellow", "Kanto"],

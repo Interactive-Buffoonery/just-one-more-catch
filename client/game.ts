@@ -29,6 +29,13 @@ export let EVENTS: Record<string, GameData["events"][number]> = {};
 let LATER: Record<string, GameData["events"][number][]> = {};
 export const METHOD: Record<string, [string, string | null]> = {
   walk: ["Walking", null],
+  "dark-grass": ["Dark grass", null],
+  "grass-spots": ["Rustling grass", null],
+  "cave-spots": ["Dust cloud", null],
+  "bridge-spots": ["Flying Pokémon’s shadow", null],
+  "surf-spots": ["Rippling water (Surf)", "surf"],
+  "super-rod-spots": ["Rippling water (Super Rod)", "super-rod"],
+  "hidden-grotto": ["Hidden Grotto", null],
   seaweed: ["Underwater", "dive"],
   "feebas-tile-fishing": ["Feebas fishing tiles", "old-rod"],
   "devon-scope": ["Devon Scope", null],
@@ -86,6 +93,20 @@ export const OK_COND: Record<string, string> = {
   "story-progress-hall-of-fame": "After the Elite Four",
 };
 const STORY: Record<string, string> = {
+  "season-spring": "Spring only",
+  "season-summer": "Summer only",
+  "season-autumn": "Autumn only",
+  "season-winter": "Winter only",
+  "special-encounter-couldnt-capture-before": "After the League, if not caught earlier",
+  "story-progress-juniper-cave-of-being": "Meet the lake guardians in Cave of Being",
+  "story-progress-quake-badge": "After the Quake Badge",
+  "other-regirock-regice-registeel-in-party": "Bring Regirock, Regice and Registeel",
+  "other-captured-reshiram-or-zekrom": "After catching N’s dragon",
+  "item-lunar-wing": "Bring the Lunar Wing",
+  "item-dark-stone": "Bring the Dark Stone",
+  "item-light-stone": "Bring the Light Stone",
+  "item-iron-key": "Activate the Iron Key",
+  "item-ice-key": "Activate the Iceberg Key",
   "story-progress-beat-red": "After beating Red",
   "story-progress-awakened-beasts": "After the Burned Tower beasts wake",
   "story-progress-vermilion-copycat": "After returning Copycat's doll",
@@ -395,15 +416,15 @@ export const R = () => run as Run;
 export const ver = () => verOf(R().version);
 export const P = () => ver().pack;
 export const e4 = () => R().badges.has("Elite Four");
-export const visible = (p: Species) => !!p.j || e4();
+export const visible = (p: Species) => p.j != null || e4();
 export const dexList = () =>
   DEX.filter(visible).sort((a, b) =>
     e4() ? a.n - b.n : (a.j as number) - (b.j as number),
   );
-export const num = (p: Species) => (e4() || !p.j ? p.n : p.j);
+export const num = (p: Species) => (e4() || p.j == null ? p.n : p.j);
 export const pad = (n: number) => String(n).padStart(3, "0");
 export const regionalCaught = () =>
-  [...R().caught].filter((n) => byN[n]?.j).length;
+  [...R().caught].filter((n) => byN[n]?.j != null).length;
 
 export const gameTime = () => {
   const h = gameNow(R().clock).hour,

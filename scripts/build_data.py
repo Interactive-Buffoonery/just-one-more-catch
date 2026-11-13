@@ -229,7 +229,7 @@ if __name__ == "__main__":
     dex = [species(n, johto) for n in range(1, GAME["species"] + 1)]
     if unmatched:
         sys.exit("No chapter for: " + ", ".join(sorted(unmatched)))
-    assert sum(1 for p in dex if p["j"]) == len(johto)
+    assert sum(1 for p in dex if p["j"] is not None) == len(johto)
     assert not set(GAME["needs"]) - need_hits, f"needs match no area: {set(GAME['needs']) - need_hits}"
     events = GAME.get("events", [])
     ids = {e["id"] for e in events}
