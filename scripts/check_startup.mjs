@@ -224,7 +224,6 @@ runInNewContext(recoveryScript, {
   },
   window: {addEventListener: (event, callback) => failed = callback},
   location: {href: 'https://app.example/', origin: 'https://app.example', reload: () => reloaded = true},
-  URL,
   setTimeout: (callback, delay) => {
     assert.equal(delay, 12000);
     timeout = callback;

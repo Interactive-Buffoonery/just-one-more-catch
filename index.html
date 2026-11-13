@@ -56,7 +56,7 @@
         });
         window.addEventListener("error", function (e) {
           var src = e && e.target && e.target.src;
-          if (src && new URL(src, location.href).origin !== location.origin) return;
+          if (src && src.indexOf(location.origin + "/") !== 0) return;
           showRecovery();
         }, true);
         setTimeout(showRecovery, 12000);

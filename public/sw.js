@@ -2,8 +2,7 @@
 // image fingerprints replace older copies of the same path when stored.
 const CACHE = "jomc-v2";
 const STATIC = /^\/(assets|sprites|badges|items|covers|fonts|icons|save-reader)\//;
-// Unhashed files the app page needs before first paint: network first, like the page,
-// though _headers lets the browser reuse them for up to 5 minutes after a deploy.
+// Unhashed files the app page needs before first paint: network first, like the page.
 const SHELL = ["/theme.js", "/tokens.css"];
 
 const put = (key, res) => caches.open(CACHE).then(async (c) => {
