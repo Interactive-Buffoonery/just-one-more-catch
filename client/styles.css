@@ -904,6 +904,7 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
   .toolicon,.nowshort{display:inline}
   .app .dextools .quietbtn{min-width:32px;padding:6px}
   .dgrid .dt{scroll-margin-top:52px}
+  #dexgrid{grid-column:1/-1}
 }
 .large .dextypes{justify-content:center}
 .dextypes .type{margin:0;padding:0 7px;font-size:11px;line-height:18px}

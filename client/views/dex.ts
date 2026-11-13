@@ -149,8 +149,8 @@ export function Dex() {
         <button class="quietbtn" data-custom="1" data-k="custom" aria-label="Customize">${SLIDERS_ICON}<span class="tooltext">Customize</span></button>
       </div>
     </div>
-  </section>
-  <div id="dexgrid">${dexGrid()}</div>`;
+    <div id="dexgrid">${dexGrid()}</div>
+  </section>`;
 }
 const tags = (t: [string, boolean][]) =>
   t.length ? `<div class="tags">${t.map((x) => x[0]).join("")}</div>` : "";
