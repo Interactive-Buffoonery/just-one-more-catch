@@ -505,11 +505,6 @@
       "vivillon-jungle"
     ]
   },
-  "drop_rows": [
-    {"place": "Lush Jungle West", "n": 762, "m": "bubbling-spots", "src": "https://bulbapedia.bulbagarden.net/wiki/Lush_Jungle", "quote": "Ambush encounters (rustling grass) are listed only under the Central and north area table, not the Northwest area table"},
-    {"place": "Lush Jungle West", "n": 765, "m": "bubbling-spots", "src": "https://bulbapedia.bulbagarden.net/wiki/Lush_Jungle", "quote": "Ambush encounters (rustling grass) are listed only under the Central and north area table, not the Northwest area table"},
-    {"place": "Lush Jungle West", "n": 766, "m": "bubbling-spots", "src": "https://bulbapedia.bulbagarden.net/wiki/Lush_Jungle", "quote": "Ambush encounters (rustling grass) are listed only under the Central and north area table, not the Northwest area table"}
-  ],
   "area_methods": [
     {
       "place": "Route 2",
@@ -607,6 +602,7 @@
     {
       "place": "Lush Jungle West",
       "methods": {
+        "bubbling-spots": "rustling-grass",
         "sos-from-bubbling-spot": "sos"
       },
       "src": "https://bulbapedia.bulbagarden.net/wiki/Lush_Jungle",
