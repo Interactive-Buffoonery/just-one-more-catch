@@ -13,4 +13,7 @@
 /sw.js
   Cache-Control: no-cache
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-Ktid4cpTgVuONxyyxN/F933FxwuzWYphH6Gi1X9EEZs=' 'wasm-unsafe-eval' https://clerk.justonemorecatch.app https://challenges.cloudflare.com https://*.protect.clerk.com https://static.cloudflareinsights.com; connect-src 'self' https://clerk.justonemorecatch.app https://*.protect.clerk.com:* https://blissful-cod-978.convex.cloud wss://blissful-cod-978.convex.cloud https://cloudflareinsights.com; img-src 'self' data: https://img.clerk.com; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:; frame-src https://challenges.cloudflare.com https://*.protect.clerk.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-Ktid4cpTgVuONxyyxN/F933FxwuzWYphH6Gi1X9EEZs=' 'wasm-unsafe-eval' https://clerk.justonemorecatch.app https://challenges.cloudflare.com https://*.protect.clerk.com https://static.cloudflareinsights.com; connect-src 'self' https://clerk.justonemorecatch.app https://*.protect.clerk.com:* https://blissful-cod-978.convex.cloud https://blissful-cod-978.convex.site wss://blissful-cod-978.convex.cloud https://cloudflareinsights.com; img-src 'self' data: https://img.clerk.com; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:; frame-src https://challenges.cloudflare.com https://*.protect.clerk.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'
+/share/*
+  Referrer-Policy: no-referrer
+  X-Robots-Tag: noindex, nofollow

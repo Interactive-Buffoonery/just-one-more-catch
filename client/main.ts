@@ -1,14 +1,14 @@
 import { withTimeout } from "./async";
 import "@fontsource/jetbrains-mono/latin-500.css";
 import type { Clerk } from "@clerk/clerk-js";
-import { ConvexClient } from "convex/browser";
-import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import type { Bridge, Device } from "./types";
 
 const legacyTab = new URLSearchParams(location.search).get("tab");
 if (location.pathname === "/" && legacyTab === "contact") {
   location.replace("/contact/");
+} else if (/^\/share\/?$/.test(location.pathname)) {
+  void startShare();
 } else if (/^\/contact\/?$/.test(location.pathname)) {
   void startContact().catch(() => {
     document.getElementById("contact-status")!.textContent =
@@ -18,7 +18,33 @@ if (location.pathname === "/" && legacyTab === "contact") {
   void startTracker();
 }
 
+async function startShare() {
+  const { validateProjection } = await import("../shared/share-projection");
+  const { renderSnapshot } = await import("./views/share");
+  await import("./styles.css");
+  await import("./share.css");
+  const target = document.getElementById("share-card")!;
+  try {
+    const token = new URLSearchParams(location.hash.slice(1)).get("s");
+    if (!token || !/^[A-Za-z0-9_-]{43}$/.test(token)) throw new Error("Unavailable");
+    const site = new URL(import.meta.env.VITE_CONVEX_URL);
+    site.hostname = site.hostname.replace(/\.convex\.cloud$/, ".convex.site");
+    const response = await fetch(new URL("/share", site), {
+      headers: { "X-Share-Token": token }, cache: "no-store", credentials: "omit", referrerPolicy: "no-referrer",
+    });
+    const projection = response.ok && validateProjection(await response.json());
+    if (!projection) throw new Error("Unavailable");
+    target.className = "snap";
+    target.dataset.game = projection.game;
+    target.innerHTML = renderSnapshot(projection);
+  } catch {
+    target.className = "gone";
+    target.innerHTML = `<div class="ball" aria-hidden="true"></div><h1 class="lg">This link isn't available</h1><p>It may have been turned off.</p>`;
+  }
+}
+
 async function startContact() {
+  const [{ ConvexClient }, { api }] = await Promise.all([import("convex/browser"), import("../convex/_generated/api")]);
   const { mountContact } = await import("./contact");
   const convex = new ConvexClient(import.meta.env.VITE_CONVEX_URL);
   let session: Promise<Clerk> | undefined;
@@ -106,6 +132,7 @@ function sessionToken(c: Pick<Clerk, "session"> | undefined, forceRefreshToken: 
 }
 
 async function startTracker() {
+  const [{ ConvexClient }, { api }] = await Promise.all([import("convex/browser"), import("../convex/_generated/api")]);
   const { mount, update } = await import("./app");
   let clerk: Clerk | undefined;
   const pendingSignIns = new WeakSet<HTMLDivElement>();
