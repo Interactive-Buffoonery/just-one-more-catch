@@ -68,6 +68,13 @@ assert.equal(roundtrip.caught.size, 1);
 assert.equal(api.loadRun(row, '{"forms":null}').forms.size, 0);
 assert.equal(api.loadRun(row, '{"forms":{}}').forms.size, 0);
 assert.equal(api.loadRun(row, '{"forms":[null,1,"unown-a"]}').forms.size, 1);
+const personal = { mons: [{ id: 3, n: 25, box: 1, acquisition: { method: "trade", day: "2000-02-29", place: "A remembered place" } }], journalEntries: [{ id: "memory", text: "A note", day: "2000-02-29" }] };
+const personalRun = api.loadRun(row, JSON.stringify(personal));
+const personalRoundtrip = JSON.parse(api.dumpRun(personalRun));
+assert.deepEqual(personalRoundtrip.mons[0].acquisition, personal.mons[0].acquisition);
+assert.deepEqual(personalRoundtrip.journalEntries, personal.journalEntries);
+assert.equal(api.loadRun(row, "{}").journalEntries.length, 0);
+assert.equal(api.loadRun(row, '{"mons":[{"id":1,"n":25}]}').mons[0].acquisition, undefined);
 console.log("form catalogs, sprites and run state ok");
 
 // Exercise the rendered sheets and save path with old and new stored Pokemon.
@@ -82,6 +89,7 @@ const moduleCode = (path) => stripTypeScriptTypes(read(path).replace(/^import[\s
 const parts = read('client/parts.ts');
 const spriteCode = stripTypeScriptTypes(parts.slice(parts.indexOf('const ring ='), parts.indexOf('export const lvl')).replaceAll('export ', ''));
 const context = {
+  acquisition: input => Object.values(input).some(Boolean) ? input : undefined, ACQUISITION_METHODS: { caught: "Caught" }, acquisitionPlaces: () => [], checkPersonalSave: () => {}, ymd: () => "2026-11-13",
   $, esc, ui, byN, searching: () => '', R: () => current, viewOf: r => r.view, isGuest: () => false, run: true, P: () => ({ art: 'hgss', boxes: [2, 30] }),
   FORM_ZOOM: { hgss: { unown: 200 } }, PARTY_SIZE: 6, HELD_ITEMS: [], FIT: {}, TYPE: { psychic: 'pink', normal: 'grey' },
   collectedForms: api.collectedForms, visibleForms: api.visibleForms, collectedGenders: api.collectedGenders, hasGenders: api.hasGenders, GENDERS: api.GENDERS, num: (p) => p.n, pad: (n) => String(n).padStart(3, '0'),
@@ -96,6 +104,9 @@ assert.equal((elements['#sheetbody'].innerHTML.match(/<option value="unown-/g) |
 views.fillMonSheet({ n: 19 });
 assert(!elements['#sheetbody'].innerHTML.includes('id="f-form"'));
 for (const [id, value] of Object.entries({ box: '1', form: 'unown-question', lvl: '5', nick: '', g: '', item: '', note: '' })) elements['#f-' + id] = { value };
+elements['#f-day'] = { value: '', reportValidity: () => true };
+elements['#f-how'] = { value: '' };
+elements['#f-place'] = { value: '' };
 elements['#f-shiny'] = { checked: false };
 views.saveMon();
 assert.equal(current.mons[0].form, 'unown-question');

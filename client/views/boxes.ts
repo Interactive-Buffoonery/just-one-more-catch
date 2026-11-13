@@ -1,7 +1,9 @@
 import { $, esc } from "../dom";
-import { byN, hasGenders, visibleForms, HELD_ITEMS, P, PARTY_SIZE, R, run, ui } from "../game";
+import { byN, hasGenders, visibleForms, HELD_ITEMS, P, PARTY_SIZE, R, run, ui, ymd } from "../game";
 import { mon } from "../parts";
 import { Mon } from "../types";
+import { acquisition, ACQUISITION_METHODS } from "../../shared/journal";
+import { acquisitionPlaces, checkPersonalSave } from "./journal";
 import { NoRun } from "./runs";
 
 /* ---- Boxes ---- */
@@ -18,7 +20,7 @@ export function monLine(m: Mon, showBox?: boolean) {
   const p = byN[m.n];
   return `<button class="row monrow" data-editmon="${m.id}" data-k="m${m.id}" aria-label="${esc(m.nick || p.name)}${m.nick ? `, ${p.name}` : ""}${m.shiny ? ", shiny" : ""}, ${esc(boxLabel(m.box))}. Edit">${mon(p, m.shiny, m.form || p.forms?.[0]?.id)}<span class="grow">
     <span class="name">${m.nick ? `${esc(m.nick)} <span class="muted small">${p.name}</span>` : p.name}${m.shiny ? ` <span class="shiny" title="Shiny">✦</span>` : ""}</span>
-    <span class="tags">${showBox ? `<span class="tag">${esc(boxLabel(m.box))}</span>` : ""}${R().trackForms && p.forms && p.forms.length > 1 ? `<span class="tag plain">${esc((p.forms.find((f) => f.id === m.form) || p.forms[0]).name)}</span>` : ""}${m.lvl ? `<span class="tag plain">Lv ${m.lvl}</span>` : ""}${m.g ? `<span class="tag plain">${GENDER[m.g]}</span>` : ""}${m.item ? `<span class="tag time">${esc(m.item)}</span>` : ""}${m.note ? `<span class="small muted">${esc(m.note)}</span>` : ""}</span></span></button>`;
+    <span class="tags">${showBox ? `<span class="tag">${esc(boxLabel(m.box))}</span>` : ""}${R().trackForms && p.forms && p.forms.length > 1 ? `<span class="tag plain">${esc((p.forms.find((f) => f.id === m.form) || p.forms[0]).name)}</span>` : ""}${m.lvl ? `<span class="tag plain">Lv ${m.lvl}</span>` : ""}${m.g ? `<span class="tag plain">${GENDER[m.g]}</span>` : ""}${m.item ? `<span class="tag time">${esc(m.item)}</span>` : ""}${m.acquisition?.place ? `<span class="tag plain">${esc(m.acquisition.place)}</span>` : ""}${m.note ? `<span class="small muted">${esc(m.note)}</span>` : ""}</span></span></button>`;
 }
 export function Boxes() {
   if (!run) return NoRun();
@@ -87,6 +89,14 @@ export function fillMonSheet(s: any) {
       <label class="field span2"><span>Note</span><input id="f-note" placeholder="Knows Surf, saving for a trade" maxlength="80" autocomplete="off" value="${esc(m?.note || "")}"></label>
       <label class="check span2"><input id="f-shiny" type="checkbox" ${m?.shiny ? "checked" : ""}> Shiny</label>
     </div></details>
+    <details class="more acquisition"><summary>Where and when <span class="muted small">optional</span></summary>
+      <div class="acquisition-grid"><label class="field span2"><span>How</span><select id="f-how"><option value="">Not set</option>${Object.entries(ACQUISITION_METHODS).map(([k, label]) => `<option value="${k}" ${m?.acquisition?.method === k ? "selected" : ""}>${label}</option>`).join("")}</select></label>
+      <label class="field"><span id="acquisition-day-label">${m?.acquisition?.method === "caught" ? "Caught" : "Obtained"} on</span><span class="journal-date"><input id="f-day" type="date" max="${ymd(new Date())}" value="${esc(m?.acquisition?.day || "")}"><button type="button" class="quietbtn" data-today="f-day">Today</button></span></label>
+      <label class="field"><span id="acquisition-place-label">${m?.acquisition?.method === "caught" ? "Caught" : "Obtained"} at</span><input id="f-place" list="acquisition-places" maxlength="120" autocomplete="off" value="${esc(m?.acquisition?.place || "")}"></label>
+      <div class="span2 acquisition-suggestions" aria-label="Suggested places">${acquisitionPlaces().slice(0, 4).map(place => `<button type="button" class="chip" data-acquisitionplace="${esc(place)}">${esc(place)}</button>`).join("")}</div></div>
+      <datalist id="acquisition-places">${acquisitionPlaces().map(place => `<option value="${esc(place)}">`).join("")}</datalist>
+    </details>
+    <p id="personal-error" class="personal-error" role="alert" tabindex="-1"></p>
     <datalist id="held-items">${HELD_ITEMS.map((i) => `<option value="${esc(i)}">`).join("")}</datalist>
     <div class="hv-actions" style="margin-top:20px"><button class="app-primary grow" data-savemon="1">Save</button>${m ? `<button class="app-quiet" data-delmon="${m.id}">Remove</button>` : `<button class="app-quiet" data-close="1">Cancel</button>`}</div>`;
 }
@@ -109,10 +119,12 @@ export function saveMon() {
     raw = v("f-box").value,
     box = raw === "party" ? "party" : +raw,
     existing = s.id ? R().mons.find((m) => m.id === s.id) : null;
+  if (!v("f-day").reportValidity()) return false;
   const lvl = v("f-lvl").value
     ? Math.min(100, Math.max(1, Math.round(+v("f-lvl").value)))
     : "";
   const data = {
+    acquisition: acquisition({ method: v("f-how").value || undefined, day: v("f-day").value, place: v("f-place").value }),
     box,
     form: v("f-form")?.value || existing?.form || byN[existing ? existing.n : s.n].forms?.[0]?.id,
     lvl,
@@ -123,6 +135,8 @@ export function saveMon() {
     shiny: v("f-shiny").checked,
   };
   const r = R();
+  const candidate = existing ? { ...existing, ...data } as Mon : { id: r.monSeq + 1, n: s.n, ...data } as Mon;
+  checkPersonalSave({ ...r, mons: existing ? r.mons.map(m => m.id === existing.id ? candidate : m) : [...r.mons, candidate] });
   if (s.id) Object.assign(r.mons.find((m) => m.id === s.id) as Mon, data);
   else {
     const m = { id: ++r.monSeq, n: s.n, ...data } as Mon;
@@ -137,4 +151,5 @@ export function saveMon() {
   }
   r.lastBox = box;
   $("#live").textContent = `Saved to ${boxLabel(box)}`;
+  return true;
 }

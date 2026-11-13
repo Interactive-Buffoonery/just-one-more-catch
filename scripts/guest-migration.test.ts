@@ -84,3 +84,14 @@ it("skips legacy half-migrated rows belonging to another account and continues l
   expect(raw.saveRun).toHaveBeenLastCalledWith("run-other", "{}", "A");
   expect(guestRows()).toHaveLength(0);
 });
+
+it("moves personal fields byte for byte without inferring catch history", async () => {
+  const state = JSON.stringify({ caught: [25], mons: [{ id: 1, n: 25, acquisition: { day: "2010-03-14", place: "Pallet Town" } }], journalEntries: [{ id: "memory", text: "Private note" }] });
+  let data = JSON.stringify([{ id: "personal", version: "yellow", state, createdAt: "2026-11-01" }]);
+  game.store.get.mockImplementation(() => data);
+  game.store.set.mockImplementation((_key, value) => { data = value; });
+  const raw = { auth: { userId: "A" }, createRun: vi.fn(async () => "moved"), saveRun: vi.fn(async () => {}), setStart: vi.fn(async () => {}), track: vi.fn() } as unknown as Bridge;
+  await moveGuestRuns(raw, vi.fn(), vi.fn());
+  expect(raw.saveRun).toHaveBeenCalledExactlyOnceWith("moved", state, "A");
+  expect(guestRows()).toHaveLength(0);
+});

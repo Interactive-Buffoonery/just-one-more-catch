@@ -253,7 +253,7 @@ export const PALETTE: Record<string, { light: string; dark: string }> = {
 };
 
 /* ---- Run state ---- */
-type Run = {
+export type Run = {
   id: string;
   version: string;
   badges: Set<string>;
@@ -272,6 +272,7 @@ type Run = {
   time: string;
   boxNames: string[];
   mons: Mon[];
+  journalEntries: import("../shared/journal").JournalEntry[];
   monSeq: number;
   lastBox: "party" | number;
   clock: Clock;
@@ -323,6 +324,7 @@ function loadRun(row: RunRow, state: string): Run {
       s.boxNames ||
       Array.from({ length: pack.boxes[0] }, (_, i) => `Box ${i + 1}`),
     mons: (s.mons || []).map((m: Mon) => ({ ...MON_DEFAULTS, ...m })),
+    journalEntries: Array.isArray(s.journalEntries) ? s.journalEntries : [],
     monSeq: s.monSeq || 0,
     lastBox: s.lastBox ?? 1,
     clock: s.clock || { mode: "device" },
@@ -350,6 +352,7 @@ export const dumpRun = (r: Run) =>
     time: r.time,
     boxNames: r.boxNames,
     mons: r.mons.map(compactMon),
+    journalEntries: r.journalEntries,
     monSeq: r.monSeq,
     lastBox: r.lastBox,
     clock: r.clock,
