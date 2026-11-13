@@ -187,7 +187,7 @@ The owner can decide a separate correction; this PR changes no USUM data.
 | Route 2 South | Drowzee, Dunsparce, Ekans, Makuhita |
 | Route 3 North | Rufflet, Spearow, Vullaby |
 | Route 5 | Diglett |
-| Route 7 | Diglett, Gyarados (SOS), Magikarp, Starmie (SOS), Staryu, Wishiwashi |
+| Route 7 | Diglett |
 | Vast Poni Canyon Inside | Dugtrio |
 | Verdant Cavern Trial Site | Rattata, Yungoos |
 
