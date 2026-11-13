@@ -1575,6 +1575,21 @@ of Diamond/Pearl; none of their chapter or HM assumptions were substituted.
   Turnback Cave's fourth wild table is explicitly unused in regular play;
   its Giratina static is retained. Route 205's grunts block north of the
   stream, but south-bank fishing remains a gameplay check in OPEN_QUESTIONS.md.
+- Turnback Cave wild tables, checked against pret/pokeplatinum at
+  `62bdaacdca6c56a6a396f3e9911e2f922b79bba8`: each map has its own
+  `encounters.json` under `res/field/maps/turnback_cave_*/`. The entrance and
+  all six Pillar 1 rooms share the level 15-18 table; the six Pillar 2 rooms
+  use the level 25-28 table; the Pillar 3 rooms and `turnback_cave_pillar_room`
+  use the level 35-38 table; `turnback_cave_giratina_room` uses the same
+  species with level 37 Dusclops and Chimecho. No map in `res/field/maps/`
+  has the level 45-48 table, so PokeAPI's After Pillar 3 walk table is
+  unused and stays dropped. The other six PokeAPI tables (Before Pillar 1,
+  Pillar 1, Between Pillars 1 And 2, Between Pillars 2 And 3, Pillar 2 and
+  Pillar 3) all match an in-game table and stay as they are:
+  https://github.com/pret/pokeplatinum/blob/62bdaacdca6c56a6a396f3e9911e2f922b79bba8/res/field/maps/turnback_cave_entrance/encounters.json
+  https://github.com/pret/pokeplatinum/blob/62bdaacdca6c56a6a396f3e9911e2f922b79bba8/res/field/maps/turnback_cave_pillar_2_room_2/encounters.json
+  https://github.com/pret/pokeplatinum/blob/62bdaacdca6c56a6a396f3e9911e2f922b79bba8/res/field/maps/turnback_cave_pillar_room/encounters.json
+  https://github.com/pret/pokeplatinum/blob/62bdaacdca6c56a6a396f3e9911e2f922b79bba8/res/field/maps/turnback_cave_giratina_room/encounters.json
 - Additional area-specific access evidence (not merely route order):
   https://bulbapedia.bulbagarden.net/wiki/Wayward_Cave
   https://bulbapedia.bulbagarden.net/wiki/Lost_Tower
