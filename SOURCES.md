@@ -1102,7 +1102,7 @@ The existing gap-fill path supplies these rows without changing shared code.
 The empty `data/bw-bulbapedia.json` opts in; explicit rows are in
 `extra_encounters`, and prerequisites are in `row_needs`. NPC trades retain
 partner conditions; Munchlax also retains `season-summer`. The RageCandyBar
-checklist does not assume the item can only be obtained after Ghetsis.
+step sits in the Icirrus chapter, its earliest source.
 Roamers use one region-wide entry per version, not a fictitious fixed Route 7
 capture. Legend and the house-story release are separate prerequisites.
 
@@ -1127,6 +1127,11 @@ capture. Legend and the house-story release are separate prerequisites.
   confirms level 35, Desert Resort and Hidden Ability. The cached second
   source, https://bulbapedia.bulbagarden.net/wiki/Desert_Resort, lines 112–124,
   gives five statues on the first visit, level 35 and a required RageCandyBar.
+  The earliest RageCandyBar is a winter gift in Icirrus City:
+  https://bulbapedia.bulbagarden.net/wiki/Icirrus_City (lines 43, 124) and
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_and_White/Part_9
+  (lines 230–233, "Only during Winter"). Desert Resort (line 53) adds a
+  second one from Professor Juniper after Ghetsis.
 - [PKHeX Tornadus, pinned line 186](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5BW.cs#L186)
   and [Thundurus, pinned line 192](https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen5/Encounters5BW.cs#L192)
   confirm level 40, roaming and version exclusivity. Cached
@@ -1146,6 +1151,8 @@ available in the cache):
 - `Unova Route 7.wiki`: `40922e825d2a4bed724cf01538d6e03f4de158a2704fb2c049aa6c8e928939cc`
 - `Unova Route 15.wiki`: `eb72dc9ac1e47ce956ce383dff7577ae6499433d9005576c6b68960ff65dea00`
 - `Undella Town.wiki`: `de6033c2ceb7dcdf45e111a5c68c25bc2e534fb3b6eae427f1e4bc68af55c30f`
+- `Icirrus City.wiki`: `ee2b5435f0c3deb89aed40c00611634f27be3a40a38be0d86857988e3f5fc866`
+- `Walkthrough:Pokémon Black and White_Part 9.wiki`: `e686e0da3ab29aad6bd1d8d9de3a04db353b4cfb4b4d487f4201b4a34cc8c2a2`
 - `Desert Resort.wiki`: `38ec34aa040f007debda943125f12bf7200cf41774ff1629a94fdf80525d7ecc`
 - `Roaming Pokémon.wiki`: `c9ad7646efe50bde1b0e875a2e330c8c37aa766babf69243bac66dccd301edb5`
 - `Walkthrough:Pokémon Black and White_Part 11.wiki`: `df150c8d085d80264698a949e316e9bd01597c944d264105737e385f3b712797`

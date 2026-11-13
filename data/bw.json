@@ -415,9 +415,9 @@
       "id": "rage-candy-bar",
       "label": "Get a RageCandyBar",
       "q": "Do you have a RageCandyBar to wake a Desert Resort statue?",
-      "chap": 3,
-      "src": "https://bulbapedia.bulbagarden.net/wiki/Desert_Resort",
-      "quote": "A [[Rage Candy Bar|RageCandyBar]] must be used in order to battle them."
+      "chap": 7,
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Icirrus_City",
+      "quote": "{{Itemlist|Rage Candy Bar|Gift from the former Team Rocket member's wife {{sup/s|W}}|Bl=yes|W=yes|display=[[Rage Candy Bar|RageCandyBar]]}}"
     },
     {
       "id": "roamer-released",
@@ -1215,9 +1215,6 @@
         "Legend",
         "roamer-released"
       ],
-      "conditions": [
-        "Follow stormy weather on gate bulletin boards"
-      ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Roaming_Pokémon#Generation_V",
       "quote": "In {{game|Black and White|s}}, after obtaining the {{Badge|Legend}}, when entering the [[gate]] leading to {{rt|10|Unova}}, the woman behind the desk will alert the player about the big storm on {{rt|7|Unova}}. {{p|Tornadus}}{{sup/5|B}} or {{p|Thundurus}}{{sup/5|W}} will make the weather more extreme in {{rt|7|Unova}} when entering the route. Heading towards the second house on the route will cause an old lady to come out and pull the player in. She will then recite the story of either {{p|Tornadus}}{{sup/5|B}} or {{p|Thundurus}}{{sup/5|W}}. Upon exiting the house, the player will be approached by the respective Pokémon, which will then fly off and will roam around [[Unova]] until being caught or defeated. Wherever these Pokémon appear will be subject to weather identified as \"stormy\" by the bulletin boards in [[gate]]s. Only these two Pokémon can cause stormy weather (which manifests as {{weather|rain}} in-battle), so they can be tracked down using the bulletin boards."
     },
@@ -1231,9 +1228,6 @@
       "needs": [
         "Legend",
         "roamer-released"
-      ],
-      "conditions": [
-        "Follow stormy weather on gate bulletin boards"
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Roaming_Pokémon#Generation_V",
       "quote": "In {{game|Black and White|s}}, after obtaining the {{Badge|Legend}}, when entering the [[gate]] leading to {{rt|10|Unova}}, the woman behind the desk will alert the player about the big storm on {{rt|7|Unova}}. {{p|Tornadus}}{{sup/5|B}} or {{p|Thundurus}}{{sup/5|W}} will make the weather more extreme in {{rt|7|Unova}} when entering the route. Heading towards the second house on the route will cause an old lady to come out and pull the player in. She will then recite the story of either {{p|Tornadus}}{{sup/5|B}} or {{p|Thundurus}}{{sup/5|W}}. Upon exiting the house, the player will be approached by the respective Pokémon, which will then fly off and will roam around [[Unova]] until being caught or defeated. Wherever these Pokémon appear will be subject to weather identified as \"stormy\" by the bulletin boards in [[gate]]s. Only these two Pokémon can cause stormy weather (which manifests as {{weather|rain}} in-battle), so they can be tracked down using the bulletin boards."
