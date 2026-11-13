@@ -1,0 +1,50 @@
+import { httpRouter } from "convex/server";
+import { httpAction } from "./_generated/server";
+import { internal } from "./_generated/api";
+import { validateProjection } from "../shared/share-projection";
+
+const http = httpRouter();
+const origins = new Set(["https://justonemorecatch.app", "http://localhost:5173"]);
+
+function shareHeaders(request: Request) {
+  const headers = new Headers({
+    "Content-Type": "application/json",
+    "Cache-Control": "no-store",
+    "Referrer-Policy": "no-referrer",
+    "X-Robots-Tag": "noindex",
+    "Vary": "Origin",
+  });
+  const origin = request.headers.get("Origin");
+  if (origin && origins.has(origin)) headers.set("Access-Control-Allow-Origin", origin);
+  return headers;
+}
+
+http.route({
+  path: "/share",
+  method: "GET",
+  handler: httpAction(async (ctx, request) => {
+    const headers = shareHeaders(request);
+    const unavailable = () => new Response(JSON.stringify({ error: "Unavailable" }), { status: 404, headers });
+    const token = request.headers.get("X-Share-Token");
+    if (!token || !/^[A-Za-z0-9_-]{43}$/.test(token)) return unavailable();
+    try {
+      const projection = validateProjection(await ctx.runQuery(internal.shareReader.read, { token }));
+      return projection ? new Response(JSON.stringify(projection), { headers }) : unavailable();
+    } catch {
+      return unavailable();
+    }
+  }),
+});
+
+http.route({
+  path: "/share",
+  method: "OPTIONS",
+  handler: httpAction(async (_ctx, request) => {
+    const headers = shareHeaders(request);
+    headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
+    headers.set("Access-Control-Allow-Headers", "X-Share-Token");
+    return new Response(null, { status: 204, headers });
+  }),
+});
+
+export default http;
