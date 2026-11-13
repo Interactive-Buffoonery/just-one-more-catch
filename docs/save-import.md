@@ -24,6 +24,7 @@ Website game support is an explicit adapter in `client/save-import.ts`:
 | C | Crystal |
 | FR / LG | FireRed / LeafGreen, with a GBA or Switch choice |
 | E | Emerald |
+| DP (D / P candidates) | Diamond / Pearl (paired choice; excludes Platinum) |
 | HG / SS | HeartGold / SoulSilver |
 | US / UM | Ultra Sun / Ultra Moon |
 
@@ -54,7 +55,7 @@ supports HeartGold/SoulSilver and Sun/Moon/Ultra Sun/Ultra Moon; only the websit
 supported packs can be imported. The source fields are PKHeX's `SecondsToStart`
 with its `DateUtil.GetDateTime2000` conversion. The reader checks each format's
 console calendar bounds and omits uninitialized zero values. Red/Blue/Yellow, Gold/Silver/Crystal and
-FireRed/LeafGreen and Emerald provide no recorded date through this reader. Missing, invalid
+FireRed/LeafGreen, Emerald and Diamond/Pearl provide no recorded date through this reader. Missing, invalid
 or future dates use import day; the preview never invents a recorded date.
 
 The website converts the selected calendar day to local midnight, matching the
@@ -173,6 +174,44 @@ A disposable emulator profile using a user-supplied ROM and 64 KiB flash setting
 is another possible reproduction, but has not been verified here. Do not change
 a player's active profile or truncate their only save. No personal Emerald
 save, live account import or mobile Safari check was performed.
+
+## Diamond/Pearl verification
+
+Diamond/Pearl uses unchanged reader 0.1.2 and the pack's 493-species National
+Dex limits, already present in `IMPORT_SPECIES_LIMITS` on the pack branch.
+Eight serialized synthetic 512 KiB fixtures cover caught and empty saves for
+DP, Platinum, HeartGold and SoulSilver. Native Core, independent raw-bit reads
+and the published WASM worker agree on exact caught/seen arrays and complete
+National Dex coverage. Nineteen caught species survive removal from storage,
+including starter stages and species 386/387 and 493; seen-only Bulbasaur stays
+uncaught. DP returns paired `D`/`P` candidates, so players choose the title.
+File names do not determine that choice.
+
+Gen IV shares a save family, but Core detects distinct general-block footer
+sizes: DP `0xC100`, Platinum `0xCF2C`, HGSS `0xF628`. The worker returns `DP`,
+`Pt`, `HG` and `SS` respectively. Both Platinum fixtures remain unsupported by
+the website and create nothing. HGSS imports retain their existing identities
+and never offer DP choices. Zero-filled and truncated files create nothing.
+These checks establish separation for the tested structural layouts, not every
+corrupt, modified or regional save.
+
+`SAV4.SecondsToStart` reads the general block at adventure info + `0x34`.
+DP exposes that field, but reader 0.1.2 allowlists only HGSS within Gen IV.
+Populated and zero DP fields both omit `startDate` through the worker; DP
+imports use import day. DP date epoch/calendar bounds, invalid values, leap
+days and exported recorded-date behavior need separate verification before
+extending the allowlist. No reader source, package, lockfile or tarball changed.
+
+Reproduce with [the DP fixture README](../scripts/dp-save-fixtures/README.md).
+The guest browser matrix covers selection/drop, both DP choices, an empty dex
+at 390px, exact preview counts, import-day fallback, creation/reload,
+cancellation, storage failure/retry, duplicate confirmation, navigation and
+preparation failure/retry/cancellation. Existing tests cover limits and account
+changes. Input files/buffers and existing runs stay unchanged; no uploads occur.
+These structural fixtures are not cartridge exports or proof of a legitimate
+in-game zero-caught save. Permitted real cartridge/emulator exports, legitimate
+in-game zero-caught saves, live signed-in imports, mobile Safari and physical
+mobile performance remain unverified.
 
 ## Adding a ROM hack
 
