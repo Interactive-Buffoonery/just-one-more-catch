@@ -1,9 +1,10 @@
+import { loadGeneratedPack } from './check-utils.mjs';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import { stripTypeScriptTypes } from 'node:module';
 import { runInNewContext } from 'node:vm';
 
-const game = JSON.parse(readFileSync('client/data/emerald.ts', 'utf8').split('export default ')[1].trim().replace(/;$/, ''));
+const game = loadGeneratedPack('emerald');
 const pack = JSON.parse(readFileSync('data/emerald.json', 'utf8'));
 const mon = n => game.dex.find(p => p.n === n);
 const needs = r => [...game.chapters[r.chap].needs, ...(r.need || [])];

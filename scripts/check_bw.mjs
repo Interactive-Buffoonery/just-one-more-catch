@@ -1,9 +1,10 @@
+import { loadGeneratedPack } from './check-utils.mjs';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import { stripTypeScriptTypes } from 'node:module';
 import { runInNewContext } from 'node:vm';
 
-const data = JSON.parse(readFileSync('client/data/bw.ts', 'utf8').split('export default ')[1].trim().replace(/;$/, ''));
+const data = loadGeneratedPack('bw');
 const config = JSON.parse(readFileSync('data/bw.json', 'utf8'));
 const source = readFileSync('client/game.ts', 'utf8');
 const mon = n => data.dex.find(p => p.n === n);

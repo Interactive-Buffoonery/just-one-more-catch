@@ -1,7 +1,8 @@
+import { loadGeneratedPack } from './check-utils.mjs';
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
-const data = JSON.parse(readFileSync("client/data/rb.ts", "utf8").split("export default ")[1].replace(/;\s*$/, ""));
+const data = loadGeneratedPack('rb');
 const byN = Object.fromEntries(data.dex.map(p => [p.n, p]));
 // Later-added babies must not turn original species into evolution-only catches.
 for (const n of [25, 35, 39, 106, 107, 113, 122, 124, 125, 126, 143]) {
