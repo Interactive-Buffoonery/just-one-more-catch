@@ -124,7 +124,7 @@ const lastPlayed = (iso: string) => {
 };
 const champion = (s: Summary) => s.badges.includes("Elite Four");
 const ptMenu = (row: RunRow, v: (typeof VERSIONS)[VersionId]) =>
-  `<details class="ptmenu"><summary aria-label="More options for ${v.name}">···</summary><div class="menu"><button data-startsheet="${row.id}">Change start date</button><button data-delrun="${row.id}">Delete playthrough</button></div></details>`;
+  `<details class="ptmenu"><summary aria-label="More options for ${v.name}">···</summary><div class="menu"><button data-refresh="${row.id}">Refresh from a save</button><button data-startsheet="${row.id}">Change start date</button><button data-delrun="${row.id}">Delete playthrough</button></div></details>`;
 const meter = (n: number, of: number) =>
   `<span class="meter" aria-hidden="true"><i style="width:${(n / of) * 100}%"></i></span>`;
 const badgeGroups = (p: Pack): [string, string[][]][] => [

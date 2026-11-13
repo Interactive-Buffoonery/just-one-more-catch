@@ -75,3 +75,7 @@
 
 
 .si-start h2{font-size:12px}
+.si-facts .n{margin-left:auto;font-weight:800;white-space:nowrap}
+.si-start-row input[type=checkbox]{flex:none;width:20px;height:20px;margin:0;accent-color:var(--teal)}
+label.si-start-row{cursor:pointer;padding-right:12px}
+.si-start-row img.cover{flex:none;width:32px;height:32px;border-radius:6px}

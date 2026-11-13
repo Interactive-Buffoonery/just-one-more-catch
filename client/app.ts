@@ -3,7 +3,7 @@
 import "./styles.css";
 import "./save-import.css";
 import { withTimeout } from "./async";
-import { SaveImport } from "./save-import";
+import { SaveImport, undoRefreshRun } from "./save-import";
 import { $, announce, esc, root, setRoot } from "./dom";
 import { caughtCsv, fetchStates, jsonParts, saveFile } from "./export";
 import {
@@ -61,6 +61,7 @@ let openSeq = 0;
 let saveImport: SaveImport;
 let importPage: HTMLElement;
 let pendingImport = false;
+let refreshTarget: string | undefined;
 const IMPORT_PATH = /^\/import\/?$/;
 function useRun(row: RunRow, start = false, customize = false) {
   const v = verOf(row.version);
@@ -277,7 +278,8 @@ function render() {
   const importLive = onImport && saveImport.isOpen;
   if (onImport && !importLive && !loading) {
     $("#view").replaceChildren(importPage);
-    saveImport.open();
+    saveImport.open(refreshTarget);
+    refreshTarget = undefined;
   } else if (!importLive) $("#view").innerHTML = loading
     ? `<p class="muted" style="text-align:center;padding-top:40px">Loading…</p>`
     : needsGame && ui.loadError
@@ -303,7 +305,7 @@ function render() {
     ? `<nav class="tabbar${!isGuest() && run?.view === "dexonly" ? " four" : ""}" aria-label="Sections">${tabButtons(true)}<button class="tab-settings" data-tab="settings" data-k="tab-settings"${here}>${SETTINGS_ICON}<span>Settings</span></button></nav>`
     : "";
   $("#toast").innerHTML = ui.undo
-    ? `<div class="toast">${ui.undo.msg}${ui.undo.n ? `<button data-undo="1">Undo</button>` : ""}</div>`
+    ? `<div class="toast">${ui.undo.msg}${ui.undo.n || ui.undo.restore ? `<button data-undo="1">Undo</button>` : ""}</div>`
     : "";
   if (
     (typeof ui.sheet === "number" ||
@@ -372,6 +374,12 @@ async function saveBeforeImport() {
   if (state === ui.saved) return;
   await withTimeout(bridge.saveRun(id, state), 30000, "Saving timed out");
   if (run?.id === id) ui.saved = state;
+}
+async function undoRefresh(id: string, added: number[], previousStart?: number) {
+  await saveBeforeImport();
+  await undoRefreshRun(bridge, id, added, previousStart);
+  const row = bridge.runs?.find((r) => r.id === id);
+  if (row && run?.id === id) useRun(row);
 }
 function toggleCaught(n: number) {
   const p = byN[n],
@@ -577,6 +585,27 @@ async function onClick(e: MouseEvent) {
       if (d.stay) ui.undo = null;
       else ui.tab = !isGuest() && run?.view === "journey" ? "journey" : "dex";
       render();
+    }
+    return;
+  }
+  if (d.refresh) {
+    flushSave();
+    refreshTarget = d.refresh;
+    ui.tab = "import";
+    ui.undo = null;
+    render();
+    scrollTo(0, 0);
+    return;
+  }
+  if (d.undo && ui.undo?.restore) {
+    const restore = ui.undo.restore;
+    ui.undo = null;
+    render();
+    try {
+      await restore();
+      $("#live").textContent = "Undone";
+    } catch {
+      showSaveError("Couldn't undo the refresh.");
     }
     return;
   }
@@ -835,8 +864,8 @@ function applyTheme() {
 let raw: Bridge;
 const refresh = () => queueMicrotask(() => update(raw));
 
-function flash(msg: string) {
-  ui.undo = { msg };
+function flash(msg: string, restore?: () => Promise<void>) {
+  ui.undo = { msg, restore };
   $("#live").textContent = msg;
   clearTimeout(undoTimer);
   undoTimer = setTimeout(hideToast, 8000);
@@ -845,6 +874,7 @@ function flash(msg: string) {
 let pendingRun: string | null = null;
 function closeImport() {
   saveImport.close();
+  refreshTarget = undefined;
   if (pendingImport) {
     pendingImport = false;
     pendingRun = null;
@@ -913,6 +943,15 @@ export function mount(el: HTMLElement, b: Bridge) {
         refresh();
       }
       flash(!current ? "Caught Pokémon imported." : bridge.auth.isAuthenticated ? "Caught Pokémon imported. Saved to your account." : "Caught Pokémon imported. Saved only in this browser.");
+    },
+    refreshed: (id, added, previousStart, current) => {
+      const row = bridge.runs?.find((r) => r.id === id);
+      if (row && (current || run?.id === id)) useRun(row);
+      if (current) {
+        ui.tab = "playthroughs";
+        scrollTo(0, 0);
+      }
+      flash(`Added ${added.length} caught Pokémon`, () => undoRefresh(id, added, previousStart));
     },
     dismiss: () => {
       ui.tab = "playthroughs";
