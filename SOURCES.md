@@ -738,6 +738,15 @@ mechanics sources. The `gold` / `silver` encounter codes are `g` / `i`.
   Manias's house and cave sections. Floor-specific gates apply before
   display-floor names are merged; no encounter area is dropped.
 
+### Dark Cave trace endpoints
+
+- [Violet-room events, lines 33–48](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/DarkCaveVioletEntrance.asm#L33-L48)
+  identify Route 31 warp (3,15), Blackthorn-room warp (17,1), and four
+  smashable rock objects. [Blackthorn-room events, lines 65–67](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/DarkCaveBlackthornEntrance.asm#L65-L67)
+  identify the Violet arrival (3,25) separately from the Route 45 exit (23,3).
+  These are endpoints for the unresolved collision trace, not evidence of a
+  walkable path or grounds for changing the current gates.
+
 ### Chapters, access and events
 
 `src` / `quote` fields in `data/gs.json` identify individual gates. These
@@ -868,6 +877,108 @@ Gold/Silver text, not their Crystal additions):
   https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/RuinsOfAlphAerodactylChamber.asm
   https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/RuinsOfAlphHoOhChamber.asm
 
+### Static map traces for remaining access questions
+
+Read `pret/pokegold` at `f2cde36f49b994c143bfd18582182302fdc76492`.
+An isolated scratch Python BFS decoded each `.blk` byte into the four
+16-pixel collision cells in its tileset table. It followed script warps and
+map connections, one-way ledge jumps and player side-wall permissions;
+Cut trees, smashable rocks, fixed NPCs and unpushed boulders blocked movement.
+Cave/door arrivals could leave only toward the exit, preventing paths behind
+exterior cave warps. Item balls were treated as collectible. No ROM was
+built or run. These are static source inferences, not gameplay verification.
+
+Shared primary inputs: [map sizes](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/constants/map_constants.asm),
+[tilesets](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/maps/maps.asm), [connections](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/maps/attributes.asm),
+[Kanto collisions](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/kanto_collision.asm),
+[Johto collisions](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/johto_collision.asm),
+[cave collisions](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/cave_collision.asm),
+[player side-wall permissions](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/home/map.asm#L1869-L2020),
+[ledge jumps](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/engine/overworld/player_movement.asm#L352-L391).
+Coordinates below are zero-based script tile coordinates, not block coordinates.
+
+- **Route 8:** from both Saffron gate exits (4,4)/(4,5) and Lavender's
+  east edge, 0/24 grass cells are reachable without Cut, 24/24 with Cut.
+  Repeating with every walkable boundary cell as an entrance and Surf enabled
+  gives the same result. The two trees are (27,10) and (21,12). Add Cut to
+  walking rows only. [Map bytes](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route8.blk),
+  [warps and fixed trainers](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route8.asm).
+- **Pewter / Route 3:** Route 2's southern Viridian entrances reach its
+  north connection at (8,0)/(9,0) without Cut, respecting ledges and objects.
+  Diglett's (12,7) arrival is separately confined to the eastern pocket.
+  The Viridian approach suffices once normal western Kanto access is open;
+  retain the current absence of a Cut gate.
+  [Route 2 bytes](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route2.blk), [objects/warps](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route2.asm),
+  [Snorlax-controlled east guard](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/VictoryRoadGate.asm).
+- **Route 1:** north (8,0)/(9,0) and south (8,35)/(9,35) approaches reach
+  104 grass cells without Cut. Retain current gates.
+  [Map bytes](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route1.blk), [objects](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route1.asm).
+- **Dark Cave:** from Route 31 arrival (3,15), no Surf reaches neither
+  Violet warp (17,1) nor the Blackthorn room, even with Rock Smash. Surf
+  alone reaches that warp and 25 FLOOR cells in the destination's southern
+  pocket at (3,25); Rock Smash is unnecessary for walking encounters.
+  The same flood from Route 46 arrival (35,33), with Surf + Rock Smash,
+  cannot reach Blackthorn-room exit (23,3). Its one-way ledge separates the
+  pocket from the main room. Thus this proposed shortcut establishes neither
+  early Blackthorn/Route 45 nor early Route 44. Retain their existing gates.
+  Overland, a flood of all Route 29 cells with Surf, Rock Smash, Cut and
+  Strength reaches all 52 Route 46 grass cells but no Route 45 cell: Route
+  46's ledges only hop south. The reverse flood from Blackthorn reaches
+  Route 45, Route 46 and Route 29, confirming the connections are modeled.
+  [Route 46 bytes](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route46.blk),
+  [Route 46 connections](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/maps/attributes.asm#L247-L249).
+  Aquatic access is still open; preserve its previous provisional gate.
+  [Violet bytes](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/DarkCaveVioletEntrance.blk),
+  [Violet warps/rocks](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/DarkCaveVioletEntrance.asm#L33-L48),
+  [Blackthorn bytes](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/DarkCaveBlackthornEntrance.blk),
+  [Blackthorn exits](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/DarkCaveBlackthornEntrance.asm#L65-L67).
+- **Mt. Mortar / Route 42:** from Ecruteak gate arrival (0,8), without Surf,
+  the flood follows the western cave entrance through 1F Inside and exits
+  the eastern cave entrance, reaching 16 Route 42 grass cells. From there
+  Route 42's northern path (row 4) leads on foot to the middle entrance
+  (28,9), whose arrival (17,33) walks straight up to the B1F ladder
+  (17,29) -> B1F (19,29): 37 B1F FLOOR cells without Surf, next to
+  fishable water. Psypokes agrees that B1F ladder (E) comes out "just above
+  the middle entrance of Mt Mortar". B1F therefore has no Surf place gate;
+  its Surf rows keep Surf through their method. With Surf, B1F grows to
+  175 FLOOR cells but still misses Kiyo's platform and 1F Inside stairs
+  (9,9). Adding Waterfall reaches 428 upper-floor FLOOR cells and all four
+  tiles adjacent to Kiyo (13,4), without moving boulders. Keep upper-floor
+  Surf + Waterfall and Tyrogue's existing requirements; Route 42 walking
+  encounters need no Surf.
+  [middle entrance](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route42.asm#L251), [B1F ladder](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/MountMortar1FOutside.asm#L24-L29),
+  [B1F warps](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/MountMortarB1F.asm#L127-L128),
+  [walkthrough](https://www.psypokes.com/gsc/walkthrough.php?part=12),
+  [Route 42 map](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route42.blk), [Route 42 entrances](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route42.asm),
+  [1F Outside bytes](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/MountMortar1FOutside.blk),
+  [Outside warps](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/MountMortar1FOutside.asm),
+  [1F Inside bytes](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/MountMortar1FInside.blk),
+  [Inside warps/boulder](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/MountMortar1FInside.asm),
+  [upper floor](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/MountMortar2FInside.blk),
+  [B1F bytes](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/MountMortarB1F.blk), [Kiyo](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/MountMortarB1F.asm).
+- **Mt. Silver:** Room1 arrival (9,33) reaches Room2 via (15,1) and
+  Room3 via Room2 (11,5) without Surf or Waterfall. These correspond to the main 1F/2F/Top encounter
+  progression; no complete main encounter area waits for either move.
+  Item-room warps remain inaccessible, but the pack's merged Mt. Silver
+  area already opens at its earliest encounters. No additional gate.
+  [Room1 map](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/SilverCaveRoom1.blk), [Room1 warps](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/SilverCaveRoom1.asm),
+  [Room2 map](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/SilverCaveRoom2.blk), [Room2 warps](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/SilverCaveRoom2.asm),
+  [Room3 map](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/SilverCaveRoom3.blk), [Room3 warps](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/SilverCaveRoom3.asm),
+  [original encounter tables](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/wild/johto_grass.asm#L1297-L1516).
+- **Controls:** Route 44's known Surf-gated grass gave 0/16 cells without
+  Surf and 16/16 with Surf; Route 13's existing Cut gate gave 0/32 without
+  Cut even with Surf, 32/32 with Cut. These permissive-boundary tests agree
+  with the already cited Route 44 walkthrough and Route 13 collision audit.
+  [Route 44 map](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route44.blk), [Route 13 map](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route13.blk).
+- **Ice Path limitation:** from the first B1F ladder, no Strength reaches
+  37 B2F Mahogany-side FLOOR cells but not B3F. Fallen boulders were hidden
+  initially, following the original initialization flags. The 1F ice model
+  failed to solve the known first sliding puzzle; no complete ice traversal
+  or revised Strength gate is claimed. The remaining question records this
+  limit instead of treating an incomplete model as proof.
+  [B1F](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/IcePathB1F.asm), [B2F](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/IcePathB2FMahoganySide.asm),
+  [initial flags](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/engine/events/std_scripts.asm).
+
 ### Pack metadata and artwork
 
 - Original Johto/national dex bound 251 (tracking/import-validation limit,
@@ -914,7 +1025,7 @@ The second pass inspected original scripts rather than accepting terrain-only sh
 - Gold/Silver Route 27: [map warps](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route27.asm) include `warp_event 26, 5, TOHJO_FALLS, 1` and `warp_event 36, 5, TOHJO_FALLS, 2`; walking behind those cave warps was an invalid shortcut in the terrain model.
 - Gold/Silver Kanto shortcut and western approaches: [Victory Road Gate](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/VictoryRoadGate.asm) keeps its east-door Black Belt until `EVENT_FOUGHT_SNORLAX`. [Route 19](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route19.asm) inserts rock blocks until `EVENT_CINNABAR_ROCKS_CLEARED`; merely reaching Fuchsia does not establish sea access. These checks reject the proposed shortcuts, rather than claiming exhaustive gameplay proof of every alternative.
 
-Yellow Cerulean fishing was subsequently settled by the static trace above (PR #122). Gold/Silver Mt. Mortar / Route 1 uncertainties remain in OPEN_QUESTIONS.md. No gate was removed on the basis of these rejected or unresolved flags.
+Yellow Cerulean fishing was subsequently settled by the static trace above (PR #122), and the Gold/Silver Mt. Mortar and Route 1 checks are settled by the static map traces above. No gate was removed on the basis of these rejected or unresolved flags.
 
 ### Gold/Silver: Route 13 grass access
 

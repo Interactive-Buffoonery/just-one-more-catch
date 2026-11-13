@@ -63,13 +63,6 @@
       "src": "https://www.psypokes.com/gsc/walkthrough.php?part=12",
       "quote": "Surf up the Waterfall"
     },
-    "Mt. Mortar B1F": {
-      "needs": [
-        "surf"
-      ],
-      "src": "https://www.psypokes.com/gsc/walkthrough.php?part=12",
-      "quote": "Exit Mt Mortar and re-enter through the middle entrance"
-    },
     "Ice Path B3F": {
       "needs": [
         "strength"
@@ -93,11 +86,11 @@
     },
     "Dark Cave Blackthorn City Entrance": {
       "needs": [
-        "surf",
-        "rock-smash"
+        "surf"
       ],
-      "src": "https://www.psypokes.com/gsc/images/darkcave2.png",
-      "quote": "Dark Cave"
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/DarkCaveVioletEntrance.asm#L33-L48",
+      "quote": "warp_event 17,  1, DARK_CAVE_BLACKTHORN_ENTRANCE, 2",
+      "note": "Static map trace: Surf alone reaches Violet warp (17,1) and 25 Blackthorn-room FLOOR cells from arrival (3,25); no Rock Smash object is crossed."
     },
     "Dragons Den": {
       "needs": [
@@ -984,6 +977,193 @@
       "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/engine/overworld/tile_events.asm",
       "quote": "CheckCutCollision:\n\tld a, c\n\tld hl, .blocks\n\tld de, 1\n\tcall IsInArray\n\tret",
       "note": "The pinned Route13.blk, Kanto collision table and attributes enclose the grass behind the Cut tree at (44,4). Independent source floods, including all map-boundary entrances and Surf, reached zero grass cells without Cut and all 32 with Cut. Applies only to walking; rod and Surf encounters keep their method requirements."
+    },
+    {
+      "place": "Route 8",
+      "n": 17,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/kanto_collision.asm#L54",
+      "quote": "tilecoll FLOOR, CUT_TREE, WALL, FLOOR ; 35",
+      "note": "Static collision trace of Route8.blk: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Block $35 places Cut trees at (27,10) and (21,12). All walkable boundary cells were also tested as permissive entrances."
+    },
+    {
+      "place": "Route 8",
+      "n": 19,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/kanto_collision.asm#L54",
+      "quote": "tilecoll FLOOR, CUT_TREE, WALL, FLOOR ; 35",
+      "note": "Static collision trace of Route8.blk: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Block $35 places Cut trees at (27,10) and (21,12). All walkable boundary cells were also tested as permissive entrances."
+    },
+    {
+      "place": "Route 8",
+      "n": 37,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/kanto_collision.asm#L54",
+      "quote": "tilecoll FLOOR, CUT_TREE, WALL, FLOOR ; 35",
+      "note": "Static collision trace of Route8.blk: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Block $35 places Cut trees at (27,10) and (21,12). All walkable boundary cells were also tested as permissive entrances."
+    },
+    {
+      "place": "Route 8",
+      "n": 52,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/kanto_collision.asm#L54",
+      "quote": "tilecoll FLOOR, CUT_TREE, WALL, FLOOR ; 35",
+      "note": "Static collision trace of Route8.blk: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Block $35 places Cut trees at (27,10) and (21,12). All walkable boundary cells were also tested as permissive entrances."
+    },
+    {
+      "place": "Route 8",
+      "n": 58,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/kanto_collision.asm#L54",
+      "quote": "tilecoll FLOOR, CUT_TREE, WALL, FLOOR ; 35",
+      "note": "Static collision trace of Route8.blk: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Block $35 places Cut trees at (27,10) and (21,12). All walkable boundary cells were also tested as permissive entrances."
+    },
+    {
+      "place": "Route 8",
+      "n": 63,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/kanto_collision.asm#L54",
+      "quote": "tilecoll FLOOR, CUT_TREE, WALL, FLOOR ; 35",
+      "note": "Static collision trace of Route8.blk: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Block $35 places Cut trees at (27,10) and (21,12). All walkable boundary cells were also tested as permissive entrances."
+    },
+    {
+      "place": "Route 8",
+      "n": 64,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/kanto_collision.asm#L54",
+      "quote": "tilecoll FLOOR, CUT_TREE, WALL, FLOOR ; 35",
+      "note": "Static collision trace of Route8.blk: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Block $35 places Cut trees at (27,10) and (21,12). All walkable boundary cells were also tested as permissive entrances."
+    },
+    {
+      "place": "Route 8",
+      "n": 93,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/kanto_collision.asm#L54",
+      "quote": "tilecoll FLOOR, CUT_TREE, WALL, FLOOR ; 35",
+      "note": "Static collision trace of Route8.blk: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Block $35 places Cut trees at (27,10) and (21,12). All walkable boundary cells were also tested as permissive entrances."
+    },
+    {
+      "place": "Route 8",
+      "n": 164,
+      "m": "walk",
+      "needs": [
+        "cut-hm"
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/tilesets/kanto_collision.asm#L54",
+      "quote": "tilecoll FLOOR, CUT_TREE, WALL, FLOOR ; 35",
+      "note": "Static collision trace of Route8.blk: 0/24 grass cells without Cut; 24/24 with Cut, including both gate exits and the Lavender approach. Block $35 places Cut trees at (27,10) and (21,12). All walkable boundary cells were also tested as permissive entrances."
+    },
+    {
+      "place": "Dark Cave Blackthorn City Entrance",
+      "n": 118,
+      "m": "old-rod",
+      "needs": [
+        "rock-smash"
+      ],
+      "src": "https://www.psypokes.com/gsc/images/darkcave2.png",
+      "quote": "Dark Cave",
+      "note": "Retains the previous provisional aquatic requirement. The Surf-only trace proves floor encounters in the southern pocket, not access to the main water or fishing shore; see OPEN_QUESTIONS.md."
+    },
+    {
+      "place": "Dark Cave Blackthorn City Entrance",
+      "n": 118,
+      "m": "good-rod",
+      "needs": [
+        "rock-smash"
+      ],
+      "src": "https://www.psypokes.com/gsc/images/darkcave2.png",
+      "quote": "Dark Cave",
+      "note": "Retains the previous provisional aquatic requirement. The Surf-only trace proves floor encounters in the southern pocket, not access to the main water or fishing shore; see OPEN_QUESTIONS.md."
+    },
+    {
+      "place": "Dark Cave Blackthorn City Entrance",
+      "n": 118,
+      "m": "super-rod",
+      "needs": [
+        "rock-smash"
+      ],
+      "src": "https://www.psypokes.com/gsc/images/darkcave2.png",
+      "quote": "Dark Cave",
+      "note": "Retains the previous provisional aquatic requirement. The Surf-only trace proves floor encounters in the southern pocket, not access to the main water or fishing shore; see OPEN_QUESTIONS.md."
+    },
+    {
+      "place": "Dark Cave Blackthorn City Entrance",
+      "n": 119,
+      "m": "super-rod",
+      "needs": [
+        "rock-smash"
+      ],
+      "src": "https://www.psypokes.com/gsc/images/darkcave2.png",
+      "quote": "Dark Cave",
+      "note": "Retains the previous provisional aquatic requirement. The Surf-only trace proves floor encounters in the southern pocket, not access to the main water or fishing shore; see OPEN_QUESTIONS.md."
+    },
+    {
+      "place": "Dark Cave Blackthorn City Entrance",
+      "n": 129,
+      "m": "old-rod",
+      "needs": [
+        "rock-smash"
+      ],
+      "src": "https://www.psypokes.com/gsc/images/darkcave2.png",
+      "quote": "Dark Cave",
+      "note": "Retains the previous provisional aquatic requirement. The Surf-only trace proves floor encounters in the southern pocket, not access to the main water or fishing shore; see OPEN_QUESTIONS.md."
+    },
+    {
+      "place": "Dark Cave Blackthorn City Entrance",
+      "n": 129,
+      "m": "good-rod",
+      "needs": [
+        "rock-smash"
+      ],
+      "src": "https://www.psypokes.com/gsc/images/darkcave2.png",
+      "quote": "Dark Cave",
+      "note": "Retains the previous provisional aquatic requirement. The Surf-only trace proves floor encounters in the southern pocket, not access to the main water or fishing shore; see OPEN_QUESTIONS.md."
+    },
+    {
+      "place": "Dark Cave Blackthorn City Entrance",
+      "n": 129,
+      "m": "super-rod",
+      "needs": [
+        "rock-smash"
+      ],
+      "src": "https://www.psypokes.com/gsc/images/darkcave2.png",
+      "quote": "Dark Cave",
+      "note": "Retains the previous provisional aquatic requirement. The Surf-only trace proves floor encounters in the southern pocket, not access to the main water or fishing shore; see OPEN_QUESTIONS.md."
+    },
+    {
+      "place": "Dark Cave Blackthorn City Entrance",
+      "n": 129,
+      "m": "surf",
+      "needs": [
+        "rock-smash"
+      ],
+      "src": "https://www.psypokes.com/gsc/images/darkcave2.png",
+      "quote": "Dark Cave",
+      "note": "Retains the previous provisional aquatic requirement. The Surf-only trace proves floor encounters in the southern pocket, not access to the main water or fishing shore; see OPEN_QUESTIONS.md."
     }
   ],
   "obtainable_forms": {
