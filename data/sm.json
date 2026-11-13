@@ -561,6 +561,14 @@
       "chap": 12,
       "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Sun_and_Moon/Part_24",
       "quote": "When the battle ends, Lusamine attempts to attack on her own. Lillie calls for Nebby's help, and it uses the power of its third eye to repel Lusamine's assault. She and {{p|Nihilego}} split, and her Pokémon returns to its Beast Ball as she falls to the ground. Lillie runs to her mother's side as a group of Nihilego appears and prepares to attack. The Legendary Pokémon rushes in and teleports everyone, including Lusamine and [[Guzma]], back to the [[Altar of the Sunne]]{{sup/7|S}} / [[Altar of the Moone]]{{sup/7|M}}."
+    },
+    {
+      "id": "sm-magearna-qr",
+      "label": "Scan the Magearna QR Code",
+      "q": "Did you scan the Magearna QR Code after becoming Champion?",
+      "chap": 14,
+      "src": "https://bulbanews.bulbagarden.net/w/index.php?title=American_region_Magearna_QR_Code_released&oldid=59354",
+      "quote": "A QR Code to obtain Magearna in American region Pokémon Sun and Moon is now available. The code can only be scanned by players who have already become Champion."
     }
   ],
   "row_needs": [
@@ -934,6 +942,94 @@
       ],
       "src": "https://bulbapedia.bulbagarden.net/wiki/Alola_Route_5",
       "quote": "The north part of the route can only be accessed from {{rt|8|Alola}}, or by [[Poké Ride|Charizard Glide]] after entering [[Lush Jungle]]."
+    },
+    {
+      "place": "Route 2",
+      "n": 66,
+      "m": "npc-trade",
+      "needs": [],
+      "conditions": [
+        "trade-spearow"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Alola_Route_2",
+      "quote": "{{Catch/entry7|066|Machop|yes|yes|Trade|9|all=One|tradenum=021|tradename=Spearow|type1=Fighting|alliesna=N/A}}"
+    },
+    {
+      "place": "Route 5",
+      "n": 761,
+      "m": "npc-trade",
+      "needs": [],
+      "conditions": [
+        "trade-lillipup"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Alola_Route_5",
+      "quote": "{{Catch/entry7|761|Bounsweet|yes|yes|Trade|16|all=One|tradenum=506|tradename=Lillipup|type1=Grass|alliesna=N/A}}"
+    },
+    {
+      "place": "Konikoni City",
+      "n": 61,
+      "m": "npc-trade",
+      "needs": [],
+      "conditions": [
+        "trade-zubat"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Konikoni_City",
+      "quote": "{{Catch/entry7|061|Poliwhirl|yes|yes|Trade|22|all=One|tradenum=041|tradename=Zubat|type1=Water|alliesna=N/A}}"
+    },
+    {
+      "place": "Malie City",
+      "n": 440,
+      "m": "npc-trade",
+      "needs": [],
+      "conditions": [
+        "trade-pancham"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Malie_City",
+      "quote": "{{Catch/entry7|440|Happiny|yes|yes|Trade|27|all=One|tradenum=674|tradename=Pancham|type1=Normal|alliesna=N/A}}"
+    },
+    {
+      "place": "Tapu Village",
+      "n": 75,
+      "m": "npc-trade",
+      "needs": [],
+      "conditions": [
+        "trade-haunter"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Tapu_Village",
+      "quote": "{{Catch/entry7|075A|Graveler|yes|yes|Trade|32|all={{tt|One|Evolves into Golem immediately upon trade. Registers both Graveler and Golem into the Pokédex.}}|tradenum=093|tradename=Haunter|type1=Rock|type2=Electric|alliesna=N/A|form=Alolan Form}}"
+    },
+    {
+      "place": "Seafolk Village",
+      "n": 762,
+      "m": "npc-trade",
+      "needs": [],
+      "conditions": [
+        "trade-granbull"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Seafolk_Village",
+      "quote": "{{Catch/entry7|762|Steenee|yes|yes|Trade|43|all=One|tradenum=210|tradename=Granbull|type1=grass|alliesna=N/A}}"
+    },
+    {
+      "place": "Poni Gauntlet",
+      "n": 663,
+      "m": "npc-trade",
+      "needs": [],
+      "conditions": [
+        "trade-bewear"
+      ],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Poni_Gauntlet",
+      "quote": "{{Catch/entry7|663|Talonflame|yes|yes|Trade|59|all=One|tradenum=760|tradename=Bewear|type1=fire|type2=flying|alliesna=N/A}}"
+    },
+    {
+      "place": "Hauoli City Shopping District",
+      "n": 801,
+      "m": "gift",
+      "needs": [
+        "Elite Four",
+        "sm-magearna-qr"
+      ],
+      "src": "https://bulbanews.bulbagarden.net/w/index.php?title=American_region_Magearna_QR_Code_released&oldid=59354",
+      "quote": "The code can only be scanned by players who have already become Champion."
     }
   ],
   "obtainable_forms": {
@@ -1336,6 +1432,24 @@
       },
       "src": "https://bulbapedia.bulbagarden.net/wiki/Poni_Wilds",
       "quote": "{{Catch/entry7|321|Wailord|yes|yes|Water splashes|40-43|all=10%|type1=Water}}"
+    }
+  ],
+  "bulbapedia_gap_fill": "data/sm-bulbapedia.json",
+  "extra_encounters": [
+    {
+      "n": 801,
+      "versions": [
+        "sun",
+        "moon"
+      ],
+      "area": "Hauoli City Shopping District",
+      "method": "gift",
+      "lo": 50,
+      "hi": 50,
+      "chance": 100,
+      "src": "bulbanews",
+      "url": "https://bulbanews.bulbagarden.net/w/index.php?title=American_region_Magearna_QR_Code_released&oldid=59354",
+      "quote": "This Magearna is level 50, holds a Bottle Cap, has the Ability Soul-Heart, and knows the moves Fleur Cannon, Flash Cannon, Lucky Chant and Helping Hand. It is in a Cherish Ball and has a Wishing Ribbon.\nAfter scanning the QR Code, the player can collect the Magearna from the deliveryman at the Antiquities of the Ages shop in the Hau'oli City mall."
     }
   ]
 }

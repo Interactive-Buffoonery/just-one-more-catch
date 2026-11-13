@@ -594,32 +594,31 @@ The initial pack is partial. Its sourced access work list is
   SOS still requires the rod. Splitting Wailmer's mixed water table needs
   source-backed encounter overrides. USUM's analogous
   land rows remain unchanged; see `docs/sm-access-audit.md` for the list.
-- **Machamp milestone resolved:** Part 21 places registration after Aether
-  Paradise. All four Machamp-gated areas now require `sm-aether` as well as
-  the selected ride; Darkinium alone cannot open them.
 - **Missing PokeAPI conditions:** nearly every SM encounter-detail record
   has an empty condition list (Necrozma is the exception). Day/night
-  availability, Island Scan weekdays, weather-dependent SOS allies, and
-  requested in-game trade species therefore cannot be represented reliably
-  from this cache. The pack retains the supplied rows/odds without inventing
-  conditions. Both versions have 28 Island Scan detail records; their
-  weekday schedule is absent. Moon's clock is implemented, but cannot
-  repair missing time-specific encounter tables.
-- **Missing places/gifts:** no SM Trainers' School encounter area, no
-  initial Akala-stage Poké Pelago table, and no Magearna QR gift appear in
-  the cache. Poké Pelago contains only Ula'ula/Poni/Champion-stage areas.
-  Magearna remains in the national/regional dex without a synthetic gift.
-  See https://bulbapedia.bulbagarden.net/wiki/QR_Scanner and
-  https://bulbapedia.bulbagarden.net/wiki/Poké_Pelago . Marshadow is also
-  a distribution-only dex entry without an ordinary encounter row.
-- **Zygarde level/form granularity:** the cache provides a level-50 gift,
-  while walkthrough Part 18 lists level 30 before Champion and 50 after.
-  The 10/50 Cell assembly event is sourced, but the single cache row is
-  retained without changing its level or distinguishing assembly forms.
-- **Fossil/trade granularity:** all four fossil revival species occur in
-  both cached versions; ownership events permit a traded fossil. Only
+  availability, Island Scan weekdays and weather-dependent SOS allies
+  therefore cannot be represented from this cache; the pack keeps the
+  supplied rows/odds without inventing conditions. Both versions have 28
+  Island Scan detail records; their weekday schedule is absent. Moon's
+  clock is implemented, but cannot repair missing time-specific tables.
+  (Requested trade species are now sourced; see SOURCES.md.)
+- **Missing places/gifts:** Trainers' School and the initial Akala-stage
+  Poké Pelago table still need two agreeing sources for species, levels,
+  versions and gates before adding supplemental rows. The existing pack
+  format supports these rows; no build change is needed. Poké Pelago
+  currently contains only Ula'ula/Poni/Champion-stage areas
+  (https://bulbapedia.bulbagarden.net/wiki/Poké_Pelago).
+  Marshadow is a distribution-only dex entry without an encounter row.
+- **Zygarde level/form granularity:** the single gift row (Lv. 30-50)
+  opens at 10 Cells. Walkthrough Part 18 lists Lv. 30 before Champion and
+  Lv. 50 after, and the 50% Forme needs 50 Cells. PKHeX confirms both
+  levels for both forms at Route 16:
+  https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen7/Encounters7SM.cs#L42-L50 .
+  Splitting by level and form needs per-form gift rows.
+- **Fossil granularity:** all four fossil revival species occur in both
+  cached versions; ownership events permit a traded fossil. Only
   Skull/Cover are sold in Sun and Armor/Plume in Moon. Foreign fossil
-  acquisition and requested trade Pokémon are not inventory-validated.
+  acquisition is not inventory-validated.
 - **Coarse area/terrain gates:** independently trace the first reachable
   encounter tiles inside Vast Poni Canyon's combined `Inside` and
   `Northwest` records, including later Machamp/Lapras paths. The first

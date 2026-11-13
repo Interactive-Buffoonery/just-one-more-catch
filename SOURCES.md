@@ -2400,6 +2400,28 @@ claim that every obtainable Pokémon or condition is represented.
   Kartana (Sun)/Celesteela (Moon); Guzzlord; then report to Wicke before
   Necrozma at Ten Carat Hill. Each mission is a separate event and rows
   additionally require Champion. No USUM Wormhole legends are added.
+- **Magearna QR gift (both original versions):** level 50, collected at
+  Antiquities of the Ages in Hau'oli City's Shopping District mall after
+  becoming Champion and scanning the regional QR Code. Sources agree:
+  - PKHeX, pinned encounter definition:
+    https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen7/Encounters7SM.cs#L52-L56
+    lists species 801, level 50 for SM. Its location 40001 is the gift's
+    met-location, not its physical pickup site.
+  - Bulbanews, pinned revision 59354, December 6, 2016:
+    https://bulbanews.bulbagarden.net/w/index.php?title=American_region_Magearna_QR_Code_released&oldid=59354
+    confirms both games, level 50, the Champion/QR prerequisite and the
+    deliveryman at Antiquities of the Ages in Hau'oli City mall.
+  - Cached Bulbapedia QR Scanner page:
+    https://bulbapedia.bulbagarden.net/wiki/QR_Scanner#Special_QR_Codes
+    confirms the Champion requirement. Cached Hau'oli City Sun/Moon
+    Shopping District table lists the level-50 gift in both games:
+    https://bulbapedia.bulbagarden.net/wiki/Hau%27oli_City#Shopping_District
+    Serebii independently agrees on level, pickup site and Champion gate:
+    https://www.serebii.net/sunmoon/qrevents.shtml
+  SM opts into an empty gap-fill candidate file plus this explicit gift.
+  The existing Hau'oli City chapter supplies the place; `row_needs`
+  adds Champion and the `sm-magearna-qr` event, matching USUM's
+  `magearna-qr`.
 - **Clock:** https://bulbapedia.bulbagarden.net/wiki/Time and walkthrough
   Part 1: Sun follows console time; Moon's day/night cycle is 12 hours
   ahead. SM morning begins at 06:00 and night at 18:00. Weekday events
@@ -2439,6 +2461,21 @@ claim that every obtainable Pokémon or condition is represented.
   metrics. Existing sourced libretro Sun/Moon box covers `su.jpg`/`mo.jpg`
   are reused (see Coming Soon box art above). No save-file reader mapping
   is enabled by registering these games.
+- **In-game trade requests and Zygarde gift levels:** the seven NPC trades
+  carry a `trade-<species>` condition through `row_needs`: Machop (Route 2)
+  for Spearow, Bounsweet (Route 5) for Lillipup, Poliwhirl (Konikoni City)
+  for Zubat, Happiny (Malie City) for Pancham, Alolan Graveler (Tapu
+  Village) for Haunter, Steenee (Seafolk Village) for Granbull and
+  Talonflame (Poni Gauntlet) for Bewear. Requested species: each location's
+  cached Bulbapedia `Catch/entry7` Trade row (`tradename=`), agreeing with
+  https://www.serebii.net/sunmoon/ingametrades.shtml ("Trader requests a").
+  Offered species and levels (9, 16, 22, 27, 32, 43, 59):
+  https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen7/Encounters7SM.cs#L128-L138
+  (`TradeGift_SM`). The existing Zygarde gift row (levels 30 and 50) matches
+  PKHeX's two Zygarde gift levels at Route 16 (location 118), each for
+  both forms:
+  https://github.com/kwsch/PKHeX/blob/d8ab568695b414853c699fcadc63b7f81d0fccab/PKHeX.Core/Legality/Encounters/Data/Gen7/Encounters7SM.cs#L42-L50
+  and walkthrough Part 18.
 
 ### Sun/Moon ambush terrain review
 
