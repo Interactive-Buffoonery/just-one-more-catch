@@ -17,12 +17,16 @@
     <link rel="apple-touch-icon" href="/icons/icon-180.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="theme-color" content="#fff5f7" />
+    <script src="/theme.js"></script>
+    <link rel="stylesheet" href="/tokens.css" />
     <style>
-      html, body { overscroll-behavior-y: none; }
-      .startup { max-width: 680px; margin: 48px auto; padding: 24px; font-family: system-ui, sans-serif; line-height: 1.6; color: #3d2a33; background: #fff; border-radius: 18px; }
+      html, body { overscroll-behavior-y: none; margin: 0; background: var(--bg, #fff5f7); }
+      @media (prefers-color-scheme: dark) { html, body { background: var(--bg, #191724); } html { color-scheme: dark; } }
+      .startup { max-width: 680px; margin: 48px auto; padding: 24px; font-family: system-ui, sans-serif; line-height: 1.6; color: var(--ink); background: var(--surface); border-radius: 18px; }
+      html[data-theme] .startup:not(:has(#startup-recovery:not([hidden]))) { visibility: hidden; }
       .startup h1 { line-height: 1.2; }
-      .startup a { color: #a8285a; display: inline-flex; align-items: center; min-height: 44px; margin-right: 20px; }
-      .startup button { min-height: 44px; padding: 8px 16px; border: 1px solid #a8285a; border-radius: 12px; background: #fff; color: #a8285a; font: inherit; cursor: pointer; }
+      .startup a { color: var(--teal); display: inline-flex; align-items: center; min-height: 44px; margin-right: 20px; }
+      .startup button { min-height: 44px; padding: 8px 16px; border: 1px solid var(--teal); border-radius: 12px; background: var(--surface); color: var(--teal); font: inherit; cursor: pointer; }
     </style>
     <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "d0cef51b7e59416ea46ad07012e00d56"}'></script>
   </head>
@@ -50,7 +54,11 @@
         document.getElementById("startup-reload").addEventListener("click", function () {
           location.reload();
         });
-        window.addEventListener("error", showRecovery, true);
+        window.addEventListener("error", function (e) {
+          var src = e && e.target && e.target.src;
+          if (src && new URL(src, location.href).origin !== location.origin) return;
+          showRecovery();
+        }, true);
         setTimeout(showRecovery, 12000);
       })();
     </script>

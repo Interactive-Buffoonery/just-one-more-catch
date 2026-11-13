@@ -223,13 +223,19 @@ runInNewContext(recoveryScript, {
     },
   },
   window: {addEventListener: (event, callback) => failed = callback},
-  location: {reload: () => reloaded = true},
+  location: {href: 'https://app.example/', origin: 'https://app.example', reload: () => reloaded = true},
+  URL,
   setTimeout: (callback, delay) => {
     assert.equal(delay, 12000);
     timeout = callback;
   },
 });
 assert.equal(recovery.hidden, true);
+failed({target: {src: 'https://static.cloudflareinsights.com/beacon.min.js'}});
+assert.equal(recovery.hidden, true, 'a blocked third-party script must not reveal the startup card');
+failed({target: {src: 'https://app.example/assets/app-abc.js'}});
+assert.equal(recovery.hidden, false, 'a failed app file must offer recovery');
+recovery.hidden = true;
 failed();
 assert.equal(recovery.hidden, false, 'a failed entry must offer recovery');
 recovery.hidden = true;
@@ -239,4 +245,28 @@ reload();
 assert.equal(reloaded, true);
 recovery = null;
 assert.doesNotThrow(timeout, 'recovery must be harmless after the app mounts');
+const tokens = readFileSync(new URL('../public/tokens.css', import.meta.url), 'utf8');
+const themeScript = readFileSync(new URL('../public/theme.js', import.meta.url), 'utf8');
+for (const [look, mode] of [['blossom','light'],['blossom','dark'],['vampire','light'],['vampire','dark'],['blissey','light'],['blissey','dark'],['venusaur','light'],['venusaur','dark'],['snorlax','light'],['snorlax','dark']]) {
+  const meta = {content:'#000000', setAttribute(name, value) { this[name] = value; }};
+  const root = {dataset:{}};
+  runInNewContext(themeScript, {
+    localStorage: {getItem: key => ({'jomc.look':look, 'jomc.mode':mode})[key]},
+    matchMedia: () => ({matches:false}),
+    document: {documentElement:root, querySelector: () => meta},
+  });
+  const bg = tokens.match(new RegExp(`\\[data-theme=${root.dataset.theme}\\]\\{\\s*--bg:(#[0-9a-f]+)`))?.[1];
+  assert.ok(bg, `tokens.css needs a block for ${root.dataset.theme}`);
+  assert.equal(meta.content, bg, `${look}/${mode} browser bar must match the ${root.dataset.theme} background before the app loads`);
+}
+const blocked = {dataset:{}};
+runInNewContext(themeScript, {
+  localStorage: {getItem() { throw new Error('storage blocked'); }},
+  matchMedia: () => ({matches:true}),
+  document: {documentElement:blocked, querySelector: () => null},
+});
+assert.equal(blocked.dataset.theme, 'rosepine', 'blocked storage still follows the system dark setting');
+const firstStyle = html.indexOf('<style>');
+assert.ok(html.indexOf('src="/theme.js"') < firstStyle, 'theme.js must set the theme before the first style');
+assert.ok(html.indexOf('href="/tokens.css"') < firstStyle, 'tokens.css must be ready for the first paint');
 console.log('startup ok: idle initialization, intent reuse, retry limits, session signals, delayed/failed sign-in, cancellation, reopening, and recovery');
