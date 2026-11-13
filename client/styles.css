@@ -388,8 +388,8 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 .who{display:grid;min-width:0}
 .who b{font-size:22px;line-height:1;padding-top:4px}
 .meta{color:var(--soft);font-size:14px;margin-top:3px}
-.app .avatar{width:44px;height:44px;border-radius:50%;background:var(--pink);border:0;padding:0;overflow:hidden;position:relative;flex:none}
-.avatar img{position:absolute;width:76px;height:76px;left:-16px;top:-20px;image-rendering:pixelated}
+.app .avatar{--d:44;width:44px;height:44px;border-radius:50%;background:var(--pink);border:0;padding:0;overflow:hidden;position:relative;flex:none}
+.avatar img{--k:min(var(--d)/46,var(--d)/var(--s));position:absolute;width:calc(80px*var(--k));height:calc(80px*var(--k));left:calc(50% - var(--cx)*var(--k)*1px);top:calc(50% - (var(--cy) + 4)*var(--k)*1px);image-rendering:pixelated}
 
 /* Settings */
 .sheetbody>h2.lg{font-size:30px;line-height:1;margin:0 0 18px}
@@ -767,8 +767,7 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
   .top{margin-bottom:6px}
   .logo,.top:has(.acct) .logo{font-size:15px}
   .app .acct .signin{min-height:40px;font-size:13px;padding:0 6px 0 12px}
-  .app .avatar{width:40px;height:40px}
-  .avatar img{width:70px;height:70px;left:-15px;top:-19px}
+  .app .avatar{--d:40;width:40px;height:40px}
   .gsw>summary{min-height:40px}
   .gsw .cover{width:40px;height:40px}
 
