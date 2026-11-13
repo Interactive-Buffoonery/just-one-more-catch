@@ -102,7 +102,7 @@ export const monRow = (
 ) => {
   const t = r ? tagBits(r, place) : [],
     side = t.filter((x) => x[1]).map((x) => x[0]);
-  return `<div class="row">${mon(p, redGyarados(p, r))}<div class="grow"><div class="name">${p.name}${redGyarados(p, r) ? ` <span class="shiny small">✦ ${RED_NOTE}</span>` : ""}${side.length ? ` ${side.join(" ")}` : ""}</div>${r ? tagRow(t.filter((x) => !x[1])) : `<div class="small muted">${howElse(p)}</div>`}</div>${gotBtn(p, evo)}</div>`;
+  return `<div class="row">${mon(p, redGyarados(p, r))}<div class="grow"><div class="name">${p.name}${redGyarados(p, r) ? ` <span class="shiny small">✦ ${RED_NOTE}</span>` : ""}${side.length ? ` ${side.join(" ")}` : ""}</div>${r ? tagRow(t.filter((x) => !x[1])) : `<div class="small muted">${howElse(p)}</div>`}</div>${R().trackShinyHunts && R().hunt?.species === p.n ? `<button class="tag shiny" data-hunt="open">✦ ${R().hunt!.count.toLocaleString("en-US")}</button>` : ""}${gotBtn(p, evo)}</div>`;
 };
 export type Catchable = { p: Species; r: Row };
 const pref = (a: Catchable, b: Catchable) =>

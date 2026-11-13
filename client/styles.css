@@ -966,3 +966,4 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
 .acquisition-grid .span2 { grid-column:1/-1; }
 .acquisition-suggestions { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
 @media (max-width:520px) { .acquisition-grid .field:has(.journal-date) { grid-column:1/-1; } }
+.huntbar{position:fixed;bottom:76px;left:16px;right:16px;z-index:30;display:flex;background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:8px;box-shadow:0 4px 20px #0002}.huntbar button{min-height:48px}.huntbar button:first-child{flex:1;text-align:left}.huntbar button:last-child{min-width:64px}.hunting #view{padding-bottom:120px}.hunting #toast{bottom:154px}.hstats{display:flex;justify-content:space-between;gap:12px;margin:24px 0}@media(min-width:960px){.huntbar{width:440px;left:50%;right:auto;transform:translateX(-50%);bottom:24px}.hunting #toast{bottom:110px}}

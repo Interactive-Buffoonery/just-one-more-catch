@@ -1,3 +1,4 @@
+import { huntBar, huntClick } from "./views/hunt";
 // Ported from the approved mockup: string-rendered views on one root, event delegation, no framework.
 // main.ts owns auth and server calls and hands them in through the bridge.
 import "./styles.css";
@@ -332,6 +333,8 @@ function render() {
   $("#tabs").innerHTML = !a.isLoading
     ? `<nav class="tabbar${!isGuest() && run?.view === "dexonly" ? " four" : ""}" aria-label="Sections">${tabButtons(true)}<button class="tab-settings" data-tab="settings" data-k="tab-settings"${here}>${SETTINGS_ICON}<span>Settings</span></button></nav>`
     : "";
+  if (!$("#huntbar-host")) { const host = document.createElement("div"); host.id="huntbar-host"; root.append(host); }
+  $("#huntbar-host").innerHTML = huntBar();
   $("#toast").innerHTML = ui.undo
     ? `<div class="toast"><span id="toast-msg">${ui.undo.msg}</span>${ui.undo.restore || ui.undo.n ? `<button data-undo="1" data-k="toast-undo" aria-describedby="toast-msg">Undo</button>` : ""}</div>`
     : "";
@@ -514,6 +517,10 @@ async function onClick(e: MouseEvent) {
   }
   if (d.shareaction) {
     await shareAction?.(d.shareaction);
+    return;
+  }
+  if (d.hunt) {
+    huntClick(d.hunt, () => { scheduleSave(); $("#huntbar-host").innerHTML = huntBar(); }, fill => showSheet({kind:"hunt"}, fill), (n, note) => { openSheet({kind:"mon", n}); if ($("#f-shiny")) { $("#f-shiny").checked = true; $("#f-note").value = note; } });
     return;
   }
   if (d.dexsize && Object.hasOwn(DEX_SIZES, d.dexsize)) {
