@@ -843,6 +843,8 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
 .app .searchclear{position:absolute;right:4px;top:4px;min-height:36px;width:32px;border:0;background:transparent;color:var(--soft);font-size:22px}
 .searchclear[hidden]{display:none}
 .app .search input{padding-right:36px}
+.app .search input:placeholder-shown{padding-right:12px}
+.search input::-webkit-search-cancel-button{-webkit-appearance:none;display:none}
 .dt .no{display:flex;flex-wrap:wrap;justify-content:center;gap:3px}
 .dt .no i{flex-basis:100%}
 .dexsizes{display:flex;gap:2px;align-items:center}
