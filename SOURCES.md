@@ -2809,3 +2809,17 @@ ORAS evolution-location overrides: [New Mauville](https://bulbapedia.bulbagarden
 Sylveon retains the cached [PokeAPI Eevee chain](https://pokeapi.co/api/v2/evolution-chain/67/) Gen VI affection threshold of 2 plus a Fairy move, explicitly restored in its pack override because the generic text renderer omits affection. The [ORAS game article](https://bulbapedia.bulbagarden.net/wiki/Pokémon_Omega_Ruby_and_Alpha_Sapphire) confirms all contemporary Eevee evolutions are obtainable. Seafloor Cavern rooms 5/6 water rows also receive Rock Smash and Strength: walkthrough Part 16 describes both obstacles in room 1 before these rooms. Generic API walking rows retain the broad entry gate pending a tile-level audit.
 
 Implementation verification: 721 catalog entries, 272 directly encountered species, 154 distinct generated areas, 1,328 combined-version rows (306 API; 1,013 location-table gap fills; nine hand-written fossil revivals), 19 chapters and 24 events. Hoenn dex: 132/211 have direct encounters; family closure through evolution/breeding reaches 210/211, excluding event-only Jirachi. All eight existing generated encounter packs rebuild byte-identically. The supplied cache omitted `pokedex_4.json`; for this comparison it was reconstructed locally from the supplied read-only PokeAPI `pokemon_dex_numbers.csv` and `pokemon_species.csv`, without fetching the API.
+
+
+## Gold/Silver night encounter corrections (2026-11-13)
+
+The late original batch-4 audit raised two encounter mismatches absent from its
+replacement report. Independently checked both against pinned pret/pokegold
+`f2cde36f49b994c143bfd18582182302fdc76492` and the current PokeAPI cache:
+
+- [Route 38 Silver night table](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/wild/johto_grass.asm#L2059-L2067): both the first and fourth slots say `db 16, MEOWTH`. PokeAPI assigns the 30% first slot to Rattata. The GS-only correction transfers that slot to Meowth, giving Meowth 40% at level 16 at night; Gold and Silver's daytime tables stay unchanged.
+- [Route 18 night table](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/wild/kanto_grass.asm#L997-L1004): the fourth slot says `db 28, MUK`, followed by two level-30 Muk slots. PokeAPI assigns the 10% level-28 slot to Murkrow in both versions. Transfer it to Muk, giving 15% at levels 28–30 at night. Route 16's real Murkrow encounters remain unchanged.
+- [Grass slot probabilities](https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/wild/probabilities.asm) give 30/30/20/10/5/4/1 percent. The generator reassigns the original cached detail before aggregation, preserving this distribution, conditions and versions. Expected donor slot values are asserted so an upstream correction cannot silently apply twice.
+
+No access gate changes follow from this delayed report. Mt. Mortar, Ice Path
+and Diglett's Cave remain governed by the completed retry and second review.

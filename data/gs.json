@@ -1201,5 +1201,47 @@
   },
   "condition_replacements": {
     "trade-dragonair": "trade-dragonair-f"
-  }
+  },
+  "encounter_reassignments": [
+    {
+      "place": "Route 38",
+      "from": 19,
+      "to": 52,
+      "versions": [
+        "silver"
+      ],
+      "m": "walk",
+      "conditions": [
+        "swarm-no",
+        "time-night"
+      ],
+      "expected": [
+        16,
+        16,
+        30
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/wild/johto_grass.asm#L2059-L2067",
+      "quote": "db 16, MEOWTH"
+    },
+    {
+      "place": "Route 18",
+      "from": 198,
+      "to": 89,
+      "versions": [
+        "gold",
+        "silver"
+      ],
+      "m": "walk",
+      "conditions": [
+        "time-night"
+      ],
+      "expected": [
+        28,
+        28,
+        10
+      ],
+      "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/data/wild/kanto_grass.asm#L997-L1004",
+      "quote": "db 28, MUK"
+    }
+  ]
 }
