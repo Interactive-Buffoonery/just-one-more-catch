@@ -78,6 +78,43 @@ class HistoricalData(unittest.TestCase):
         self.assertEqual(dex[196]["evo"], "High friendship + Morning / Day")
         self.assertTrue(any("trade-dragonair-f" in row["cond"] for row in dex[112]["rows"]))
 
+    def test_reassignment_preserves_other_versions_and_rejects_stale_slots(self):
+        raw = [{"location_area": {"name": "johto-route-38-area"}, "version_details": [
+            {"version": {"name": version}, "encounter_details": [{
+                "method": {"name": "walk"}, "condition_values": [{"name": c} for c in ["swarm-no", "time-night"]],
+                "min_level": 16, "max_level": 16, "chance": 30,
+            }]} for version in ("gold", "silver")
+        ]}]
+        reassign = build["reassign_encounters"]
+        with patch.dict(env, cached=lambda name: raw):
+            donor = reassign(19, raw)
+            recipient = reassign(52, [])
+        self.assertEqual([v["version"]["name"] for v in donor[0]["version_details"]], ["gold"])
+        self.assertEqual([v["version"]["name"] for v in recipient[0]["version_details"]], ["silver"])
+        self.assertEqual(len(raw[0]["version_details"]), 2)
+        self.assertEqual(reassign(25, raw), raw)
+        with patch.dict(env, GAME={**env["GAME"], "encounter_reassignments": []}):
+            self.assertEqual(reassign(19, raw), raw)
+        raw[0]["version_details"][1]["encounter_details"][0]["chance"] = 20
+        with self.assertRaisesRegex(AssertionError, "Stale encounter reassignment"):
+            reassign(19, raw)
+
+    def test_corrected_night_encounters(self):
+        text = (ROOT / "client/data/gs.ts").read_text()
+        dex = {p["n"]: p for p in json.loads(text[text.index("{"):-2])["dex"]}
+        def rows(n, place, version):
+            return [r for r in dex[n]["rows"] if r["place"] == place and version in r["v"] and r["m"] == "walk"]
+        self.assertEqual(rows(19, "Route 38", "i"), [])
+        self.assertEqual([(r["c"], r["lo"], r["hi"]) for r in rows(52, "Route 38", "i") if r["cond"] == ["time-night"]], [(40, 16, 16)])
+        self.assertEqual([(r["c"], r["lo"], r["hi"]) for r in rows(19, "Route 38", "g") if r["cond"] == ["time-night"]], [(40, 16, 16)])
+        for version in "gi":
+            self.assertEqual(rows(198, "Route 18", version), [])
+            self.assertEqual([(r["c"], r["lo"], r["hi"]) for r in rows(89, "Route 18", version) if r["cond"] == ["time-night"]], [(15, 28, 30)])
+            self.assertTrue(rows(198, "Route 16", version))
+            for place in ("Route 18", "Route 38"):
+                total = sum(r["c"] for mon in dex.values() for r in rows(mon["n"], place, version) if not r["cond"] or r["cond"] == ["time-night"])
+                self.assertEqual(total, 100, (place, version))
+
     def test_condition_replacement_stays_with_its_pack(self):
         encounter = [{"location_area": {"name": "example-area"}, "version_details": [{
             "version": {"name": "gold"}, "encounter_details": [{

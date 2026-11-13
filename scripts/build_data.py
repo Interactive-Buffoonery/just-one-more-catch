@@ -234,6 +234,39 @@ def rows_for(encounters, version, n):
     return out
 
 
+def reassign_encounters(n, encounters):
+    for rule in GAME.get("encounter_reassignments", []):
+        if n not in (rule["from"], rule["to"]):
+            continue
+        assert rule["src"] and rule["quote"] and rule["from"] != rule["to"]
+        source = encounters if n == rule["from"] else cached(f"pokemon_{rule['from']}_encounters")
+        selected, remaining, hits = [], [], []
+        for area in source:
+            moved_versions, kept_versions = [], []
+            for version in area["version_details"]:
+                moved, kept = [], []
+                for detail in version["encounter_details"]:
+                    match = (nice(area["location_area"]["name"]) == rule["place"]
+                             and version["version"]["name"] in rule["versions"]
+                             and detail["method"]["name"] == rule["m"]
+                             and sorted(c["name"] for c in detail["condition_values"]) == sorted(rule["conditions"]))
+                    if match:
+                        assert [detail["min_level"], detail["max_level"], detail["chance"]] == rule["expected"], f"Stale encounter reassignment: {rule}"
+                        hits.append(version["version"]["name"])
+                    (moved if match else kept).append(detail)
+                if moved:
+                    moved_versions.append({**version, "encounter_details": moved})
+                if kept:
+                    kept_versions.append({**version, "encounter_details": kept})
+            if moved_versions:
+                selected.append({**area, "version_details": moved_versions})
+            if kept_versions:
+                remaining.append({**area, "version_details": kept_versions})
+        assert sorted(hits) == sorted(rule["versions"]), f"Stale encounter reassignment: {rule}"
+        encounters = remaining if n == rule["from"] else encounters + selected
+    return encounters
+
+
 def varieties(sp):
     return [v["pokemon"]["url"].rstrip("/").split("/")[-1] for v in sp["varieties"]]
 
@@ -268,6 +301,7 @@ def species(n, johto):
     chain_id = sp["evolution_chain"]["url"].rstrip("/").split("/")[-1]
     chain = cached(f"evolution_chain_{chain_id}")["chain"]
     enc = [a for i in varieties(sp) for a in cached(f"pokemon_{i}_encounters")] + SUPPLEMENT.get(n, [])
+    enc = reassign_encounters(n, enc)
     name = lambda s: next(x["name"] for x in s["names"] if x["language"]["name"] == "en")
     rows = {}
     for version, v in VERSIONS.items():
