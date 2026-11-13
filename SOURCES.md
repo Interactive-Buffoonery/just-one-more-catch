@@ -71,6 +71,40 @@ for the complete row inventory and cache limitations.
   registers Machamp Shove at Ancient Poni Path. Machamp areas therefore also
   require the existing Aether event, including the earlier Lush Jungle cave.
 
+### USUM open-question review
+
+- Haina Desert weather SOS: the Gabite and Castform rows now carry weather
+  conditions. https://bulbapedia.bulbagarden.net/wiki/Haina_Desert ("Special
+  allies in weather": Gabite in a sandstorm; Castform in a sandstorm, or rain
+  or hail). pk3DS agrees that weather allies only come up while the weather
+  is active:
+  https://github.com/kwsch/pk3DS/blob/6daaca934ca2284a73ab743bf89c848c57cd9de1/pk3DS.WinForms/Subforms/Gen7/SMWE.cs#L43
+  ("If weather is active, create a random number. If 0, use slot 0. If <= 10,
+  use slot 1. Else, pick an SOS table and a slot."). Serebii's SOS page
+  describes the same weather-only allies:
+  https://www.serebii.net/ultrasunultramoon/sosbattles.shtml
+- Lush Jungle West duplicates: https://bulbapedia.bulbagarden.net/wiki/Lush_Jungle
+  lists the rustling-grass ambush block only in the USUM Central and north
+  table, not in the Northwest table. PokeAPI South carries the ambushes and
+  West repeats them, so the three West bubbling-spots rows (Steenee,
+  Oranguru, Passimian) are dropped. The mapping of PokeAPI West to the
+  Northwest table is an inference from the area layout.
+- Route 13 access: https://bulbapedia.bulbagarden.net/wiki/Alola_Route_12
+  gives Mudsdale Gallop "from Hapu upon visiting the route for the first
+  time", and the Route 13 page lists fishing only with no Ride requirement:
+  https://bulbapedia.bulbagarden.net/wiki/Alola_Route_13. No data change.
+- Mahalo Trail Solgaleo/Lunala timing (open): Official Alola Region Strategy
+  Guide p227-229 ("Go to Mahalo Trail at this point, and you'll find Lillie
+  together with the Legendary Pokémon that you helped rescue from
+  Necrozma"), after the Ultra Necrozma battle. The Bulbapedia walkthrough
+  order is Part 24, Part 25 (Ultra Megalopolis), then Part 26 (Mina's trial).
+- Route 15 and Poni Breaker Coast Ride gates, Totem Stickers (open):
+  https://bulbapedia.bulbagarden.net/wiki/Alola_Route_15,
+  https://bulbapedia.bulbagarden.net/wiki/Poni_Breaker_Coast,
+  https://www.serebii.net/ultrasunultramoon/totemstickers.shtml,
+  https://github.com/kwsch/pk3DS/blob/6daaca934ca2284a73ab743bf89c848c57cd9de1/pk3DS.Core/Structures/Gen7/Gen7SlotDumper.cs#L122
+  (`InaccessibleUnused_USUM`).
+
 ## Obtainable form catalog
 
 `obtainable_forms` in each pack is an allowlist of PokeAPI pokemon-form
