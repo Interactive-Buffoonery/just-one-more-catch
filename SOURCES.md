@@ -2823,3 +2823,18 @@ replacement report. Independently checked both against pinned pret/pokegold
 
 No access gate changes follow from this delayed report. Mt. Mortar, Ice Path
 and Diglett's Cave remain governed by the completed retry and second review.
+
+
+## Red/Blue Route 18 fishing access (2026-11-13)
+
+The delayed original access audit flagged a Bicycle gate absent from its retry.
+Independently checked against pret/pokered at
+`130ac3fa5493fb29a8005e8439fd31b4826e46af`:
+
+- [Route 18 gate script](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/Route18Gate1F.asm) calls `Route16Gate1FIsBicycleInBagScript` and turns the player back at gate coordinates (4,3) through (4,6) without the item. [The helper](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/Route16Gate1F.asm) explicitly checks `BICYCLE`.
+- [Route 18 warps](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/maps/objects/Route18.asm) connect gate doors (33,8)/(33,9) on the west and (40,8)/(40,9) on the east. Fuchsia's west boundary opens only at its map rows 16/17, connecting to Route 18 rows 8/9 via the [header offset](https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/data/maps/headers/FuchsiaCity.asm). The east enclosure contains the grass and trade; the fishing shore is west of the gate.
+- The independent collision trace uses pinned `maps/Route18.blk`, `maps/FuchsiaCity.blk`, `gfx/blocksets/overworld.bst` and `data/tilesets/collision_tile_ids.asm`. Starting at Route 18 (49,8)/(49,9) reaches its grass but no fishing shore. Seeding every passable map-edge tile would incorrectly admit the disconnected northern strip. The alternative northern Cycling Road entrance also requires Bicycle.
+
+Add `bicycle` only to the seven old/good/super-rod rows in both versions.
+Walking encounters and the Lickitung trade retain their existing access.
+This is source and collision-model verification; no emulator play-test was run.

@@ -663,6 +663,83 @@
       "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
       "quote": "\tcall IsNextTileShoreOrWater\n\tret c\n\tld a, [wWalkBikeSurfState]\n\tcp 2 ; Surfing?\n\tjr z, .surfing",
       "note": "Fishing requires standing on land. The pinned CeruleanCity and Route4 maps, overworld blockset, collisions and ledges put all accessible fishing shore in the cave-door pocket, reached only via Surf; Route24 fishing uses its own map encounters. NPC trade remains unaffected."
+    },
+    {
+      "place": "Route 18",
+      "n": 60,
+      "m": "good-rod",
+      "needs": [
+        "bicycle"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/Route18Gate1F.asm",
+      "quote": "\tcall Route16Gate1FIsBicycleInBagScript\n\tret nz\n\tld hl, .StopsPlayerCoords\n\tcall ArePlayerCoordsInArray",
+      "note": "Fuchsia connects to the eastern grass/trade enclosure. The fishing shore is west of the gate, whose guard requires a Bicycle; the alternative Cycling Road entrance also requires it. Verified against the pinned map headers, blockset, collision tables and gate scripts."
+    },
+    {
+      "place": "Route 18",
+      "n": 72,
+      "m": "super-rod",
+      "needs": [
+        "bicycle"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/Route18Gate1F.asm",
+      "quote": "\tcall Route16Gate1FIsBicycleInBagScript\n\tret nz\n\tld hl, .StopsPlayerCoords\n\tcall ArePlayerCoordsInArray",
+      "note": "Fuchsia connects to the eastern grass/trade enclosure. The fishing shore is west of the gate, whose guard requires a Bicycle; the alternative Cycling Road entrance also requires it. Verified against the pinned map headers, blockset, collision tables and gate scripts."
+    },
+    {
+      "place": "Route 18",
+      "n": 98,
+      "m": "super-rod",
+      "needs": [
+        "bicycle"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/Route18Gate1F.asm",
+      "quote": "\tcall Route16Gate1FIsBicycleInBagScript\n\tret nz\n\tld hl, .StopsPlayerCoords\n\tcall ArePlayerCoordsInArray",
+      "note": "Fuchsia connects to the eastern grass/trade enclosure. The fishing shore is west of the gate, whose guard requires a Bicycle; the alternative Cycling Road entrance also requires it. Verified against the pinned map headers, blockset, collision tables and gate scripts."
+    },
+    {
+      "place": "Route 18",
+      "n": 118,
+      "m": "good-rod",
+      "needs": [
+        "bicycle"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/Route18Gate1F.asm",
+      "quote": "\tcall Route16Gate1FIsBicycleInBagScript\n\tret nz\n\tld hl, .StopsPlayerCoords\n\tcall ArePlayerCoordsInArray",
+      "note": "Fuchsia connects to the eastern grass/trade enclosure. The fishing shore is west of the gate, whose guard requires a Bicycle; the alternative Cycling Road entrance also requires it. Verified against the pinned map headers, blockset, collision tables and gate scripts."
+    },
+    {
+      "place": "Route 18",
+      "n": 118,
+      "m": "super-rod",
+      "needs": [
+        "bicycle"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/Route18Gate1F.asm",
+      "quote": "\tcall Route16Gate1FIsBicycleInBagScript\n\tret nz\n\tld hl, .StopsPlayerCoords\n\tcall ArePlayerCoordsInArray",
+      "note": "Fuchsia connects to the eastern grass/trade enclosure. The fishing shore is west of the gate, whose guard requires a Bicycle; the alternative Cycling Road entrance also requires it. Verified against the pinned map headers, blockset, collision tables and gate scripts."
+    },
+    {
+      "place": "Route 18",
+      "n": 129,
+      "m": "old-rod",
+      "needs": [
+        "bicycle"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/Route18Gate1F.asm",
+      "quote": "\tcall Route16Gate1FIsBicycleInBagScript\n\tret nz\n\tld hl, .StopsPlayerCoords\n\tcall ArePlayerCoordsInArray",
+      "note": "Fuchsia connects to the eastern grass/trade enclosure. The fishing shore is west of the gate, whose guard requires a Bicycle; the alternative Cycling Road entrance also requires it. Verified against the pinned map headers, blockset, collision tables and gate scripts."
+    },
+    {
+      "place": "Route 18",
+      "n": 129,
+      "m": "super-rod",
+      "needs": [
+        "bicycle"
+      ],
+      "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/Route18Gate1F.asm",
+      "quote": "\tcall Route16Gate1FIsBicycleInBagScript\n\tret nz\n\tld hl, .StopsPlayerCoords\n\tcall ArePlayerCoordsInArray",
+      "note": "Fuchsia connects to the eastern grass/trade enclosure. The fishing shore is west of the gate, whose guard requires a Bicycle; the alternative Cycling Road entrance also requires it. Verified against the pinned map headers, blockset, collision tables and gate scripts."
     }
   ]
 }
