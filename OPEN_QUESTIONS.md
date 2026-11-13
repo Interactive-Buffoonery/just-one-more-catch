@@ -198,8 +198,8 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
 ## Black 2 / White 2 (`b2w2`)
 
 This is a sourced first implementation awaiting independent access review,
-not a claim that all earliest encounter tiles are proven. The supplied cache
-is the encounter source; missing rows were not fabricated. See SOURCES.md
+not a claim that all earliest encounter tiles are proven. PokeAPI is the main encounter source; cached location tables now fill the
+missing outbreak rows with per-row provenance. See SOURCES.md
 and the 137-area work list in `docs/b2w2-access.md`.
 
 - **Numbered room mappings:** PokeAPI's Reversal Mountain Unknown Areas
@@ -252,12 +252,13 @@ and the 137-area work list in `docs/b2w2-access.md`.
   and no time-of-day encounter changes. A second source for each seasonal
   access exception is still missing.
 - **PokeAPI coverage:** all 137 supplied areas and their B2/W2 rows are
-  integrated (no hand-invented rows). There are no catchable-area rows for
+  integrated, plus 23 sourced outbreak species (19 rows per version). There are no catchable-area rows for
   Plasma Frigate, N's Castle, Black Tower or White Treehollow; their story
   and Benga reward are represented by events/Floccesy gift rows. The cache
   does not supply the complete Yancy/Curtis phone-trade sequence: do not
-  claim all in-game trades are covered. Verify outbreaks, Memory Link's N
-  Pokémon and other conditional gifts against the raw rows before claiming
+  claim all in-game trades are covered. All requested outbreak species were confirmed in cached B2/W2 Swarm
+  tables; none were left out. Daily location selection is not predicted.
+  Verify Memory Link's N Pokémon and other conditional gifts before claiming
   completeness. Ordinary gifts/fossils retain raw item conditions and their
   chapter gates, not a full inventory/phone/day-counter simulation.
 - **Location labeling:** PokeAPI calls the Nacrene gift gate West Gate,
@@ -289,3 +290,26 @@ and the 137-area work list in `docs/b2w2-access.md`.
   (White 2, Route 4) and Petilil (Black 2, Route 4). The phone trades have
   no raw encounter rows in either version; this is a confirmed omission,
   not a proposed gate for invented rows.
+
+- **Kyurem trigger conflict:** retain `catch-n-dragon` and PokeAPI’s
+  `other-captured-reshiram-or-zekrom` condition until gameplay/scripts settle
+  whether catching is required or battling/encountering is enough.
+  https://bulbapedia.bulbagarden.net/wiki/Giant_Chasm
+  (cached line 531) says “after encountering” Zekrom/Reshiram at
+  Dragonspiral Tower. Walkthrough Part 19 (line 1120) says “After the battle”
+  N directs the player to Giant Chasm, while line 105 describes catching.
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_19
+  PokeAPI’s capture condition is stricter than the location article’s text;
+  no gate was weakened on this conflicting evidence.
+- **Cobalion / Cut gameplay check:** keep the existing Cobalion gate.
+  https://bulbapedia.bulbagarden.net/wiki/Unova_Route_13
+  (cached line 30) places Cobalion “above the cuttable trees” but also
+  describes an eastern path without cuttable trees.
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_12
+  (line 105) says to approach the cuttable trees and find Cobalion in the
+  clearing beyond. Trace the exact encounter tile in-game before adding Cut.
+- **Resolved review corrections:** Dreamyard B1F uses the fence gap without
+  Cut; Latias/Latios still require Cut (Dreamyard Geography; Part 20’s chase).
+  The access inventory now matches all area/chapter requirements in the data.
+  Gigalith stays on Route 7: Part 10’s “Trade with a Hiker” is under Route 7,
+  not Mistralton City (headings at cached lines 50 and 241; trade at 142–143).

@@ -183,10 +183,9 @@
       "src": "https://bulbapedia.bulbagarden.net/wiki/Underground_Ruins"
     },
     "Dreamyard B1F": {
-      "needs": [
-        "cut-hm"
-      ],
-      "src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_20"
+      "needs": [],
+      "src": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "The gap in the fence to the right of the cuttable tree leads to the basement."
     },
     "Unova Route 17": {
       "needs": [
@@ -803,5 +802,529 @@
     "476": {
       "evo": "Level up in Chargestone Cave"
     }
-  }
+  },
+  "extra_encounters": [
+    {
+      "n": 79,
+      "area": "Abundant Shrine",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Abundant Shrine, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Abundant_Shrine",
+      "quote": "{{catch/entry5-2|079|Slowpoke|yes|yes|Grass|40-55|all=40%|type1=Water|type2=Psychic}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 450,
+      "area": "Desert Resort",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Desert Resort, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Desert_Resort",
+      "quote": "{{catch/entry5-2|450|Hippowdon|yes|yes|Sand|40-55|all=40%|type1=Ground}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 97,
+      "area": "Dreamyard",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Dreamyard, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Dreamyard",
+      "quote": "{{catch/entry5-2|097|Hypno|yes|yes|Grass|40-55|all=40%|type1=Psychic}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 332,
+      "area": "Reversal Mountain",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Reversal Mountain, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Reversal_Mountain",
+      "quote": "{{catch/entry5-2|332|Cacturne|yes|yes|Grass|40-55|all=40%|type1=Grass|type2=Dark}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 83,
+      "area": "Unova Route 1",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 1, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_1",
+      "quote": "{{Catch/entry5-2|083|Farfetch'd|yes|yes|Grass|40-55|all=40%|type1=Normal|type2=Flying}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 313,
+      "area": "Unova Route 3",
+      "versions": [
+        "black-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 3, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_3",
+      "quote": "{{catch/entry5-2|313|Volbeat|yes|no|Grass|40-55|all=40%|type1=Bug}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 314,
+      "area": "Unova Route 3",
+      "versions": [
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 3, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_3",
+      "quote": "{{catch/entry5-2|314|Illumise|no|yes|Grass|40-55|all=40%|type1=Bug}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 177,
+      "area": "Unova Route 5",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 5, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_5",
+      "quote": "{{catch/entry5-2|177|Natu|yes|yes|Grass|40-55|all=40%|type1=Psychic|type2=Flying}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 311,
+      "area": "Unova Route 6",
+      "versions": [
+        "black-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 6, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_6",
+      "quote": "{{catch/entry5-2|311|Plusle|yes|no|Grass|40-55|all=40%|type1=Electric}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 312,
+      "area": "Unova Route 6",
+      "versions": [
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 6, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_6",
+      "quote": "{{catch/entry5-2|312|Minun|no|yes|Grass|40-55|all=40%|type1=Electric}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 162,
+      "area": "Unova Route 7",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 7, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_7",
+      "quote": "{{catch/entry5-2|162|Furret|yes|yes|Grass|40-55|all=40%|type1=Normal}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 195,
+      "area": "Unova Route 8",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak",
+        "season-not-winter"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 8, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_8",
+      "quote": "{{catch/entry5-2|195|Quagsire|yes|yes|Puddle|40-55|40%|40%|40%|-|type1=Water|type2=Ground}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 317,
+      "area": "Unova Route 9",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 9, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_9",
+      "quote": "{{catch/entry5-2|317|Swalot|yes|yes|Grass|40-55|all=40%|type1=Poison}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 284,
+      "area": "Unova Route 11",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 11, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_11",
+      "quote": "{{catch/entry5-2|284|Masquerain|yes|yes|Grass|40-55|all=40%|type1=Bug|type2=Flying}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 84,
+      "area": "Unova Route 12",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 12, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_12",
+      "quote": "{{catch/entry5-2|084|Doduo|yes|yes|Grass|40-55|all=40%|type1=Normal|type2=Flying}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 277,
+      "area": "Unova Route 13",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 13, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_13",
+      "quote": "{{catch/entry5-2|277|Swellow|yes|yes|Grass|40-55|all=40%|type1=Normal|type2=Flying}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 22,
+      "area": "Unova Route 15",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 15, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_15",
+      "quote": "{{Catch/entry5-2|022|Fearow|yes|yes|Grass|40-55|all=40%|type1=Normal|type2=Flying}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 204,
+      "area": "Unova Route 16",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 16, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_16",
+      "quote": "{{catch/entry5-2|204|Pineco|yes|yes|Grass|40-55|all=40%|type1=bug}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 187,
+      "area": "Unova Route 18",
+      "versions": [
+        "black-2",
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 18, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_18",
+      "quote": "{{catch/entry5-2|187|Hoppip|yes|yes|Grass|40-55|all=40%|type1=Grass|type2=Flying}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 122,
+      "area": "Unova Route 20",
+      "versions": [
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 20, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_20",
+      "quote": "{{catch/entry5-2|122|Mr. Mime|no|yes|Grass|40-55|all=40%|type1=Psychic}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 185,
+      "area": "Unova Route 20",
+      "versions": [
+        "black-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 20, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_20",
+      "quote": "{{catch/entry5-2|185|Sudowoodo|yes|no|Grass|40-55|all=40%|type1=Rock}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 166,
+      "area": "Unova Route 22",
+      "versions": [
+        "white-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 22, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_22",
+      "quote": "{{catch/entry5-2|166|Ledian|no|yes|Grass|40-55|all=40%|type1=Bug|type2=Flying}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    },
+    {
+      "n": 168,
+      "area": "Unova Route 22",
+      "versions": [
+        "black-2"
+      ],
+      "method": "walk",
+      "lo": 40,
+      "hi": 55,
+      "chance": 40,
+      "conditions": [
+        "daily-outbreak"
+      ],
+      "needs": [
+        "Elite Four"
+      ],
+      "src": "Bulbapedia Unova Route 22, Swarm",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_22",
+      "quote": "{{catch/entry5-2|168|Ariados|yes|no|Grass|40-55|all=40%|type1=Bug|type2=Poison}}",
+      "gate_src": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16",
+      "gate_quote": "After defeating the Pokémon League ... He then upgrades your Pokédex, enabling National Dex mode. Mass outbreaks of Pokémon will now appear ... These locations change daily."
+    }
+  ]
 }

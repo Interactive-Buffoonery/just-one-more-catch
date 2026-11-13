@@ -785,7 +785,7 @@ citations, not an independent access review or gameplay proof.
   their `pokemon/<id>/encounters` responses, evolution chains, and
   https://pokeapi.co/api/v2/pokedex/9/ (`updated-unova`). Preserve both
   versions separately, including levels, rates, seasons, Phenomenon methods,
-  Hidden Grotto tables, gifts and trades. No encounter row was hand-created.
+  Hidden Grotto tables, gifts and trades. Missing outbreak tables are supplemented from the cached location pages, with per-row provenance (see below).
   The regional list has 301 entries numbered **000–300**, including Victini;
   `0` must be treated as a real regional number. National bound is 649.
 - **Game, platform, region, beginning and starters:**
@@ -860,8 +860,8 @@ citations, not an independent access review or gameplay proof.
 - **Legendaries / gifts:** Part 16 requires releasing the lake guardians
   from Cave of Being (Surf + Waterfall) before their individual encounters.
   Part 19 gives Zekrom in Black 2 / Reshiram in White 2 after N's castle,
-  then Kyurem after catching that dragon. Part 20 gives Latios in Black 2 /
-  Latias in White 2 in Dreamyard, with Cut; basement access also needs Cut.
+  then Kyurem after battling that dragon (the stricter PokeAPI capture condition is retained pending resolution in OPEN_QUESTIONS.md). Part 20 gives Latios in Black 2 /
+  Latias in White 2 in Dreamyard, with Cut. Dreamyard’s fence gap reaches the basement without Cut (location article, Geography).
   Part 22 gives Heatran after taking Route 18's Magma Stone (Part 21) to
   Reversal Mountain. Part 18 gives Cresselia at Marvelous Bridge with the
   Lunar Wing from Strange House. https://bulbapedia.bulbagarden.net/wiki/Floccesy_Town
@@ -905,3 +905,22 @@ Black 2 / White 2 in OPEN_QUESTIONS.md. Save-file import is not enabled.
   both contacts' 12 phone-trade rewards. None has a corresponding Nimbasa
   trade row in these version responses; the exact missing rewards and
   the seven ordinary raw trade rewards are listed in OPEN_QUESTIONS.md.
+
+- **Outbreak supplements:** `extra_encounters` in `data/b2w2.json` records
+  the cached B2/W2 Swarm table entry, source URL, levels, rate and version
+  flags for each of 23 species (19 encounter rows per version). Sources:
+  Abundant Shrine, Desert Resort, Dreamyard, Reversal Mountain and Unova
+  Routes 1, 3, 5–9, 11–13, 15–16, 18, 20 and 22, each linked on its row.
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_16
+  places the National Dex upgrade and daily outbreaks after the League.
+  All rows require `Elite Four` and carry a daily-outbreak condition; gate
+  bulletin boards identify the active location, which the app does not predict.
+  Route 8’s Quagsire table has 40% in spring/summer/autumn and no winter
+  encounter; its row preserves that restriction. Each row retains its source
+  URL in generated output. PokeAPI outbreak tables, if added, retire the
+  corresponding supplemental version/location/method table.
+- **Gigalith trade review:**
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pokémon_Black_2_and_White_2/Part_10
+  places “Trade with a Hiker” under the Route 7 heading (cached lines 50,
+  142–143), before Mistralton City resumes at line 241. Its Route 7 label
+  agrees with PokeAPI and is retained.

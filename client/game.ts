@@ -119,6 +119,8 @@ const STORY: Record<string, string> = {
   "radio-hoenn": "Hoenn Sound on the radio",
   "radio-sinnoh": "Sinnoh Sound on the radio",
   "swarm-yes": "Swarm only",
+  "daily-outbreak": "Daily outbreak only (check gate bulletin boards)",
+  "season-not-winter": "Spring, summer or autumn only",
   "bug-catching-contest-yes": "Bug-Catching Contest",
   "trade-any-pokemon": "Trade any Pokémon",
   "headbutt-tree-secret": "Secret tree",
