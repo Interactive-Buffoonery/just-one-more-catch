@@ -785,3 +785,141 @@ Advance game. Ruby and Sapphire remain separate Coming Soon entries.
   attributes and `include/global.fieldmap.h` collision bits. The western
   connection reaches at most x=41; grass begins at x=49, beyond westbound
   ledges. Its encounters therefore stay with the later Route 122 approach.
+
+## Ruby and Sapphire (`rs`)
+
+Original Game Boy Advance versions `ruby` / `sapphire`, encounter codes `R` /
+`S`. The 13 chapters, 19 events and area/row requirements in `data/rs.json`
+were sourced separately from Emerald. Each entry links its relevant source.
+
+- PokeAPI cached encounters, original Hoenn numbering (202), national bound
+  (386), generation-III types and species:
+  https://pokeapi.co/api/v2/pokedex/4/ and cached Pokémon encounter endpoints.
+  The supplied cache lacked `pokedex_4.json`; only that response was fetched.
+  No bulk PokeAPI fetch or scripted Bulbapedia request was made.
+- Cached walkthrough:
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire
+  Parts 1–3 establish Route 101 starters (Treecko, Torchic, Mudkip), the
+  opening through Rustboro, the Slakoth-for-Makuhita trade, Rusturf Tunnel,
+  Peeko and the Devon Letter. Part 4 establishes Dewford/Route 106, every
+  Granite Cave floor and Steven's Letter delivery before Briney's Slateport
+  destination; Flash is helpful for navigation, not an entry requirement.
+  Parts 5–6 establish Route 109, Slateport, the Museum, Route 110, Mauville,
+  Route 117 and the west shore of Route 118. Parts 7–8 establish Rock Smash
+  through Route 111 to Route 112, Fiery Path, Fallarbor, Route 114 and Meteor
+  Falls. Part 9 establishes the version-specific boss at Mt. Chimney,
+  Jagged Pass, Lavaridge's Wynaut Egg and Go-Goggles after Flannery.
+- Part 10: desert access requires Go-Goggles; the Root/Claw Fossils are a
+  choice, revived at Devon into Lileep/Anorith. Norman and Wally's father
+  provide Surf access; Wattson gives the Basement Key after the Balance
+  Badge. New Mauville's entrance precedes its locked inner door.
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_10
+- Part 8 explicitly says Route 115's only tall grass is in the north and
+  cannot be reached without Surf. Fishing remains available earlier.
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_8
+- Route 118: west beach is reachable from Mauville; the inlet separates it
+  from the eastern tall grass. Only walking rows receive a Surf gate.
+  https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_118
+- Part 11: Route 119, Weather Institute rescue and Castform, Fortree's
+  Pikachu-for-Skitty trade, and Devon Scope. The bridge Grunts block Fortree
+  until rescue; the Scope clears the Route 120 bridge. Ordinary wild
+  Kecleon rows do not require the Scope; its static encounters do.
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_11
+- Part 12: Route 121, Safari Zone (northwest Mach Bike, northeast Acro Bike),
+  Mt. Pyre and Route 122/123. Route 123's eastern grass is reached from Route
+  122; its westward ledges lead to the Berry Master's western terminus.
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_12
+  https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_123
+- Parts 13–14: submarine theft unlocks the Lilycove hideout; Ruby uses Magma
+  and Sapphire Aqua. Defeating Tabitha/Matt releases the eastern ocean
+  blocker. Parts 15–18 establish Mossdeep, Dive, Shoal Cave, Seafloor Cavern,
+  Sootopolis and the Cave of Origin (Groudon in Ruby, Kyogre in Sapphire),
+  Wallace's Rain Badge, Routes 129–131, Mirage Island and Pacifidlog's
+  Bellossom-for-Corsola trade. Part 19 establishes Routes 132–134 and the
+  Sealed Chamber; Part 20 establishes the individual Regi puzzles and
+  western sea routes/Abandoned Ship (reachable with Surf before the League).
+  Each relevant part is linked in the pack config. The three chamber-open
+  events represent completion of their full puzzle, including the Sealed
+  Chamber, instead of pretending that reaching a location unlocks a Regi.
+- Meteor Falls' back rooms and Bagon room need Surf + Waterfall:
+  https://bulbapedia.bulbagarden.net/wiki/Meteor_Falls
+  Part 15's Shoal Cave Chamber 4 requires Strength before descending into
+  the ice room (PokeAPI B3F). Part 21 describes Victory Road: B1F is reachable
+  before its boulders, while the described descent to B2F uses Strength and
+  Rock Smash. Earliest B2F alternatives remain a manual checkpoint.
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_21
+- Sky Pillar is postgame in R/S: “blocked off by walls of rocks until the
+  player enters the Hall of Fame.” Mach Bike is needed past 1F, including
+  Rayquaza's apex. Part 23 gives the floor route and roaming TV report:
+  Latios in Ruby, Latias in Sapphire, without Emerald's red/blue choice.
+  https://bulbapedia.bulbagarden.net/wiki/Sky_Pillar
+  https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ruby_and_Sapphire/Part_23
+- Badges/leaders and field HMs are sourced from walkthrough Parts 3, 4, 6,
+  9, 10, 11, 15 and 17 plus the Badge page. Cut/Stone, Flash/Knuckle,
+  Rock Smash/Dynamo, Strength/Heat, Surf/Balance, Fly/Feather, Dive/Mind,
+  Waterfall/Rain. Wallace is Gym Leader and Steven the Champion (Part 22).
+  The pack exposes catch-relevant tools and both Rydel bikes (Part 6).
+  https://bulbapedia.bulbagarden.net/wiki/Badge
+- RTC with no changing overworld lighting or time-specific wild encounter
+  tables: https://bulbapedia.bulbagarden.net/wiki/Time (Generation III).
+  Berries, Shoal Cave's six-hour tides and Mirage Island use the clock.
+  No `nightFrom` or invented day/night conditions are added. Automatic tide
+  restrictions are not modelled; see OPEN_QUESTIONS.md.
+- Original source, pinned to pret/pokeruby
+  `5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f`:
+  https://github.com/pret/pokeruby/tree/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f
+  No decompilation build, ROM or emulator was used. Relative paths below
+  refer to this revision:
+  - `src/pokemon_menu.c`: `sFieldMoveFuncs` and badge-index check confirm
+    the HM badge mapping independently of Emerald.
+  - `include/pokemon.h`: `struct BoxPokemon boxes[14][30]` supplies box limits.
+  - `data/maps/DewfordTown/scripts.inc`: `FLAG_DELIVERED_STEVEN_LETTER`
+    controls the Slateport destination.
+  - `data/maps/SlateportCity_OceanicMuseum_2F/scripts.inc` sets
+    `FLAG_HIDE_EVIL_TEAM_ROUTE110` after Stern's rescue.
+  - `data/maps/Route119_WeatherInstitute_2F/scripts.inc`: rescue clears
+    `FLAG_HIDE_EVIL_TEAM_WEATHER_INSTITUTE` and gives level-25 Castform.
+  - `data/maps/RustboroCity_DevonCorp_2F/scripts.inc`: revival consumes the
+    Root/Claw Fossil; `LavaridgeTown/scripts.inc` gives Wynaut's Egg;
+    `MossdeepCity_StevensHouse/scripts.inc` and `map.json` gate Beldum with
+    `FLAG_SYS_GAME_CLEAR` / its hidden object flag.
+  - `src/trade.c` and Rustboro/Fortree/Pacifidlog house scripts supply the
+    three trades. Required offered species are retained as PokeAPI conditions;
+    no badge proxy is added to these trades.
+  - `data/maps/SlateportCity_Harbor/scripts.inc` clears the two hideout
+    blockers after the submarine theft. `data/scripts/static_pokemon.inc`
+    places level-30 Electrode in the hideout in both versions. PokeAPI also
+    incorrectly tags the Ruby Magma hideout with Sapphire; `area_versions`
+    restricts Magma to Ruby and Aqua to Sapphire, following the cached
+    Team Magma Hideout / Team Aqua Hideout location articles.
+  - `data/maps/NewMauville_Inside/scripts.inc` has three level-25 Voltorb
+    statics and no Electrode static. PokeAPI's erroneous New Mauville
+    Electrode `static` row is excluded with the sourced `drop_rows` config;
+    its wild walking rows and the correct hideout statics remain intact.
+  - `data/maps/LilycoveCity_Harbor/scripts.inc`: the special voyage checks
+    `FLAG_SYS_GAME_CLEAR`, the actual Eon Ticket and its distribution flag.
+    `SouthernIsland_Interior/scripts.inc` selects the opposite Eon Pokémon.
+    Historical distribution availability is not implied by tracking it.
+  - `src/wild_encounter.c`: `FishingWildEncounter` checks Feebas before the
+    rod-specific table. Any rod works, using existing method support.
+  - `src/data/wild_encounters.json`: Route 130's land tables contain only
+    Wynaut. The cached Hoenn Route 130 article labels these grass encounters
+    as Mirage Island. Drop PokeAPI's duplicate Route 130 walking row so
+    Wynaut keeps the existing Mirage Island gate:
+    https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_130
+  - `src/data/pokemon/evolution.h`, `src/pokemon_3.c`, and
+    `src/evolution_scene.c` establish historical evolution text overrides:
+    original stones/friendship/beauty, Espeon noon–midnight, Umbreon
+    midnight–noon, and Nincada's level-20 empty-party-slot Shedinja.
+    Later-generation babies are excluded as pre-evolutions by generation.
+- No alternate form catalog is added: battle-only Castform transformations
+  and Spinda personality markings are excluded under the existing catalog
+  policy. Sprite source (all 386 regular and shiny files downloaded):
+  https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon/versions/generation-iii/ruby-sapphire
+  Existing Hoenn badges, kit icons and `public/covers/ru.jpg` / `sa.jpg` are
+  reused. The cover URLs are already recorded under Box art.
+- The access-audit helper now resolves all 103 R/S encounter areas from the
+  supplied cache, including Hoenn routes, Victory Road, Safari Zone and the
+  Weather Institute walkthrough fallback. This implementation's source pass
+  is not the independent Opus review or cartridge/browser verification.
+  No second scanned-guide source was consulted; see OPEN_QUESTIONS.md.

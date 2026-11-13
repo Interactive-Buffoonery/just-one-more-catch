@@ -36,6 +36,7 @@ import { VERSIONS } from "../client/packs.ts";
 
 const esc = (s: unknown) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
 const games = [
+  ["ruby-sapphire", "rs", "Hoenn"],
   ["emerald", "emerald", "Hoenn"],
   ["red-blue", "rb", "Kanto"],
   ["yellow", "yellow", "Kanto"],

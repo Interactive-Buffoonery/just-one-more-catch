@@ -45,7 +45,7 @@ def species(n):
 
 
 if __name__ == "__main__":
-    for dex in (2, 3, 4, 7, 21):  # Kanto, original Johto, Hoenn, HGSS Johto, USUM Alola
+    for dex in (2, 3, 4, 7, 21):  # Kanto, original Johto, Hoenn (R/S/E), HGSS Johto, USUM Alola
         get(f"{API}pokedex/{dex}")
     with ThreadPoolExecutor(4) as ex:  # ponytail: 4 workers keeps us well inside PokeAPI fair use
         list(ex.map(species, range(1, 808)))
