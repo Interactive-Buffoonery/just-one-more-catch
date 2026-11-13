@@ -111,11 +111,13 @@ Access questions the sources haven't settled yet. Answer one, then delete it.
   source levels are retained, not claimed as mandatory in-game levels.
   Coordinator should decide a shared variable-level presentation rather
   than introducing Red/Blue-only UI changes in this pack task.
-- The S.S. Anne dock is a temporary location after the ship departs. The
-  tracker models access via Bill's ticket but does not model losing access
-  after departure. Its source-backed PokeAPI fishing rows are retained;
-  verify an appropriate shared temporary-area presentation before claiming
-  all currently available encounters are exact.
+- **S.S. Anne temporary access:** original dock script checks
+  `EVENT_GOT_HM01` and destination warp 1 before triggering departure,
+  then sets `EVENT_SS_ANNE_LEFT` (see the pinned dock source in SOURCES.md).
+  Keep the fishing rows unchanged until the shared model can express
+  availability ending after a story event; positive prerequisites alone
+  cannot represent this. Departure timing is now source-confirmed, but
+  the temporary-area presentation remains open.
 - The shared box editor still offers later-generation metadata (gender,
   shiny and held-item fields). Red/Blue has no visible shiny art or held
   items; regular sprites intentionally fill shiny paths. Do not interpret

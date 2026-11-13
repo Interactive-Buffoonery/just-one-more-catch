@@ -328,6 +328,16 @@ Source inspection: pret/pokered revision
 All pret paths below are relative to:
 https://github.com/pret/pokered/tree/130ac3fa5493fb29a8005e8439fd31b4826e46af
 
+### Temporary dock access evidence
+
+- https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/VermilionDock.asm#L1-L40
+  Lines 5–11 check `EVENT_GOT_HM01`, destination warp 1 and
+  `EVENT_SS_ANNE_LEFT` before calling the departure script; line 40 sets
+  `EVENT_SS_ANNE_LEFT`. This confirms the departure trigger, without
+  establishing a new positive encounter prerequisite. The shared model
+  needs an availability-ending condition before these rows can be hidden
+  after departure. No encounter rows change on this evidence alone.
+
 ### Encounters, historical data and artwork
 
 - https://pokeapi.co/api/v2/pokemon/1/encounters and the corresponding
