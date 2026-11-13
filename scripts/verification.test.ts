@@ -20,6 +20,7 @@ function browser(outcome: "success" | "error" | "timeout" = "success") {
   vi.stubGlobal("window", window);
   vi.stubGlobal("localStorage", { getItem: () => "a".repeat(32) });
   vi.stubGlobal("document", {
+    querySelector: vi.fn(() => null),
     createElement: () => {
       const element = { style: {}, setAttribute: vi.fn(), remove: vi.fn() };
       containers.push(element);
@@ -43,6 +44,19 @@ test("loads lazily, reuses the API, binds visitor/action, and removes each widge
   expect(b.api.ready).toHaveBeenCalledTimes(1);
   expect(b.api.remove).toHaveBeenCalledTimes(2);
   expect(b.containers.slice(1).every(c => c.remove.mock.calls.length === 1)).toBe(true);
+});
+
+test("keeps an interactive challenge inside the active modal", async () => {
+  const b = browser();
+  const modal = { append: vi.fn() };
+  vi.mocked(document.querySelector).mockReturnValue(modal as unknown as Element);
+  const { verificationToken } = await import("../client/verification");
+  expect(await verificationToken("pairing")).toBe("one-use-token");
+  expect(document.querySelector).toHaveBeenCalledWith("dialog:modal");
+  expect(modal.append).toHaveBeenCalledWith(b.containers.at(-1));
+  expect(document.body.append).not.toHaveBeenCalled();
+  expect(b.api.remove).toHaveBeenCalledWith("widget");
+  expect(b.containers.at(-1)!.remove).toHaveBeenCalled();
 });
 
 test("failed challenges reject and clean up", async () => {

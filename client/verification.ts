@@ -52,7 +52,7 @@ export async function verificationToken(action: "contact" | "pairing" | "analyti
   const container = document.createElement("div");
   container.setAttribute("aria-label", "Security check");
   Object.assign(container.style, { position: "fixed", bottom: "16px", right: "16px", zIndex: "10000" });
-  document.body.append(container);
+  (document.querySelector("dialog:modal") ?? document.body).append(container);
   let widget: string | undefined;
   let timeout: ReturnType<typeof setTimeout> | undefined;
   try {
