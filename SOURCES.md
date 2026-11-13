@@ -1380,9 +1380,8 @@ Each hand-written gate/event also carries its source in `data/dp.json`.
   Gastrodon. These plus Unown are the local form catalogs. Rotom appliances,
   Origin Giratina and Sky Shaymin are not enabled for original D/P.
 - Unown event wording: Solaceon Ruins says the Ruin Maniac finishes
-  Maniac Tunnel "after seeing 26 different forms of Unown" and the Rare Candy
-  ledge needs "encountering 26 different kinds". The game's own code agrees
-  with "seen": the Pokédex records Unown letters when one is seen
+  Maniac Tunnel "after seeing 26 different forms of Unown". The game's own
+  code agrees with "seen": the Pokédex records Unown letters when one is seen
   (`SetSeenUnownLetter`,
   https://github.com/pret/pokediamond/blob/b623abef1b4dfe204ca50aab42447ac00c134290/arm9/src/pokedex.c#L226-L237)
   and the only Unown-counting script command is `ScrCmd_CountSeenUnown`
