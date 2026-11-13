@@ -71,6 +71,10 @@
     {"id": "expn-card", "label": "Get the EXPN Card", "q": "Did the Lavender radio manager give you the EXPN Card?", "chap": 8}
   ],
   "row_needs": [
+    {"place": "Ruins Of Alph Outside", "n": 177, "m": "walk", "needs": ["surf"], "src": "https://github.com/pret/pokecrystal/blob/3c813b0b4d82b39bf62185aceffb76fd6026c70b/maps/UnionCaveB1F.blk", "note": "Static collision trace: Surf reaches Ruins grass via Union Cave B1F (3,3) to Outside (6,19); no Strength needed. No grass is reachable from the Route 32/36 gates without Surf."},
+    {"place": "Ruins Of Alph Outside", "n": 194, "m": "walk", "needs": ["surf"], "src": "https://github.com/pret/pokecrystal/blob/3c813b0b4d82b39bf62185aceffb76fd6026c70b/maps/UnionCaveB1F.blk", "note": "Static collision trace: Surf reaches Ruins grass via Union Cave B1F (3,3) to Outside (6,19); no Strength needed. No grass is reachable from the Route 32/36 gates without Surf."},
+    {"place": "Ruins Of Alph Outside", "n": 195, "m": "walk", "needs": ["surf"], "src": "https://github.com/pret/pokecrystal/blob/3c813b0b4d82b39bf62185aceffb76fd6026c70b/maps/UnionCaveB1F.blk", "note": "Static collision trace: Surf reaches Ruins grass via Union Cave B1F (3,3) to Outside (6,19); no Strength needed. No grass is reachable from the Route 32/36 gates without Surf."},
+    {"place": "Ruins Of Alph Outside", "n": 235, "m": "walk", "needs": ["surf"], "src": "https://github.com/pret/pokecrystal/blob/3c813b0b4d82b39bf62185aceffb76fd6026c70b/maps/UnionCaveB1F.blk", "note": "Static collision trace: Surf reaches Ruins grass via Union Cave B1F (3,3) to Outside (6,19); no Strength needed. No grass is reachable from the Route 32/36 gates without Surf."},
     {"place": "Route 10", "n": 125, "m": "walk", "needs": ["surf"], "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Route_10", "quote": "have moved into a new grassy patch located nearby"},
     {"place": "Route 10", "n": 100, "m": "walk", "needs": ["surf"], "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Route_10", "quote": "have moved into a new grassy patch located nearby"},
     {"place": "Violet City", "n": 175, "m": "gift-egg", "needs": ["Zephyr"]},

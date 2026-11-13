@@ -2,13 +2,6 @@
 
 Access questions the sources haven't settled yet. Answer one, then delete it.
 
-## Crystal
-
-- Ruins of Alph Outside: is the Natu and Smeargle grass only reachable through Union Cave (Surf and Strength)?
-- Ice Path B2F: can you catch anything there before the B1F boulder puzzle?
-- Whirl Islands: does any floor need Waterfall?
-- Mt. Silver: which floors need Surf or Waterfall?
-
 ## HeartGold and SoulSilver
 
 - Ruins of Alph Outside: same grass question as Crystal.
