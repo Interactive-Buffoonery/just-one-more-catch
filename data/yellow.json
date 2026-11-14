@@ -603,7 +603,7 @@
         "surf"
       ],
       "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/CeruleanCity.blk",
-      "note": "Static map trace: no on-foot fishing bank; Surf from Route 24 reaches land at (2,13). See SOURCES.md, Yellow static map trace."
+      "note": "Static map trace: no on-foot fishing bank; Surf from Route 24 reaches land at (2,13). See sources/yellow.md, Yellow static map trace."
     },
     {
       "place": "Cerulean City",
@@ -613,7 +613,7 @@
         "surf"
       ],
       "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/CeruleanCity.blk",
-      "note": "Static map trace: no on-foot fishing bank; Surf from Route 24 reaches land at (2,13). See SOURCES.md, Yellow static map trace."
+      "note": "Static map trace: no on-foot fishing bank; Surf from Route 24 reaches land at (2,13). See sources/yellow.md, Yellow static map trace."
     },
     {
       "place": "Cerulean City",
@@ -623,7 +623,7 @@
         "surf"
       ],
       "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/CeruleanCity.blk",
-      "note": "Static map trace: no on-foot fishing bank; Surf from Route 24 reaches land at (2,13). See SOURCES.md, Yellow static map trace."
+      "note": "Static map trace: no on-foot fishing bank; Surf from Route 24 reaches land at (2,13). See sources/yellow.md, Yellow static map trace."
     },
     {
       "place": "Cerulean City",
@@ -633,7 +633,7 @@
         "surf"
       ],
       "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/CeruleanCity.blk",
-      "note": "Static map trace: no on-foot fishing bank; Surf from Route 24 reaches land at (2,13). See SOURCES.md, Yellow static map trace."
+      "note": "Static map trace: no on-foot fishing bank; Surf from Route 24 reaches land at (2,13). See sources/yellow.md, Yellow static map trace."
     },
     {
       "place": "Cerulean City",
@@ -643,7 +643,7 @@
         "surf"
       ],
       "src": "https://github.com/pret/pokeyellow/blob/b452f2ab07185075140061c5084ab866d5e4a794/maps/CeruleanCity.blk",
-      "note": "Static map trace: no on-foot fishing bank; Surf from Route 24 reaches land at (2,13). See SOURCES.md, Yellow static map trace."
+      "note": "Static map trace: no on-foot fishing bank; Surf from Route 24 reaches land at (2,13). See sources/yellow.md, Yellow static map trace."
     }
   ],
   "evolution_overrides": {

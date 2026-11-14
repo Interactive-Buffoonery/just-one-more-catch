@@ -77,7 +77,7 @@ something the app models (a badge, a kit id, or an event in the pack's
   `python3 scripts/build_data.py <pack>`, and diff it. Only the rows you meant
   to gate should change.
 
-Don't merge these. List them for Sarah, and add any still open to `OPEN_QUESTIONS.md`:
+Don't merge these. List them for Sarah, and add any still open to `sources/<pack>.md#open-questions`:
 - Flags that need something unmodeled (Johto-pack Cut, Flash, Rock Climb,
   Bicycle, Safari layout unlocks, Primo codes, "all three beasts caught").
   Adding a new event or kit item is a product decision.

@@ -4,7 +4,7 @@ Pack and version: `emerald`; encounter code `e`; original Game Boy Advance.
 
 The pack contains 386 species (202 regional entries), 755 encounter rows,
 112 display areas and 14 chapters. Data comes from the cached PokeAPI pipeline;
-hand-written access and metadata sources are listed in `SOURCES.md` and linked
+hand-written access and metadata sources are listed in `sources/emerald.md` and linked
 from `data/emerald.json`. Sprites include all 386 regular and shiny images.
 
 The implementation retains the existing picker and playthrough UI. It reuses
@@ -57,7 +57,7 @@ See [save-import validation](save-import.md) for verified formats and limits.
   tiles. The Berry Master section ends at x=41; grass starts at x=49.
   Kept encounter rows behind the later Route 122 approach, with Devon Scope.
 - The unresolved Victory Road B2F access question is tracked in
-  [OPEN_QUESTIONS.md](../OPEN_QUESTIONS.md#emerald).
+  [sources/emerald.md#open-questions](../sources/emerald.md#open-questions).
 
 ## Known limitations
 

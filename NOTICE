@@ -9,7 +9,7 @@ artwork are trademarks and copyrights of Nintendo, Creatures Inc. and
 GAME FREAK inc. This is an unofficial fan project, not affiliated with or
 endorsed by them. The artwork under public/sprites/, public/covers/,
 public/badges/ and public/items/ is theirs and is not covered by the GPL.
-SOURCES.md lists where each piece came from.
+SOURCES.md and sources/<pack>.md list where each piece came from.
 
 Third-party components:
 

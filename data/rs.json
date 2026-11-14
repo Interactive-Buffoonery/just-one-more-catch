@@ -234,14 +234,14 @@
         "rock-smash"
       ],
       "src": "https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/VictoryRoad_B1F/map.json",
-      "note": "Static collision/warp trace from both 1F entrances reaches no B2F encounter tile without either Strength or Rock Smash; with both, the southern approach reaches B2F (30,26). See SOURCES.md."
+      "note": "Static collision/warp trace from both 1F entrances reaches no B2F encounter tile without either Strength or Rock Smash; with both, the southern approach reaches B2F (30,26). See sources/rs.md."
     },
     "Hoenn Route 123": {
       "needs": [
         "scope"
       ],
       "src": "https://github.com/pret/pokeruby/blob/5784633ce4ef7ade1a7f2d2d0c288e3d5e6cdd7f/data/maps/Route123/map.json",
-      "note": "Static map trace from Route 118 reaches only the western terminus (x=0..41), with no encounter grass, water or fishing shore; the Route 122 approach reaches encounter tiles. See SOURCES.md."
+      "note": "Static map trace from Route 118 reaches only the western terminus (x=0..41), with no encounter grass, water or fishing shore; the Route 122 approach reaches encounter tiles. See sources/rs.md."
     },
     "Meteor Falls Backsmall Room": {
       "needs": [

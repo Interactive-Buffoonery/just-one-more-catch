@@ -4,7 +4,7 @@ Implementation source review; independent audit pending. Pack `sm`, versions `su
 
 The cached PokeAPI preflight found 102 matching areas and 891 Sun / 890 Moon encounter-detail records. Two Sun records at Hoenn’s New Mauville (Voltorb/Electrode) are dropped, leaving 101 retained areas and 889 / 890 raw details. The generator merges these into 890 rows across versions. Every retained area resolves to a cached Bulbapedia location page. This inventory is a reviewer work list, not proof that each terrain boundary was independently traced.
 
-Sources and gate excerpts live in `data/sm.json` and `SOURCES.md`; unresolved terrain and cache limitations live in `OPEN_QUESTIONS.md`. Rebuild the work list with `python3 scripts/access_audit.py areas sm`.
+Sources and gate excerpts live in `data/sm.json` and `sources/sm.md`; unresolved terrain and cache limitations live in `sources/sm.md#open-questions`. Rebuild the work list with `python3 scripts/access_audit.py areas sm`.
 
 ## Area work list
 

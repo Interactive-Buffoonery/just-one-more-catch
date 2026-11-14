@@ -1,8 +1,8 @@
 # Black 2 / White 2 access work list
 
-Implementation inventory, not an independent access certification. All 137 PokeAPI areas have a cached parent/location article match. A match does not prove a numbered room mapping or its earliest encounter tile. See `OPEN_QUESTIONS.md` for unresolved mappings. Chapter numbers below are zero-based.
+Implementation inventory, not an independent access certification. All 137 PokeAPI areas have a cached parent/location article match. A match does not prove a numbered room mapping or its earliest encounter tile. See `sources/b2w2.md#open-questions` for unresolved mappings. Chapter numbers below are zero-based.
 
-Encounter rows are generated from PokeAPI plus sourced outbreak supplements in `extra_encounters` (19 rows per version). Outbreaks require the postgame League milestone and are labeled as daily conditions; the app does not predict the active location. Area-specific and species-specific requirements and their citations live in `data/b2w2.json`; chapter progression is cited there and in `SOURCES.md`.
+Encounter rows are generated from PokeAPI plus sourced outbreak supplements in `extra_encounters` (19 rows per version). Outbreaks require the postgame League milestone and are labeled as daily conditions; the app does not predict the active location. Area-specific and species-specific requirements and their citations live in `data/b2w2.json`; chapter progression is cited there and in `sources/b2w2.md`.
 
 | PokeAPI area label | Chapter | Area requirements | Cached source |
 | --- | --- | --- | --- |

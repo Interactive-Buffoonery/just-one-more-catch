@@ -56,11 +56,11 @@ ordinary encounter rows; the shrine rows retain their Champion requirement.
 ## Evidence limits
 
 Haina's Gabite and Castform SOS rows now carry their weather conditions; see
-`SOURCES.md`. Lush Jungle's ambush block appears under PokeAPI South and West,
+`sources/usum.md`. Lush Jungle's ambush block appears under PokeAPI South and West,
 which matches Bulbapedia's shared Central and north table, so both stay.
 Wailmer's Poni Breaker Coast bubble row mixes fishing and splash
 levels/odds, so it remains unchanged pending a sourced split.
-These issues are recorded in `OPEN_QUESTIONS.md`.
+These issues are recorded in `sources/usum.md#open-questions`.
 
 ## Verification
 
