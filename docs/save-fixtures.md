@@ -10,7 +10,7 @@ For my setup, I use an existing Playwright installation and Chromium. `PLAYWRIGH
 
 The non-GB sets share the same steps: generate saves, build the website, then run their verifier. Their native checks, independent raw-bit checks and published WASM must agree on exact caught/seen arrays, identities and complete `national-dex` coverage. Unrelated worker filenames must not influence detection; zero-filled and truncated files must fail, and input buffers and file digests must remain unchanged. Harnesses block external requests and close their own browser and loopback server. Receipts such as `native-results.json`, `wasm-results.json` and `website-results.json` stay local.
 
-Real player saves, live signed-in account imports and mobile Safari need separate checks. The opt-in harnesses do not download fixtures or ROMs. `pnpm test:convex` separately covers maintained adapter, guest and simulated-account persistence without external binaries.
+Real player saves, live signed-in account imports and mobile Safari need separate checks. `pnpm test:convex` separately covers maintained adapter, guest and simulated-account persistence without external binaries.
 
 ## GB/GBC
 
