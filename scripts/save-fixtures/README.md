@@ -10,7 +10,9 @@ it does not contact a production backend.
    `red_blue/pokemon_red.sav`, `yellow/pokemon_yellow.sav`,
    `gold_silver/pokemon_gold.sav`, `crystal/pokemon_crystal.sav`.
    Use `https://raw.githubusercontent.com/ncorgan/pksav-test-saves/<revision>/<path>`.
-2. Create `.cache/save-tests/synthetic/`. With .NET 10, run:
+2. Create `.cache/save-tests/synthetic/`. With .NET 10, run (install it per user
+   with Microsoft's `dotnet-install.sh --channel 10.0`; the Homebrew cask stops
+   at a password prompt):
 
    ```sh
    dotnet run --project scripts/save-fixtures/GenerateGb.csproj \
