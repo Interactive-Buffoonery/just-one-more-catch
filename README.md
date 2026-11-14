@@ -93,8 +93,8 @@ pnpm exec convex dev  # back end; keep it running
 pnpm dev              # site on http://localhost:5173
 ```
 
-New worktrees: `scripts/setup-worktree.sh` copies `.env.local` and
-`.env.production` from the main checkout and installs dependencies. A git
+New worktrees: `scripts/setup-worktree.sh` copies `.env.local` from the main
+checkout, links `.env.production` to it, and installs dependencies. A git
 hook runs it on `git worktree add` once you turn hooks on in the main
 checkout: `git config core.hooksPath "$PWD/.githooks"`. Setup runs the
 branch's install scripts, so for a branch you don't trust, use
