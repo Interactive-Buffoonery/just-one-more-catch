@@ -167,3 +167,8 @@ persisted locally; they are not a person or device identity. Clearing storage
 can rotate the value, but each anonymous write still needs a fresh successful
 Turnstile check. Anonymous analytics remains approximate and rate limited. Failed analytics
 verification drops the event without blocking guest play.
+
+## License
+
+GPL-3.0-or-later. See [LICENSE](LICENSE). Pokémon artwork belongs to
+Nintendo, Creatures and GAME FREAK; see [NOTICE](NOTICE).

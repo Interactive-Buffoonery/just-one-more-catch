@@ -8,7 +8,7 @@ from PokeAPI and needs no source.
    (see the `audit-access` skill).
 2. **StrategyWiki**: a second walkthrough, good for breaking ties. It also
    blocks scripted fetches, so open it in a browser.
-3. **Official strategy guides**: scanned PDFs in Sarah's iCloud
+3. **Official strategy guides**: archive.org scans kept in a local
    `game-guides/` folder. Read them with the `read-guide` skill.
 4. **Serebii**: last tiebreaker.
 5. **pret decompilations**: the games' own map scripts and event data, best
