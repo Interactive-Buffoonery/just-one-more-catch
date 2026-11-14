@@ -1,32 +1,21 @@
 # Contact form
 
-The page at `/contact/` calls the `api.runs.contact` action. It accepts an optional reply
-email and a message, and never accepts attachments.
+`/contact/` calls `api.runs.contact` with an optional reply email and a message; attachments are never
+accepted. Server checks run before storage or email scheduling:
 
-Spam checks run on the server before a message is stored or an email is queued:
+- Discard a filled hidden website field; reject blank messages, invalid reply addresses and oversized fields.
+- Do not store or notify twice for the latest identical message and reply address.
+- Require anonymous callers to supply a fresh server-verified Turnstile proof with the expected action, hostname and browser visitor value.
+- Allow each signed-in account or verified browser visitor two messages immediately, replenishing three per hour.
 
-- A hidden website field discards submissions that fill the bot trap.
-- Blank messages, invalid reply addresses and oversized fields are rejected.
-- Repeating the latest identical message and reply address does not store or
-  notify twice.
-- Anonymous submissions require a server-verified Turnstile proof with the
-  expected action, hostname and browser visitor value before accepting a message.
-- Each signed-in account or verified browser visitor can send two messages
-  immediately and replenishes three messages per hour.
+The Convex rate-limiter applies quotas transactionally in `convex/contactSpam.ts`. A limited request returns a
+wait time without storage, a contact event or email. Keep the draft and show when to retry. Clean up inactive
+caller quotas after two days.
 
-The Convex rate-limiter component applies these limits transactionally. Requests
-that hit a limit return a wait time without storing a message, recording a
-contact event or scheduling email. The page keeps the draft and shows when to
-try again. Limits live in `convex/contactSpam.ts`.
+These limits bound accepted submissions per caller, not requests reaching Convex. Visitor values can rotate;
+there is no site-wide notification cap or IP blocking. Configure the Turnstile site key, backend secret and
+hostname as described in [deployment.md](deployment.md#turnstile).
 
-These controls bound accepted submissions and notifications per caller; they do
-not stop requests from reaching Convex. Browser visitor values can rotate, but
-each anonymous submission still needs a fresh successful Turnstile proof. There
-is no site-wide notification cap or IP-based blocking. See [deployment.md](deployment.md#turnstile) for the
-required Turnstile site key, backend secret and hostname configuration. Inactive
-caller quota records are cleaned up after two days.
-
-Run `pnpm test:convex` for the backend spam checks and `pnpm check` for form
-validation, repeat-click prevention, draft retention and retry copy. Deployment
-must include the registered rate-limiter component with the backend before the
-new form is served. Normal manual deployment remains `pnpm run deploy`.
+Run `pnpm test:convex` for spam checks and `pnpm check` for validation, repeat-click prevention, draft
+retention and retry copy. Deploy the backend with its registered rate-limiter before serving the form,
+manually through `pnpm run deploy`.

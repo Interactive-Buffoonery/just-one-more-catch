@@ -1,63 +1,35 @@
 # Progress sharing
 
-A player can publish a read-only snapshot of one playthrough and share its link. Sharing is off for every playthrough until the owner turns it on.
+Owners can publish a read-only snapshot of one playthrough. Sharing starts off; sign-in, guest migration, import and new runs never enable it. Guests may preview but must sign in to publish.
 
-## What the link shows
+## Public contents
 
-One playthrough, exactly:
+Show only game, region and box art from `VERSIONS[version]` and its pack; caught species with sprite, name and national number; and completed badges/trials. Show the postgame case only when a postgame badge exists. Use `pack.badgesWord` / `pack.badgeWord`; drop “Elite Four”, which is not a catalog badge. Counts come from these lists, with no percentages.
 
-- Game, region and box art (from `VERSIONS[version]` and its pack).
-- Completed badges or trials, drawn as the pack's badge case. Postgame case only when at least one postgame badge is recorded. Heading uses `pack.badgesWord` / `pack.badgeWord`.
-- Caught species: sprite, name, national number.
-- Counts derived from those two lists ("3 of 8", "18 caught"). No percentages.
+Exclude timestamps, account/trainer identity, nicknames, notes, shinies, genders, forms, party, boxes, held items, locations, clock and story events.
 
-Never shown: timestamps, account or trainer identity, nicknames, notes, shinies, genders, forms, party, boxes, held items, locations, clock, story events. "Elite Four" is not a catalog badge and is dropped.
-
-## Projection
-
-`shared/share-projection.ts`, pure, used by the client, the publish mutation and the HTTP reader:
+The client, publish mutation and HTTP reader use pure `shared/share-projection.ts`:
 
 ```ts
 type ShareProjection = { v: 1; game: VersionId; caught: number[]; badges: string[] };
 ```
 
-- `projectionOf(stateJson, version)` builds it from raw state, never from `Summary` (which carries party nicknames).
-- `validateProjection(x: unknown)` accepts exactly those four keys; `game` in `VERSION_IDS`; `caught` strictly increasing safe integers in `1..IMPORT_SPECIES_LIMITS[game]`; `badges` unique members of the game's milestone catalog in catalog order; serialized size at most 8 KiB. Unknown keys are rejected, not stripped.
-- Milestone catalog lives in `shared/milestones.ts`; `client/packs.ts` imports its badge arrays from there.
-- Species names come from a generated `shared/species-names.ts`; the reader never sends names.
+`projectionOf(stateJson, version)` reads raw state, never `Summary`, which carries party nicknames. `validateProjection(x: unknown)` requires exactly these four keys and rejects unknown keys. Require `game` in `VERSION_IDS`, strictly increasing safe integer `caught` IDs in `1..IMPORT_SPECIES_LIMITS[game]`, unique catalog-ordered `badges` from the game's milestone catalog, and serialized size at most 8 KiB.
 
-## Links
+`client/packs.ts` imports badge arrays from `shared/milestones.ts`. Resolve names from generated `shared/species-names.ts`; the reader never sends them. Owner preview and public page share one renderer.
 
-- URL: `https://justonemorecatch.app/share/#s=<token>`. The fragment keeps the token out of the static host request.
-- Token: 32 random bytes, base64url (43 chars), generated server side. Stored recoverably on the private share row so the owner can copy it again.
-- One active share per run. Each run has a monotonic `shareRevision`; create, update, replace and stop all compare and increment it. Stop increments it even when no share row exists, so a delayed create cannot bring a stopped link back.
-- Replace issues a new token and invalidates the old one in the same mutation.
+## Publishing and links
 
-## Owner flow
+Dashboard **Share progress**, Journey/Dex/Boxes share icons and the playthrough **...** menu open the same sheet. Await pending saves before rendering the exact preview; stop on failure. Previewing never publishes. **Create link** sends that projection; the mutation recomputes it from stored state and rejects mismatches with a fresh preview.
 
-1. **Share progress** (smaller pill on the dashboard resume card), the share icon on Journey, Dex and Boxes, and the playthrough **...** menu item all open the same sheet for that run.
-2. Opening the sheet saves pending changes (awaited; failure stops the flow) and renders the exact preview. Nothing is written.
-3. **Create link** sends the previewed projection. The mutation recomputes it from stored state and rejects on mismatch with a fresh preview.
-4. With a link: **Copy link**, native share, **Update snapshot** (new preview first), **Replace link**, **Stop sharing**. A stale notice compares stored and current counts.
-5. Guests can preview but must sign in before creating a link. Sign-in, guest migration, import and new playthroughs never turn sharing on.
+Owners can copy or natively share links, update after a new preview, replace links or stop sharing. A stale notice compares stored and current counts. Allow one active share per run. Compare and increment monotonic `shareRevision` on create/update/replace/stop, even when stopping without a share row, so delayed creates cannot restore stopped links. Replace invalidates the old token atomically.
 
-## Public reader
+Use `https://justonemorecatch.app/share/#s=<token>` so the fragment keeps tokens out of static host requests. Generate 32 random bytes server-side, base64url encoded (43 chars), and store recoverably on the private row for copying again.
 
-- One Convex HTTP action. Token is sent in a request header, never in the URL. Validates token format before any database work, looks up the share row by index, checks the account is not being deleted, revalidates the stored projection and returns it. Never reads `states`.
-- Unknown, stopped, replaced, deleted and malformed tokens all return the same unavailable response. Timing is not uniform and is not claimed to be.
-- `Cache-Control: no-store`. Tight CORS to the site origin.
+## Reading and deletion
 
-## Public page
+The Convex HTTP action receives tokens in a header, never the URL. Validate format before database work, look up by index, check the account-deletion marker and revalidate the stored projection. Never read `states`. Unknown, stopped, replaced, deleted and malformed tokens share one unavailable response; timing is not uniform. Send `Cache-Control: no-store` with CORS restricted to the site origin.
 
-- `share/index.html`, a separate Vite input like `contact/`. No Clerk, no Convex client, no analytics, no service worker registration.
-- `client/main.ts` branches on `/share/` and does one `fetch`.
-- `noindex, nofollow`, `Referrer-Policy: no-referrer`, generic Open Graph card (same as the home page). `/share/` stays out of the service worker's app pages.
-- Owner preview and public page use one renderer, so the preview is what the link shows.
+`share/index.html` is a separate Vite input like `contact/`. `client/main.ts` branches on `/share/` for one `fetch`. Load no Clerk, Convex client, analytics or service worker registration. Use `noindex, nofollow`, `Referrer-Policy: no-referrer` and the home page's generic Open Graph card. Keep `/share/` out of service-worker app pages.
 
-## Deletion
-
-- Deleting a playthrough deletes its share in the same mutation (`dropRun`).
-- Deleting the account writes an account-wide deleting marker before batched cleanup starts; public reads and publishes check it.
-- Clerk `user.deleted` webhook (signature-verified, idempotent) sets the same marker for deletions made outside the app.
-
-Stopping a link stops future reads. It cannot recall screenshots, copies or cached pages.
+`dropRun` deletes the share atomically with its playthrough. Account deletion sets an account-wide marker before batched cleanup; reads and publishes check it. The signature-verified, idempotent Clerk `user.deleted` webhook sets that marker for external deletions. Stopping blocks future reads but cannot recall screenshots, copies or cached pages.
