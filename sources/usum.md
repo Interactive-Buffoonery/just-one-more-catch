@@ -13,8 +13,7 @@ The USUM sections of the location pages linked in `data/usum.json`'s
 `area_methods` identify rustling grass/trees/bushes, dirt/sand clouds,
 flying shadows, Dividing Peak Tunnel shadows and water splashes. These
 place/species overrides correct PokeAPI's shared bubbling-spots bucket;
-fishing methods retain their rod requirement. See `docs/usum-access-audit.md`
-for the complete row inventory and cache limitations.
+fishing methods retain their rod requirement. Cache limitations are listed below.
 
 - https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Ultra_Sun_and_Ultra_Moon/Part_21
   sails to Poni after clearing Aether Paradise.

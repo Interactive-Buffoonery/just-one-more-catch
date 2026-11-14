@@ -248,7 +248,6 @@ Independent access review remains pending.
   block integration. Three independent-review findings were checked against
   cached sources and corrected: the Route 9 stone gate, Black Landorus's
   deferred-catch condition, and Cut on Dreamyard dark grass/B1F.
-  See `docs/bw-access-audit.md` for the reviewer work list.
 
 The existing gap-fill format now supplies the six NPC-trade species and
   Desert Resort's level 35 Darmanitan statues, with trade partners, Munchlax's
@@ -257,6 +256,59 @@ The existing gap-fill format now supplies the six NPC-trade species and
 - **Roamers:** Tornadus (Black) and Thundurus (White) now appear at level 40
   under Roaming Unova after Legend and the Route 7 release. Gate bulletin
   boards identify their stormy-weather route.
+
+
+### Location references
+
+- https://bulbapedia.bulbagarden.net/wiki/Abundant_Shrine
+- https://bulbapedia.bulbagarden.net/wiki/Castelia_City
+- https://bulbapedia.bulbagarden.net/wiki/Celestial_Tower
+- https://bulbapedia.bulbagarden.net/wiki/Challenger's_Cave
+- https://bulbapedia.bulbagarden.net/wiki/Chargestone_Cave
+- https://bulbapedia.bulbagarden.net/wiki/Cold_Storage
+- https://bulbapedia.bulbagarden.net/wiki/Desert_Resort
+- https://bulbapedia.bulbagarden.net/wiki/Dragonspiral_Tower
+- https://bulbapedia.bulbagarden.net/wiki/Dreamyard
+- https://bulbapedia.bulbagarden.net/wiki/Driftveil_City
+- https://bulbapedia.bulbagarden.net/wiki/Driftveil_Drawbridge
+- https://bulbapedia.bulbagarden.net/wiki/Giant_Chasm
+- https://bulbapedia.bulbagarden.net/wiki/Icirrus_City
+- https://bulbapedia.bulbagarden.net/wiki/Liberty_Garden
+- https://bulbapedia.bulbagarden.net/wiki/Lostlorn_Forest
+- https://bulbapedia.bulbagarden.net/wiki/Marvelous_Bridge
+- https://bulbapedia.bulbagarden.net/wiki/Mistralton_Cave
+- https://bulbapedia.bulbagarden.net/wiki/Moor_of_Icirrus
+- https://bulbapedia.bulbagarden.net/wiki/N's_Castle
+- https://bulbapedia.bulbagarden.net/wiki/Nacrene_City
+- https://bulbapedia.bulbagarden.net/wiki/Nuvema_Town
+- https://bulbapedia.bulbagarden.net/wiki/P2_Laboratory
+- https://bulbapedia.bulbagarden.net/wiki/Pinwheel_Forest
+- https://bulbapedia.bulbagarden.net/wiki/Relic_Castle
+- https://bulbapedia.bulbagarden.net/wiki/Striaton_City
+- https://bulbapedia.bulbagarden.net/wiki/Twist_Mountain
+- https://bulbapedia.bulbagarden.net/wiki/Undella_Bay
+- https://bulbapedia.bulbagarden.net/wiki/Undella_Town
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_1
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_10
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_11
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_12
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_13
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_14
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_15
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_16
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_17
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_18
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_2
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_3
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_4
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_5
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_6
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_7
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_8
+- https://bulbapedia.bulbagarden.net/wiki/Unova_Route_9
+- https://bulbapedia.bulbagarden.net/wiki/Victory_Road_(Black_and_White)
+- https://bulbapedia.bulbagarden.net/wiki/Village_Bridge
+- https://bulbapedia.bulbagarden.net/wiki/Wellspring_Cave
 
 ## Open questions
 

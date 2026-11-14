@@ -132,6 +132,9 @@ include those baselines, rather than asserting the species is locally caught.
 
 ## Box art
 
+- Pokémon Emerald 3DS project logo (`emerald-3ds.avif`): https://emerald-3ds.com/assets/logo-DlkkOg0E.avif
+- Project: https://emerald-3ds.com/
+
 - Covers keep the full source image and its proportions, at up to 512px on
   the longest side, saved as JPEG at quality 92. The app uses
   `object-fit: contain` so square frames show the complete artwork.
