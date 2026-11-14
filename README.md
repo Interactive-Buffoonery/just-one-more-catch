@@ -1,22 +1,31 @@
 # Just One More Catch
 
-What can I catch right now? A tracker for retro Pokémon playthroughs, from Game
-Boy to 3DS.
+_What can I catch right now?_
 
-Live at https://justonemorecatch.app
+Just One More Catch is a tracker for Pokémon playthroughs. Our current focus is
+retro Pokémon games, from the original Game Boy games through 3DS, plus the two
+Switch LeafGreen and FireRed re-releases. Eventually we hope to add newer
+Pokémon games and maybe even some of the more popular or unique ROM hacks. If
+you'd like us to add another game, you can
+[open an issue here](https://github.com/Interactive-Buffoonery/just-one-more-catch/issues/new).
 
-## How it fits together
+This repository is the source code for https://justonemorecatch.app.
+
+Pokémon artwork belongs to Nintendo, Creatures and GAME FREAK and we make
+absolutely no claim to this artwork. Please see [NOTICE](NOTICE) for our full
+disclaimer.
+
+## How the site backend works
 
 - **Site:** plain TypeScript built with Vite. No framework. Hosted on
-  Cloudflare as a static Worker (`wrangler.jsonc`), on the custom domain
+  Cloudflare as a static Worker (`wrangler.jsonc`), with the custom domain
   justonemorecatch.app.
 - **Back end:** Convex stores playthroughs (one JSON state each) and contact
   messages, and handles account deletion.
 - **Sign-in:** Clerk, with Google, email codes or a password. The sign-in form is Clerk's
   own UI (`@clerk/ui`), styled to match the app.
 - **Guests:** playthroughs live in the browser until someone signs in, then
-  move to their account. The site still works as a guest if Clerk fails to
-  load.
+  move to their account.
 
 ## Where things live
 
@@ -61,37 +70,36 @@ Story gates (chapters, story steps, HM badge rules) are written by hand and
 must be sourced. Start with [the game-addition checklist](docs/adding-games.md)
 and `.agents/skills/add-game/SKILL.md` before adding or changing a pack.
 
-## Accounts and settings
-
-- **Convex:** project `just-one-more-catch`. Dev deployment
-  `chatty-lyrebird-992`, production `blissful-cod-978`.
-- **Clerk:** one app with a development and a production instance. Production
-  uses `clerk.justonemorecatch.app` and its own Google OAuth client.
-- **Cloudflare:** Worker `just-one-more-catch`. The domain's DNS is on
-  Cloudflare, including Clerk's records, which must stay "DNS only".
-- **Settings in files** (git-ignored, never commit them):
-  - `.env.local`: Convex dev values (written by `pnpm exec convex dev`) and
-    `VITE_CLERK_PUBLISHABLE_KEY` with the `pk_test_` key.
-  - `.env.production`: `VITE_CLERK_PUBLISHABLE_KEY` with the `pk_live_` key.
-- **Settings in Convex:** `CLERK_JWT_ISSUER_DOMAIN`, `CLERK_SECRET_KEY`
-  (used by the device sign-in and device list actions), `RESEND_API_KEY` (a
-  sending-only key for `mail.justonemorecatch.app`) and `CONTACT_TO` (where
-  contact-form messages are emailed) on each deployment. Set them with
-  `pnpm exec convex env set`, and add `--prod` for production.
-- **Email:** Cloudflare Email Routing forwards `contact@justonemorecatch.app`
-  to `justonemorecatch@gmail.com`. Resend sends the contact-form
-  notifications from `notify@mail.justonemorecatch.app` to the same inbox
-  (`CONTACT_TO`).
-- The Clerk secret key lives only in Convex, on dev (`sk_test_`) and prod
-  (`sk_live_`). Keep it out of this repo.
-
 ## Run locally
+
+You need Node 22.18 or later, pnpm and Python 3. To run this as written,
+you'll also need to set up a local Convex development instance.
 
 ```sh
 pnpm install
-pnpm exec convex dev  # back end; keep it running
-pnpm dev              # site on http://localhost:5173
+pnpm exec convex dev --once   # log in and create a free dev deployment
+pnpm exec convex env set CLERK_JWT_ISSUER_DOMAIN https://example.clerk.accounts.dev
+pnpm exec convex dev          # keep it running
+pnpm dev                      # in a second terminal: http://localhost:5173
 ```
+
+The first `convex dev --once` creates the deployment and writes
+`VITE_CONVEX_URL` to `.env.local`, then stops because the Clerk setting is
+missing. The placeholder lets it deploy without a Clerk account.
+
+Sign-in is optional. Without a Clerk key the site runs in guest mode and
+playthroughs stay in the browser. To try sign-in, create a Clerk development
+instance, add `VITE_CLERK_PUBLISHABLE_KEY` to `.env.local`, and replace the
+placeholder: set `CLERK_JWT_ISSUER_DOMAIN` and `CLERK_SECRET_KEY` with
+`pnpm exec convex env set`. In development, Clerk accepts test emails like
+`name+clerk_test@example.com` with the code `424242`.
+
+As a guest, the contact form and device pairing also need Cloudflare
+Turnstile keys (see [Turnstile](docs/deployment.md#turnstile)).
+Without them, both show "Verification unavailable". Everything else works.
+
+Run `pnpm check` before opening a pull request. For CSS changes, also run
+`pnpm check:styles`.
 
 New worktrees: `scripts/setup-worktree.sh` copies `.env.local` from the main
 checkout, links `.env.production` to it, and installs dependencies. A git
@@ -101,74 +109,16 @@ branch's install scripts, so for a branch you don't trust, use
 `git worktree add --no-checkout` to skip the hook and review it before
 installing.
 
-In development, Clerk accepts test emails like `name+clerk_test@example.com`
-with the code `424242`.
-
 ## Save imports
 
 See [the save-import guide](docs/save-import.md) for the browser reader, release
 assets, testing and how to add official games or ROM hacks.
 
-## Deploy
+## Running the live site
 
-```sh
-pnpm run deploy
-```
-
-- Pushes Convex functions to production. Answer **y** when it asks (where it
-  can't prompt, add `--yes` to the `convex deploy` command).
-- Builds the site with `.env.production`. The script removes development Clerk
-  and Turnstile keys first, because `convex deploy` loads `.env.local`, then stops the deploy if
-  the build doesn't contain the live (`pk_live_`) key.
-- Uploads `dist/` to the Cloudflare Worker with `wrangler deploy`. Run
-  `pnpm exec wrangler login` once first.
-
-## Analytics
-
-Browser event counts are approximate: verified visitors can still forge events.
-Telemetry has a daily cap of 100 events per account or verified browser visitor,
-with a burst limit of 10 per minute for each.
-Contact counts are recorded only when a message is accepted. Raw event records
-expire after 90 days; an hourly job removes expired records in batches of 100.
-The stats report uses the same 90-day window. Rate-limit keys and their component
-records are removed hourly after two days without activity, longer than any of
-these quota windows.
-
-## Anonymous write protection
-
-Guest contact submissions, device pairing starts and anonymous analytics
-writes require Cloudflare Turnstile. The browser loads the widget only when one of these actions starts.
-The backend verifies each single-use token with Cloudflare and checks its
-hostname, action and visitor value before an internal mutation writes data.
-Missing configuration or failed verification rejects the request. Signed-in
-requests use the verified Clerk account and do not need Turnstile.
-
-Before releasing these changes:
-
-- Create a Managed Turnstile widget for `justonemorecatch.app`, and a separate
-  development widget for local testing.
-- Add the public `VITE_TURNSTILE_SITE_KEY` to the matching `.env.production` or
-  `.env.local` build settings.
-- Set `TURNSTILE_SECRET_KEY` in the matching Convex deployment. Keep it out of
-  frontend environment variables and source control.
-- Set `TURNSTILE_HOSTNAMES` in Convex to the comma-separated exact hostnames
-  allowed for that deployment: `justonemorecatch.app` for production and
-  `localhost` for local development. Never allow local/test hosts in production.
-- `build:prod` rejects missing Turnstile site keys and Cloudflare test keys.
-- Release frontend and backend together, then verify guest contact, pairing and analytics
-  with real Turnstile tokens. Existing tabs need to reload because these public
-  functions changed from mutations to actions.
-
-Contact allows two messages immediately, then replenishes three per hour per
-account or verified browser visitor. Pairing allows 20 starts immediately,
-then replenishes 60 per minute per account or verified browser visitor.
-These callers have separate allowances. Browser visitor values are random and
-persisted locally; they are not a person or device identity. Clearing storage
-can rotate the value, but each anonymous write still needs a fresh successful
-Turnstile check. Anonymous analytics remains approximate and rate limited. Failed analytics
-verification drops the event without blocking guest play.
+Accounts, settings and deploy steps for justonemorecatch.app are in
+[docs/deployment.md](docs/deployment.md).
 
 ## License
 
-GPL-3.0-or-later. See [LICENSE](LICENSE). Pokémon artwork belongs to
-Nintendo, Creatures and GAME FREAK; see [NOTICE](NOTICE).
+GPL-3.0-or-later. See [LICENSE](LICENSE).
