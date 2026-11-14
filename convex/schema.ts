@@ -16,6 +16,7 @@ export default defineSchema({
     version: v.string(),
     saveLink: v.optional(saveLink),
     importId: v.optional(v.string()),
+    shareRevision: v.optional(v.number()),
     summary: v.object({
       badges: v.array(v.string()),
       caught: v.number(),
@@ -30,6 +31,19 @@ export default defineSchema({
     run: v.id("runs"),
     state: v.string(),
   }).index("by_run", ["run"]),
+  shares: defineTable({
+    runId: v.id("runs"),
+    owner: v.string(),
+    token: v.string(),
+    projection: v.object({ v: v.literal(1), game: v.string(), caught: v.array(v.number()), badges: v.array(v.string()) }),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_token", ["token"]).index("by_runId", ["runId"]),
+  accounts: defineTable({
+    owner: v.string(),
+    subject: v.string(),
+    deleting: v.optional(v.boolean()),
+  }).index("by_owner", ["owner"]).index("by_subject", ["subject"]),
   profiles: defineTable({
     owner: v.string(),
     avatar: v.optional(v.number()),

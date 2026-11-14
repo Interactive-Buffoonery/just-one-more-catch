@@ -8,6 +8,7 @@ const app = defineApp({
     TURNSTILE_HOSTNAMES: v.optional(v.string()),
     RESEND_API_KEY: v.optional(v.string()),
     CONTACT_TO: v.optional(v.string()),
+    CLERK_WEBHOOK_SECRET: v.optional(v.string()),
     CLERK_SECRET_KEY: v.optional(v.string()),
   },
 });

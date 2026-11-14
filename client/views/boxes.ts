@@ -1,5 +1,6 @@
+import { shareButton } from "../share-controls";
 import { $, esc } from "../dom";
-import { byN, hasGenders, visibleForms, HELD_ITEMS, P, PARTY_SIZE, R, run, ui, ymd } from "../game";
+import { byN, hasGenders, visibleForms, HELD_ITEMS, P, PARTY_SIZE, R, run, ui, ver, ymd } from "../game";
 import { mon } from "../parts";
 import { Mon } from "../types";
 import { acquisition, ACQUISITION_METHODS } from "../../shared/journal";
@@ -46,7 +47,7 @@ export function Boxes() {
         `<button data-boxfilter="${k}" data-k="bf-${k}" aria-pressed="${f === k}"><b>${count}</b>${l}</button>`,
     )
     .join("")}</div>
-  <div class="seg3 boxlayout" role="group" aria-label="Boxes layout">${["list", "grid"].map((layout) => `<button data-boxlayout="${layout}" data-k="bl-${layout}" aria-label="${layout === "list" ? "List view" : "Grid view"}" title="${layout === "list" ? "List view" : "Grid view"}" aria-pressed="${(grid ? "grid" : "list") === layout}">${layout === "list" ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>` : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>`}</button>`).join("")}</div></div>
+  <div class="boxright">${shareButton(run.id, ver().name)}<div class="seg3 boxlayout" role="group" aria-label="Boxes layout">${["list", "grid"].map((layout) => `<button data-boxlayout="${layout}" data-k="bl-${layout}" aria-label="${layout === "list" ? "List view" : "Grid view"}" title="${layout === "list" ? "List view" : "Grid view"}" aria-pressed="${(grid ? "grid" : "list") === layout}">${layout === "list" ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>` : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>`}</button>`).join("")}</div></div></div>
   ${cards ? `<div class="boxgrid">${cards}</div>` : `<div class="boxmons"><p class="boxempty muted small">${f === "items" ? "No Pokémon holding an item." : "No shiny Pokémon."}</p></div>`}
   ${f === "all" && empty.length ? `<details class="boxunused"><summary><b>${empty.length} empty boxes</b></summary><div class="chips">${empty.map((b) => `<button class="chip" data-renamebox="${b}" data-k="rb${b}">${esc(boxLabel(b))}</button>`).join("")}</div></details>` : ""}</section>`;
 }
@@ -93,7 +94,7 @@ export function fillMonSheet(s: any) {
       <div class="acquisition-grid"><label class="field span2"><span>How</span><select id="f-how"><option value="">Not set</option>${Object.entries(ACQUISITION_METHODS).map(([k, label]) => `<option value="${k}" ${m?.acquisition?.method === k ? "selected" : ""}>${label}</option>`).join("")}</select></label>
       <label class="field"><span id="acquisition-day-label">${m?.acquisition?.method === "caught" ? "Caught" : "Obtained"} on</span><span class="journal-date"><input id="f-day" type="date" max="${ymd(new Date())}" value="${esc(m?.acquisition?.day || "")}"><button type="button" class="quietbtn" data-today="f-day">Today</button></span></label>
       <label class="field"><span id="acquisition-place-label">${m?.acquisition?.method === "caught" ? "Caught" : "Obtained"} at</span><input id="f-place" list="acquisition-places" maxlength="120" autocomplete="off" value="${esc(m?.acquisition?.place || "")}"></label>
-      <div class="span2 acquisition-suggestions" aria-label="Suggested places">${acquisitionPlaces().slice(0, 4).map(place => `<button type="button" class="chip" data-acquisitionplace="${esc(place)}">${esc(place)}</button>`).join("")}</div></div>
+      <div class="span2 acquisition-suggestions" aria-label="Suggested places">${acquisitionPlaces().slice(0, 4).map(place => `<button type="button" class="chip" data-acquisitionplace="${esc(place)}">${esc(place)}</button>`).join("")}</div></div></div>
       <datalist id="acquisition-places">${acquisitionPlaces().map(place => `<option value="${esc(place)}">`).join("")}</datalist>
     </details>
     <p id="personal-error" class="personal-error" role="alert" tabindex="-1"></p>

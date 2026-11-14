@@ -2,6 +2,8 @@
 // main.ts owns auth and server calls and hands them in through the bridge.
 import "./styles.css";
 import "./save-import.css";
+import "./share.css";
+import { loadShareStatuses, shareSheet } from "./share-owner";
 import { withTimeout } from "./async";
 import { SaveImport } from "./save-import";
 import type { SaveLink } from "../shared/save-import";
@@ -130,6 +132,7 @@ function showSheet(s: any, fill?: () => void) {
   if (!open) finishSheet();
   if (s.hist) pushSheet(s.kind);
   ui.sheet = s;
+  $("#sheetbody").classList.toggle("share-sheet", s.kind === "share");
   fill?.();
   if (!open) $("#sheet").showModal();
 }
@@ -262,6 +265,7 @@ function tabFromUrl() {
   return t === "journey" && !isGuest() && run?.view === "dexonly" ? "dex" : t && Object.hasOwn(VIEWS, t) ? t : "playthroughs";
 }
 function render() {
+  loadShareStatuses(render);
   clearTimeout(resultsTimer);
   clearTimeout(typingTimer);
   typingTimer = undefined;
@@ -347,6 +351,14 @@ function render() {
 }
 
 let saveTimer: any, undoTimer: any, undoing = false;
+let pendingSave: Promise<unknown> = Promise.resolve();
+function saveState(id: string, state: string) {
+  const save = bridge.saveRun.bind(bridge), user = bridge.auth.userId;
+  const next = pendingSave.catch(() => {}).then(() => save(id, state, user));
+  pendingSave = next;
+  return next;
+}
+let shareAction: ((action: string) => Promise<void>) | undefined;
 function hideToast() {
   const n = ui.undo?.n,
     refreshed = ui.undo?.run,
@@ -379,7 +391,7 @@ function scheduleSave(delay = 800) {
     );
   saveTimer = setTimeout(async () => {
     try {
-      await bridge.saveRun(id, state);
+      await saveState(id, state);
       if (run?.id === id) ui.saved = state;
       if (ui.saveError) showSaveError("");
     } catch {
@@ -393,7 +405,7 @@ function flushSave() {
   if (run && dumpRun(run) !== ui.saved) {
     const id = run.id,
       state = dumpRun(run);
-    bridge.saveRun(id, state).then(
+    saveState(id, state).then(
       () => {
         if (run?.id === id) ui.saved = state;
       },
@@ -406,7 +418,7 @@ async function saveBeforeImport() {
   if (!run) return;
   const id = run.id, state = dumpRun(run);
   if (state === ui.saved) return;
-  await withTimeout(bridge.saveRun(id, state), 30000, "Saving timed out");
+  await withTimeout(saveState(id, state), 30000, "Saving timed out");
   if (run?.id === id) ui.saved = state;
 }
 async function undoRefresh(id: string, added: number[], previousStart?: number, previousLink?: SaveLink, expectedUserId?: string) {
@@ -485,6 +497,25 @@ async function onClick(e: MouseEvent) {
     e.preventDefault();
   }
   const d = t.dataset;
+  if (d.act === "share" && d.run) {
+    root.querySelectorAll<HTMLDetailsElement>("details.ptmenu[open]").forEach(el => el.open = false);
+    showSheet({ kind: "share", id: d.run, owner: bridge.auth.userId, k: d.k }, () => {
+      $("#sheetbody").innerHTML = `<h2 class="lg" id="sheet-title">Share progress</h2>`;
+    });
+    shareAction = shareSheet(d.run, async () => {
+      clearTimeout(saveTimer);
+      if (run) {
+        const id = run.id, state = dumpRun(run);
+        await withTimeout(saveState(id, state), 30000, "Saving timed out");
+        if (run?.id === id) ui.saved = state;
+      } else await pendingSave;
+    }, render, flash);
+    return;
+  }
+  if (d.shareaction) {
+    await shareAction?.(d.shareaction);
+    return;
+  }
   if (d.dexsize && Object.hasOwn(DEX_SIZES, d.dexsize)) {
     ui.dexSize = d.dexsize;
     store.set("jomc.dexSize", ui.dexSize);
@@ -1244,6 +1275,10 @@ export function update(b: Bridge) {
   saveImport.accountChanged();
   syncRuns();
   syncTheme();
+  if (ui.sheet?.kind === "share" && ui.sheet.owner !== b.auth.userId) {
+    $("#sheetbody").innerHTML = "";
+    $("#sheet").close();
+  }
   if (ui.sheet?.personal && (!b.auth.isAuthenticated || b.auth.userId !== ui.sheet.owner || run?.id !== ui.sheet.runId)) {
     $("#sheetbody").innerHTML = "";
     $("#sheet").close();

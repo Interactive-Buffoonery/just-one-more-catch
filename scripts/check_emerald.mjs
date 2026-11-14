@@ -1,3 +1,4 @@
+import { evaluatePacks } from './check-utils.mjs';
 import { loadGeneratedPack } from './check-utils.mjs';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
@@ -63,7 +64,7 @@ console.log('Emerald: historical species, progression, special methods and asset
 // Exercise the actual game's HM badge and row availability code.
 const source = readFileSync('client/game.ts', 'utf8');
 const packs = readFileSync('client/packs.ts', 'utf8');
-const emerald = runInNewContext(stripTypeScriptTypes(packs.slice(packs.indexOf('const EMERALD:'), packs.indexOf('const USUM:'))) + '\nEMERALD');
+const emerald = evaluatePacks(packs.slice(packs.indexOf('const EMERALD:'), packs.indexOf('const USUM:')), 'EMERALD');
 const run = { caught: new Set(), badges: new Set(), kit: new Set(), events: new Set(['stern']) };
 const context = {
   R: () => run, P: () => emerald, EVENTS: Object.fromEntries(game.events.map(e => [e.id, e])),

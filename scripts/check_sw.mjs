@@ -85,3 +85,5 @@ for (const file of ['/theme.js', '/tokens.css'])
 assert.match((await get('/assets/first-visit.js')).body, /^net /, 'offline, first-visit files load');
 await assert.rejects(get('/sprites/never-seen.png'), 'offline, uncached files fail as usual');
 console.log('service worker ok: offline app page, cache-first static files, everything else untouched');
+
+assert.equal(await get('/share/', 'navigate'), undefined, 'share pages must never enter the app-page cache');

@@ -9,6 +9,7 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as clerkWebhook from "../clerkWebhook.js";
 import type * as contactSpam from "../contactSpam.js";
 import type * as crons from "../crons.js";
 import type * as devices from "../devices.js";
@@ -17,6 +18,9 @@ import type * as events from "../events.js";
 import type * as pairing from "../pairing.js";
 import type * as quotaKeys from "../quotaKeys.js";
 import type * as runs from "../runs.js";
+import type * as http from "../http.js";
+import type * as shareReader from "../shareReader.js";
+import type * as shares from "../shares.js";
 import type * as stats from "../stats.js";
 import type * as verification from "../verification.js";
 
@@ -28,6 +32,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  clerkWebhook: typeof clerkWebhook;
   contactSpam: typeof contactSpam;
   crons: typeof crons;
   devices: typeof devices;
@@ -36,6 +41,9 @@ declare const fullApi: ApiFromModules<{
   pairing: typeof pairing;
   quotaKeys: typeof quotaKeys;
   runs: typeof runs;
+  http: typeof http;
+  shareReader: typeof shareReader;
+  shares: typeof shares;
   stats: typeof stats;
   verification: typeof verification;
 }>;

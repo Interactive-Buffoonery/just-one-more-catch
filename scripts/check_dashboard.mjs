@@ -1,10 +1,11 @@
+import { evaluatePacks } from './check-utils.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {stripTypeScriptTypes} from 'node:module';
 import {runInNewContext} from 'node:vm';
 const source = readFileSync(new URL('../client/views/runs.ts', import.meta.url), 'utf8');
 const packs = readFileSync(new URL('../client/packs.ts', import.meta.url), 'utf8');
-const {VERSIONS, CONSOLES} = runInNewContext(stripTypeScriptTypes(packs).replace(/^import .*$/gm, '').replace(/^export /gm, '') + '\n({VERSIONS, CONSOLES})');
+const {VERSIONS, CONSOLES} = evaluatePacks(packs, '({VERSIONS, CONSOLES})');
 for (const v of Object.values(VERSIONS)) readFileSync(new URL(`../public/covers/${v.cover ?? v.short.toLowerCase()}.jpg`, import.meta.url));
 
 const titles = CONSOLES.flatMap(c => c.titles);
@@ -20,7 +21,7 @@ for (const g of titles.flat().filter(g => typeof g !== 'string')) readFileSync(n
 const game = readFileSync(new URL('../client/game.ts', import.meta.url), 'utf8');
 const badgesWord = runInNewContext(stripTypeScriptTypes(game.slice(game.indexOf('export const badgesWord'), game.indexOf(';', game.indexOf('export const badgesWord')) + 1)).replace('export ', '') + '\nbadgesWord');
 const ctx = {
-  exportError: () => "",
+  SHARE_ICON: "", shareLabel: () => "Share progress", exportError: () => "",
   isGuest: () => !ctx.bridge.auth.isAuthenticated,
   imageUrl: x => x, esc: x => x, $: () => null, VERSIONS, CONSOLES, verOf: v => VERSIONS[v], byN: {}, ui: {},
   badgesWord, badgeName: b => b, startDay: () => '2026-11-01', ymd: () => '2026-11-12',

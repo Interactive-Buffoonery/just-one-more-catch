@@ -1,3 +1,4 @@
+import { JOHTO_BADGES, kantoBadges, RS_BADGES, EMERALD_BADGES, BW_BADGES, XY_BADGES, DP_BADGES, USUM_BADGES, B2W2_BADGES, PLATINUM_BADGES, SM_BADGES, ORAS_BADGES } from "../shared/milestones.ts";
 // Everything that differs between games. Encounter data is generated per pack
 // and loaded only when a playthrough of that game is opened.
 import type { VersionId } from "../shared/versions";
@@ -54,26 +55,6 @@ export type Version = {
   ring: string[];
 };
 
-const JOHTO_BADGES = [
-  ["Zephyr", "Falkner"],
-  ["Hive", "Bugsy"],
-  ["Plain", "Whitney"],
-  ["Fog", "Morty"],
-  ["Storm", "Chuck"],
-  ["Mineral", "Jasmine"],
-  ["Glacier", "Pryce"],
-  ["Rising", "Clair"],
-];
-const kantoBadges = (soul: string, earth: string) => [
-  ["Boulder", "Brock"],
-  ["Cascade", "Misty"],
-  ["Thunder", "Lt. Surge"],
-  ["Rainbow", "Erika"],
-  ["Soul", soul],
-  ["Marsh", "Sabrina"],
-  ["Volcano", "Blaine"],
-  ["Earth", earth],
-];
 const ALOLA_KIT = [
   ["fishing-rod", "Fishing Rod"],
   ["tauros", "Tauros Charge"],
@@ -254,11 +235,7 @@ const RS: Pack = {
   national: 386,
   start: "Route 101",
   starters: [252, 255, 258],
-  badges: [
-    ["Stone", "Roxanne"], ["Knuckle", "Brawly"], ["Dynamo", "Wattson"],
-    ["Heat", "Flannery"], ["Balance", "Norman"], ["Feather", "Winona"],
-    ["Mind", "Tate & Liza"], ["Rain", "Wallace"],
-  ],
+  badges: RS_BADGES,
   kit: [
     ["old-rod", "Old Rod"], ["good-rod", "Good Rod"], ["super-rod", "Super Rod"],
     ["cut-hm", "Cut"], ["flash", "Flash"], ["rock-smash", "Rock Smash"],
@@ -280,11 +257,7 @@ const EMERALD: Pack = {
   national: 386,
   start: "Route 101",
   starters: [252, 255, 258],
-  badges: [
-    ["Stone", "Roxanne"], ["Knuckle", "Brawly"], ["Dynamo", "Wattson"],
-    ["Heat", "Flannery"], ["Balance", "Norman"], ["Feather", "Winona"],
-    ["Mind", "Tate & Liza"], ["Rain", "Juan"],
-  ],
+  badges: EMERALD_BADGES,
   kit: [
     ["old-rod", "Old Rod"], ["good-rod", "Good Rod"], ["super-rod", "Super Rod"],
     ["cut-hm", "Cut"], ["flash", "Flash"], ["rock-smash", "Rock Smash"],
@@ -307,11 +280,7 @@ const BW: Pack = {
   national: 649,
   start: "Nuvema Town",
   starters: [495, 498, 501],
-  badges: [
-    ["Trio", "Cilan / Chili / Cress"], ["Basic", "Lenora"],
-    ["Insect", "Burgh"], ["Bolt", "Elesa"], ["Quake", "Clay"],
-    ["Jet", "Skyla"], ["Freeze", "Brycen"], ["Legend", "Drayden / Iris"],
-  ],
+  badges: BW_BADGES,
   kit: [
     ["cut-hm", "Cut"], ["surf", "Surf"], ["strength", "Strength"],
     ["waterfall", "Waterfall"], ["super-rod", "Super Rod"],
@@ -329,11 +298,7 @@ const XY: Pack = {
   national: 721,
   start: "Aquacorde Town",
   starters: [650, 653, 656],
-  badges: [
-    ["Bug", "Viola"], ["Cliff", "Grant"], ["Rumble", "Korrina"],
-    ["Plant", "Ramos"], ["Voltage", "Clemont"], ["Fairy", "Valerie"],
-    ["Psychic", "Olympia"], ["Iceberg", "Wulfric"],
-  ],
+  badges: XY_BADGES,
   kit: [
     ["old-rod", "Old Rod"], ["good-rod", "Good Rod"], ["super-rod", "Super Rod"],
     ["cut-hm", "Cut"], ["rock-smash", "Rock Smash"], ["strength", "Strength"],
@@ -352,11 +317,7 @@ const DP: Pack = {
   national: 493,
   start: "Lake Verity",
   starters: [387, 390, 393],
-  badges: [
-    ["Coal", "Roark"], ["Forest", "Gardenia"], ["Cobble", "Maylene"],
-    ["Fen", "Crasher Wake"], ["Relic", "Fantina"], ["Mine", "Byron"],
-    ["Icicle", "Candice"], ["Beacon", "Volkner"],
-  ],
+  badges: DP_BADGES,
   kit: [
     ["old-rod", "Old Rod"], ["good-rod", "Good Rod"], ["super-rod", "Super Rod"],
     ["rock-smash", "Rock Smash"], ["cut-hm", "Cut"], ["fly", "Fly"],
@@ -380,20 +341,7 @@ const USUM: Pack = {
   start: "Route 1",
   starters: [722, 725, 728],
   // trial and grand trial Z-Crystals, in island challenge order
-  badges: [
-    ["Normalium", "Ilima"],
-    ["Fightinium", "Hala"],
-    ["Waterium", "Lana"],
-    ["Firium", "Kiawe"],
-    ["Grassium", "Mallow"],
-    ["Rockium", "Olivia"],
-    ["Electrium", "Sophocles"],
-    ["Ghostium", "Acerola"],
-    ["Darkinium", "Nanu"],
-    ["Dragonium", "Vast Poni Canyon"],
-    ["Fairium", "Mina"],
-    ["Groundium", "Hapu"],
-  ],
+  badges: USUM_BADGES,
   badgeWord: "Z",
   badgesWord: "trials",
   kit: ALOLA_KIT,
@@ -409,11 +357,7 @@ const B2W2: Pack = {
   national: 649,
   start: "Aspertia City",
   starters: [495, 498, 501],
-  badges: [
-    ["Basic", "Cheren"], ["Toxic", "Roxie"], ["Insect", "Burgh"],
-    ["Bolt", "Elesa"], ["Quake", "Clay"], ["Jet", "Skyla"],
-    ["Legend", "Drayden"], ["Wave", "Marlon"],
-  ],
+  badges: B2W2_BADGES,
   kit: [
     ["cut-hm", "Cut"], ["surf", "Surf"], ["strength", "Strength"],
     ["waterfall", "Waterfall"], ["super-rod", "Super Rod"],
@@ -430,11 +374,7 @@ const PLATINUM: Pack = {
   national: 493,
   start: "Route 201",
   starters: [387, 390, 393],
-  badges: [
-    ["Coal", "Roark"], ["Forest", "Gardenia"], ["Relic", "Fantina"],
-    ["Cobble", "Maylene"], ["Fen", "Crasher Wake"], ["Mine", "Byron"],
-    ["Icicle", "Candice"], ["Beacon", "Volkner"],
-  ],
+  badges: PLATINUM_BADGES,
   kit: [
     ["old-rod", "Old Rod"], ["good-rod", "Good Rod"], ["super-rod", "Super Rod"],
     ["rock-smash", "Rock Smash"], ["cut-hm", "Cut"], ["defog", "Defog"],
@@ -459,19 +399,7 @@ const SM: Pack = {
   start: "Iki Town",
   starters: [722, 725, 728],
   // trial and grand trial Z-Crystals, in island challenge order
-  badges: [
-    ["Normalium", "Ilima"],
-    ["Fightinium", "Hala"],
-    ["Waterium", "Lana"],
-    ["Firium", "Kiawe"],
-    ["Grassium", "Mallow"],
-    ["Rockium", "Olivia"],
-    ["Electrium", "Sophocles"],
-    ["Ghostium", "Acerola"],
-    ["Darkinium", "Nanu"],
-    ["Groundium", "Hapu"],
-    ["Dragonium", "Vast Poni Canyon"],
-  ],
+  badges: SM_BADGES,
   badgeWord: "Z",
   badgesWord: "trials",
   kit: ALOLA_KIT,
@@ -489,11 +417,7 @@ const ORAS: Pack = {
   national: 721,
   start: "Route 101",
   starters: [252, 255, 258],
-  badges: [
-    ["Stone", "Roxanne"], ["Knuckle", "Brawly"], ["Dynamo", "Wattson"],
-    ["Heat", "Flannery"], ["Balance", "Norman"], ["Feather", "Winona"],
-    ["Mind", "Tate & Liza"], ["Rain", "Wallace"],
-  ],
+  badges: ORAS_BADGES,
   kit: [
     ["old-rod", "Old Rod"], ["good-rod", "Good Rod"], ["super-rod", "Super Rod"],
     ["cut-hm", "Cut"], ["rock-smash", "Rock Smash"], ["strength", "Strength"],

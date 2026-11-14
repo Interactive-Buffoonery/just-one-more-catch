@@ -15,6 +15,8 @@ for (const name of ["script-src-elem", "script-src-attr"])
   assert.ok(!directives.has(name), `${name} would override script-src checks`);
 for (const name of ["default-src", "script-src", "connect-src", "img-src", "style-src", "worker-src", "frame-src", "object-src", "base-uri", "frame-ancestors", "form-action"])
   assert.ok(directives.has(name), `CSP is missing ${name}`);
+assert.ok(directives.get("connect-src").includes("https://blissful-cod-978.convex.site"));
+assert.match(headers, /\/share\/\*\n  Referrer-Policy: no-referrer\n  X-Robots-Tag: noindex, nofollow/);
 const scripts = directives.get("script-src");
 for (const bad of ["'unsafe-inline'", "'unsafe-eval'", "'unsafe-hashes'", "*", "https:", "http:", "data:", "blob:"])
   assert.ok(!scripts.includes(bad), `script-src must not allow ${bad}`);
@@ -23,7 +25,7 @@ assert.deepEqual(directives.get("object-src"), ["'none'"]);
 assert.deepEqual(directives.get("frame-ancestors"), ["'none'"]);
 assert.doesNotMatch(policy, /clerk\.accounts\.dev|localhost|chatty-lyrebird/, "dev hosts must stay out of the production CSP");
 
-const pages = ["index.html", "contact/index.html", "scripts/game-page.html",
+const pages = ["index.html", "contact/index.html", "share/index.html", "scripts/game-page.html",
   ...readdirSync("public", { recursive: true }).filter(f => f.endsWith(".html")).map(f => `public/${f}`)];
 for (const page of pages) {
   const html = readFileSync(page, "utf8");

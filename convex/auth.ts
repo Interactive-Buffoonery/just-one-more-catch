@@ -1,4 +1,4 @@
-import { env, internalQuery, type QueryCtx } from "./_generated/server";
+import { env, internalQuery, type MutationCtx, type QueryCtx } from "./_generated/server";
 import { v } from "convex/values";
 import type { UserIdentity } from "convex/server";
 
@@ -41,4 +41,16 @@ export async function clerkApi(path: string, init: { method: "GET" | "POST"; bod
     return null;
   }
   return (await res.json()) as Record<string, unknown>;
+}
+
+export const accountOf = (ctx: QueryCtx, owner: string) =>
+  ctx.db.query("accounts").withIndex("by_owner", q => q.eq("owner", owner)).unique();
+
+export async function rememberIdentity(ctx: MutationCtx) {
+  const me = await identityOf(ctx);
+  if (!me) throw new Error("Sign in first");
+  const account = await accountOf(ctx, me.tokenIdentifier);
+  if (account?.deleting) throw new Error("Account is being deleted");
+  if (!account) await ctx.db.insert("accounts", { owner: me.tokenIdentifier, subject: me.subject });
+  return me;
 }

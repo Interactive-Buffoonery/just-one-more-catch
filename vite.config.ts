@@ -38,7 +38,7 @@ export default defineConfig({
   plugins: [reader.plugin, importPage, releaseConfig],
   build: {
     rolldownOptions: {
-      input: ["index.html", "contact/index.html"],
+      input: ["index.html", "contact/index.html", "share/index.html"],
       output: {
         codeSplitting: {
           groups: [
