@@ -3,9 +3,7 @@
 ## Sources
 
 Original Nintendo 3DS releases only: `sun`/`S`, `moon`/`M`. USUM is a
-structural example, never evidence for this pack. The source/access inventory
-and remaining manual checks are in `docs/sm-access-audit.md` and
-`#open-questions` (Sun/Moon). This is a partial encounter dataset, not a
+structural example, never evidence for this pack. Remaining access questions are listed below. This is a partial encounter dataset, not a
 claim that every obtainable Pokémon or condition is represented.
 
 - **Generated encounters and numbering:** cached PokeAPI species 1–802,
@@ -168,10 +166,82 @@ area also requires the existing Aether event.
 
 - Requested trade species are now sourced.
 
+
+### Location references
+
+- https://bulbapedia.bulbagarden.net/wiki/Aether_Paradise
+- https://bulbapedia.bulbagarden.net/wiki/Akala_Outskirts
+- https://bulbapedia.bulbagarden.net/wiki/Alola_Route_1
+- https://bulbapedia.bulbagarden.net/wiki/Alola_Route_10
+- https://bulbapedia.bulbagarden.net/wiki/Alola_Route_11
+- https://bulbapedia.bulbagarden.net/wiki/Alola_Route_12
+- https://bulbapedia.bulbagarden.net/wiki/Alola_Route_13
+- https://bulbapedia.bulbagarden.net/wiki/Alola_Route_14
+- https://bulbapedia.bulbagarden.net/wiki/Alola_Route_15
+- https://bulbapedia.bulbagarden.net/wiki/Alola_Route_16
+- https://bulbapedia.bulbagarden.net/wiki/Alola_Route_17
+- https://bulbapedia.bulbagarden.net/wiki/Alola_Route_2
+- https://bulbapedia.bulbagarden.net/wiki/Alola_Route_3
+- https://bulbapedia.bulbagarden.net/wiki/Alola_Route_4
+- https://bulbapedia.bulbagarden.net/wiki/Alola_Route_5
+- https://bulbapedia.bulbagarden.net/wiki/Alola_Route_6
+- https://bulbapedia.bulbagarden.net/wiki/Alola_Route_7
+- https://bulbapedia.bulbagarden.net/wiki/Alola_Route_8
+- https://bulbapedia.bulbagarden.net/wiki/Alola_Route_9
+- https://bulbapedia.bulbagarden.net/wiki/Altar_of_the_Moone
+- https://bulbapedia.bulbagarden.net/wiki/Altar_of_the_Sunne
+- https://bulbapedia.bulbagarden.net/wiki/Ancient_Poni_Path
+- https://bulbapedia.bulbagarden.net/wiki/Berry_fields
+- https://bulbapedia.bulbagarden.net/wiki/Blush_Mountain
+- https://bulbapedia.bulbagarden.net/wiki/Brooklet_Hill
+- https://bulbapedia.bulbagarden.net/wiki/Diglett's_Tunnel
+- https://bulbapedia.bulbagarden.net/wiki/Exeggutor_Island
+- https://bulbapedia.bulbagarden.net/wiki/Haina_Desert
+- https://bulbapedia.bulbagarden.net/wiki/Hano_Beach
+- https://bulbapedia.bulbagarden.net/wiki/Hau'oli_Cemetery
+- https://bulbapedia.bulbagarden.net/wiki/Hau'oli_City
+- https://bulbapedia.bulbagarden.net/wiki/Iki_Town
+- https://bulbapedia.bulbagarden.net/wiki/Kala'e_Bay
+- https://bulbapedia.bulbagarden.net/wiki/Konikoni_City
+- https://bulbapedia.bulbagarden.net/wiki/Lake_of_the_Moone
+- https://bulbapedia.bulbagarden.net/wiki/Lake_of_the_Sunne
+- https://bulbapedia.bulbagarden.net/wiki/Lush_Jungle
+- https://bulbapedia.bulbagarden.net/wiki/Malie_City
+- https://bulbapedia.bulbagarden.net/wiki/Malie_Garden
+- https://bulbapedia.bulbagarden.net/wiki/Melemele_Meadow
+- https://bulbapedia.bulbagarden.net/wiki/Melemele_Sea
+- https://bulbapedia.bulbagarden.net/wiki/Memorial_Hill
+- https://bulbapedia.bulbagarden.net/wiki/Mount_Hokulani
+- https://bulbapedia.bulbagarden.net/wiki/Mount_Lanakila
+- https://bulbapedia.bulbagarden.net/wiki/Paniola_Ranch
+- https://bulbapedia.bulbagarden.net/wiki/Paniola_Town
+- https://bulbapedia.bulbagarden.net/wiki/Poké_Pelago
+- https://bulbapedia.bulbagarden.net/wiki/Poni_Breaker_Coast
+- https://bulbapedia.bulbagarden.net/wiki/Poni_Coast
+- https://bulbapedia.bulbagarden.net/wiki/Poni_Gauntlet
+- https://bulbapedia.bulbagarden.net/wiki/Poni_Grove
+- https://bulbapedia.bulbagarden.net/wiki/Poni_Meadow
+- https://bulbapedia.bulbagarden.net/wiki/Poni_Plains
+- https://bulbapedia.bulbagarden.net/wiki/Poni_Wilds
+- https://bulbapedia.bulbagarden.net/wiki/Resolution_Cave
+- https://bulbapedia.bulbagarden.net/wiki/Royal_Avenue
+- https://bulbapedia.bulbagarden.net/wiki/Ruins_of_Abundance
+- https://bulbapedia.bulbagarden.net/wiki/Ruins_of_Conflict
+- https://bulbapedia.bulbagarden.net/wiki/Ruins_of_Hope
+- https://bulbapedia.bulbagarden.net/wiki/Ruins_of_Life
+- https://bulbapedia.bulbagarden.net/wiki/Seafolk_Village
+- https://bulbapedia.bulbagarden.net/wiki/Seaward_Cave
+- https://bulbapedia.bulbagarden.net/wiki/Tapu_Village
+- https://bulbapedia.bulbagarden.net/wiki/Ten_Carat_Hill
+- https://bulbapedia.bulbagarden.net/wiki/Ula'ula_Beach
+- https://bulbapedia.bulbagarden.net/wiki/Ula'ula_Meadow
+- https://bulbapedia.bulbagarden.net/wiki/Vast_Poni_Canyon
+- https://bulbapedia.bulbagarden.net/wiki/Verdant_Cavern
+- https://bulbapedia.bulbagarden.net/wiki/Wela_Volcano_Park
+
 ## Open questions
 
-The initial pack is partial. Its sourced access work list is
-`docs/sm-access-audit.md`; independent review and gameplay checks remain.
+The initial pack is partial; independent review and gameplay checks remain.
 
 
 - **Ambush source granularity:** land ambushes are now classified by cached
@@ -180,8 +250,7 @@ The initial pack is partial. Its sourced access work list is
   combines fishing bubbles and water splashes under one PokeAPI method;
   Wailord's direct row is corrected to a Lapras water splash; its fishing
   SOS still requires the rod. Splitting Wailmer's mixed water table needs
-  source-backed encounter overrides. USUM's analogous
-  land rows remain unchanged; see `docs/sm-access-audit.md` for the list.
+  source-backed encounter overrides.
 
 - **Missing PokeAPI conditions:** nearly every SM encounter-detail record
   has an empty condition list (Necrozma is the exception). Day/night

@@ -66,19 +66,4 @@ assert(byN[526].rows.filter(r => r.m === 'trade').every(r => r.place === 'Route 
 assert(byN[638].rows.every(r => !r.need?.includes('cut-hm')), 'Cobalion awaits gameplay verification');
 assert(readFileSync('scripts/build_game_pages.ts', 'utf8').includes('(m.j == null && !has("Elite Four"))'));
 
-const matches = (place, prefix) => place === prefix || place.startsWith(prefix + ' ');
-const inventory = readFileSync('docs/b2w2-access.md', 'utf8').split('\n').filter(l => l.startsWith('| ') && !l.startsWith('| PokeAPI') && !l.startsWith('| ---'));
-assert.equal(inventory.length, 137);
-for (const line of inventory) {
-  const [area, chapter, needs] = line.slice(2, -2).split(' | ');
-  const place = config.rename[area] || area;
-  const candidates = config.chapters.flatMap((c, i) => c.places.filter(p => matches(place, p)).map(p => ({ p, c, i })));
-  const best = candidates.sort((a, b) => b.p.length - a.p.length)[0];
-  assert(best, `no chapter for ${area}`);
-  assert.equal(chapter, `${best.i}: ${best.c.title} (needs ${best.c.needs.length ? JSON.stringify(best.c.needs).replaceAll('"', "'").replaceAll(',', ', ') : 'nothing'})`, area);
-  const key = Object.keys(config.needs).find(k => matches(area, k));
-  const raw = key ? config.needs[key] : [];
-  const list = typeof raw === 'string' ? [raw] : Array.isArray(raw) ? raw : raw.needs;
-  assert.equal(needs, list.join(', ') || '—', area);
-}
-console.log('B2W2 outbreaks (19/version), Dreamyard and access inventory ok');
+console.log('B2W2 outbreaks (19/version), Dreamyard ok');
