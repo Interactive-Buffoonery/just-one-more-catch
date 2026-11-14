@@ -70,8 +70,8 @@ and `url` so a cache refresh can retire them. Refresh candidates with
    species-specific gifts/statics/trades, including version differences.
    Attach citations and record disagreements and inaccessible sources.
    Data generation and type checking do not prove game accuracy. The
-   [Game Boy access review](game-boy-access-audit.md) records the initial
-   expansion's coverage, fixes, model limitations and manual checkpoints.
+   [Red/Blue](../sources/rb.md), [Yellow](../sources/yellow.md) and
+   [Gold/Silver](../sources/gs.md) record access evidence and open questions.
 
 ## Verification and completion
 
