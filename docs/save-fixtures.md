@@ -6,7 +6,7 @@ We keep saves and local receipts in ignored cache directories because fixtures c
 
 Install .NET 10 per user with Microsoft's `dotnet-install.sh --channel 10.0`, rather than the Homebrew cask. Build `PKHeX.Core.dll` from Core revision `02c9ec108fe3c96735f6c2397eaebc10e29a049f` (the reader 0.1.1 pin), then replace `/absolute/path/to/PKHeX.Core.dll` below with its path.
 
-Use an existing Playwright installation and Chromium. `PLAYWRIGHT_MODULE` points to that installation; `CHROMIUM_EXECUTABLE` optionally selects an installed browser. Where supported, `WORKER_ONLY=1` runs raw/native/worker checks without website imports. Each set keeps its outputs under the ignored `.cache/` path in its commands; GB/GBC uses `.cache/save-tests/`.
+For my setup, I use an existing Playwright installation and Chromium. `PLAYWRIGHT_MODULE` points to that installation; `CHROMIUM_EXECUTABLE` optionally selects an installed browser. Where supported, `WORKER_ONLY=1` runs raw/native/worker checks without website imports. Each set keeps its outputs under the ignored `.cache/` path in its commands; GB/GBC uses `.cache/save-tests/`.
 
 The non-GB sets share the same steps: generate saves, build the website, then run their verifier. Their native checks, independent raw-bit checks and published WASM must agree on exact caught/seen arrays, identities and complete `national-dex` coverage. Unrelated worker filenames must not influence detection; zero-filled and truncated files must fail, and input buffers and file digests must remain unchanged. Harnesses block external requests and close their own browser and loopback server. Receipts such as `native-results.json`, `wasm-results.json` and `website-results.json` stay local.
 
