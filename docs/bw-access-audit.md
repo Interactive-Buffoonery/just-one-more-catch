@@ -18,9 +18,9 @@ Dreamyard dark grass and B1F require the postgame without Cut; the fence gap
 bypasses the tree. Cut remains on the aboveground ruins grass rows. The duplicate
 aboveground Musharna static is dropped. Regression checks cover all three corrections.
 
-The chapter and exception evidence is in `data/bw.json` and `SOURCES.md`.
+The chapter and exception evidence is in `data/bw.json` and `sources/bw.md`.
 Unresolved Victory Road labels, combined cave tables and missing acquisition
-methods are listed in `OPEN_QUESTIONS.md`. No terrain requirement was invented
+methods are listed in `sources/bw.md#open-questions`. No terrain requirement was invented
 for an unknown room. This table records the source work list for the reviewer;
 it is not 87 independent access approvals.
 

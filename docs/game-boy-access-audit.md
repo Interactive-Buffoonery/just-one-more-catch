@@ -15,8 +15,8 @@ The first pass used Claude Sonnet. Codex independently checked non-ok findings
 against the original scripts, map data and the app's actual chapter, event,
 HM-badge, kit and encounter-method rules. A separate coordinator check found a
 Yellow fishing issue that the first pass had marked ok. Detailed source links
-are in [SOURCES.md](../SOURCES.md); unsettled paths and concrete tester checks
-are in [OPEN_QUESTIONS.md](../OPEN_QUESTIONS.md).
+are in [Red/Blue](../sources/rb.md), [Yellow](../sources/yellow.md) and [Gold/Silver](../sources/gs.md); unsettled paths and concrete tester checks
+are in [Red/Blue open questions](../sources/rb.md#open-questions), [Yellow open questions](../sources/yellow.md#open-questions) and [Gold/Silver open questions](../sources/gs.md#open-questions).
 
 Original sources were pinned to:
 
@@ -65,10 +65,11 @@ Some proposals remain unresolved rather than accepted: Yellow Safari interior
 paths and Seafoam currents; Gold/Silver Dark Cave and Mt. Mortar paths,
 alternate Blackthorn/Route 45 access, Route 8 grass, and northbound Route 2
 alternatives to Pewter/Route 3, Yellow dock Super Rod timing, and an alternate
-Dark Cave approach to Route 44. Yellow Cerulean fishing has two supporting Codex
+Dark Cave approach to Route 44. Yellow Cerulean fishing has two supporting
 source checks but conflicts with the original first-pass ok verdict. Its data
-is unchanged under the audit skill's disagreement rule. See the tester checks
-in OPEN_QUESTIONS.md before treating those rows as fully verified.
+is unchanged under the audit skill's disagreement rule. See the tester checks in the
+[Red/Blue](../sources/rb.md#open-questions), [Yellow](../sources/yellow.md#open-questions)
+and [Gold/Silver](../sources/gs.md#open-questions) open questions before treating those rows as fully verified.
 
 ## Verification limits
 

@@ -11,14 +11,14 @@ and `read-guide` for independent access verification and scanned guide evidence.
 - Name the supported versions and pack ID. Paired versions can share a pack
   while keeping separate version IDs and encounter codes. Keep meaningfully
   different editions separate. Do not infer mechanics from a remake.
-- Record each hand-written fact in `SOURCES.md`, including chapters, earliest
+- Record each hand-written fact in `sources/<pack>.md`, including chapters, earliest
   reachable areas, HM badge rules, story events, gifts, trades, statics,
   starters, clocks, dex sizes, boxes and form availability. Include precise
   URLs and short quotes beside gates where supported.
 - Inspect the game's own pret scripts for gifts, trades and event flags.
   Never build a decompilation. PokeDaisy can help locate scripts; its guide
   prose is not evidence. Use sourced maps or walkthroughs for physical access.
-- Record unresolved facts in `OPEN_QUESTIONS.md`. A new pack has no old value
+- Record unresolved facts in `sources/<pack>.md#open-questions`. A new pack has no old value
   to preserve: do not silently invent a gate or call that pack release-ready.
   Return the uncertain rows and the evidence needed to settle them.
 

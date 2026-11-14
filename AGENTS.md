@@ -9,7 +9,7 @@
 - `shared/` is pure TypeScript used by both sides.
 - Hosting: a static Cloudflare Worker (`wrangler.jsonc`, `pnpm run deploy`). Keep the site static. See README.md for the full setup.
 - Guest playthroughs live in localStorage and move to the account on sign-in. Keep guest mode working when Clerk fails to load.
-- Game data: never write gates, times, locations or story steps from memory. Every hand-written row needs a source listed in SOURCES.md; if the sources don't settle it, add it to OPEN_QUESTIONS.md instead. Use the `add-game`, `audit-access` and `read-guide` skills.
+- Game data: never write gates, times, locations or story steps from memory. Every hand-written row needs a source in `sources/<pack>.md`; if the sources don't settle it, add it to that file's Open questions section. Use the `add-game`, `audit-access` and `read-guide` skills.
 - Bulbapedia blocks automated fetches. Use the `read-guide` skill or Serebii instead, and list anything left unverified in your report.
 - Before mocking up a UI change, screenshot the live page at 390px and desktop widths and build the mockup from those screenshots.
 - Before `pnpm run deploy`, add a dated entry to public/whats-new/index.html for anything players would notice. Game data fixes get one line per game with its box art; skip fixes players would not notice. Sarah approves all What's New wording before it ships.

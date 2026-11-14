@@ -314,7 +314,7 @@
       ],
       "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/BillsHouse.asm",
       "quote": "SetEvent EVENT_GOT_SS_TICKET",
-      "note": "Static collision trace reaches the trade house (15,19) from Diglett’s Cave (12,10) without Cut. Cut also opens a western approach; Bill OR Cut cannot be expressed by the current conjunctive row gates. See OPEN_QUESTIONS.md and SOURCES.md."
+      "note": "Static collision trace reaches the trade house (15,19) from Diglett’s Cave (12,10) without Cut. Cut also opens a western approach; Bill OR Cut cannot be expressed by the current conjunctive row gates. See sources/rb.md#open-questions and sources/rb.md."
     },
     {
       "place": "Route 12",
@@ -325,7 +325,7 @@
       ],
       "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
       "quote": "Route12SnorlaxFluteCoords:",
-      "note": "Static collision trace: all 32 grass squares need Cut on foot (already required by the chapter); the northern/western approaches also cross Snorlax. The southern approach via Route 13 still needs Cut; its ordinary story route passes Route 16 Snorlax. See SOURCES.md."
+      "note": "Static collision trace: all 32 grass squares need Cut on foot (already required by the chapter); the northern/western approaches also cross Snorlax. The southern approach via Route 13 still needs Cut; its ordinary story route passes Route 16 Snorlax. See sources/rb.md."
     },
     {
       "place": "Route 23",
@@ -414,7 +414,7 @@
       ],
       "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
       "quote": "Route12SnorlaxFluteCoords:",
-      "note": "Static collision trace: all 32 grass squares need Cut on foot (already required by the chapter); the northern/western approaches also cross Snorlax. The southern approach via Route 13 still needs Cut; its ordinary story route passes Route 16 Snorlax. See SOURCES.md."
+      "note": "Static collision trace: all 32 grass squares need Cut on foot (already required by the chapter); the northern/western approaches also cross Snorlax. The southern approach via Route 13 still needs Cut; its ordinary story route passes Route 16 Snorlax. See sources/rb.md."
     },
     {
       "place": "Route 12",
@@ -425,7 +425,7 @@
       ],
       "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
       "quote": "Route12SnorlaxFluteCoords:",
-      "note": "Static collision trace: all 32 grass squares need Cut on foot (already required by the chapter); the northern/western approaches also cross Snorlax. The southern approach via Route 13 still needs Cut; its ordinary story route passes Route 16 Snorlax. See SOURCES.md."
+      "note": "Static collision trace: all 32 grass squares need Cut on foot (already required by the chapter); the northern/western approaches also cross Snorlax. The southern approach via Route 13 still needs Cut; its ordinary story route passes Route 16 Snorlax. See sources/rb.md."
     },
     {
       "place": "Route 12",
@@ -436,7 +436,7 @@
       ],
       "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
       "quote": "Route12SnorlaxFluteCoords:",
-      "note": "Static collision trace: all 32 grass squares need Cut on foot (already required by the chapter); the northern/western approaches also cross Snorlax. The southern approach via Route 13 still needs Cut; its ordinary story route passes Route 16 Snorlax. See SOURCES.md."
+      "note": "Static collision trace: all 32 grass squares need Cut on foot (already required by the chapter); the northern/western approaches also cross Snorlax. The southern approach via Route 13 still needs Cut; its ordinary story route passes Route 16 Snorlax. See sources/rb.md."
     },
     {
       "place": "Route 12",
@@ -447,7 +447,7 @@
       ],
       "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
       "quote": "Route12SnorlaxFluteCoords:",
-      "note": "Static collision trace: all 32 grass squares need Cut on foot (already required by the chapter); the northern/western approaches also cross Snorlax. The southern approach via Route 13 still needs Cut; its ordinary story route passes Route 16 Snorlax. See SOURCES.md."
+      "note": "Static collision trace: all 32 grass squares need Cut on foot (already required by the chapter); the northern/western approaches also cross Snorlax. The southern approach via Route 13 still needs Cut; its ordinary story route passes Route 16 Snorlax. See sources/rb.md."
     },
     {
       "place": "Route 12",
@@ -458,7 +458,7 @@
       ],
       "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/engine/items/item_effects.asm",
       "quote": "Route12SnorlaxFluteCoords:",
-      "note": "Static collision trace: all 32 grass squares need Cut on foot (already required by the chapter); the northern/western approaches also cross Snorlax. The southern approach via Route 13 still needs Cut; its ordinary story route passes Route 16 Snorlax. See SOURCES.md."
+      "note": "Static collision trace: all 32 grass squares need Cut on foot (already required by the chapter); the northern/western approaches also cross Snorlax. The southern approach via Route 13 still needs Cut; its ordinary story route passes Route 16 Snorlax. See sources/rb.md."
     },
     {
       "place": "Route 23",
