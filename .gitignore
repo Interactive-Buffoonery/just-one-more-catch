@@ -13,3 +13,8 @@ __pycache__/
 /.playwright-mcp/
 
 stats.html
+
+# Convex agent skills: install with `npx convex ai-files install`
+.agents/skills/convex*
+.claude/skills/convex*
+skills-lock.json
