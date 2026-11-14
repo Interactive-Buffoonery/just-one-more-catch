@@ -47,7 +47,7 @@ it to `titles.json`. Known cases:
    - `wiki`, a trimmed copy of the page without anime, trivia or music
 2. Split each list into chunks of about 25 to 30 areas, keeping areas that
    share a page in the same chunk. Add `"pack"` to each entry.
-3. Send one read-only Sonnet agent per chunk, all at once. Give it
+3. Send one read-only agent per chunk, all at once. Give it
    [reviewer-brief.md](reviewer-brief.md), the repo path, and its chunk and
    output paths.
 4. `python3 scripts/access_audit.py check findings-*.json > findings.json`.
@@ -57,8 +57,7 @@ it to `titles.json`. Known cases:
 ## 3. Second pass: confirm
 
 Gather every finding that isn't `ok`, with its `wiki`, `chapter`, `area_needs`
-and `row_needs`. Give them to a different model family, such as a Codex model
-through `delegate_task` in T3. Use
+and `row_needs`. Give them to a different model family for a second opinion. Use
 [second-opinion-brief.md](second-opinion-brief.md). In the first run (Nov
 2026), the second pass rejected about a quarter of the flags. Most were needs
 already implied by the chapter or the HM badge rule.
@@ -77,7 +76,7 @@ something the app models (a badge, a kit id, or an event in the pack's
   `python3 scripts/build_data.py <pack>`, and diff it. Only the rows you meant
   to gate should change.
 
-Don't merge these. List them for Sarah, and add any still open to `sources/<pack>.md#open-questions`:
+Don't merge these. List them in the PR, and add any still open to `sources/<pack>.md#open-questions`:
 - Flags that need something unmodeled (Johto-pack Cut, Flash, Rock Climb,
   Bicycle, Safari layout unlocks, Primo codes, "all three beasts caught").
   Adding a new event or kit item is a product decision.

@@ -106,8 +106,8 @@ is hand-written, so it needs a source.
   Bill's house, Ho-Oh, Lugia, Celebi).
 - **Cite as you go.** Keep a scratch list of `place -> chapter / gate -> URL +
   quote`. Put the links in the PR description.
-- **Can't source it? Say so.** Leave it as-is, list it as unverified in the PR,
-  and ask Sarah. Don't guess.
+- **Can't source it? Say so.** Leave it as-is, list it as unverified in the PR.
+  Don't guess.
 - **Prefer a real event over a badge proxy.** If a place opens after a story
   event (SecretPotion delivered, Sudowoodo moved), add an event instead of
   gating on the nearest badge.
