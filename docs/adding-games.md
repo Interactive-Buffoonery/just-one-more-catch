@@ -70,8 +70,7 @@ and `url` so a cache refresh can retire them. Refresh candidates with
    species-specific gifts/statics/trades, including version differences.
    Attach citations and record disagreements and inaccessible sources.
    Data generation and type checking do not prove game accuracy. The
-   [Game Boy access review](game-boy-access-audit.md) records the initial
-   expansion's coverage, fixes, model limitations and manual checkpoints.
+   pack source notes in `sources/<pack>.md` record evidence and open questions.
 
 ## Verification and completion
 
@@ -100,20 +99,3 @@ Return pack/version IDs, commit SHA, changed files, check results, citations,
 remaining questions and the manual checklist. Builds are not deployments.
 Deployments remain manual and need their own authorization and receipts.
 
-## Parallel implementation
-
-Give each implementation agent an isolated worktree and explicit pack ownership.
-They are not alone in the repository: preserve concurrent work and do not reset
-or revert others' changes. Each may make the minimal shared-registry edits
-needed to validate its own pack locally; the coordinator combines those edits
-and reruns validation after integration. Shared scripts and registries must
-retain every pack's entries. Never copy one worker's entire registry over the
-combined result.
-
-For the initial Game Boy / Game Boy Color expansion, use `rb` for Red/Blue,
-`yellow` for Yellow, and `gs` for Gold/Silver. Crystal already exists. These
-names describe work ownership, not permission to copy mechanics between games.
-Agents return local commits without pushing, opening PRs, merging or deploying.
-The coordinator owns integration, independent access audits and session rollups.
-Do not spawn additional agents from an implementation child unless its task
-explicitly authorizes them.

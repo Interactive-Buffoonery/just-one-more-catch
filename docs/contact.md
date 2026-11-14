@@ -29,4 +29,4 @@ caller quota records are cleaned up after two days.
 Run `pnpm test:convex` for the backend spam checks and `pnpm check` for form
 validation, repeat-click prevention, draft retention and retry copy. Deployment
 must include the registered rate-limiter component with the backend before the
-new form is served. Normal manual deployment remains `pnpm run deploy`.
+new form is served. Deploy manually with `pnpm run deploy`.

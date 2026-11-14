@@ -44,15 +44,14 @@ Deleting a playthrough/account deletes its state and journal with it.
 
 ## Adjacent work boundaries
 
-Save refresh (separate PR #151) must change only caught completion in the original
+Save refresh must change only caught completion in the original
 parsed state and preserve `mons[].acquisition` and `journalEntries`. It must not
 create acquisition fields from file times, game clocks, met-location IDs, species
-flags, or a playthrough's start date. Test that helper when integrating its PR.
+flags, or a playthrough's start date. Test that helper when changing refresh behavior.
 
 Sharing is separate. Any public response must use an explicit allowlist and omit
 both fields; never return or spread the private state. The existing dashboard
-summary excludes both, but is not proof for a future sharing serializer. No
-sharing UI, share API, save reader, or save-refresh implementation changes here.
+summary excludes both, but is not proof for a future sharing serializer. 
 
 ## Verification and release
 
@@ -67,7 +66,3 @@ that must preserve a newer start-date editor, and overflow at 390px and desktop 
 fixtures test the actual renderer with isolated Bridge data; cloud persistence
 needs a signed-in deployment check before release.
 
-Match the approved A mockup; keep the existing quick catch action unchanged.
-No new route, tab, mandatory form, photos, tags, GPS, or public journal in v1.
-
-Approved release wording: “Added the ability to keep a private journal for each playthrough”

@@ -8,16 +8,7 @@ revoke the others, and a revoked device loses access at once.
 
 Built on Clerk sign-in tokens (the `ticket` strategy). We chose this over
 Clerk's OAuth Device Authorization Grant because the grant's tokens can't be
-revoked per device. Background is in `auth-options.md`.
-
-## Order of work
-
-1. CSP (`feat/site-csp`). Worth having anyway, but it no longer blocks this
-   work, because no long-lived token is stored in localStorage.
-2. Mockups for the three screens, approved before any UI work.
-3. Backend and client plumbing, alongside the mockups.
-4. UI from the approved mockups.
-5. Test on the dev instance with a real Retroid and a phone.
+revoked per device. We use normal Clerk sessions so guest migration and account ownership follow the existing sign-in path, without separate OAuth refresh-token storage.
 
 ## Flow
 
@@ -87,14 +78,13 @@ revoked per device. Background is in `auth-options.md`.
 - **Tickets:** Clerk sign-in tokens are single-use, and ours expire in two
   minutes. The ticket is deleted once the device finishes.
 - **Secret key:** `CLERK_SECRET_KEY` lives in Convex env on dev and
-  production, and is used only in the actions. Update the README's "the
-  secret key isn't used" line.
+  production, and is used only in the actions.
 - **Phishing:** A stranger could show a player their own code and ask them
   to approve it. The approval sheet shows the device label and start time,
   and asks the player to confirm the code matches the screen in front of
   them.
 
-## Spike checks (first hour of testing on dev)
+## Deployment checks
 
 1. **Required before deploying:** Convex must get Clerk's session token, not
    the `convex` JWT template. Clerk reserves `sid` and leaves it out of
@@ -131,10 +121,3 @@ revoked per device. Background is in `auth-options.md`.
   - A denied or expired code shows that state.
   - The QR code opens the approval sheet on a signed-out phone after sign-in.
 
-## Size
-
-About 5 to 6 days. The pairing backend and revocation take 2 days, the three
-screens with mockups take 2, and checks and testing take 1 to 1.5.
-
-The OAuth app created for the device grant isn't used. Delete it after the
-dev test passes.

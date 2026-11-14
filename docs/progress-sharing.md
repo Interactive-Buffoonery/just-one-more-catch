@@ -4,7 +4,7 @@ A player can publish a read-only snapshot of one playthrough and share its link.
 
 ## What the link shows
 
-One playthrough, exactly:
+Each link shows one playthrough:
 
 - Game, region and box art (from `VERSIONS[version]` and its pack).
 - Completed badges or trials, drawn as the pack's badge case. Postgame case only when at least one postgame badge is recorded. Heading uses `pack.badgesWord` / `pack.badgeWord`.
@@ -36,7 +36,7 @@ type ShareProjection = { v: 1; game: VersionId; caught: number[]; badges: string
 ## Owner flow
 
 1. **Share progress** (smaller pill on the dashboard resume card), the share icon on Journey, Dex and Boxes, and the playthrough **...** menu item all open the same sheet for that run.
-2. Opening the sheet saves pending changes (awaited; failure stops the flow) and renders the exact preview. Nothing is written.
+2. Opening the sheet saves pending changes (awaited; failure stops the flow) and renders the exact preview. Opening the preview does not publish it.
 3. **Create link** sends the previewed projection. The mutation recomputes it from stored state and rejects on mismatch with a fresh preview.
 4. With a link: **Copy link**, native share, **Update snapshot** (new preview first), **Replace link**, **Stop sharing**. A stale notice compares stored and current counts.
 5. Guests can preview but must sign in before creating a link. Sign-in, guest migration, import and new playthroughs never turn sharing on.
