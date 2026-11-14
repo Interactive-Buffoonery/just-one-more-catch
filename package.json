@@ -1,6 +1,7 @@
 {
   "name": "just-one-more-catch",
   "private": true,
+  "license": "GPL-3.0-or-later",
   "engines": {
     "node": ">=22.18"
   },

@@ -1,0 +1,22 @@
+Just One More Catch
+Copyright (C) 2026 Sarah Wolff
+
+The source code and hand-written game data in this repository are licensed
+under the GNU General Public License, version 3 or later. See LICENSE.
+
+Pokémon and all related names, characters, sprites, box art, badge and item
+artwork are trademarks and copyrights of Nintendo, Creatures Inc. and
+GAME FREAK inc. This is an unofficial fan project, not affiliated with or
+endorsed by them. The artwork under public/sprites/, public/covers/,
+public/badges/ and public/items/ is theirs and is not covered by the GPL.
+SOURCES.md lists where each piece came from.
+
+Third-party components:
+
+- vendor/serabi-pokemon-save-reader-*.tgz: GPL-3.0-or-later, built from
+  PKHeX (https://github.com/kwsch/PKHeX). Its source ships inside the
+  package.
+- public/fonts/luckiest-guy/: Luckiest Guy, SIL Open Font License 1.1.
+  See public/fonts/luckiest-guy/LICENSE.txt.
+- Sprites are fetched from PokeAPI/sprites
+  (https://github.com/PokeAPI/sprites).
