@@ -22,7 +22,7 @@ try again. Limits live in `convex/contactSpam.ts`.
 These controls bound accepted submissions and notifications per caller; they do
 not stop requests from reaching Convex. Browser visitor values can rotate, but
 each anonymous submission still needs a fresh successful Turnstile proof. There
-is no site-wide notification cap or IP-based blocking. See README.md for the
+is no site-wide notification cap or IP-based blocking. See [deployment.md](deployment.md#turnstile) for the
 required Turnstile site key, backend secret and hostname configuration. Inactive
 caller quota records are cleaned up after two days.
 

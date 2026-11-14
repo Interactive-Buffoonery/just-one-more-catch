@@ -1,21 +1,12 @@
 # Just One More Catch
 
-- Back end: Convex functions in `convex/`. Auth comes from Clerk via `ctx.auth.getUserIdentity()`; own data by `tokenIdentifier`.
-- Front end: plain TypeScript in `client/`, built with Vite. No framework; `client/views/` render strings and `client/app.ts` wires them up with event delegation.
-- `client/main.ts` is the only file that talks to Clerk or Convex. Keep the `Bridge` type in `client/types.ts` as the boundary.
-- Run `pnpm check` (types plus the `scripts/check_*` checks) before finishing.
-- Push only after `pnpm check` passes. Chain them with `&&` (`pnpm check && git push`), never `;`.
-- For CSS changes, also run `pnpm check:styles`. It compares computed styles against `origin/main`; any difference should be one you meant to make.
-- `shared/` is pure TypeScript used by both sides.
-- Hosting: a static Cloudflare Worker (`wrangler.jsonc`, `pnpm run deploy`). Keep the site static. See README.md for the full setup.
-- Guest playthroughs live in localStorage and move to the account on sign-in. Keep guest mode working when Clerk fails to load.
-- Game data: never write gates, times, locations or story steps from memory. Every hand-written row needs a source in `sources/<pack>.md`; if the sources don't settle it, add it to that file's Open questions section. Use the `add-game`, `audit-access` and `read-guide` skills.
-- Bulbapedia blocks automated fetches. Use the `read-guide` skill or Serebii instead, and list anything left unverified in your report.
-- Before mocking up a UI change, screenshot the live page at 390px and desktop widths and build the mockup from those screenshots.
-- Before `pnpm run deploy`, add a dated entry to public/whats-new/index.html for anything players would notice. Game data fixes get one line per game with its box art; skip fixes players would not notice. Sarah approves all What's New wording before it ships.
-- Deploys are manual. After `pnpm run deploy`, report the deployed commit SHA and the top line of `pnpm exec wrangler deployments list`, and name any merged PRs that are not deployed yet.
-- After a deploy that touches Clerk, `convex/auth.config.ts` or sign-in code, sign in on https://justonemorecatch.app and make one signed-in change, such as the theme, before reporting done.
-- Save fixtures need .NET 10. Install it per user with Microsoft's `dotnet-install.sh --channel 10.0` (into `~/.dotnet`), not the Homebrew cask, which stops at a password prompt.
+- Convex back end in `convex/`. Clerk auth through `ctx.auth.getUserIdentity()`; own data by `tokenIdentifier`.
+- Plain TypeScript front end in `client/` (Vite, no framework). `client/views/` render strings and `client/app.ts` wires up events. Only `client/main.ts` talks to Clerk or Convex, through the `Bridge` type in `client/types.ts`. `shared/` is pure TypeScript used by both.
+- The site stays static (a Cloudflare Worker). Guest mode must keep working when Clerk fails to load.
+- Run `pnpm check` before finishing, and `pnpm check && git push` to push. For CSS changes, also run `pnpm check:styles` and make sure every difference is one you meant.
+- Game data: never write gates, times, locations or story steps from memory. Cite every hand-written row in `sources/<pack>.md`, or add it to that file's Open questions. Bulbapedia blocks scripts, so use the `read-guide`, `audit-access` and `add-game` skills.
+- Before mocking up a UI change, screenshot the live page at 390px and desktop widths.
+- Deploying: follow [docs/deployment.md](docs/deployment.md).
 
 <!-- convex-ai-start -->
 

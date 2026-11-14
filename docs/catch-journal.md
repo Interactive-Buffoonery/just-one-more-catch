@@ -69,6 +69,5 @@ needs a signed-in deployment check before release.
 
 Match the approved A mockup; keep the existing quick catch action unchanged.
 No new route, tab, mandatory form, photos, tags, GPS, or public journal in v1.
-What's New wording requires Sarah's approval before deployment.
 
 Approved release wording: “Added the ability to keep a private journal for each playthrough”

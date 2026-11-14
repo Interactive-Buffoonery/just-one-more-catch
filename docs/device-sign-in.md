@@ -80,7 +80,7 @@ revoked per device. Background is in `auth-options.md`.
   approval attempts are rate limited with `@convex-dev/rate-limiter`, which
   is already used in `convex/contactSpam.ts`. Starts are limited per signed-in
   account or verified browser visitor. Anonymous starts require a fresh,
-  server-verified Turnstile proof; see README.md for configuration. Inactive
+  server-verified Turnstile proof; see [deployment.md](deployment.md#turnstile) for configuration. Inactive
   start quota records are cleaned up after two days. Approve and lookup attempts
   are limited per player, which stops someone
   from guessing codes.
