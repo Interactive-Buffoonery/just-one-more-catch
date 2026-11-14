@@ -351,8 +351,8 @@ include those baselines, rather than asserting the species is locally caught.
   - `us.jpg`: https://raw.githubusercontent.com/libretro-thumbnails/Nintendo_-_Nintendo_3DS/master/Named_Boxarts/Pokemon%20Ultra%20Sun%20%28USA%29%20%28En%2CJa%2CFr%2CDe%2CEs%2CIt%2CZh%2CKo%29.png
   - `um.jpg`: https://raw.githubusercontent.com/libretro-thumbnails/Nintendo_-_Nintendo_3DS/master/Named_Boxarts/Pokemon%20Ultra%20Moon%20%28USA%29%20%28En%2CJa%2CFr%2CDe%2CEs%2CIt%2CZh%2CKo%29.png
   - `c.jpg`: https://raw.githubusercontent.com/libretro-thumbnails/Nintendo_-_Game_Boy_Color/master/Named_Boxarts/Pokemon%20-%20Crystal%20Version%20%28USA%29.png
-- FireRed and LeafGreen for Nintendo Switch use the official square eShop
-  artwork, resized to 512px without cropping the listing banner:
+- FireRed and LeafGreen for Nintendo Switch use the square eShop artwork,
+  cropped from GameTDB's digital cover (446px, no resizing):
   - `frs.jpg`: https://art.gametdb.com/switch/coverHQ/US/BPUJB.jpg
   - `lgs.jpg`: https://art.gametdb.com/switch/coverHQ/US/BPUKB.jpg
 
