@@ -1,35 +1,40 @@
 # Personal catch details and journal
 
-Journey's Journal button and the selected Dashboard playthrough's menu open the same sheet. Pokémon rows use the existing editor; notes use a
-two-field editor. Closing restores Journey's scroll and keyboard focus. Guest Journey and Boxes keep their sign-in gates.
+Players can note how and where they got each Pokémon, and keep free-form notes for a playthrough. Journey's Journal button and the Dashboard playthrough menu open the same sheet. Pokémon rows use the existing editor and notes get a small two-field editor. When the sheet closes, we put Journey's scroll position and keyboard focus back where they were. Guests still see the sign-in prompt on Journey and Boxes.
 
-## Storage and privacy
+## What we store
 
-- `mons[].acquisition?: { method?, day?, place? }` belongs to an individual ID. All fields are manual and optional; methods are `caught`, `hatched`, `gift`, `trade`, `other`. Place is plain text, at most 120 characters. Pack suggestions fill only on selection and mean in-game places. Use no geolocation permission or new analytics.
-- `journalEntries?: { id, day?, text }[]` holds independent notes with stable IDs, plain text up to 500 characters and at most 200 notes per run. They survive Pokémon removal and are not automatically linked to Pokémon.
-- `day` is a real `YYYY-MM-DD` calendar date, displayed without UTC conversion. Blank means unknown; Today explicitly uses the local calendar. Sort known dates newest first, unknown last. Stable ID order within a day implies no catch time.
-- Derive Pokémon rows from current individual records, keeping duplicates separate. Corrections change rows in place; clearing acquisition fields removes a row, and removing an individual removes its row after confirmation. Keep no event table, automatic catch/evolution/trade log, inferred data, historical species snapshot or backfill.
-- Caught flags are independent completion flags. Toggles and imports never create history or delete personal fields. Undo retains a new individual that now has acquisition details.
+Everything here is typed by the player. We never fill it in from save files, game clocks, met-location IDs, caught flags or the start date, because a guess would look like a fact.
 
-Fields are optional inside the owner-protected JSON state, requiring no database migration. Validate server-side within the 512 KiB total limit,
-reserving 16 KiB for ordinary tracking. Omitted `journalEntries` preserves stored notes; explicit `[]` clears them. Preserve nested acquisition fields
-on load/save. Whole-state saves retain last-write-wins behavior rather than merging concurrent edits.
+- **Catch details** live on each individual Pokémon as `mons[].acquisition?: { method?, day?, place? }`. Every field is optional. The methods are `caught`, `hatched`, `gift`, `trade` and `other`. Place is plain text of up to 120 characters. The pack's place suggestions only fill in when picked, and they mean in-game places. We don't ask for location permission or add analytics.
+- **Notes** live in `journalEntries?: { id, day?, text }[]`. Each note is plain text of up to 500 characters, with up to 200 notes per playthrough. Notes stand on their own, so they stay when a Pokémon is removed.
+- **Dates** are real `YYYY-MM-DD` calendar days, shown without any UTC shift. A blank date means unknown, and Today uses the player's local calendar. We sort known dates newest first and unknown ones last. The order within a day doesn't imply a catch time.
 
-Guest storage and sign-in migration retain these fields even though guests cannot author them through gated views. Account JSON export includes active
-unsaved changes. The caught CSV stays species-only; export is not a general JSON restore facility and save-file import still imports caught flags.
-Deleting a run or account deletes its journal.
+The journal's Pokémon rows come straight from the current individuals, with duplicates kept separate. Editing a row changes it in place, and clearing its details removes the row. Removing the Pokémon removes its row too, after the player confirms. We keep no event log, history or inferred data, so there's nothing to backfill.
 
-Save refresh changes only caught completion in the original parsed state, preserving `mons[].acquisition` and `journalEntries`. Never derive
-acquisition fields from file times, game clocks, met-location IDs, caught flags or start date; test the helper when changing refresh behavior. Public
-responses must explicitly allowlist fields and omit both private fields. Never return or spread private state; the Dashboard summary alone does not
-prove another serializer safe.
+Caught flags are separate from all of this. Toggling caught or importing a save never creates history or deletes these fields, and undo keeps a new Pokémon that already has details.
 
-## Verification
+## Saving and privacy
 
-Start `pnpm dev --host 127.0.0.1 --port 5187`, then run `node scripts/check_journal_browser.mjs` (isolated account fixtures; screenshots in
-`.cache/journal-screenshots`). Run `pnpm check`, `pnpm test:convex`, `pnpm check:styles` and the Convex TypeScript check.
+These fields sit inside the owner-protected JSON state, so they need no database migration. The server checks them within the 512 KiB state limit and keeps 16 KiB free for ordinary tracking. If a save leaves out `journalEntries`, we keep the stored notes; an explicit `[]` clears them. Whole-state saves are last-write-wins, and concurrent edits are not merged.
 
-Exercise both entry points; create/edit/delete/undated notes; acquisition correction/clearing/removal; duplicates; caught toggles/undo; export;
-account switching; and guest migration. Verify keyboard dismissal, focus and scroll restoration, Dashboard focus after Escape/Done, deferred Journal
-loading preserving a newer start-date editor, and overflow at 390px and desktop in both themes. Browser fixtures use the real renderer with isolated
-Bridge data; verify signed-in cloud persistence on a deployment before release.
+Guest storage and the move to an account on sign-in keep these fields, even though guests can't write them. The account JSON export includes unsaved changes. The caught CSV stays species-only, and save import still brings in caught flags only. Deleting a playthrough or an account deletes its journal.
+
+Refreshing from a save changes only caught flags and keeps `mons[].acquisition` and `journalEntries`. If you change refresh behaviour, test its helper.
+
+Catch details and notes are private. Any public response must allowlist its fields and leave both out. Never return or spread the private state. The Dashboard summary being safe doesn't prove another serializer is.
+
+## Checking changes
+
+Start `pnpm dev --host 127.0.0.1 --port 5187`, then run `node scripts/check_journal_browser.mjs`. It uses isolated account fixtures and saves screenshots to `.cache/journal-screenshots`. Then run `pnpm check`, `pnpm test:convex`, `pnpm check:styles` and the Convex TypeScript check.
+
+By hand, try both ways into the sheet, and run through:
+
+- Notes: creating, editing and deleting them, including ones with no date.
+- Catch details: correcting and clearing them, removing a Pokémon, and duplicates.
+- Caught toggles and undo.
+- Exports, switching accounts and moving guest data to an account.
+- Keyboard: dismissing the sheet, focus and scroll coming back, and Dashboard focus after Escape or Done. If the journal loads late, it must not overwrite a start-date edit already in progress.
+- Layout at 390px and desktop width, in both themes.
+
+The browser fixtures use the real renderer with isolated Bridge data. Before a release, check that a signed-in change saves on a real deployment.

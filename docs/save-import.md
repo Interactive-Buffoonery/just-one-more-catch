@@ -1,6 +1,6 @@
 # Importing caught Pokémon
 
-We offer `/import/` from the Dashboard to choose an in-game save. The page scrolls normally and has a
+Players can import an in-game save from the Dashboard (`/import/`). The page scrolls normally and has a
 refreshable URL. The browser loads the reader on demand, reads the save in a dedicated worker, and previews its caught flags.
 Confirming creates a new playthrough. Existing runs stay untouched.
 
