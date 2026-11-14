@@ -399,7 +399,7 @@ rows/verification sections and mapping/guest tests. Both packs already carry
 `docs/save-import.md`, `scripts/check_save_import.test.ts` and
 `scripts/save_import_data.test.ts` may need text conflict resolution, alongside
 the pack branches' shared files. A `git merge-tree` check also reports existing
-pack conflicts in `sources/<pack>.md#open-questions`, `sources/<pack>.md`, `client/data/sprite-fit.ts`,
+pack conflicts in `sources/dp.md`, `sources/pt.md`, `client/data/sprite-fit.ts`,
 `client/game.ts`, `client/packs.ts`, `package.json`, `public/sitemap.xml`,
 `scripts/access_audit.py`, `scripts/build_data.py`, `scripts/build_game_pages.ts`,
 `scripts/fetch_pokeapi.py` and `scripts/fetch_sprites.py`. Preserve both packs'
@@ -452,7 +452,7 @@ Integration with X/Y import PR #111 is expected to overlap the Works with list
 and `VERSION_MAP` line in `client/save-import.ts`, the guest test parameter list
 in `scripts/check_save_import.test.ts`, appended mapping tests in
 `scripts/save_import_data.test.ts`, and nearby documentation insertions here
-and in `sources/<pack>.md#open-questions`. Keep both sets of adapters, tests and verification
+and in `sources/sm.md` and `sources/xy.md`. Keep both sets of adapters, tests and verification
 notes. The fixture directories are separate. Neither import needs a reader or
 vendor change.
 ## Omega Ruby/Alpha Sapphire verification

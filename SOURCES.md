@@ -177,3 +177,9 @@ include those baselines, rather than asserting the species is locally caught.
 - https://www.serebii.net/games/shiny.shtml — base odds 1/8192 before X/Y, 1/4096 from X/Y; Masuda Gen IV 1/2048 (disputed, disabled), Gen V 1/1365.3, Gen VI onwards 1/682.7.
 - https://www.serebii.net/games/breed.shtml — incense offspring: Azurill and Wynaut introduced with the Generation III incense rule; Budew, Chingling, Bonsly, Mime Jr., Happiny, Munchlax and Mantyke use incense from Generation IV. Without incense, hatch the next stage; Scarlet/Violet removes the incense requirement.
 - https://pokeapi.co/ — pokemon-species egg_groups, evolution families and generation of introduction, fetched by scripts/fetch_pokeapi.py.
+
+### Open questions
+
+- Gen 4 Masuda odds: Serebii gives 1/2048; approximately 1/1638 is reported elsewhere. Unsettled; Masuda is disabled for Gen 4.
+- NPC trades are assumed not reset-huntable. Unchecked.
+- Egg groups come from current PokeAPI data; per-game changes before Sword/Shield are not spot-checked.

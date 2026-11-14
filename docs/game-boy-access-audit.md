@@ -65,10 +65,11 @@ Some proposals remain unresolved rather than accepted: Yellow Safari interior
 paths and Seafoam currents; Gold/Silver Dark Cave and Mt. Mortar paths,
 alternate Blackthorn/Route 45 access, Route 8 grass, and northbound Route 2
 alternatives to Pewter/Route 3, Yellow dock Super Rod timing, and an alternate
-Dark Cave approach to Route 44. Yellow Cerulean fishing has two supporting Codex
+Dark Cave approach to Route 44. Yellow Cerulean fishing has two supporting
 source checks but conflicts with the original first-pass ok verdict. Its data
-is unchanged under the audit skill's disagreement rule. See the tester checks
-in sources/<pack>.md#open-questions before treating those rows as fully verified.
+is unchanged under the audit skill's disagreement rule. See the tester checks in the
+[Red/Blue](../sources/rb.md#open-questions), [Yellow](../sources/yellow.md#open-questions)
+and [Gold/Silver](../sources/gs.md#open-questions) open questions before treating those rows as fully verified.
 
 ## Verification limits
 

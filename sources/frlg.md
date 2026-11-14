@@ -8,6 +8,7 @@
 - https://bulbapedia.bulbagarden.net/wiki/Appendix:FireRed_and_LeafGreen_walkthrough
 - https://strategywiki.org/wiki/Pok%C3%A9mon_FireRed_and_LeafGreen
 - No guide PDF yet.
+
 ### FRLG static map traces
 
 All pret links below use revision `ce6406d8c2eaf46d543c8a2606de0c3cb1951982`.
