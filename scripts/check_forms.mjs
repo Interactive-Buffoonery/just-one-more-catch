@@ -47,7 +47,7 @@ const stateCode = source.slice(source.indexOf("function loadRun("), source.index
 let current;
 const api = runInNewContext(stripTypeScriptTypes(stateCode.replaceAll("export ", "")) + "\n({ loadRun, dumpRun, collectedForms, visibleForms, hasGenders, collectedGenders, GENDERS })", {
   verOf: () => ({ pack: { start: "Start", boxes: [2] } }),
-  MON_DEFAULTS: defaults,
+  MON_DEFAULTS: defaults, parseHunt: () => undefined,
   compactMon: (m) => Object.fromEntries(Object.entries(m).filter(([k, v]) => defaults[k] !== v)),
   R: () => current, viewOf: r => r.view, isGuest: () => false,
 });
@@ -93,7 +93,7 @@ const context = {
   $, esc, ui, byN, searching: () => '', R: () => current, viewOf: r => r.view, isGuest: () => false, run: true, P: () => ({ art: 'hgss', boxes: [2, 30] }),
   FORM_ZOOM: { hgss: { unown: 200 } }, PARTY_SIZE: 6, HELD_ITEMS: [], FIT: {}, TYPE: { psychic: 'pink', normal: 'grey' },
   collectedForms: api.collectedForms, visibleForms: api.visibleForms, collectedGenders: api.collectedGenders, hasGenders: api.hasGenders, GENDERS: api.GENDERS, num: (p) => p.n, pad: (n) => String(n).padStart(3, '0'),
-  tagBits: () => [], isHere: () => false, rowStatus: () => ({ s: 'now' }), howElse: () => '', cap: (s) => s,
+  tagBits: () => [], isHere: () => false, rowStatus: () => ({ s: 'now' }), howElse: () => '', cap: (s) => s, huntButton: () => '',
 };
 context.imageUrl = path => path;
 const views = runInNewContext(spriteCode + '\n' + moduleCode('client/views/boxes.ts') + '\n' + moduleCode('client/views/dex.ts') + '\n({ fillMonSheet, saveMon, monLine, fillSpecies, tile })', context);

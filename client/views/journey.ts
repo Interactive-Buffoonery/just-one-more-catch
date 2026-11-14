@@ -146,6 +146,7 @@ export function fillCustom() {
     ${toggle(r.trackForms, "Forms", "", `data-dexoption="trackForms" data-k="h-forms"`)}
     ${toggle(r.trackGenders, "Genders", "", `data-dexoption="trackGenders" data-k="h-genders"`)}
     ${r.trackForms ? toggle(r.trackTraded, "Traded forms", "", `data-dexoption="trackTraded" data-k="h-traded"`) : ""}
+    ${ver().gen !== "Gen 1" ? toggle(r.trackShinyHunts, "Shiny hunts", "", `data-dexoption="trackShinyHunts" data-k="h-hunts"`) : ""}
     <div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="chip" data-close="1">Done</button></div>`;
 }
 /* ---- Story events: one question on top, the full list in Your journey ---- */

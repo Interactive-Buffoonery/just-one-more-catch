@@ -1,3 +1,4 @@
+import { fillHunt, huntBar, huntClick, huntPlaceChanged, paintHunt } from "./views/hunt";
 // Ported from the approved mockup: string-rendered views on one root, event delegation, no framework.
 // main.ts owns auth and server calls and hands them in through the bridge.
 import "./styles.css";
@@ -107,6 +108,7 @@ function fillSheet(s: any) {
   }
   if (s.kind === "journal") return fillJournal();
   if (s.kind === "journalnote") return fillJournalNote(s.id);
+  if (s.kind === "hunt") return fillHunt(s);
   typeof s === "number"
     ? fillSpecies(s)
     : s.kind === "signin"
@@ -332,6 +334,9 @@ function render() {
   $("#tabs").innerHTML = !a.isLoading
     ? `<nav class="tabbar${!isGuest() && run?.view === "dexonly" ? " four" : ""}" aria-label="Sections">${tabButtons(true)}<button class="tab-settings" data-tab="settings" data-k="tab-settings"${here}>${SETTINGS_ICON}<span>Settings</span></button></nav>`
     : "";
+  const bar = run && !loading ? huntBar() : "";
+  root.querySelector(".dock > .huntbar")?.remove();
+  if (bar) $("#tabs").insertAdjacentHTML("beforebegin", bar);
   $("#toast").innerHTML = ui.undo
     ? `<div class="toast"><span id="toast-msg">${ui.undo.msg}</span>${ui.undo.restore || ui.undo.n ? `<button data-undo="1" data-k="toast-undo" aria-describedby="toast-msg">Undo</button>` : ""}</div>`
     : "";
@@ -383,8 +388,8 @@ function scheduleSave(delay = 800) {
   if (!run) return;
   const id = run.id,
     state = dumpRun(run);
-  if (state === ui.saved) return;
   clearTimeout(saveTimer);
+  if (state === ui.saved) return;
   if (bridge.auth.isAuthenticated && runBytes(state) > MAX_RUN_BYTES)
     return showSaveError(
       "This playthrough is too big to save. Try shortening some notes.",
@@ -514,6 +519,34 @@ async function onClick(e: MouseEvent) {
   }
   if (d.shareaction) {
     await shareAction?.(d.shareaction);
+    return;
+  }
+  if (d.hunt || d.huntmethod) {
+    huntClick(t, {
+      show: (s) => showSheet(s, () => fillSheet(s)),
+      changed: () => {
+        scheduleSave();
+        render();
+      },
+      counted: () => {
+        scheduleSave();
+        paintHunt();
+      },
+      close: () => $("#sheet").close(),
+      caught: (h) => {
+        if (isGuest()) {
+          if (!R().caught.has(h.species)) toggleCaught(h.species);
+          R().hunt = undefined;
+          scheduleSave();
+          return $("#sheet").open ? $("#sheet").close() : render();
+        }
+        openSheet({ kind: "mon", n: h.species, hunt: h });
+        $("#f-shiny").checked = true;
+        $("#f-note").value = `${h.count.toLocaleString("en-US")} ${h.count === 1 ? h.unit.slice(0, -1) : h.unit}`;
+        $("#sheetbody details.more").open = true;
+        updateMonSprite();
+      },
+    });
     return;
   }
   if (d.dexsize && Object.hasOwn(DEX_SIZES, d.dexsize)) {
@@ -831,7 +864,9 @@ async function onClick(e: MouseEvent) {
   }
   if (d.savemon) {
     try {
+      const hunt = ui.sheet.hunt;
       if (!saveMon()) return;
+      if (hunt && R().hunt === hunt) R().hunt = undefined;
       scheduleSave();
       if (ui.sheet.journal) openSheet({ ...ui.sheet, kind: "journal", id: undefined, journal: false });
       else $("#sheet").close();
@@ -880,7 +915,7 @@ async function onClick(e: MouseEvent) {
     r.view = r.view === "dexonly" ? r.startView : "dexonly";
   } else if (d.startview) {
     r.view = r.startView = d.startview === "dex" ? "dex" : "journey";
-  } else if (d.dexoption === "trackForms" || d.dexoption === "trackGenders" || d.dexoption === "trackTraded") {
+  } else if (d.dexoption === "trackForms" || d.dexoption === "trackGenders" || d.dexoption === "trackTraded" || d.dexoption === "trackShinyHunts") {
     r[d.dexoption] = !r[d.dexoption];
   } else if (d.showlater) r.showLater = !r.showLater;
   else if (d.event) {
@@ -1179,6 +1214,7 @@ export function mount(el: HTMLElement, b: Bridge) {
       $("#acquisition-day-label").textContent = `${verb} on`;
       $("#acquisition-place-label").textContent = `${verb} at`;
     }
+    if (t.name === "hunt-place") return huntPlaceChanged();
     if (t.id === "f-form" || t.id === "f-shiny") {
       updateMonSprite();
       return;

@@ -1,3 +1,5 @@
+import { ONE_TIME as oneTimeMethods } from "./encounter-methods.ts";
+import { parseHunt } from "./hunt.ts";
 import { badgeName as sharedBadgeName, needLabel as sharedNeedLabel } from "./need-labels.ts";
 import { GameData, Pack, VERSIONS } from "./packs";
 import { Bridge, Mon, Row, RunRow, Species } from "./types";
@@ -83,17 +85,7 @@ export const METHOD: Record<string, [string, string | null]> = {
   "island-scan": ["Island Scan", "island-scan"],
   "berry-trees": ["Berry tree", null],
 };
-export const ONE_TIME = new Set([
-  "pokemon-ranger",
-  "devon-scope",
-  "wailmer-pail",
-  "gift",
-  "gift-egg",
-  "static",
-  "squirt-bottle",
-  "pokeflute",
-  "npc-trade",
-]);
+export const ONE_TIME = oneTimeMethods;
 export const TIME: Record<string, string> = {
   "time-morning": "Morning",
   "time-day": "Day",
@@ -264,6 +256,8 @@ export type Run = {
   forms: Set<string>;
   trackForms: boolean;
   trackTraded: boolean;
+  trackShinyHunts: boolean;
+  hunt?: import("./hunt").Hunt;
   trackGenders: boolean;
   genders: Record<number, Set<string>>;
   skip: Set<number>;
@@ -310,6 +304,8 @@ function loadRun(row: RunRow, state: string): Run {
     forms: new Set((Array.isArray(s.forms) ? s.forms : []).filter((f: unknown) => typeof f === "string")),
     trackForms: s.trackForms !== false,
     trackTraded: s.trackTraded === true,
+    trackShinyHunts: s.trackShinyHunts === true,
+    hunt: parseHunt(s.hunt),
     trackGenders: s.trackGenders === true,
     genders: Object.fromEntries(
       Object.entries(s.genders || {}).filter(([n, gs]) => /^\d+$/.test(n) && Array.isArray(gs)).map(([n, gs]) =>
@@ -344,6 +340,8 @@ export const dumpRun = (r: Run) =>
     forms: [...r.forms],
     trackForms: r.trackForms,
     trackTraded: r.trackTraded,
+    trackShinyHunts: r.trackShinyHunts,
+    hunt: r.hunt,
     trackGenders: r.trackGenders,
     genders: Object.fromEntries(Object.entries(r.genders).map(([n, gs]) => [n, [...gs]])),
     skip: [...r.skip],
@@ -458,6 +456,7 @@ export function openRun(row: RunRow, data: GameData, state: string) {
   }));
   byName = Object.fromEntries(DEX.map((p) => [p.name, p]));
   byN = Object.fromEntries(DEX.map((p) => [p.n, p]));
+  if (run.hunt && !byN[run.hunt.species]) run.hunt = undefined;
   for (const m of run.mons) {
     const p = byN[m.n],
       form = p?.forms?.find((f) => f.id === m.form) || p?.forms?.[0];

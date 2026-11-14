@@ -53,7 +53,10 @@ if __name__ == "__main__":
     selected = set()
     for path in glob.glob(os.path.join(os.path.dirname(__file__), "..", "data", "*.json")):
         with open(path) as f:
-            for forms in json.load(f).get("obtainable_forms", {}).values():
+            data = json.load(f)
+            if not isinstance(data, dict):
+                continue
+            for forms in data.get("obtainable_forms", {}).values():
                 selected.update(forms)
     with ThreadPoolExecutor(4) as ex:
         list(ex.map(lambda slug: get(f"{API}pokemon-form/{slug}"), sorted(selected)))

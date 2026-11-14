@@ -5,7 +5,7 @@ import {runInNewContext} from "node:vm";
 
 const game = readFileSync(new URL("../client/game.ts", import.meta.url), "utf8");
 const load = runInNewContext(stripTypeScriptTypes(game.slice(game.indexOf("function loadRun("), game.indexOf("export const dumpRun"))) + "\nloadRun", {
-  verOf: () => ({pack: {start: "Start", boxes: [1]}}), MON_DEFAULTS: {},
+  verOf: () => ({pack: {start: "Start", boxes: [1]}}), MON_DEFAULTS: {}, parseHunt: () => undefined,
 });
 for (const [view, expected] of [[undefined, "journey"], ["unknown", "journey"], ["journey", "journey"], ["dex", "dex"], ["dexonly", "dexonly"]]) {
   assert.equal(load({id: "guest", version: "example"}, JSON.stringify({view})).view, expected);
@@ -41,7 +41,7 @@ for (const destination of ["stay", "dashboard", "fresh-import"]) {
     pathname: new URL(url, location.href).pathname,
     search: new URL(url, location.href).search,
   });
-  const element = {innerHTML: "", open: false, replaceChildren() {}};
+  const element = {innerHTML: "", open: false, replaceChildren() {}, remove() {}};
   const importer = {isOpen: true, close() { this.isOpen = false; }, open() { this.isOpen = true; }};
   const lifecycle = stripTypeScriptTypes(
     app.slice(app.indexOf("function tabFromUrl()"), app.indexOf("let saveTimer:")) +
@@ -59,7 +59,7 @@ for (const destination of ["stay", "dashboard", "fresh-import"]) {
     root: {classList: {toggle() {}}, querySelector: () => null}, $: () => element,
     VIEWS: {playthroughs: () => "", dex: () => ""}, dash: {},
     partner: () => "", esc: value => value, trainerName: () => "Trainer",
-    switcher: () => "", tabButtons: () => "", SETTINGS_ICON: "",
+    huntBar: () => "", switcher: () => "", tabButtons: () => "", SETTINGS_ICON: "",
     fillSheet() {}, moveGuestRuns() {}, moveGuestAvatar() {}, flash() {},
     clearTimeout() {}, resetDexCache() {}, resultsTimer: undefined, typingTimer: undefined,
     store: {get: () => "old"}, closeRun() {}, useRun: row => opened.push(row.id),

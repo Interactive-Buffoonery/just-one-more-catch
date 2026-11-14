@@ -20,7 +20,7 @@ class HistoricalData(unittest.TestCase):
         return {
             "pokemon_species_1": {
                 "names": names("Example"), "name": "example", "gender_rate": 4,
-                "is_baby": False, "varieties": [{"pokemon": {"url": "/1/"}}],
+                "is_baby": False, "egg_groups": [{"name": "monster"}], "varieties": [{"pokemon": {"url": "/1/"}}],
                 "evolution_chain": {"url": "/1/"},
                 "evolves_from_species": {"url": "/2/"},
             },

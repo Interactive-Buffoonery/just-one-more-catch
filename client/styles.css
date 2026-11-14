@@ -966,3 +966,41 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
 .acquisition-grid .span2 { grid-column:1/-1; }
 .acquisition-suggestions { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
 @media (max-width:520px) { .acquisition-grid .field:has(.journal-date) { grid-column:1/-1; } }
+
+/* Shiny hunt: dex and journey buttons, start sheet, hunt sheet and pinned counter. */
+.app .app-quiet.gold { background:var(--gold-soft); border-color:transparent; color:var(--gold-ink); font-weight:800; }
+.app .huntopen { padding:0 16px; white-space:nowrap; }
+.app .hunt-tag { gap:4px; vertical-align:middle; margin-left:2px; }
+.spot.pick { display:flex; align-items:center; gap:12px; min-height:48px; cursor:pointer; }
+.spot.pick input { width:22px; height:22px; accent-color:var(--teal); flex:none; margin:0; }
+.pickstep .seg3 button[hidden], .pickstep .field[hidden] { display:none; }
+.pickstep .hv-actions { margin-top:16px; }
+.huntbar { width:calc(100% - 16px); display:flex; gap:8px; align-items:stretch; padding:6px; background:var(--surface); border-radius:20px; box-shadow:0 8px 28px rgba(0,0,0,.18),0 0 0 1px var(--line); }
+.app .hb-main { flex:1; min-width:0; display:flex; align-items:center; gap:12px; border:0; background:none; text-align:left; padding:4px 4px 4px 8px; border-radius:14px; }
+.hb-main .mon { width:44px; height:44px; }
+.hb-main .grow { min-width:0; }
+.hb-main .name, .hb-sub { display:block; }
+.hb-main .name { font-weight:800; }
+.hb-sub { font-size:13px; font-weight:700; color:var(--soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-variant-numeric:tabular-nums; }
+.hb-sub b { color:var(--ink); font-weight:800; }
+.app .hb-plus, .app .plus { border:0; background:var(--fill); color:var(--on-fill); font-family:"Luckiest Guy",ui-rounded,system-ui,sans-serif; line-height:1; touch-action:manipulation; user-select:none; }
+.app .hb-plus { flex:none; width:104px; min-height:64px; border-radius:14px; font-size:30px; padding-top:5px; margin-bottom:4px; box-shadow:0 4px 0 color-mix(in srgb,var(--fill) 68%,#000); }
+.app .hb-plus:active { translate:0 3px; box-shadow:0 1px 0 color-mix(in srgb,var(--fill) 68%,#000); }
+.app .plus { width:100%; min-height:104px; border-radius:20px; font-size:48px; padding-top:8px; margin-bottom:6px; box-shadow:0 6px 0 color-mix(in srgb,var(--fill) 68%,#000); }
+.app .plus:active { translate:0 4px; box-shadow:0 2px 0 color-mix(in srgb,var(--fill) 68%,#000); }
+.hbody { padding:14px 16px 16px; display:grid; gap:12px; }
+.hcount { display:grid; justify-items:center; gap:2px; }
+.hcount .hunt-cnt { font-size:84px; line-height:.9; padding-top:10px; font-variant-numeric:tabular-nums; }
+.hstats { display:grid; grid-template-columns:repeat(3,1fr); gap:4px; text-align:center; }
+.hstats b { display:block; font-size:17px; font-weight:800; font-variant-numeric:tabular-nums; }
+.hstats span { font-size:12.5px; font-weight:700; color:var(--soft); }
+.hfoot { margin-top:12px; }
+.ptmenu.up .menu { top:auto; bottom:calc(100% + 4px); }
+.app .ptmenu .menu [data-end] { color:var(--coral); }
+.app .ptmenu .menu [data-end]:hover { background:var(--coral-soft); }
+@media (max-width:959px) { .app:has(.huntbar) { padding-bottom:calc(180px + env(safe-area-inset-bottom)); } }
+@media (min-width:960px) {
+  .huntbar { width:440px; }
+  .app:has(.huntbar) { padding-bottom:120px; }
+}
+@media (prefers-reduced-motion:reduce) { .app .hb-plus:active, .app .plus:active { translate:none; } }

@@ -2858,3 +2858,8 @@ reaches 0/8 grass cells without Cut and 8/8 with Cut, even over-allowing every
 other non-wall collision. Add `cut-hm` to the walking rows for Fearow, Grimer,
 Muk, Murkrow and Slugma in both versions. This is static source verification;
 no emulator play-test was run.
+
+### Shiny hunts
+- https://www.serebii.net/games/shiny.shtml — base odds 1/8192 before X/Y, 1/4096 from X/Y; Masuda Gen IV 1/2048 (disputed, disabled), Gen V 1/1365.3, Gen VI onwards 1/682.7.
+- https://www.serebii.net/games/breed.shtml — incense offspring: Azurill and Wynaut introduced with the Generation III incense rule; Budew, Chingling, Bonsly, Mime Jr., Happiny, Munchlax and Mantyke use incense from Generation IV. Without incense, hatch the next stage; Scarlet/Violet removes the incense requirement.
+- https://pokeapi.co/ — pokemon-species egg_groups, evolution families and generation of introduction, fetched by scripts/fetch_pokeapi.py.
