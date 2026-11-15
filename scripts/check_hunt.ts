@@ -20,3 +20,7 @@ const hunt = { species: 179, place: "Eggs", unit: "eggs", method: "masuda", odds
 assert.deepEqual(parseHunt({ ...hunt, extra: "x" }), hunt);
 for (const bad of [{ count: -1 }, { count: 1.5 }, { count: 2 ** 60 }, { unit: "steps" }, { odds: 0 }, { species: "179" }]) assert.equal(parseHunt({ ...hunt, ...bad }), undefined);
 console.log("hunt checks passed");
+
+const placeHunt = { ...hunt, species: 0, kind: "walk", unit: "encounters", method: "full" };
+assert.deepEqual(parseHunt(placeHunt), placeHunt);
+for (const bad of [{kind: ""}, {kind: 1}, {species: 1}, {unit: "eggs"}, {method: "masuda"}, {kind: undefined}]) assert.equal(parseHunt({...placeHunt, ...bad}), undefined);

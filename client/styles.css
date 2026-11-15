@@ -1004,3 +1004,12 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
   .app:has(.huntbar) { padding-bottom:120px; }
 }
 @media (prefers-reduced-motion:reduce) { .app .hb-plus:active, .app .plus:active { translate:none; } }
+
+.app .quietbtn.gold{background:var(--gold-soft);border-color:transparent;color:var(--gold-ink);font-weight:800}
+.mon.star{--t1:var(--gold);--t2:var(--gold)}
+.mon.star>b{color:var(--gold-ink);font-size:18px}
+.spot .pn .tags{margin-top:4px}
+.dexsheet>h2.lg{font-size:30px;line-height:1;margin:4px 0 14px}
+.dexsheet details.fold:first-of-type{border-top:0}
+.dexsheet details.fold>.card{margin-bottom:8px}
+.dexsheet .field{margin:12px 0 4px}

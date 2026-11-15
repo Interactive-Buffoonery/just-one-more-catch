@@ -536,7 +536,7 @@ async function onClick(e: MouseEvent) {
       caught: (h) => {
         if (isGuest()) {
           if (!R().caught.has(h.species)) toggleCaught(h.species);
-          R().hunt = undefined;
+          if (!h.kind) R().hunt = undefined;
           scheduleSave();
           return $("#sheet").open ? $("#sheet").close() : render();
         }
@@ -866,7 +866,7 @@ async function onClick(e: MouseEvent) {
     try {
       const hunt = ui.sheet.hunt;
       if (!saveMon()) return;
-      if (hunt && R().hunt === hunt) R().hunt = undefined;
+      if (hunt && !hunt.kind && R().hunt === hunt) R().hunt = undefined;
       scheduleSave();
       if (ui.sheet.journal) openSheet({ ...ui.sheet, kind: "journal", id: undefined, journal: false });
       else $("#sheet").close();
@@ -1186,6 +1186,12 @@ export function mount(el: HTMLElement, b: Bridge) {
     }
   });
   el.addEventListener("input", (e) => {
+    const search = e.target as HTMLInputElement;
+    if (search.id === "hunt-search") {
+      document.querySelectorAll<HTMLElement>("[data-huntname]").forEach(row => row.hidden = !row.dataset.huntname!.includes(search.value.toLowerCase()));
+      return;
+    }
+
     const t = e.target as HTMLInputElement;
     if (t.id === "paircode") {
       const letters = pairLetters(t.value);

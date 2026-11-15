@@ -1,3 +1,4 @@
+import { journeyHuntButton } from "./hunt";
 import { shareButton } from "../share-controls";
 import { JOURNAL_ICON } from "./journal";
 import { $ } from "../dom";
@@ -273,6 +274,7 @@ export function Journey() {
       <select id="here" data-k="here" aria-label="Selected area">${picker.includes(`value="${r.here}"`) ? "" : `<option selected disabled>${r.here}</option>`}${picker}</select>
     </div>
     <div class="where-tools">
+      ${journeyHuntButton()}
       ${P().nightFrom ? `<button class="quietbtn" data-clock="1" data-k="clock" aria-label="Game clock: ${cap(nowTime())}, ${cap(DAYS[gameClock(r.clock).day])}. Change">${CLOCK_ICON}<b>${cap(nowTime())}</b> · ${cap(DAYS[gameClock(r.clock).day]).slice(0, 3)}</button>` : ""}
       <button class="quietbtn" data-journal="${r.id}" data-k="journal">${JOURNAL_ICON}Journal</button>
       <button class="quietbtn" data-custom="1" data-k="custom">${SLIDERS_ICON}Customize</button>${shareButton(r.id, ver().name)}
