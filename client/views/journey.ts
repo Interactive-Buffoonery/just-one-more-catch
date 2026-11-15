@@ -312,7 +312,7 @@ function focusLayout(html: string) {
   const primary = tools.querySelector(story ? "[data-journal]" : "[data-clock]");
   if (primary) tools.prepend(primary);
   const share = items.querySelector('[data-act="share"]');
-  if (share) share.innerHTML = "Share";
+  if (share) share.insertAdjacentText("beforeend", "Share");
   tools.append(menu);
   const around = get(".s-around");
   if (story) {

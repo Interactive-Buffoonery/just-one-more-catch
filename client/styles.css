@@ -1023,6 +1023,7 @@ button.spot.pick { width:100%; background:none; border:0; border-top:1px solid v
 .app .seg3.focus{display:grid;grid-auto-columns:1fr;width:100%;box-sizing:border-box;margin-top:12px;position:sticky;top:0;z-index:20;background:var(--bg)}
 .sw .seg3.focus{position:static;margin-top:0;width:auto}
 .where-tools .ptmenu{margin-left:auto}
+.app .ptmenu .menu .sharei{display:inline-flex;align-items:center;justify-content:flex-start;gap:6px;width:auto;height:auto;font-size:14px}.app .ptmenu .menu .sharei svg{width:16px;height:16px}
 .where-tools .ptmenu>summary{border:1px solid var(--line)}
 .s-near .places.added{margin-top:10px}
 .jny.story .s-kit{order:5}
