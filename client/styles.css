@@ -448,7 +448,7 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 /* Journey */
 .jny{display:flex;flex-direction:column;gap:14px}
 .jny .colmain,.jny .colside{display:contents}
-.s-where{order:1}.s-kit{order:2}.s-next{order:3}.s-ask{order:4}.s-around{order:5}.s-evo{order:6}.s-journey{order:7}.s-dex{order:8}
+.s-where{order:1}.s-kit{order:2}.s-next{order:3}.s-ask{order:4}.s-around,.s-near{order:5}.s-evo{order:6}.s-journey{order:7}.s-dex{order:8}
 .jny .card{border:0;border-radius:18px;padding:14px 16px}
 .jny details>summary{list-style:none;cursor:pointer}
 .jny details>summary::-webkit-details-marker{display:none}
