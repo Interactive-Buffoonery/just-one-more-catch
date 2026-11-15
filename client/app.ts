@@ -1502,7 +1502,7 @@ document.addEventListener("focusin", (event) => {
     box.scrollIntoView({ block: "nearest", inline: "center", behavior: "instant" });
 });
 
-root.addEventListener("input", (event) => {
+document.addEventListener("input", (event) => {
   const input = event.target as HTMLInputElement;
   if (input.id !== "other-place-search") return;
   const query = input.value.trim().toLowerCase();
