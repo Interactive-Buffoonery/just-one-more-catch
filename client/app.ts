@@ -376,6 +376,12 @@ function replayPendingEntry(key: string): { state: string; base: string } | null
 function pendingKey(id: string) {
   return "jomc.pending." + JSON.stringify([bridge.auth.userId ?? "guest", id]);
 }
+function dropPending(id?: string) {
+  const prefix = id ? pendingKey(id) : pendingKey("").slice(0, -2);
+  try {
+    Object.keys(localStorage).filter((k) => k.startsWith(prefix)).forEach(store.del);
+  } catch {}
+}
 function saveState(id: string, state: string) {
   const save = bridge.saveRun.bind(bridge), user = bridge.auth.userId;
   const key = pendingKey(id);
@@ -666,7 +672,9 @@ async function onClick(e: MouseEvent) {
     )
       return;
     $("#sheet").close();
+    clearTimeout(saveTimer);
     await bridge.deleteAccount();
+    dropPending();
     closeRun();
     bridge.signOut();
     return;
@@ -789,6 +797,7 @@ async function onClick(e: MouseEvent) {
       closeRun();
     }
     await bridge.deleteRun(row.id);
+    dropPending(row.id);
     return;
   }
   if (!run) return;
