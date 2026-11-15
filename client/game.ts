@@ -256,6 +256,7 @@ export type Run = {
   forms: Set<string>;
   trackForms: boolean;
   trackTraded: boolean;
+  journeyFocus: "story" | "catch";
   trackShinyHunts: boolean;
   hunt?: import("./hunt").Hunt;
   trackGenders: boolean;
@@ -304,6 +305,7 @@ function loadRun(row: RunRow, state: string): Run {
     forms: new Set((Array.isArray(s.forms) ? s.forms : []).filter((f: unknown) => typeof f === "string")),
     trackForms: s.trackForms !== false,
     trackTraded: s.trackTraded === true,
+    journeyFocus: s.journeyFocus === "catch" ? "catch" : "story",
     trackShinyHunts: s.trackShinyHunts === true,
     hunt: parseHunt(s.hunt),
     trackGenders: s.trackGenders === true,
@@ -340,6 +342,7 @@ export const dumpRun = (r: Run) =>
     forms: [...r.forms],
     trackForms: r.trackForms,
     trackTraded: r.trackTraded,
+    journeyFocus: r.journeyFocus,
     trackShinyHunts: r.trackShinyHunts,
     hunt: r.hunt,
     trackGenders: r.trackGenders,

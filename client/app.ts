@@ -913,6 +913,8 @@ async function onClick(e: MouseEvent) {
     r.hidden.has(d.hide) ? r.hidden.delete(d.hide) : r.hidden.add(d.hide);
   } else if (d.journeytab) {
     r.view = r.view === "dexonly" ? r.startView : "dexonly";
+  } else if (d.journeyfocus) {
+    r.journeyFocus = d.journeyfocus === "catch" ? "catch" : "story";
   } else if (d.startview) {
     r.view = r.startView = d.startview === "dex" ? "dex" : "journey";
   } else if (d.dexoption === "trackForms" || d.dexoption === "trackGenders" || d.dexoption === "trackTraded" || d.dexoption === "trackShinyHunts") {

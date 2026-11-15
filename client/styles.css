@@ -1016,3 +1016,18 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
 .dexsheet details.fold:first-of-type{border-top:0}
 .dexsheet details.fold>.card{margin-bottom:8px}
 .dexsheet .field{margin:12px 0 4px}
+
+/* Journey focuses */
+.jny .s-where{display:contents}
+.app .seg3.focus{display:grid;grid-auto-columns:1fr;width:100%;box-sizing:border-box;margin-top:12px;position:sticky;top:0;z-index:20;background:var(--bg)}
+.sw .seg3.focus{position:static;margin-top:0;width:auto}
+.where-tools .ptmenu{margin-left:auto}
+.where-tools .ptmenu>summary{border:1px solid var(--line)}
+.s-near .places.added{margin-top:10px}
+.jny.story .s-kit{order:5}
+.jny.catch .s-kit{order:7}
+.jny .gate{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:4px 12px}
+.gate h2{display:flex;align-items:center;gap:8px;font-size:20px}
+.gate h2 img{width:28px;height:28px;object-fit:contain}
+.gate .app-primary{grid-column:2;grid-row:1/4;padding:0 18px}
+@media (min-width:960px){.app .seg3.focus{width:300px}}

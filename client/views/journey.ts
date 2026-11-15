@@ -131,6 +131,7 @@ const SECTIONS = [
   ["journey", "Your journey", "Disabling this hides the Your journey section"],
   ["dex", "Dex progress", "Disabling this hides the Dex progress section"],
 ];
+const focusSwitch = () => `<div class="seg3 focus" role="group" aria-label="Journey focus">${["story", "catch"].map((v) => `<button type="button" data-journeyfocus="${v}" aria-pressed="${R().journeyFocus === v}">${v === "story" ? "Story" : "Catch here"}</button>`).join("")}</div>`;
 const toggle = (on: boolean, title: string, note: string, attr: string) =>
   `<button class="sw" role="switch" aria-checked="${on}" ${attr}><span class="grow"><b>${title}</b>${note ? `<small>${note}</small>` : ""}</span><span class="tog${on ? " on" : ""}" aria-hidden="true"></span></button>`;
 export function fillCustom() {
@@ -138,8 +139,8 @@ export function fillCustom() {
   $("#sheetbody").innerHTML =
     `<h2 id="sheet-title">Customize this ${ver().name} playthrough</h2>
     ${isGuest() ? "" : toggle(r.view !== "dexonly", "Journey tab", "", `data-journeytab="1"`)}
-    ${!isGuest() && r.view !== "dexonly" ? `<div class="sw"><b class="grow">Start on</b><div class="seg3" role="group" aria-label="Start on">${["journey", "dex"].map((v) => `<button data-startview="${v}" aria-pressed="${r.view === v}">${v === "journey" ? "Journey" : "Dex"}</button>`).join("")}</div></div><p class="eyebrow">Journey sections</p>
-    ${SECTIONS.map(([k, t, n]) => toggle(!r.hidden.has(k), t, n, `data-hide="${k}" data-k="h-${k}"`)).join("")}
+    ${!isGuest() && r.view !== "dexonly" ? `<div class="sw"><b class="grow">Start on</b><div class="seg3" role="group" aria-label="Start on">${["journey", "dex"].map((v) => `<button data-startview="${v}" aria-pressed="${r.view === v}">${v === "journey" ? "Journey" : "Dex"}</button>`).join("")}</div></div><div class="sw"><b class="grow">Journey focus</b>${focusSwitch()}</div><p class="eyebrow">Journey sections</p>
+    ${SECTIONS.filter(([k]) => k === "evolve" || k === "dex").map(([k, t, n]) => toggle(!r.hidden.has(k), t, n, `data-hide="${k}" data-k="h-${k}"`)).join("")}
     ${toggle(r.showLater, "Show Pokémon I can't reach yet", `List them in each section, not under "Come back later"`, `data-showlater="1" data-k="h-later"`)}
     <div class="sw"><span class="grow"><b>${badgesWord()[0].toUpperCase()}${badgesWord().slice(1)} and items</b><small>Always shown: this is how the app knows what you can catch</small></span><span class="lock">Always on</span></div>
     ` : ""}
@@ -243,9 +244,9 @@ export function Journey() {
   const hero = now.find((x) => !r.skip.has(x.p.n));
   const hide = r.hidden,
     all = spots(),
-    around = !hide.has("near") || !hide.has("chapter"),
+    around = true,
     curS = chapterSpots(all, cur, (pl) =>
-      isHere(pl) ? !hide.has("near") : !hide.has("chapter"),
+      true,
     );
   const evolve = DEX.filter(
     (p) =>
@@ -265,7 +266,7 @@ export function Journey() {
   const badges = P().badges,
     badgesOn = badges.filter((b) => r.badges.has(b[0])).length,
     kitOn = P().kit.filter((k) => r.kit.has(k[0])).length;
-  return `<div class="jny"><div class="colmain">
+  return focusLayout(`<div class="jny"><div class="colmain">
   <section class="s-where" aria-labelledby="where-h">
     <div class="where-k">Chapter ${cur + 1} · ${CHAPTERS[cur].title}</div>
     <div class="where-row">
@@ -327,7 +328,7 @@ export function Journey() {
       : ""
   }
   ${
-    hide.has("journey")
+    R().journeyFocus === "catch"
       ? ""
       : `<section class="s-journey" aria-labelledby="journey-h">
     <div class="sec-h"><h2 class="lg" id="journey-h">Your journey</h2></div>
@@ -379,5 +380,76 @@ export function Journey() {
     }
   </section>`
   }
-  </aside></div>`;
+  </aside></div>`);
+}
+
+function focusLayout(html: string) {
+  const template = document.createElement("template");
+  template.innerHTML = html;
+  const root = template.content;
+  const get = (selector: string) => root.querySelector<HTMLElement>(selector);
+  const story = R().journeyFocus === "story";
+  get(".jny")!.classList.add(story ? "story" : "catch");
+  get(".where-row")!.insertAdjacentHTML("afterend", focusSwitch());
+  const tools = get(".where-tools")!;
+  const menu = document.createElement("details");
+  menu.className = "ptmenu";
+  menu.innerHTML = '<summary aria-label="More">···</summary><div class="menu"></div>';
+  const items = menu.querySelector(".menu")!;
+  const secondary = tools.querySelector(story ? "[data-clock]" : "[data-journal]");
+  if (secondary) items.append(secondary);
+  tools.querySelectorAll('[data-custom], [data-act="share"]').forEach((el) => items.append(el));
+  const primary = tools.querySelector(story ? "[data-journal]" : "[data-clock]");
+  if (primary) tools.prepend(primary);
+  const share = items.querySelector('[data-act="share"]');
+  if (share) share.innerHTML = "Share";
+  tools.append(menu);
+  root.querySelectorAll(".s-next, .s-ask").forEach((el) => el.remove());
+  const around = get(".s-around");
+  if (story) {
+    const next = CHAPTERS.findIndex((_, i) => inJourney(i) && !unlocked(i));
+    if (next >= 0) {
+      const need = chapterNeeds(next).find((k) => !has(k));
+      if (need) {
+        const badge = P().badges.some(([id]) => id === need);
+        get(".colside")!.insertAdjacentHTML("afterbegin", `<section class="card ask gate" aria-labelledby="gate-h"><div class="ask-k">Opens chapter ${next + 1}</div><h2 id="gate-h">${badge ? `<img src="${badgeIcon(need)}" alt="">` : ""}${needLabel(need)}</h2><p class="small muted">${CHAPTERS[next].title} · ${uniq(chapterGroups(next))} to catch</p><button class="app-primary" ${badge ? `data-badge="${need}"` : EVENTS[need] ? `data-event="${need}"` : `data-custom="1"`}>Got it</button></section>`);
+      }
+    }
+    const chapters = root.querySelectorAll<HTMLDetailsElement>(".chap");
+    chapters.forEach((chapter, i) => {
+      chapter.open = i === currentChap();
+      if (i === currentChap() && around) {
+        chapter.querySelector(".pls")?.remove();
+        chapter.append(around.querySelector(".places")!);
+        chapter.querySelectorAll<HTMLDetailsElement>(".pl").forEach((p) => p.open = p.classList.contains("here"));
+      }
+    });
+    around?.remove();
+    const journey = get(".s-journey");
+    if (journey) get(".colmain")!.append(journey);
+  } else {
+    get(".s-journey")?.remove();
+    get(".s-dex")?.remove();
+    if (around) {
+      around.querySelector(".sec-h")?.remove();
+      around.removeAttribute("aria-labelledby");
+      around.setAttribute("aria-label", "You are here");
+      const near = document.createElement("section");
+      near.className = "s-near";
+      near.innerHTML = '<div class="sec-h"><h2 class="lg" id="near-h">Nearby areas</h2></div><div class="places"></div><div class="places added"></div>';
+      near.setAttribute("aria-labelledby", "near-h");
+      around.querySelectorAll(".pl:not(.here)").forEach((p) => near.querySelector(".places")!.append(p));
+      get(".colside")!.prepend(near);
+    }
+  }
+  root.querySelectorAll(".here-tag").forEach((el) => el.textContent = "You are here");
+  root.querySelectorAll(".pl > .body").forEach((body) => {
+    if (body.children.length !== 1) return;
+    const fold = body.firstElementChild;
+    if (fold?.matches("details.fold") && fold.querySelector("summary")?.textContent?.startsWith("Come back later")) {
+      fold.querySelector("summary")!.remove();
+      fold.replaceWith(...fold.childNodes);
+    }
+  });
+  return template.innerHTML;
 }
