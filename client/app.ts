@@ -1,3 +1,4 @@
+import { stateHash, replayPending } from "./pending-save";
 import { fillHunt, huntBar, huntClick, huntPlaceChanged, paintHunt } from "./views/hunt";
 // Ported from the approved mockup: string-rendered views on one root, event delegation, no framework.
 // main.ts owns auth and server calls and hands them in through the bridge.
@@ -84,7 +85,18 @@ function useRun(row: RunRow, start = false, customize = false, ready?: () => voi
       if (me !== openSeq) return;
       opening = null;
       const latest = bridge.runs?.find((r) => r.id === row.id);
-      if (latest) openRun(latest, d, state);
+      if (latest) {
+        const key = pendingKey(row.id);
+        openRun(latest, d, state);
+        const pending = replayPending(ui.saved, store.get(key));
+        store.del(key);
+        if (pending !== null) {
+          const base = ui.saved;
+          openRun(latest, d, pending);
+          ui.saved = base;
+          scheduleSave();
+        }
+      }
       if (start && run) ui.tab = !isGuest() && run.view === "journey" ? "journey" : "dex";
       render();
       ready?.();
@@ -358,9 +370,20 @@ function render() {
 
 let saveTimer: any, undoTimer: any, undoing = false;
 let pendingSave: Promise<unknown> = Promise.resolve();
+function replayPendingEntry(key: string): { state: string; base: string } | null {
+  try { return JSON.parse(store.get(key) || "null"); } catch { return null; }
+}
+function pendingKey(id: string) {
+  return "jomc.pending." + JSON.stringify([bridge.auth.userId ?? "guest", id]);
+}
 function saveState(id: string, state: string) {
   const save = bridge.saveRun.bind(bridge), user = bridge.auth.userId;
-  const next = pendingSave.catch(() => {}).then(() => save(id, state, user));
+  const key = pendingKey(id);
+  const next = pendingSave.catch(() => {}).then(() => save(id, state, user)).then(() => {
+    const pending = replayPendingEntry(key);
+    if (pending?.state === state) store.del(key);
+    else if (pending) store.set(key, JSON.stringify({ ...pending, base: stateHash(state) }));
+  });
   pendingSave = next;
   return next;
 }
@@ -395,6 +418,7 @@ function scheduleSave(delay = 800) {
     return showSaveError(
       "This playthrough is too big to save. Try shortening some notes.",
     );
+  store.set(pendingKey(id), JSON.stringify({ state, base: stateHash(ui.saved) }));
   saveTimer = setTimeout(async () => {
     try {
       await saveState(id, state);
