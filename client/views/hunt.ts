@@ -116,8 +116,8 @@ const placeRows = (h: Hunt) => {
   });
 };
 export function journeyHuntButton() {
-  if (!R().trackShinyHunts || !baseOdds(gen())) return "";
-  return `<button type="button" class="quietbtn gold" data-hunt="${R().hunt ? "open" : "pick"}">${R().hunt ? `<span class="sr">Shiny hunt </span>✦ <b class="hunt-cnt">${fmt(R().hunt!.count)}</b>` : "✦ Start a shiny hunt"}</button>`;
+  if (!R().trackShinyHunts || !baseOdds(gen()) || R().hunt) return "";
+  return `<button type="button" class="quietbtn gold" data-hunt="pick">✦ Start a shiny hunt</button>`;
 }
 function fillPicker(s: any) {
   const rows = wildRows(), places = [...new Set(rows.map(x => x.r.place))];
