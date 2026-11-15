@@ -1,7 +1,7 @@
 import { journeyHuntButton } from "./hunt";
 import { shareButton } from "../share-controls";
 import { JOURNAL_ICON } from "./journal";
-import { $ } from "../dom";
+import { $, esc } from "../dom";
 import {
   badgeName,
   badgesWord,
@@ -20,6 +20,7 @@ import {
   gameClock,
   has,
   inJourney,
+  isHere,
   isBadge,
   laterEvents,
   needLabel,
@@ -45,6 +46,7 @@ import {
   kitGroup,
   monRow,
   placeLabel,
+  placeCard,
   SLIDERS_ICON,
   spots,
   strip,
@@ -346,7 +348,17 @@ function focusLayout(html: string) {
       near.innerHTML = '<div class="sec-h"><h2 class="lg" id="near-h">Nearby areas</h2></div><div class="places"></div><div class="places added"></div>';
       near.setAttribute("aria-labelledby", "near-h");
       around.querySelectorAll(".pl:not(.here)").forEach((p) => near.querySelector(".places")!.append(p));
-      get(".colside")!.prepend(near);
+      const all = spots();
+      const shown = new Set(Array.from(around.querySelectorAll(".pl .title"), el => el.childNodes[0]?.textContent));
+      near.querySelectorAll(".pl .title").forEach(el => shown.add(el.childNodes[0]?.textContent));
+      near.querySelector(".added")!.innerHTML = R().addedPlaces.filter(p => all[p] && !shown.has(p) && !isHere(p)).map(p => placeCard(p, all[p])).join("");
+      near.querySelectorAll<HTMLDetailsElement>(".added .pl").forEach(el => {
+        el.open = true;
+        const name = el.querySelector(".title")?.childNodes[0]?.textContent || "";
+        el.querySelector(".body")?.insertAdjacentHTML("afterbegin", `<div class="sumrow"><button class="app-quiet" data-remove-place="${esc(name)}">Remove</button><span class="grow"></span><button class="chip" data-here-place="${esc(name)}">I'm here</button></div>`);
+      });
+      near.insertAdjacentHTML("beforeend", '<button type="button" class="quietbtn other" data-other-places="1">Other places</button>');
+      around.after(near);
     }
   }
   root.querySelectorAll(".here-tag").forEach((el) => el.textContent = "You are here");
@@ -359,4 +371,9 @@ function focusLayout(html: string) {
     }
   });
   return template.innerHTML;
+}
+
+export function fillOtherPlaces() {
+  const next = CHAPTERS.findIndex((_, i) => !unlocked(i));
+  $("#sheetbody").innerHTML = `<div class="dexsheet pickstep"><h2 id="sheet-title">Other places</h2><label class="field"><span>Place</span><input type="search" id="other-place-search"></label>${CHAPTERS.map((c, i) => `<details class="fold" ${i === next ? "open" : ""}><summary>${i + 1}. ${esc(c.title)} <span class="n">· ${unlocked(i) ? c.places.length : chapterNeeds(i).filter(k => !has(k)).map(needLabel).join(", ")}</span>${CHEV}</summary><div class="card">${c.places.map(p => `<button type="button" class="spot pick" data-add-place="${esc(p)}"><span class="pn grow">${esc(p)}</span></button>`).join("")}</div></details>`).join("")}<div class="hv-actions hgo"><button type="button" class="app-quiet" data-close="1">Cancel</button></div></div>`;
 }

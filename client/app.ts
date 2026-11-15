@@ -41,7 +41,7 @@ import { Bridge, PairingHandle, PairingLookup, RunRow } from "./types";
 import { Devices, fillApprove, pairBody, pairErrorText, pairLetters, showCode, ttl } from "./views/devices";
 import { Boxes, fillBoxSheet, fillMonSheet, saveMon, updateMonSprite } from "./views/boxes";
 import { DEX_SIZES, Dex, dexGrid, fillSpecies, resetDexCache } from "./views/dex";
-import { fillClock, fillCustom, Journey, untick } from "./views/journey";
+import { fillClock, fillCustom, fillOtherPlaces, Journey, untick } from "./views/journey";
 import {
   confirmGame,
   confirmPair,
@@ -106,6 +106,7 @@ function fillSheet(s: any) {
     $("#sheetbody").innerHTML = s.pair ? confirmPair(s.id.split(",")) : confirmGame(s.id);
     return;
   }
+  if (s.kind === "otherplaces") return fillOtherPlaces();
   if (s.kind === "journal") return fillJournal();
   if (s.kind === "journalnote") return fillJournalNote(s.id);
   if (s.kind === "hunt") return fillHunt(s);
@@ -770,6 +771,17 @@ async function onClick(e: MouseEvent) {
   const r = R();
   if (d.open) {
     openSheet(+d.open);
+    return;
+  }
+  if (d.otherPlaces) return openSheet({ kind: "otherplaces" });
+  if (d.addPlace || d.removePlace || d.herePlace) {
+    const r = R();
+    if (d.addPlace) r.addedPlaces = [...new Set([...r.addedPlaces, d.addPlace])].slice(-30);
+    else r.addedPlaces = r.addedPlaces.filter(p => p !== (d.removePlace || d.herePlace));
+    if (d.herePlace) r.here = d.herePlace;
+    if (d.addPlace) $("#sheet").close();
+    scheduleSave();
+    render();
     return;
   }
   if (d.custom) {
@@ -1488,4 +1500,15 @@ document.addEventListener("focusin", (event) => {
   const box = (event.target as HTMLElement).closest(".gb");
   if (box?.matches(":focus-visible"))
     box.scrollIntoView({ block: "nearest", inline: "center", behavior: "instant" });
+});
+
+root.addEventListener("input", (event) => {
+  const input = event.target as HTMLInputElement;
+  if (input.id !== "other-place-search") return;
+  const query = input.value.trim().toLowerCase();
+  document.querySelectorAll<HTMLElement>("[data-add-place]").forEach(el => el.hidden = !el.dataset.addPlace!.toLowerCase().includes(query));
+  document.querySelectorAll<HTMLDetailsElement>("#sheetbody details.fold").forEach(el => {
+    el.hidden = !el.querySelector("[data-add-place]:not([hidden])");
+    if (query) el.open = true;
+  });
 });

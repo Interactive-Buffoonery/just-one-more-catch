@@ -262,6 +262,7 @@ export type Run = {
   trackGenders: boolean;
   genders: Record<number, Set<string>>;
   skip: Set<number>;
+  addedPlaces: string[];
   here: string;
   timeAuto: boolean;
   time: string;
@@ -315,6 +316,7 @@ function loadRun(row: RunRow, state: string): Run {
       ),
     ),
     skip: new Set(s.skip || []),
+    addedPlaces: Array.isArray(s.addedPlaces) ? s.addedPlaces.filter((p: unknown): p is string => typeof p === "string").slice(0, 30) : [],
     here: s.here || pack.start,
     timeAuto: s.timeAuto ?? true,
     time: s.time || "day",
@@ -348,6 +350,7 @@ export const dumpRun = (r: Run) =>
     trackGenders: r.trackGenders,
     genders: Object.fromEntries(Object.entries(r.genders).map(([n, gs]) => [n, [...gs]])),
     skip: [...r.skip],
+    addedPlaces: r.addedPlaces,
     here: r.here,
     timeAuto: r.timeAuto,
     time: r.time,
