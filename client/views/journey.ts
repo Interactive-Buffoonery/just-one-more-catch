@@ -21,21 +21,14 @@ import {
   has,
   inJourney,
   isBadge,
-  isHere,
   laterEvents,
   needLabel,
   NOT_HERE,
   nowTime,
-  num,
-  ONE_TIME,
   P,
-  pad,
   R,
   regionalCaught,
-  rowStatus,
   run,
-  TYPE,
-  ui,
   unlocked,
   ver,
   visible,
@@ -44,8 +37,6 @@ import {
 import {
   badgeIcon,
   badgeRow,
-  Catchable,
-  catchableNow,
   chapterGroups,
   chapterSpots,
   CHEV,
@@ -54,39 +45,14 @@ import {
   kitGroup,
   monRow,
   placeLabel,
-  RED_NOTE,
-  redGyarados,
-  rowTags,
   SLIDERS_ICON,
   spots,
-  sprite,
   strip,
   uniq,
 } from "../parts";
 import { NoRun } from "./runs";
 
 /* ---- Journey (home) ---- */
-const why = (h: Catchable) =>
-  redGyarados(h.p, h.r)
-    ? RED_NOTE
-    : isHere(h.r.place)
-      ? ONE_TIME.has(h.r.m)
-        ? ""
-        : "Easiest one to catch here"
-      : h.r.chap === currentChap()
-        ? "Best odds in this chapter"
-        : `Best odds in ${CHAPTERS[h.r.chap].title} chapter`;
-function heroCard(h: Catchable) {
-  const a = TYPE[h.p.types[0]],
-    b = TYPE[h.p.types[1] || h.p.types[0]];
-  return `<section class="next s-next" aria-labelledby="hero-name" style="--t1:${a};--t2:${b}">
-      <div class="band">${sprite(h.p, "hv-sprite", redGyarados(h.p, h.r))}<div class="k">Next catch · #${pad(num(h.p))}</div>
-        <h2 class="lg" id="hero-name">${h.p.name}</h2>${h.p.types.map((t) => `<span class="type" style="--tc:${TYPE[t]}">${cap(t)}</span>`).join(" ")}${why(h) && `<div class="why">${why(h)}</div>`}</div>
-      ${rowTags(h.r, isHere(h.r.place) ? R().here : "", " chance")}
-      <div class="hv-actions"><button class="app-primary grow" data-catch="${h.p.n}" data-k="hero-${h.p.n}" aria-label="${h.p.name} caught">Caught it</button><button class="app-quiet" data-skip="${h.p.n}" data-k="skip">Not now</button></div>
-    </section>`;
-}
-
 export function fillClock(mode: string) {
   const c = R().clock,
     g = gameClock(c),
@@ -152,56 +118,6 @@ export function fillCustom() {
     <div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="chip" data-close="1">Done</button></div>`;
 }
 /* ---- Story events: one question on top, the full list in Your journey ---- */
-// What ticking the event would open right now, found by ticking it for a moment.
-function opensText(id: string) {
-  const reach = () => ({
-    chaps: CHAPTERS.map((_, i) => unlocked(i)),
-    mons: DEX.filter(
-      (p) =>
-        visible(p) &&
-        !R().caught.has(p.n) &&
-        p.rows.some((r) => rowStatus(r).s !== "later"),
-    ).map((p) => p.n),
-  });
-  const was = reach();
-  R().events.add(id);
-  let now;
-  try {
-    now = reach();
-  } finally {
-    R().events.delete(id);
-  }
-  const places = CHAPTERS.filter((_, i) => now.chaps[i] && !was.chaps[i])
-      .flatMap((c) => c.places)
-      .filter((p) => !NOT_HERE.test(p)),
-    n = now.mons.length - was.mons.length;
-  return [
-    places.length &&
-      `Opens ${places.slice(0, 3).join(", ")}${places.length > 3 ? ` and ${places.length - 3} more` : ""}`,
-    n && `${n} Pokémon`,
-  ]
-    .filter(Boolean)
-    .join(" · ");
-}
-function storyCheck() {
-  const open = Object.values(EVENTS)
-    .filter(
-      (e) =>
-        !eventDone(e.id) &&
-        inJourney(e.chap) &&
-        unlocked(e.chap) &&
-        (e.after || []).every(eventDone),
-    )
-    .sort((a, b) => a.chap - b.chap);
-  const e = open.find((x) => !ui.snooze.has(x.id));
-  if (!e)
-    return open.length
-      ? `<div class="row ask-snz s-ask"><span class="grow small"><b>${open[0].label}</b> · not yet</span><button class="got-btn" data-unsnooze="1" data-k="ask-now" aria-label="Ask now: ${open[0].label}">Ask now</button></div>`
-      : "";
-  const opens = opensText(e.id);
-  return `<section class="card ask s-ask" aria-labelledby="ask-q"><div class="ask-k">Story check</div><h2 id="ask-q" tabindex="-1">${e.q}</h2>${opens && `<p class="small muted">${opens}</p>`}
-    <div class="hv-actions"><button class="app-primary" data-yes="${e.id}" aria-describedby="ask-q">Yes, got it</button><button class="app-quiet" data-snooze="${e.id}" aria-describedby="ask-q">Not yet</button></div></section>`;
-}
 function beat(id: string) {
   const e = EVENTS[id],
     done = eventDone(id),
@@ -239,15 +155,10 @@ export function Journey() {
   if (!run) return NoRun();
   const r = R(),
     cur = currentChap(),
-    now = catchableNow(),
     wide = matchMedia("(min-width:960px)").matches;
-  const hero = now.find((x) => !r.skip.has(x.p.n));
   const hide = r.hidden,
     all = spots(),
-    around = true,
-    curS = chapterSpots(all, cur, (pl) =>
-      true,
-    );
+    curS = chapterSpots(all, cur, () => true);
   const evolve = DEX.filter(
     (p) =>
       visible(p) &&
@@ -281,11 +192,8 @@ export function Journey() {
       <button class="quietbtn" data-custom="1" data-k="custom">${SLIDERS_ICON}Customize</button>${shareButton(r.id, ver().name)}
     </div>
   </section>
-  ${hide.has("next") ? "" : hero ? heroCard(hero) : now.length ? `<section class="hero s-next"><h2>You've skipped every suggestion</h2><p>${now.length} Pokémon are still catchable right now.</p><button class="btn" data-unskip="1" data-k="unskip2">Show them again</button></section>` : `<section class="hero s-next"><h2>Nothing left to catch right now</h2><p>Try another time of day, or move ahead in the story.</p></section>`}
-  ${!hide.has("next") && r.skip.size ? `<div class="skipped s-next"><button class="chip" data-unskip="1" data-k="unskip">Show ${r.skip.size} skipped</button></div>` : ""}
-  ${hide.has("story") && !hide.has("journey") ? "" : storyCheck()}
   ${
-    around && curS.html
+    curS.html
       ? `<section class="s-around" aria-labelledby="around-h">
     <div class="sec-h"><h2 class="lg" id="around-h">Nearby areas</h2></div>
     ${curS.left || curS.later ? "" : `<p class="muted">You've caught everything in this chapter.</p>`}
@@ -356,7 +264,7 @@ export function Journey() {
             .join(", ")}${n ? ` · ${n} to catch` : ""}`;
       return `<details class="chap" ${fold(String(i), wide && i === cur)}><summary><span class="node ${done ? "done" : open ? "wip" : ""}" aria-hidden="true">${done ? "✓" : i + 1}</span><span class="grow"><span class="t">${c.title}<span class="sr">${done ? ", everything caught" : open ? ", in progress" : ", not reached yet"}</span></span><span class="c">${label}</span></span>${CHEV}</summary>
         ${beats(i)}${
-          i === cur && around
+          i === cur
             ? c.places.length
               ? `<p class="pls">${c.places.join(", ")}</p>`
               : ""
@@ -404,7 +312,6 @@ function focusLayout(html: string) {
   const share = items.querySelector('[data-act="share"]');
   if (share) share.innerHTML = "Share";
   tools.append(menu);
-  root.querySelectorAll(".s-next, .s-ask").forEach((el) => el.remove());
   const around = get(".s-around");
   if (story) {
     const next = CHAPTERS.findIndex((_, i) => inJourney(i) && !unlocked(i));
