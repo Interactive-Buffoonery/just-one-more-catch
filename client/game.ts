@@ -456,7 +456,7 @@ export function openRun(row: RunRow, data: GameData, state: string) {
   }));
   byName = Object.fromEntries(DEX.map((p) => [p.name, p]));
   byN = Object.fromEntries(DEX.map((p) => [p.n, p]));
-  if (run.hunt && !byN[run.hunt.species]) run.hunt = undefined;
+  if (run.hunt && !run.hunt.kind && !byN[run.hunt.species]) run.hunt = undefined;
   for (const m of run.mons) {
     const p = byN[m.n],
       form = p?.forms?.find((f) => f.id === m.form) || p?.forms?.[0];

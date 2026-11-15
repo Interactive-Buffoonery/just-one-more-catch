@@ -972,6 +972,9 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
 .app .huntopen { padding:0 16px; white-space:nowrap; }
 .app .hunt-tag { gap:4px; vertical-align:middle; margin-left:2px; }
 .spot.pick { display:flex; align-items:center; gap:12px; min-height:48px; cursor:pointer; }
+.spot.pick[hidden] { display:none; }
+.spot.wild { display:flex; align-items:center; gap:12px; }
+.spot.wild .pn .small { display:block; font-weight:700; }
 .spot.pick input { width:22px; height:22px; accent-color:var(--teal); flex:none; margin:0; }
 .pickstep .seg3 button[hidden], .pickstep .field[hidden] { display:none; }
 .pickstep .hv-actions { margin-top:16px; }

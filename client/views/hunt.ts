@@ -9,7 +9,7 @@ import {
   unitFor,
   type Hunt,
 } from "../hunt";
-import { activeHunt, mon, rowTags, sprite } from "../parts";
+import { activeHunt, CHEV, mon, rowTags, sprite } from "../parts";
 import { Species } from "../types";
 
 const fmt = (n: number) => Math.round(n).toLocaleString("en-US");
@@ -117,13 +117,13 @@ const placeRows = (h: Hunt) => {
 };
 export function journeyHuntButton() {
   if (!R().trackShinyHunts || !baseOdds(gen())) return "";
-  return `<button type="button" class="quietbtn gold" data-hunt="${R().hunt ? "open" : "pick"}">${R().hunt ? "✦ " + fmt(R().hunt!.count) : "✦ Start a shiny hunt"}</button>`;
+  return `<button type="button" class="quietbtn gold" data-hunt="${R().hunt ? "open" : "pick"}">${R().hunt ? `<span class="sr">Shiny hunt </span>✦ <b class="hunt-cnt">${fmt(R().hunt!.count)}</b>` : "✦ Start a shiny hunt"}</button>`;
 }
 function fillPicker(s: any) {
   const rows = wildRows(), places = [...new Set(rows.map(x => x.r.place))];
   const body = s.tab === "species"
     ? `<label class="field"><span>Pokémon</span><input id="hunt-search" type="search"></label><div class="card">${DEX.filter(p => p.rows.some(r => r.chap === currentChap() && unitFor(r.m) && rowStatus(r).s === "now")).map(p => `<label class="spot pick" data-huntname="${esc(p.name.toLowerCase())}">${mon(p)}<span class="pn grow">${p.name}</span><input type="radio" name="hunt-species" value="${p.n}"></label>`).join("")}</div>`
-    : CHAPTERS.map((ch, i) => ({ch, i})).filter(x => x.i <= currentChap()).reverse().map(({ch,i}, index) => `<details class="fold"${index === 0 ? " open" : ""}><summary>${esc(ch.title)}</summary><div class="card">${places.filter(pl => rows.some(x => x.r.place === pl && x.r.chap === i)).map(pl => `<label class="spot pick"><span class="pn grow">${esc(pl)}${isHere(pl) ? '<span class="here-tag">You are here</span>' : ""}<span class="tags">${[...new Set(rows.filter(x => x.r.place === pl).map(x => x.r.m))].map(m => `<span class="tag">${kindName(m)}</span>`).join("")}</span></span><input type="radio" name="hunt-wild-place" value="${esc(pl)}"${isHere(pl) ? " checked" : ""}></label>`).join("")}</div></details>`).join("");
+    : CHAPTERS.map((ch, i) => ({ch, i, pls: places.filter(pl => rows.some(x => x.r.place === pl && x.r.chap === i))})).filter(x => x.i <= currentChap() && x.pls.length).reverse().map(({ch, pls}, index) => `<details class="fold"${index === 0 ? " open" : ""}><summary>${esc(ch.title)} <span class="n">· ${pls.length}</span>${CHEV}</summary><div class="card">${pls.map(pl => `<label class="spot pick"><span class="pn grow">${esc(pl)}${isHere(pl) ? '<span class="here-tag">You are here</span>' : ""}<span class="tags">${[...new Set(rows.filter(x => x.r.place === pl).map(x => x.r.m))].map(m => `<span class="tag">${kindName(m)}</span>`).join("")}</span></span><input type="radio" name="hunt-wild-place" value="${esc(pl)}"${isHere(pl) ? " checked" : ""}></label>`).join("")}</div></details>`).join("");
   $("#sheetbody").innerHTML = `<div class="dexsheet pickstep"><div class="grab"></div><h2 class="lg" id="sheet-title">Start a shiny hunt <span class="shiny">✦</span></h2><div class="seg3 wide" role="group" aria-label="Hunt by">${["Place","Species"].map(t => `<button data-hunt="pick" data-tab="${t.toLowerCase()}" aria-pressed="${(s.tab || "place") === t.toLowerCase()}">${t}</button>`).join("")}</div>${body}<div class="hv-actions hgo"><button class="app-primary grow" data-hunt="next">Next</button><button class="app-quiet" data-close="1">Cancel</button></div></div>`;
 }
 export function fillHunt(s: any) {
@@ -135,8 +135,15 @@ export function fillHunt(s: any) {
     return;
   }
   if (h?.kind && !["method", "count"].includes(s.step)) {
-    const rows = placeRows(h);
-    $("#sheetbody").innerHTML = `<div class="dexsheet"><h2 id="sheet-title">${esc(h.place)} · ${kindName(h.kind)}</h2><div class="hbody"><b class="hunt-cnt lg">${fmt(h.count)}</b><span class="hunt-pct">${pct(h)}</span><button class="plus" data-hunt="plus">+1</button><div class="card">${rows.map(({p,r}) => `<div class="spot">${mon(p)}<span class="grow">${p.name} · ${r.c}% · <span data-shiny-rate="${r.c}">${(chance(h.count, h.odds * 100 / r.c)*100).toFixed(1)}%</span></span>${s.step === "caught" ? `<button class="chip" data-hunt="record" data-species="${p.n}">✦ Shiny caught</button>` : ""}</div>`).join("")}</div></div><div class="hv-actions hfoot">${footActions(h)}</div></div>`;
+    const rows = placeRows(h), picking = s.step === "caught";
+    $("#sheetbody").innerHTML =
+      `<div class="dexsheet"><h2 class="lg" id="sheet-title">${esc(h.place)} · ${kindName(h.kind)}</h2>
+    <section class="hbody"><div class="hcount"><b class="hunt-cnt lg">${fmt(h.count)}</b><span class="where-k">${cap(h.unit)} · ${METHODS[h.method]}</span></div>
+    <div class="hstats"><div><b>1 in ${fmt(h.odds)}</b><span>Odds</span></div><div><b class="hunt-pct">${pct(h)}</b><span>Chance so far</span></div><div><b>${fmt(fiftyAt(h.odds))}</b><span>50% at</span></div></div>
+    <div class="bar"><i class="hunt-fill" style="width:${pct(h)}"></i></div>
+    ${picking ? "" : `<button type="button" class="plus" data-hunt="plus" data-k="hunt-plus-sheet" aria-label="Add one ${ONE[h.unit]}">+1</button>`}</section>
+    <div class="card">${rows.map(({ p, r }) => `<div class="spot wild">${mon(p)}<span class="pn grow">${p.name}<span class="small muted">${r.c}% · <span data-shiny-rate="${r.c}">${(chance(h.count, h.odds * 100 / r.c) * 100).toFixed(1)}%</span></span></span>${picking ? `<button type="button" class="chip" data-hunt="record" data-species="${p.n}">✦ ${p.name}</button>` : ""}</div>`).join("")}</div>
+    <div class="hv-actions hfoot">${picking ? `<button type="button" class="app-quiet grow" data-hunt="open">Cancel</button>` : footActions(h)}</div></div>`;
     return;
   }
   if (s.step === "start") {
