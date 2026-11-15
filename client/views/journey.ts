@@ -339,6 +339,10 @@ function focusLayout(html: string) {
   } else {
     get(".s-journey")?.remove();
     get(".s-dex")?.remove();
+    const here = R().here,
+      all = spots();
+    if (around && !around.querySelector(".pl.here") && all[here])
+      around.querySelector(".places")!.insertAdjacentHTML("afterbegin", placeCard(here, all[here]));
     if (around) {
       around.querySelector(".sec-h")?.remove();
       around.removeAttribute("aria-labelledby");
@@ -348,7 +352,6 @@ function focusLayout(html: string) {
       near.innerHTML = '<div class="sec-h"><h2 class="lg" id="near-h">Nearby areas</h2></div><div class="places"></div><div class="places added"></div>';
       near.setAttribute("aria-labelledby", "near-h");
       around.querySelectorAll(".pl:not(.here)").forEach((p) => near.querySelector(".places")!.append(p));
-      const all = spots();
       const shown = new Set(Array.from(around.querySelectorAll(".pl .title"), el => el.childNodes[0]?.textContent));
       near.querySelectorAll(".pl .title").forEach(el => shown.add(el.childNodes[0]?.textContent));
       near.querySelector(".added")!.innerHTML = R().addedPlaces.filter(p => all[p] && !shown.has(p) && !isHere(p)).map(p => placeCard(p, all[p])).join("");
@@ -374,6 +377,7 @@ function focusLayout(html: string) {
 }
 
 export function fillOtherPlaces() {
-  const next = CHAPTERS.findIndex((_, i) => !unlocked(i));
-  $("#sheetbody").innerHTML = `<div class="dexsheet pickstep"><h2 id="sheet-title">Other places</h2><label class="field"><span>Place</span><input type="search" id="other-place-search"></label>${CHAPTERS.map((c, i) => `<details class="fold" ${i === next ? "open" : ""}><summary>${i + 1}. ${esc(c.title)} <span class="n">· ${unlocked(i) ? c.places.length : chapterNeeds(i).filter(k => !has(k)).map(needLabel).join(", ")}</span>${CHEV}</summary><div class="card">${c.places.map(p => `<button type="button" class="spot pick" data-add-place="${esc(p)}"><span class="pn grow">${esc(p)}</span></button>`).join("")}</div></details>`).join("")}<div class="hv-actions hgo"><button type="button" class="app-quiet" data-close="1">Cancel</button></div></div>`;
+  const next = CHAPTERS.findIndex((_, i) => !unlocked(i)),
+    all = spots();
+  $("#sheetbody").innerHTML = `<div class="dexsheet pickstep"><h2 id="sheet-title">Other places</h2><label class="field"><span>Place</span><input type="search" id="other-place-search"></label>${CHAPTERS.map((c, i) => `<details class="fold" ${i === next ? "open data-next" : ""}><summary>${i + 1}. ${esc(c.title)} <span class="n">· ${unlocked(i) ? c.places.length : chapterNeeds(i).filter(k => !has(k)).map(needLabel).join(", ")}</span>${CHEV}</summary><div class="card">${c.places.map(p => `<button type="button" class="spot pick" data-add-place="${esc(p)}"><span class="pn grow">${esc(p)}</span><span class="small muted">${placeLabel(p, all[p])}</span></button>`).join("")}</div></details>`).join("")}<div class="hv-actions hgo"><button type="button" class="app-quiet" data-close="1">Cancel</button></div></div>`;
 }

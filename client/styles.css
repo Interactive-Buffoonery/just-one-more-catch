@@ -973,6 +973,7 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
 .app .hunt-tag { gap:4px; vertical-align:middle; margin-left:2px; }
 .spot.pick { display:flex; align-items:center; gap:12px; min-height:48px; cursor:pointer; }
 .spot.pick[hidden] { display:none; }
+button.spot.pick { width:100%; background:none; border:0; border-top:1px solid var(--line); font:inherit; color:inherit; text-align:left; }
 .spot.wild { display:flex; align-items:center; gap:12px; }
 .spot.wild .pn .small { display:block; font-weight:700; }
 .spot.pick input { width:22px; height:22px; accent-color:var(--teal); flex:none; margin:0; }

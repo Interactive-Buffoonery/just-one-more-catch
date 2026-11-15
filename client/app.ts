@@ -1509,6 +1509,6 @@ document.addEventListener("input", (event) => {
   document.querySelectorAll<HTMLElement>("[data-add-place]").forEach(el => el.hidden = !el.dataset.addPlace!.toLowerCase().includes(query));
   document.querySelectorAll<HTMLDetailsElement>("#sheetbody details.fold").forEach(el => {
     el.hidden = !el.querySelector("[data-add-place]:not([hidden])");
-    if (query) el.open = true;
+    el.open = query ? true : el.hasAttribute("data-next");
   });
 });
