@@ -358,7 +358,7 @@ function focusLayout(html: string) {
         el.querySelector(".body")?.insertAdjacentHTML("afterbegin", `<div class="sumrow"><button class="app-quiet" data-remove-place="${esc(name)}">Remove</button><span class="grow"></span><button class="chip" data-here-place="${esc(name)}">I'm here</button></div>`);
       });
       near.insertAdjacentHTML("beforeend", '<button type="button" class="quietbtn other" data-other-places="1">Other places</button>');
-      around.after(near);
+      get(".colside")!.prepend(near);
     }
   }
   root.querySelectorAll(".here-tag").forEach((el) => el.textContent = "You are here");
