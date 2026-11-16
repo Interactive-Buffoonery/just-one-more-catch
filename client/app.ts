@@ -376,8 +376,10 @@ function renderToast() {
 let saveTimer: any, undoTimer: any, undoing = false;
 if (import.meta.env.PROD) {
   const current = document.querySelector<HTMLScriptElement>('script[type="module"][src*="/assets/main-"]')?.getAttribute("src");
+  let checking = false;
   const checkUpdate = async () => {
-    if (!current || updateAvailable) return;
+    if (!current || updateAvailable || checking) return;
+    checking = true;
     try {
       const response = await fetch("/", { cache: "no-store" });
       if (!response.ok) return;
@@ -386,7 +388,9 @@ if (import.meta.env.PROD) {
         updateAvailable = true;
         renderToast();
       }
-    } catch {}
+    } catch {} finally {
+      checking = false;
+    }
   };
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") void checkUpdate();
