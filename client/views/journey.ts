@@ -14,6 +14,8 @@ import {
   DEX,
   e4,
   eventDone,
+  eventPick,
+  clearPick,
   EVENTS,
   forced,
   gameTime,
@@ -133,7 +135,7 @@ function beat(id: string) {
           : e.by && EVENTS[e.by] && has(e.by)
             ? `Shown by: ${EVENTS[e.by].label}`
             : "A later step shows it's done";
-  return `<button class="beat" id="ev-${id}" data-event="${id}" data-k="ev-${id}" aria-pressed="${done}" ${lock ? `aria-disabled="true"` : ""}><span class="bx" aria-hidden="true"></span><span class="bt">${e.label}${why ? `<small>${why}</small>` : ""}</span>${done && !R().events.has(id) ? `<span class="auto" aria-hidden="true">auto</span><span class="sr">, marked done for you</span>` : ""}</button>`;
+  return `<button class="beat" id="ev-${id}" data-event="${id}" data-k="ev-${id}" aria-pressed="${done}" ${lock ? `aria-disabled="true"` : ""}><span class="bx" aria-hidden="true"></span><span class="bt">${e.label}${why ? `<small>${why}</small>` : ""}</span>${done && !R().events.has(id) ? `<span class="auto" aria-hidden="true">auto</span><span class="sr">, marked done for you</span>` : ""}</button>${e.pick ? `<div class="pick"><div class="seg3" role="group" aria-label="${id === "fossil" ? "Fossil" : "Dojo gift"}">${e.pick.options.map((n) => `<button type="button" data-pick="${id}" data-option="${n}" data-k="pick-${id}-${n}" aria-pressed="${eventPick(id) === n}">${n === 138 ? "Helix Fossil" : n === 140 ? "Dome Fossil" : n === 106 ? "Hitmonlee" : "Hitmonchan"}</button>`).join("")}</div></div>` : ""}`;
 }
 const beats = (i: number) => {
   const list = Object.values(EVENTS).filter((e) => e.chap === i);
@@ -144,6 +146,7 @@ const beats = (i: number) => {
 // Unticking an event also unticks the ticked events that depend on it.
 export function untick(id: string) {
   R().events.delete(id);
+  clearPick(id);
   laterEvents(id)
     .filter((e) => eventDone(e.id))
     .forEach((e) => untick(e.id));

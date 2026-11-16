@@ -1033,3 +1033,7 @@ button.spot.pick { width:100%; background:none; border:0; border-top:1px solid v
 .gate h2 img{width:28px;height:28px;object-fit:contain}
 .gate .app-primary{grid-column:2;grid-row:1/4;padding:0 18px}
 @media (min-width:960px){.app .seg3.focus{width:300px}}
+
+.beats>.pick{padding:0 0 6px 32px}
+.beats>.pick .seg3{width:100%;grid-auto-columns:1fr;box-sizing:border-box}
+.beats>.pick .seg3 button[aria-pressed=true]::before{content:"\2713  ";color:var(--teal)}

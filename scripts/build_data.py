@@ -356,6 +356,11 @@ if __name__ == "__main__":
     assert not set(range(len(GAME.get("row_needs", [])))) - row_hits, f"row_needs match no row: {[g for i, g in enumerate(GAME['row_needs']) if i not in row_hits]}"
     assert not set(range(len(GAME.get("drop_rows", [])))) - drop_hits, f"drop_rows match no row: {[g for i, g in enumerate(GAME['drop_rows']) if i not in drop_hits]}"
     for e in events:
+        if "pick" in e:
+            options = e["pick"]["options"]
+            assert len(options) == 2 and len(set(options)) == 2, f"{e['id']}: pick needs two distinct options"
+            assert all(any(p["n"] == n for p in dex) for n in options), f"{e['id']}: unknown pick species"
+            assert e["pick"]["tag"], f"{e['id']}: pick needs a tag"
         assert re.fullmatch(r"[a-z][a-z0-9-]*", e["id"]), f"event id must be a lowercase slug: {e['id']}"
         assert 0 <= e["chap"] < len(GAME["chapters"]), f"{e['id']}: no chapter {e['chap']}"
         assert set(e.get("after", [])) <= ids, f"{e['id']}: unknown after {set(e['after']) - ids}"
