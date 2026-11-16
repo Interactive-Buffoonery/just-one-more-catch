@@ -325,7 +325,8 @@ function focusLayout(html: string) {
       }
     }
     const chapters = root.querySelectorAll<HTMLDetailsElement>(".chap");
-    chapters.forEach((chapter, i) => {
+    chapters.forEach((chapter) => {
+      const i = Number(chapter.dataset.chap);
       chapter.open = i === currentChap();
       if (i === currentChap() && around) {
         chapter.querySelector(".pls")?.remove();
