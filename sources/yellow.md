@@ -156,8 +156,8 @@ only `$14` at the dock) and `FishingInit` rejects fishing while surfing:
   gate. `data/events/prizes.asm` sources Abra 230, Vulpix 1000, Wigglytuff
   2680, Scyther/Pinsir 6500 and Porygon 9999 coins. Those PokeAPI conditions
   are preserved. `scripts/FightingDojo.asm` offers one of Hitmonlee/Hitmonchan
-  after the Karate Master. Both remain listed as choices; the app tracks
-  species owned rather than consuming the mutually exclusive gift.
+  after the Karate Master. The tracker records this choice and the Mt. Moon fossil choice in story
+  steps, showing the skipped gift as trade-only.
 - `scripts/PokemonTower7F.asm` removes the Silph entrance blocker after Fuji
   is rescued. `scripts/SilphCo7F.asm` and its rival trigger coordinates source
   Lapras Lv 15 after the rival. No badge substitutes for these story events.

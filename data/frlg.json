@@ -83,13 +83,14 @@
     {"title": "The completed Sevii network", "needs": ["Elite Four", "network"], "places": ["Cerulean Cave", "Roaming Kanto"]}
   ],
   "events": [
+    {"id": "fossil", "label": "Take a fossil at Mt. Moon", "q": "Did you take a fossil at Mt. Moon?", "chap": 1, "pick": {"options": [138, 140], "names": ["Helix Fossil", "Dome Fossil"], "tag": "Your fossil"}},
     {"id": "bill", "label": "Help Bill at Sea Cottage", "q": "Did you help Bill and get the S.S. Ticket?", "chap": 1, "by": "Thunder"},
     {"id": "cut", "label": "Get HM01 Cut on the S.S. Anne", "q": "Did the S.S. Anne captain give you HM01 Cut?", "chap": 2, "after": ["bill"]},
     {"id": "tea", "label": "Give Tea to a Saffron guard", "q": "Did you give Tea to a Saffron City gate guard?", "chap": 3, "by": "Marsh"},
     {"id": "scope", "label": "Get the Silph Scope", "q": "Did you get the Silph Scope in the Rocket Hideout?", "chap": 3},
     {"id": "fuji", "label": "Rescue Mr. Fuji", "q": "Did you rescue Mr. Fuji at the top of Pokémon Tower?", "chap": 5, "after": ["scope"]},
     {"id": "flute", "label": "Get the Poké Flute", "q": "Did Mr. Fuji give you the Poké Flute?", "chap": 5, "after": ["fuji"], "by": "Soul"},
-    {"id": "dojo", "label": "Beat the Fighting Dojo", "q": "Did you beat the Karate Master in Saffron’s Fighting Dojo?", "chap": 4},
+    {"id": "dojo", "pick": {"options": [106, 107], "names": ["Hitmonlee", "Hitmonchan"], "tag": "Your pick"}, "label": "Beat the Fighting Dojo", "q": "Did you beat the Karate Master in Saffron’s Fighting Dojo?", "chap": 4},
     {"id": "silph-rival", "label": "Beat your rival in Silph Co.", "q": "Did you beat your rival on Silph Co.’s seventh floor?", "chap": 4, "after": ["fuji", "tea"]},
     {"id": "tri-pass", "label": "Get the Tri-Pass", "q": "Did Celio give you the Tri-Pass on One Island?", "chap": 7},
     {"id": "bikers", "label": "Clear the Three Island bikers", "q": "Did you chase the bikers out of Three Island?", "chap": 8, "after": ["tri-pass"]},

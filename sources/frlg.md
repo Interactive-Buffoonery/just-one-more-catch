@@ -68,3 +68,8 @@ built. Scratch scripts are not included in the pack.
 ## Open questions
 
 - S.S. Anne timing: the static trace proves six fishable pier edges without Surf and reachable water with Surf in both versions. Confirm progression that preserves dock access until each rod/Surf is obtained. The [captain triggers departure](https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/maps/SSAnne_CaptainsOffice/scripts.inc#L4-L23); the [dock guard then redirects access](https://github.com/pret/pokefirered/blob/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/data/maps/VermilionCity/scripts.inc#L190-L217). Rows remain unchanged; before-departure availability is not modeled.
+
+## Either-or gifts
+
+- [Mt. Moon B2F script](https://github.com/pret/pokefirered/blob/master/data/maps/MtMoon_B2F/scripts.inc): taking either fossil removes the other object and sets `FLAG_GOT_FOSSIL_FROM_MT_MOON`. This sources the new fossil story step and pick.
+- [Fighting Dojo script](https://github.com/pret/pokefirered/blob/master/data/maps/SaffronCity_Dojo/scripts.inc): both gifts check and set `FLAG_GOT_HITMON_FROM_DOJO`, so only one can be received. This sources the Dojo pick.

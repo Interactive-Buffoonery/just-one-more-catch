@@ -19,6 +19,7 @@ import {
   closeRun,
   dumpRun,
   eventDone,
+  clearPick,
   EVENTS,
   forced,
   loaded,
@@ -1001,7 +1002,17 @@ async function onClick(e: MouseEvent) {
   } else if (d.dexoption === "trackForms" || d.dexoption === "trackGenders" || d.dexoption === "trackTraded" || d.dexoption === "trackShinyHunts") {
     r[d.dexoption] = !r[d.dexoption];
   } else if (d.showlater) r.showLater = !r.showLater;
-  else if (d.event) {
+  else if (d.pick) {
+    const n = Number(d.option);
+    if (!EVENTS[d.pick]?.pick?.options.includes(n)) return;
+    const selected = r.events.has(`pick:${d.pick}:${n}`);
+    clearPick(d.pick);
+    if (selected) untick(d.pick);
+    else {
+      r.events.add(`pick:${d.pick}:${n}`);
+      r.events.add(d.pick);
+    }
+  } else if (d.event) {
     if (forced(d.event)) return;
     eventDone(d.event) ? untick(d.event) : r.events.add(d.event);
   } else if (d.yes || d.snooze || d.unsnooze) {

@@ -231,8 +231,8 @@ was not used as a gate: Power Plant opens with Surf, not the postgame.
   coin exchange; `data/events/prizes.asm` supplies Red/Blue prize differences.
 - `scripts/{MtMoonB2F,Museum1F,CinnabarLabFossilRoom}.asm`: Dome/Helix choice,
   Old Amber and fossil revival. PokeAPI retains required fossil/Amber
-  conditions and level-30 gifts. The tracker does not record the mutually
-  exclusive Dome/Helix or Dojo choice as it does the selected starter.
+  conditions and level-30 gifts. The tracker records the mutually exclusive Dome/Helix and Dojo choices
+  in their story steps, showing the skipped gift as trade-only.
 - `data/events/trades.asm` and each corresponding map script verify all
   nine used trades: Nidorino→Nidorina (Route 11), Abra→Mr. Mime (Route 2),
   Ponyta→Seel (Cinnabar), Spearow→Farfetch'd (Vermilion), Slowbro→Lickitung

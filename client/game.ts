@@ -503,9 +503,18 @@ export const laterEvents = (id: string) => LATER[id] || [];
 export const forced = (id: string): boolean =>
   (!!EVENTS[id].by && has(EVENTS[id].by as string)) ||
   laterEvents(id).some((e) => forced(e.id));
+export const eventPick = (id: string): number | undefined => {
+  const options = EVENTS[id]?.pick?.options || [];
+  return options.find((n) => R().events.has(`pick:${id}:${n}`)) ??
+    options.find((n) => R().caught.has(n));
+};
+export function clearPick(id: string) {
+  EVENTS[id]?.pick?.options.forEach((n) => R().events.delete(`pick:${id}:${n}`));
+}
 // An event is done when ticked, proven, or implied by a later event that needs it.
 export const eventDone = (id: string): boolean =>
   R().events.has(id) ||
+  eventPick(id) !== undefined ||
   forced(id) ||
   laterEvents(id).some((e) => eventDone(e.id));
 // An HM only counts once the player also has the badge that lets them use it outside battle.
@@ -587,6 +596,16 @@ export function rowStatus(r: Row): { s: string; why?: string; need?: string; kin
       why: caught
         ? "Your starter"
         : "Trade only",
+    };
+  }
+  if (r.m === "gift") {
+    const species = DEX.find((p) => p.rows.includes(r))?.n;
+    const event = Object.values(EVENTS).find((e) => e.pick?.options.includes(species!));
+    const choice = event && eventPick(event.id);
+    if (choice !== undefined) return {
+      s: "special",
+      kind: species === choice ? "starter" : "trade",
+      why: species === choice ? event!.pick!.tag : "Trade only",
     };
   }
   const days = r.cond

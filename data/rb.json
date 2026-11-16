@@ -220,6 +220,7 @@
     }
   ],
   "events": [
+    {"id": "fossil", "label": "Take a fossil at Mt. Moon", "q": "Did you take a fossil at Mt. Moon?", "chap": 1, "pick": {"options": [138, 140], "names": ["Helix Fossil", "Dome Fossil"], "tag": "Your fossil"}},
     {
       "id": "bill",
       "label": "Get Bill’s S.S. Ticket",
@@ -256,7 +257,7 @@
       "src": "https://github.com/pret/pokered/blob/130ac3fa5493fb29a8005e8439fd31b4826e46af/scripts/CeladonDiner.asm"
     },
     {
-      "id": "dojo",
+      "id": "dojo", "pick": {"options": [106, 107], "names": ["Hitmonlee", "Hitmonchan"], "tag": "Your pick"},
       "label": "Beat the Fighting Dojo",
       "q": "Did you beat the Karate Master in Saffron’s Fighting Dojo?",
       "chap": 4,
