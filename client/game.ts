@@ -316,7 +316,7 @@ function loadRun(row: RunRow, state: string): Run {
       ),
     ),
     skip: new Set(s.skip || []),
-    addedPlaces: Array.isArray(s.addedPlaces) ? s.addedPlaces.filter((p: unknown): p is string => typeof p === "string").slice(0, 30) : [],
+    addedPlaces: Array.isArray(s.addedPlaces) ? s.addedPlaces.filter((p: unknown): p is string => typeof p === "string").slice(-30) : [],
     here: s.here || pack.start,
     timeAuto: s.timeAuto ?? true,
     time: s.time || "day",
