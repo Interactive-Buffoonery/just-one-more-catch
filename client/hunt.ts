@@ -2,6 +2,7 @@ import { ONE_TIME } from "./encounter-methods.ts";
 
 export type Hunt = {
   species: number;
+  kind?: string;
   place: string;
   unit: "encounters" | "eggs" | "resets";
   method: "full" | "masuda" | "custom";
@@ -16,11 +17,12 @@ export const unitFor = (method: string): Hunt["unit"] | null =>
 export const baseOdds = (gen: number) => gen < 2 || gen > 9 ? null : gen < 6 ? 8192 : 4096;
 export const masudaOdds = (gen: number) => gen === 5 ? 8192 / 6 : gen >= 6 && gen <= 9 ? 4096 / 6 : null;
 export function parseHunt(h: any): Hunt | undefined {
-  if (!h || !Number.isSafeInteger(h.species) || h.species < 1 || typeof h.place !== "string"
+  if (!h || !Number.isSafeInteger(h.species) || h.species < 0 || (h.species === 0 && !h.kind)
+    || (h.kind !== undefined && (typeof h.kind !== "string" || !h.kind.trim() || h.unit !== "encounters" || h.species !== 0 || h.method === "masuda")) || typeof h.place !== "string"
     || !["encounters", "eggs", "resets"].includes(h.unit) || !["full", "masuda", "custom"].includes(h.method)
     || !Number.isFinite(h.odds) || h.odds < 1 || !Number.isSafeInteger(h.count) || h.count < 0
     || !Number.isFinite(h.startedAt)) return undefined;
-  return { species: h.species, place: h.place, unit: h.unit, method: h.method, odds: h.odds, count: h.count, startedAt: h.startedAt };
+  return { ...(h.kind === undefined ? {} : { kind: h.kind }), species: h.species, place: h.place, unit: h.unit, method: h.method, odds: +h.odds, count: +h.count, startedAt: h.startedAt };
 }
 
 // The game's dex already excludes species introduced in later generations.

@@ -256,11 +256,13 @@ export type Run = {
   forms: Set<string>;
   trackForms: boolean;
   trackTraded: boolean;
+  journeyFocus: "story" | "catch";
   trackShinyHunts: boolean;
   hunt?: import("./hunt").Hunt;
   trackGenders: boolean;
   genders: Record<number, Set<string>>;
   skip: Set<number>;
+  addedPlaces: string[];
   here: string;
   timeAuto: boolean;
   time: string;
@@ -304,6 +306,7 @@ function loadRun(row: RunRow, state: string): Run {
     forms: new Set((Array.isArray(s.forms) ? s.forms : []).filter((f: unknown) => typeof f === "string")),
     trackForms: s.trackForms !== false,
     trackTraded: s.trackTraded === true,
+    journeyFocus: s.journeyFocus === "catch" ? "catch" : "story",
     trackShinyHunts: s.trackShinyHunts === true,
     hunt: parseHunt(s.hunt),
     trackGenders: s.trackGenders === true,
@@ -313,9 +316,10 @@ function loadRun(row: RunRow, state: string): Run {
       ),
     ),
     skip: new Set(s.skip || []),
+    addedPlaces: Array.isArray(s.addedPlaces) ? s.addedPlaces.filter((p: unknown): p is string => typeof p === "string").slice(-30) : [],
     here: s.here || pack.start,
     timeAuto: s.timeAuto ?? true,
-    time: s.time || "day",
+    time: ["morning", "day", "night"].includes(s.time) ? s.time : "day",
     boxNames:
       s.boxNames ||
       Array.from({ length: pack.boxes[0] }, (_, i) => `Box ${i + 1}`),
@@ -340,11 +344,13 @@ export const dumpRun = (r: Run) =>
     forms: [...r.forms],
     trackForms: r.trackForms,
     trackTraded: r.trackTraded,
+    journeyFocus: r.journeyFocus,
     trackShinyHunts: r.trackShinyHunts,
     hunt: r.hunt,
     trackGenders: r.trackGenders,
     genders: Object.fromEntries(Object.entries(r.genders).map(([n, gs]) => [n, [...gs]])),
     skip: [...r.skip],
+    addedPlaces: r.addedPlaces,
     here: r.here,
     timeAuto: r.timeAuto,
     time: r.time,
@@ -456,7 +462,7 @@ export function openRun(row: RunRow, data: GameData, state: string) {
   }));
   byName = Object.fromEntries(DEX.map((p) => [p.name, p]));
   byN = Object.fromEntries(DEX.map((p) => [p.n, p]));
-  if (run.hunt && !byN[run.hunt.species]) run.hunt = undefined;
+  if (run.hunt && !run.hunt.kind && !byN[run.hunt.species]) run.hunt = undefined;
   for (const m of run.mons) {
     const p = byN[m.n],
       form = p?.forms?.find((f) => f.id === m.form) || p?.forms?.[0];

@@ -236,7 +236,7 @@ export function placeCard(pl: string, s: Spot) {
     body = `<div class="body">${rows(ready)}${show ? rows(other) + rows(s.later) : ""}${s.caught.length ? `<div class="caught-here">Already caught here ${s.caught.map((p) => `<span class="st caught">${sprite(p)}</span>`).join("")}</div>` : ""}${show ? "" : subFold(`t:${pl}`, "Other times", other, pl) + subFold(`l:${pl}`, "Come back later", s.later, pl)}${subFold(`o:${pl}`, "One-time and special", s.once, pl)}</div>`,
     later = s.later.length && `${s.later.length} later`,
     open = fold(key, here),
-    title = `<span class="title">${pl}${here ? `<span class="here-tag">Selected</span>` : ""}</span>`;
+    title = `<span class="title">${esc(pl)}${here ? `<span class="here-tag">Selected</span>` : ""}</span>`;
   if (!s.now.length && !s.later.length && s.got)
     return `<details class="pl donepl${here ? " here" : ""}" ${open}><summary><span class="head"><span class="tick" aria-hidden="true">✓</span>${title}<span class="count">${[`All ${s.got} caught`, later].filter(Boolean).join(" · ")}${CHEV}</span></span></summary>${body}</details>`;
   if (!s.now.length && !s.got)

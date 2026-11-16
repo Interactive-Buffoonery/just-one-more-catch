@@ -1,3 +1,4 @@
+import { stateHash, replayPending } from "./pending-save";
 import { fillHunt, huntBar, huntClick, huntPlaceChanged, paintHunt } from "./views/hunt";
 // Ported from the approved mockup: string-rendered views on one root, event delegation, no framework.
 // main.ts owns auth and server calls and hands them in through the bridge.
@@ -41,7 +42,7 @@ import { Bridge, PairingHandle, PairingLookup, RunRow } from "./types";
 import { Devices, fillApprove, pairBody, pairErrorText, pairLetters, showCode, ttl } from "./views/devices";
 import { Boxes, fillBoxSheet, fillMonSheet, saveMon, updateMonSprite } from "./views/boxes";
 import { DEX_SIZES, Dex, dexGrid, fillSpecies, resetDexCache } from "./views/dex";
-import { fillClock, fillCustom, Journey, untick } from "./views/journey";
+import { fillClock, fillCustom, fillOtherPlaces, Journey, untick } from "./views/journey";
 import {
   confirmGame,
   confirmPair,
@@ -84,7 +85,17 @@ function useRun(row: RunRow, start = false, customize = false, ready?: () => voi
       if (me !== openSeq) return;
       opening = null;
       const latest = bridge.runs?.find((r) => r.id === row.id);
-      if (latest) openRun(latest, d, state);
+      if (latest) {
+        const key = pendingKey(row.id);
+        openRun(latest, d, state);
+        const pending = bridge.auth.isLoading ? null : replayPending(ui.saved, store.get(key));
+        if (pending !== null) {
+          const base = ui.saved;
+          openRun(latest, d, pending);
+          ui.saved = base;
+          scheduleSave();
+        }
+      }
       if (start && run) ui.tab = !isGuest() && run.view === "journey" ? "journey" : "dex";
       render();
       ready?.();
@@ -106,6 +117,7 @@ function fillSheet(s: any) {
     $("#sheetbody").innerHTML = s.pair ? confirmPair(s.id.split(",")) : confirmGame(s.id);
     return;
   }
+  if (s.kind === "otherplaces") return fillOtherPlaces();
   if (s.kind === "journal") return fillJournal();
   if (s.kind === "journalnote") return fillJournalNote(s.id);
   if (s.kind === "hunt") return fillHunt(s);
@@ -357,9 +369,26 @@ function render() {
 
 let saveTimer: any, undoTimer: any, undoing = false;
 let pendingSave: Promise<unknown> = Promise.resolve();
+function replayPendingEntry(key: string): { state: string; base: string } | null {
+  try { return JSON.parse(store.get(key) || "null"); } catch { return null; }
+}
+function pendingKey(id: string) {
+  return "jomc.pending." + JSON.stringify([bridge.auth.userId ?? "guest", id]);
+}
+function dropPending(id?: string) {
+  const prefix = id ? pendingKey(id) : pendingKey("").slice(0, -2);
+  try {
+    Object.keys(localStorage).filter((k) => k.startsWith(prefix)).forEach(store.del);
+  } catch {}
+}
 function saveState(id: string, state: string) {
   const save = bridge.saveRun.bind(bridge), user = bridge.auth.userId;
-  const next = pendingSave.catch(() => {}).then(() => save(id, state, user));
+  const key = pendingKey(id);
+  const next = pendingSave.catch(() => {}).then(() => save(id, state, user)).then(() => {
+    const pending = replayPendingEntry(key);
+    if (pending?.state === state) store.del(key);
+    else if (pending) store.set(key, JSON.stringify({ ...pending, base: stateHash(state) }));
+  });
   pendingSave = next;
   return next;
 }
@@ -394,6 +423,8 @@ function scheduleSave(delay = 800) {
     return showSaveError(
       "This playthrough is too big to save. Try shortening some notes.",
     );
+  if (!bridge.auth.isLoading)
+    store.set(pendingKey(id), JSON.stringify({ state, base: stateHash(ui.saved) }));
   saveTimer = setTimeout(async () => {
     try {
       await saveState(id, state);
@@ -536,7 +567,7 @@ async function onClick(e: MouseEvent) {
       caught: (h) => {
         if (isGuest()) {
           if (!R().caught.has(h.species)) toggleCaught(h.species);
-          R().hunt = undefined;
+          if (!h.kind) R().hunt = undefined;
           scheduleSave();
           return $("#sheet").open ? $("#sheet").close() : render();
         }
@@ -641,7 +672,9 @@ async function onClick(e: MouseEvent) {
     )
       return;
     $("#sheet").close();
+    clearTimeout(saveTimer);
     await bridge.deleteAccount();
+    dropPending();
     closeRun();
     bridge.signOut();
     return;
@@ -764,12 +797,24 @@ async function onClick(e: MouseEvent) {
       closeRun();
     }
     await bridge.deleteRun(row.id);
+    dropPending(row.id);
     return;
   }
   if (!run) return;
   const r = R();
   if (d.open) {
     openSheet(+d.open);
+    return;
+  }
+  if (d.otherPlaces) return openSheet({ kind: "otherplaces" });
+  if (d.addPlace || d.removePlace || d.herePlace) {
+    const r = R();
+    if (d.addPlace) r.addedPlaces = [...new Set([...r.addedPlaces, d.addPlace])].slice(-30);
+    else r.addedPlaces = r.addedPlaces.filter(p => p !== (d.removePlace || d.herePlace));
+    if (d.herePlace) r.here = d.herePlace;
+    if (d.addPlace) $("#sheet").close();
+    scheduleSave();
+    render();
     return;
   }
   if (d.custom) {
@@ -866,7 +911,7 @@ async function onClick(e: MouseEvent) {
     try {
       const hunt = ui.sheet.hunt;
       if (!saveMon()) return;
-      if (hunt && R().hunt === hunt) R().hunt = undefined;
+      if (hunt && !hunt.kind && R().hunt === hunt) R().hunt = undefined;
       scheduleSave();
       if (ui.sheet.journal) openSheet({ ...ui.sheet, kind: "journal", id: undefined, journal: false });
       else $("#sheet").close();
@@ -913,6 +958,8 @@ async function onClick(e: MouseEvent) {
     r.hidden.has(d.hide) ? r.hidden.delete(d.hide) : r.hidden.add(d.hide);
   } else if (d.journeytab) {
     r.view = r.view === "dexonly" ? r.startView : "dexonly";
+  } else if (d.journeyfocus) {
+    r.journeyFocus = d.journeyfocus === "catch" ? "catch" : "story";
   } else if (d.startview) {
     r.view = r.startView = d.startview === "dex" ? "dex" : "journey";
   } else if (d.dexoption === "trackForms" || d.dexoption === "trackGenders" || d.dexoption === "trackTraded" || d.dexoption === "trackShinyHunts") {
@@ -1186,6 +1233,12 @@ export function mount(el: HTMLElement, b: Bridge) {
     }
   });
   el.addEventListener("input", (e) => {
+    const search = e.target as HTMLInputElement;
+    if (search.id === "hunt-search") {
+      document.querySelectorAll<HTMLElement>("[data-huntname]").forEach(row => row.hidden = !row.dataset.huntname!.includes(search.value.toLowerCase()));
+      return;
+    }
+
     const t = e.target as HTMLInputElement;
     if (t.id === "paircode") {
       const letters = pairLetters(t.value);
@@ -1480,4 +1533,15 @@ document.addEventListener("focusin", (event) => {
   const box = (event.target as HTMLElement).closest(".gb");
   if (box?.matches(":focus-visible"))
     box.scrollIntoView({ block: "nearest", inline: "center", behavior: "instant" });
+});
+
+document.addEventListener("input", (event) => {
+  const input = event.target as HTMLInputElement;
+  if (input.id !== "other-place-search") return;
+  const query = input.value.trim().toLowerCase();
+  document.querySelectorAll<HTMLElement>("[data-add-place]").forEach(el => el.hidden = !el.dataset.addPlace!.toLowerCase().includes(query));
+  document.querySelectorAll<HTMLDetailsElement>("#sheetbody details.fold").forEach(el => {
+    el.hidden = !el.querySelector("[data-add-place]:not([hidden])");
+    el.open = query ? true : el.hasAttribute("data-next");
+  });
 });

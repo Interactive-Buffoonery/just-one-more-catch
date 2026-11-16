@@ -1,3 +1,4 @@
+import { replayPending } from "./pending-save";
 import { bridge, store } from "./game";
 import { Bridge, RunRow } from "./types";
 import { isAvatar } from "../shared/avatars";
@@ -167,6 +168,7 @@ export async function moveGuestRuns(
   const owned = new Set(bridge.runs?.map(r => r.id));
   setGuestRows(guestRows().map((g) => ({
     ...g,
+    state: replayPending(g.state, store.get("jomc.pending." + JSON.stringify(["guest", g.id]))) ?? g.state,
     moveOwner: g.moveOwner ?? (!g.movedTo || owned.has(g.movedTo) ? target : undefined),
   })));
   let moved = 0,
@@ -187,6 +189,7 @@ export async function moveGuestRuns(
       await raw.setStart(id, Date.parse(g.createdAt), target);
       if (!current()) break;
       setGuestRows(guestRows().filter((r) => r.id !== g.id));
+      store.del("jomc.pending." + JSON.stringify(["guest", g.id]));
       raw.track("guest_run_moved", g.version);
       moved1(g.id, id);
       moved++;

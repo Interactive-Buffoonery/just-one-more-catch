@@ -448,7 +448,7 @@ dialog.sheet::backdrop{background:rgba(0,0,0,.45)}
 /* Journey */
 .jny{display:flex;flex-direction:column;gap:14px}
 .jny .colmain,.jny .colside{display:contents}
-.s-where{order:1}.s-kit{order:2}.s-next{order:3}.s-ask{order:4}.s-around{order:5}.s-evo{order:6}.s-journey{order:7}.s-dex{order:8}
+.s-where{order:1}.s-kit{order:2}.s-next{order:3}.s-ask{order:4}.s-around,.s-near{order:5}.s-evo{order:6}.s-journey{order:7}.s-dex{order:8}
 .jny .card{border:0;border-radius:18px;padding:14px 16px}
 .jny details>summary{list-style:none;cursor:pointer}
 .jny details>summary::-webkit-details-marker{display:none}
@@ -972,6 +972,10 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
 .app .huntopen { padding:0 16px; white-space:nowrap; }
 .app .hunt-tag { gap:4px; vertical-align:middle; margin-left:2px; }
 .spot.pick { display:flex; align-items:center; gap:12px; min-height:48px; cursor:pointer; }
+.spot.pick[hidden] { display:none; }
+button.spot.pick { width:100%; background:none; border:0; border-top:1px solid var(--line); font:inherit; color:inherit; text-align:left; }
+.spot.wild { display:flex; align-items:center; gap:12px; }
+.spot.wild .pn .small { display:block; font-weight:700; }
 .spot.pick input { width:22px; height:22px; accent-color:var(--teal); flex:none; margin:0; }
 .pickstep .seg3 button[hidden], .pickstep .field[hidden] { display:none; }
 .pickstep .hv-actions { margin-top:16px; }
@@ -1004,3 +1008,28 @@ dialog.sheet:has(.dexsheet){background:var(--bg)}
   .app:has(.huntbar) { padding-bottom:120px; }
 }
 @media (prefers-reduced-motion:reduce) { .app .hb-plus:active, .app .plus:active { translate:none; } }
+
+.app .quietbtn.gold{background:var(--gold-soft);border-color:transparent;color:var(--gold-ink);font-weight:800}
+.mon.star{--t1:var(--gold);--t2:var(--gold)}
+.mon.star>b{color:var(--gold-ink);font-size:18px}
+.spot .pn .tags{margin-top:4px}
+.dexsheet>h2.lg{font-size:30px;line-height:1;margin:4px 0 14px}
+.dexsheet details.fold:first-of-type{border-top:0}
+.dexsheet details.fold>.card{margin-bottom:8px}
+.dexsheet .field{margin:12px 0 4px}
+
+/* Journey focuses */
+.jny .s-where{display:contents}
+.app .seg3.focus{display:grid;grid-auto-columns:1fr;width:100%;box-sizing:border-box;margin-top:12px;position:sticky;top:0;z-index:20;background:var(--bg)}
+.sw .seg3.focus{position:static;margin-top:0;width:auto}
+.where-tools .ptmenu{margin-left:auto}
+.app .ptmenu .menu .sharei{display:inline-flex;align-items:center;justify-content:flex-start;gap:6px;width:auto;height:auto;font-size:14px}.app .ptmenu .menu .sharei svg{width:16px;height:16px}
+.where-tools .ptmenu>summary{border:1px solid var(--line)}
+.s-near .places.added{margin-top:10px}
+.jny.story .s-kit{order:5}
+.jny.catch .s-kit{order:7}
+.jny .gate{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:4px 12px}
+.gate h2{display:flex;align-items:center;gap:8px;font-size:20px}
+.gate h2 img{width:28px;height:28px;object-fit:contain}
+.gate .app-primary{grid-column:2;grid-row:1/4;padding:0 18px}
+@media (min-width:960px){.app .seg3.focus{width:300px}}

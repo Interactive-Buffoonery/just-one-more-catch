@@ -84,6 +84,7 @@ console.log("delayed import navigation ok");
 
 const parts = readFileSync(new URL("../client/parts.ts", import.meta.url), "utf8");
 const placeCard = runInNewContext(stripTypeScriptTypes(parts.slice(parts.indexOf("export function placeCard("), parts.indexOf("// Places in a chapter"))).replace("export ", "") + "\nplaceCard", {
+  esc: value => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll('"', "&quot;"),
   isHere: () => false, fold: () => "", R: () => ({}),
   monRow: () => "", subFold: () => "", strip: () => "", CHEV: "",
 });
@@ -132,3 +133,5 @@ const signedTabs = runInNewContext(stripTypeScriptTypes(app.slice(app.indexOf("c
   LOCKED: {journey: true, boxes: true}, TABS: [["journey", "Journey"], ["boxes", "Boxes"]], TAB_ICONS: {}, run: null, ui: {}, isGuest: () => false,
 });
 assert(!signedTabs.includes('tlock') && !signedTabs.includes('sign in required'));
+
+assert(!placeCard('<img src=x onerror="alert(1)">', {now: [], later: [], got: 0, caught: [], once: []}).includes("<img"));
