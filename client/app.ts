@@ -370,7 +370,7 @@ function renderToast() {
   $("#toast").innerHTML = ui.undo
     ? `<div class="toast"><span id="toast-msg">${ui.undo.msg}</span>${ui.undo.restore || ui.undo.n ? `<button data-undo="1" data-k="toast-undo" aria-describedby="toast-msg">Undo</button>` : ""}</div>`
     : updateAvailable
-      ? `<div class="toast"><span id="toast-msg">New version</span><button data-reload="1" data-k="toast-reload" aria-describedby="toast-msg">Reload</button></div>`
+      ? `<div class="toast"><span id="toast-msg">A new version is out!</span><button data-reload="1" data-k="toast-reload" aria-describedby="toast-msg">Reload</button></div>`
       : "";
 }
 let saveTimer: any, undoTimer: any, undoing = false;
