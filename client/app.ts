@@ -19,7 +19,6 @@ import {
   closeRun,
   dumpRun,
   eventDone,
-  eventPick,
   clearPick,
   EVENTS,
   forced,
@@ -1006,7 +1005,7 @@ async function onClick(e: MouseEvent) {
   else if (d.pick) {
     const n = Number(d.option);
     if (!EVENTS[d.pick]?.pick?.options.includes(n)) return;
-    const selected = eventPick(d.pick) === n;
+    const selected = r.events.has(`pick:${d.pick}:${n}`);
     clearPick(d.pick);
     if (selected) untick(d.pick);
     else {
