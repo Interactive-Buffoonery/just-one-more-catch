@@ -137,7 +137,7 @@ export function fillHunt(s: any) {
   if (h?.kind && !["method", "count"].includes(s.step)) {
     const rows = placeRows(h), picking = s.step === "caught";
     $("#sheetbody").innerHTML =
-      `<div class="dexsheet"><h2 class="lg" id="sheet-title">${esc(h.place)} · ${kindName(h.kind)}</h2>
+      `<div class="dexsheet"><h2 class="lg" id="sheet-title">${esc(h.place)} · ${esc(kindName(h.kind))}</h2>
     <section class="hbody"><div class="hcount"><b class="hunt-cnt lg">${fmt(h.count)}</b><span class="where-k">${cap(h.unit)} · ${METHODS[h.method]}</span></div>
     <div class="hstats"><div><b>1 in ${fmt(h.odds)}</b><span>Odds</span></div><div><b class="hunt-pct">${pct(h)}</b><span>Chance so far</span></div><div><b>${fmt(fiftyAt(h.odds))}</b><span>50% at</span></div></div>
     <div class="bar"><i class="hunt-fill" style="width:${pct(h)}"></i></div>
@@ -166,7 +166,7 @@ export function fillHunt(s: any) {
               placeOptions(h).findIndex((o) => o.place === h.place),
             );
     $("#sheetbody").innerHTML =
-      `<div class="dexsheet pickstep">${h.kind ? `<h2 id="sheet-title">${esc(h.place)} · ${kindName(h.kind)}</h2><section>` : band(p, esc(h.place), types(p))}</section>${body}${editActions("save" + s.step)}</div>`;
+      `<div class="dexsheet pickstep">${h.kind ? `<h2 id="sheet-title">${esc(h.place)} · ${esc(kindName(h.kind))}</h2><section>` : band(p, esc(h.place), types(p))}</section>${body}${editActions("save" + s.step)}</div>`;
     return;
   }
   const rows = p.rows.filter((r) => r.place === h.place && unitFor(r.m) === h.unit),

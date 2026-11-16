@@ -173,7 +173,7 @@ export function Journey() {
   const picker = CHAPTERS.map((c, i) => {
     const list = unlocked(i) ? c.places.filter((p) => !NOT_HERE.test(p)) : [];
     return list.length
-      ? `<optgroup label="Chapter ${i + 1}: ${c.title}">${list.map((p) => `<option ${p === r.here ? "selected" : ""} value="${p}">${p}${placeLabel(p, all[p]) && ` · ${placeLabel(p, all[p])}`}</option>`).join("")}</optgroup>`
+      ? `<optgroup label="Chapter ${i + 1}: ${c.title}">${list.map((p) => `<option ${p === r.here ? "selected" : ""} value="${esc(p)}">${esc(p)}${placeLabel(p, all[p]) && ` · ${placeLabel(p, all[p])}`}</option>`).join("")}</optgroup>`
       : "";
   }).join("");
   const badges = P().badges,
@@ -183,9 +183,9 @@ export function Journey() {
   <section class="s-where" aria-labelledby="where-h">
     <div class="where-k">Chapter ${cur + 1} · ${CHAPTERS[cur].title}</div>
     <div class="where-row">
-      <h1 class="lg" id="where-h">${r.here}</h1>
+      <h1 class="lg" id="where-h">${esc(r.here)}</h1>
       <span class="where-chev" aria-hidden="true"><svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span>
-      <select id="here" data-k="here" aria-label="Selected area">${picker.includes(`value="${r.here}"`) ? "" : `<option selected disabled>${r.here}</option>`}${picker}</select>
+      <select id="here" data-k="here" aria-label="Selected area">${picker.includes(`value="${esc(r.here)}"`) ? "" : `<option selected disabled>${esc(r.here)}</option>`}${picker}</select>
     </div>
     <div class="where-tools">
       ${journeyHuntButton()}
