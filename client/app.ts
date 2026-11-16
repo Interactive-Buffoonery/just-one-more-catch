@@ -88,8 +88,7 @@ function useRun(row: RunRow, start = false, customize = false, ready?: () => voi
       if (latest) {
         const key = pendingKey(row.id);
         openRun(latest, d, state);
-        const pending = replayPending(ui.saved, store.get(key));
-        store.del(key);
+        const pending = bridge.auth.isLoading ? null : replayPending(ui.saved, store.get(key));
         if (pending !== null) {
           const base = ui.saved;
           openRun(latest, d, pending);
@@ -424,7 +423,8 @@ function scheduleSave(delay = 800) {
     return showSaveError(
       "This playthrough is too big to save. Try shortening some notes.",
     );
-  store.set(pendingKey(id), JSON.stringify({ state, base: stateHash(ui.saved) }));
+  if (!bridge.auth.isLoading)
+    store.set(pendingKey(id), JSON.stringify({ state, base: stateHash(ui.saved) }));
   saveTimer = setTimeout(async () => {
     try {
       await saveState(id, state);
