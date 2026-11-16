@@ -349,9 +349,7 @@ function render() {
   const bar = run && !loading ? huntBar() : "";
   root.querySelector(".dock > .huntbar")?.remove();
   if (bar) $("#tabs").insertAdjacentHTML("beforebegin", bar);
-  $("#toast").innerHTML = ui.undo
-    ? `<div class="toast"><span id="toast-msg">${ui.undo.msg}</span>${ui.undo.restore || ui.undo.n ? `<button data-undo="1" data-k="toast-undo" aria-describedby="toast-msg">Undo</button>` : ""}</div>`
-    : "";
+  renderToast();
   if (
     (typeof ui.sheet === "number" ||
       ui.sheet?.kind === "custom") &&
@@ -367,7 +365,39 @@ function render() {
     )?.focus();
 }
 
+let updateAvailable = false;
+function renderToast() {
+  $("#toast").innerHTML = ui.undo
+    ? `<div class="toast"><span id="toast-msg">${ui.undo.msg}</span>${ui.undo.restore || ui.undo.n ? `<button data-undo="1" data-k="toast-undo" aria-describedby="toast-msg">Undo</button>` : ""}</div>`
+    : updateAvailable
+      ? `<div class="toast"><span id="toast-msg">A new version is out!</span><button data-reload="1" data-k="toast-reload" aria-describedby="toast-msg">Reload</button></div>`
+      : "";
+}
 let saveTimer: any, undoTimer: any, undoing = false;
+if (import.meta.env.PROD) {
+  const current = document.querySelector<HTMLScriptElement>('script[type="module"][src*="/assets/main-"]')?.getAttribute("src");
+  let checking = false;
+  const checkUpdate = async () => {
+    if (!current || updateAvailable || checking) return;
+    checking = true;
+    try {
+      const response = await fetch("/", { cache: "no-store" });
+      if (!response.ok) return;
+      const latest = (await response.text()).match(/src=["'](\/assets\/main-[^"']+\.js)["']/)?.[1];
+      if (latest && latest !== current) {
+        updateAvailable = true;
+        renderToast();
+      }
+    } catch {} finally {
+      checking = false;
+    }
+  };
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") void checkUpdate();
+  });
+  setInterval(checkUpdate, 60 * 60 * 1000);
+}
+
 let pendingSave: Promise<unknown> = Promise.resolve();
 function replayPendingEntry(key: string): { state: string; base: string } | null {
   try { return JSON.parse(store.get(key) || "null"); } catch { return null; }
@@ -398,7 +428,7 @@ function hideToast() {
     refreshed = ui.undo?.run,
     inToast = $("#toast").contains(document.activeElement);
   ui.undo = null;
-  $("#toast").innerHTML = "";
+  renderToast();
   if (inToast && refreshed) focusCard(refreshed);
   else if (inToast) ($(`[data-k="d${n}"]`) || $("#dexq"))?.focus();
 }
@@ -733,6 +763,12 @@ async function onClick(e: MouseEvent) {
     ui.undo = null;
     render();
     scrollTo(0, 0);
+    return;
+  }
+  if (d.reload) {
+    flushSave();
+    try { await withTimeout(pendingSave, 3000, "Saving timed out"); } catch {}
+    location.reload();
     return;
   }
   if (d.undo && ui.undo?.restore) {
