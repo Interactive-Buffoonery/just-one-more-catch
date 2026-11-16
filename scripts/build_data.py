@@ -361,6 +361,7 @@ if __name__ == "__main__":
             assert len(options) == 2 and len(set(options)) == 2, f"{e['id']}: pick needs two distinct options"
             assert all(any(p["n"] == n for p in dex) for n in options), f"{e['id']}: unknown pick species"
             assert e["pick"]["tag"], f"{e['id']}: pick needs a tag"
+            assert len(e["pick"].get("names", [])) == 2, f"{e['id']}: pick needs two names"
         assert re.fullmatch(r"[a-z][a-z0-9-]*", e["id"]), f"event id must be a lowercase slug: {e['id']}"
         assert 0 <= e["chap"] < len(GAME["chapters"]), f"{e['id']}: no chapter {e['chap']}"
         assert set(e.get("after", [])) <= ids, f"{e['id']}: unknown after {set(e['after']) - ids}"
