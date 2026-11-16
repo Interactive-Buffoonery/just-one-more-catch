@@ -22,7 +22,7 @@ export function parseHunt(h: any): Hunt | undefined {
     || !["encounters", "eggs", "resets"].includes(h.unit) || !["full", "masuda", "custom"].includes(h.method)
     || !Number.isFinite(h.odds) || h.odds < 1 || !Number.isSafeInteger(h.count) || h.count < 0
     || !Number.isFinite(h.startedAt)) return undefined;
-  return { ...(h.kind === undefined ? {} : { kind: h.kind }), species: h.species, place: h.place, unit: h.unit, method: h.method, odds: h.odds, count: h.count, startedAt: h.startedAt };
+  return { ...(h.kind === undefined ? {} : { kind: h.kind }), species: h.species, place: h.place, unit: h.unit, method: h.method, odds: +h.odds, count: +h.count, startedAt: h.startedAt };
 }
 
 // The game's dex already excludes species introduced in later generations.

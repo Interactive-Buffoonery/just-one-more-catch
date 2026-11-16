@@ -319,7 +319,7 @@ function loadRun(row: RunRow, state: string): Run {
     addedPlaces: Array.isArray(s.addedPlaces) ? s.addedPlaces.filter((p: unknown): p is string => typeof p === "string").slice(-30) : [],
     here: s.here || pack.start,
     timeAuto: s.timeAuto ?? true,
-    time: s.time || "day",
+    time: ["morning", "day", "night"].includes(s.time) ? s.time : "day",
     boxNames:
       s.boxNames ||
       Array.from({ length: pack.boxes[0] }, (_, i) => `Box ${i + 1}`),
