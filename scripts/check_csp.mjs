@@ -29,7 +29,7 @@ const pages = ["index.html", "contact/index.html", "share/index.html", "scripts/
   ...readdirSync("public", { recursive: true }).filter(f => f.endsWith(".html")).map(f => `public/${f}`)];
 for (const page of pages) {
   const html = readFileSync(page, "utf8");
-  for (const [, attrs, body] of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)) {
+  for (const [, attrs, body] of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\b[^>]*>/gi)) {
     const type = attrs.match(/\btype\s*=\s*["']?([^"'\s>]+)/i)?.[1].toLowerCase() ?? "";
     if (/\bsrc\s*=/i.test(attrs) || type.includes("json") && type !== "importmap") continue;
     const hash = `'sha256-${createHash("sha256").update(body).digest("base64")}'`;

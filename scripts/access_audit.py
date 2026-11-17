@@ -232,7 +232,11 @@ def cmd_serve(port):
         def do_POST(self):
             name = unquote(self.path.lstrip("/"))
             body = self.rfile.read(int(self.headers["Content-Length"]))
-            path = os.path.join(WIKI, "titles.json") if name == "titles.json" else wiki_path(name)
+            path = os.path.realpath(os.path.join(WIKI, "titles.json") if name == "titles.json" else wiki_path(name))
+            if os.path.dirname(path) != os.path.realpath(WIKI):
+                self.send_response(400)
+                self.end_headers()
+                return
             with open(path, "wb") as f:
                 f.write(body)
             self.send_response(204)
