@@ -47,7 +47,7 @@ const stateCode = source.slice(source.indexOf("function loadRun("), source.index
 let current;
 const api = runInNewContext(stripTypeScriptTypes(stateCode.replaceAll("export ", "")) + "\n({ loadRun, dumpRun, collectedForms, visibleForms, hasGenders, collectedGenders, GENDERS })", {
   verOf: () => ({ pack: { start: "Start", boxes: [2] } }),
-  MON_DEFAULTS: defaults, parseHunt: () => undefined,
+  MON_DEFAULTS: defaults, parseHunt: () => undefined, acquisition: (a) => { if (typeof a !== "object") throw new Error(); return a; },
   compactMon: (m) => Object.fromEntries(Object.entries(m).filter(([k, v]) => defaults[k] !== v)),
   R: () => current, viewOf: r => r.view, isGuest: () => false,
 });
@@ -65,6 +65,13 @@ assert(roundtrip.forms.has("unown-b"));
 assert.equal(roundtrip.mons[0].form, undefined);
 assert.equal(roundtrip.mons[1].form, "unown-question");
 assert.equal(roundtrip.caught.size, 1);
+const hostile = api.loadRun(row, JSON.stringify({ timeAuto: "<img>", here: 1, mons: [null, { id: "<b>", n: 1 }, { id: 3, n: 25, box: "<b>", lvl: "<img>", g: "<img>", shiny: "yes", nick: 5, form: "x\" onerror=\"y", acquisition: 1 }, { id: 4, n: 25, lvl: 12, g: "f", nick: "Sparky" }] }));
+assert.equal(hostile.timeAuto, true);
+assert.equal(hostile.here, "Start");
+assert.equal(hostile.mons.length, 2);
+assert.deepEqual({ ...hostile.mons[0] }, { id: 3, n: 25, box: 1, nick: "", lvl: "", g: "", shiny: false, item: "", note: "" });
+assert.deepEqual([hostile.mons[1].lvl, hostile.mons[1].g, hostile.mons[1].nick], [12, "f", "Sparky"]);
+assert.equal(api.loadRun(row, '{"timeAuto":false}').timeAuto, false);
 assert.equal(api.loadRun(row, '{"forms":null}').forms.size, 0);
 assert.equal(api.loadRun(row, '{"forms":{}}').forms.size, 0);
 assert.equal(api.loadRun(row, '{"forms":[null,1,"unown-a"]}').forms.size, 1);

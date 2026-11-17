@@ -1,5 +1,6 @@
 import { ONE_TIME as oneTimeMethods } from "./encounter-methods.ts";
 import { parseHunt } from "./hunt.ts";
+import { acquisition } from "../shared/journal";
 import { badgeName as sharedBadgeName, needLabel as sharedNeedLabel } from "./need-labels.ts";
 import { GameData, Pack, VERSIONS } from "./packs";
 import { Bridge, Mon, Row, RunRow, Species } from "./types";
@@ -317,13 +318,13 @@ function loadRun(row: RunRow, state: string): Run {
     ),
     skip: new Set(s.skip || []),
     addedPlaces: Array.isArray(s.addedPlaces) ? s.addedPlaces.filter((p: unknown): p is string => typeof p === "string").slice(-30) : [],
-    here: s.here || pack.start,
-    timeAuto: s.timeAuto ?? true,
+    here: typeof s.here === "string" && s.here ? s.here : pack.start,
+    timeAuto: s.timeAuto !== false,
     time: ["morning", "day", "night"].includes(s.time) ? s.time : "day",
     boxNames:
       s.boxNames ||
       Array.from({ length: pack.boxes[0] }, (_, i) => `Box ${i + 1}`),
-    mons: (s.mons || []).map((m: Mon) => ({ ...MON_DEFAULTS, ...m })),
+    mons: (Array.isArray(s.mons) ? s.mons : []).map(parseMon).filter((m: Mon | null): m is Mon => !!m),
     journalEntries: Array.isArray(s.journalEntries) ? s.journalEntries : [],
     monSeq: s.monSeq || 0,
     lastBox: s.lastBox ?? 1,
@@ -332,6 +333,28 @@ function loadRun(row: RunRow, state: string): Run {
     showLater: !!s.showLater,
     view: s.view === "dex" || s.view === "dexonly" ? s.view : "journey",
     startView: s.startView === "dex" || s.view === "dex" ? "dex" : "journey",
+  };
+}
+const text = (v: unknown) => (typeof v === "string" ? v : "");
+function parseMon(m: any): Mon | null {
+  if (!m || typeof m !== "object" || !Number.isInteger(m.id) || !Number.isInteger(m.n)) return null;
+  let acq: Mon["acquisition"];
+  try {
+    acq = m.acquisition && acquisition(m.acquisition);
+  } catch {}
+  const lvl = Number(m.lvl);
+  return {
+    id: m.id,
+    n: m.n,
+    box: m.box === "party" || Number.isInteger(m.box) ? m.box : 1,
+    nick: text(m.nick),
+    lvl: m.lvl !== "" && Number.isInteger(lvl) && lvl >= 1 && lvl <= 100 ? lvl : "",
+    g: m.g === "m" || m.g === "f" ? m.g : "",
+    shiny: m.shiny === true,
+    item: text(m.item),
+    note: text(m.note),
+    ...(typeof m.form === "string" && /^[\w-]+$/.test(m.form) ? { form: m.form } : {}),
+    ...(acq ? { acquisition: acq } : {}),
   };
 }
 export const dumpRun = (r: Run) =>
