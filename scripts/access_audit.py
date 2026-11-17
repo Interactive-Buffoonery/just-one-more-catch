@@ -233,7 +233,7 @@ def cmd_serve(port):
             name = unquote(self.path.lstrip("/"))
             body = self.rfile.read(int(self.headers["Content-Length"]))
             path = os.path.realpath(os.path.join(WIKI, "titles.json") if name == "titles.json" else wiki_path(name))
-            if os.path.dirname(path) != os.path.realpath(WIKI):
+            if not path.startswith(os.path.realpath(WIKI) + os.sep):
                 self.send_response(400)
                 self.end_headers()
                 return
