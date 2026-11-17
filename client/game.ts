@@ -296,6 +296,9 @@ function loadRun(row: RunRow, state: string): Run {
   try {
     s = JSON.parse(state) || {};
   } catch {}
+  const mons: Mon[] = (Array.isArray(s.mons) ? s.mons : []).map(parseMon).filter((m: Mon | null): m is Mon => !!m);
+  let monSeq = Math.max(Number.isInteger(s.monSeq) ? s.monSeq : 0, ...mons.map((m) => m.id || 0));
+  for (const m of mons) if (!m.id) m.id = ++monSeq;
   return {
     id: row.id,
     version: row.version,
@@ -321,12 +324,10 @@ function loadRun(row: RunRow, state: string): Run {
     here: typeof s.here === "string" && s.here ? s.here : pack.start,
     timeAuto: s.timeAuto !== false,
     time: ["morning", "day", "night"].includes(s.time) ? s.time : "day",
-    boxNames:
-      s.boxNames ||
-      Array.from({ length: pack.boxes[0] }, (_, i) => `Box ${i + 1}`),
-    mons: (Array.isArray(s.mons) ? s.mons : []).map(parseMon).filter((m: Mon | null): m is Mon => !!m),
+    boxNames: Array.isArray(s.boxNames) ? s.boxNames.map(String) : Array.from({ length: pack.boxes[0] }, (_, i) => `Box ${i + 1}`),
+    mons,
     journalEntries: Array.isArray(s.journalEntries) ? s.journalEntries : [],
-    monSeq: s.monSeq || 0,
+    monSeq,
     lastBox: s.lastBox ?? 1,
     clock: s.clock || { mode: "device" },
     hidden: new Set(s.hidden || []),
@@ -337,14 +338,14 @@ function loadRun(row: RunRow, state: string): Run {
 }
 const text = (v: unknown) => (typeof v === "string" ? v : "");
 function parseMon(m: any): Mon | null {
-  if (!m || typeof m !== "object" || !Number.isInteger(m.id) || !Number.isInteger(m.n)) return null;
+  if (!m || typeof m !== "object" || !Number.isInteger(m.n)) return null;
   let acq: Mon["acquisition"];
   try {
     acq = m.acquisition && acquisition(m.acquisition);
   } catch {}
   const lvl = Number(m.lvl);
   return {
-    id: m.id,
+    id: Number.isInteger(m.id) && m.id > 0 ? m.id : 0,
     n: m.n,
     box: m.box === "party" || Number.isInteger(m.box) ? m.box : 1,
     nick: text(m.nick),
