@@ -220,7 +220,7 @@ await run({search:'?__clerk_handshake=x',signal:true});
 await run({cookie:'__client_uat=1731300000',user:{id:'user_1'},signal:true});
 
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
-const recoveryScript = html.match(/<script>([\s\S]*?)<\/script>/)[1];
+const recoveryScript = html.match(/<script>([\s\S]*?)<\/script\b[^>]*>/i)[1];
 let recovery = {hidden:true};
 let timeout;
 let failed;
