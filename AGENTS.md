@@ -7,6 +7,7 @@
 - Game data: never write gates, times, locations or story steps from memory. Cite every hand-written row in `sources/<pack>.md`, or add it to that file's Open questions. Bulbapedia blocks scripts, so use the `read-guide`, `audit-access` and `add-game` skills.
 - Before mocking up a UI change, screenshot the live page at 390px and desktop widths.
 - Deploying: follow [docs/deployment.md](docs/deployment.md).
+- When Sarah says "merge", merge and then deploy with `pnpm run deploy` per docs/deployment.md, unless she says not to deploy.
 
 <!-- convex-ai-start -->
 
