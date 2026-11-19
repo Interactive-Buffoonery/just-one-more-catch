@@ -37,7 +37,7 @@ import {
   ymd,
   isGuest,
 } from "./game";
-import { moveGuestAvatar, moveGuestRuns, withGuest } from "./guest";
+import { guestRows, moveGuestAvatar, moveGuestRuns, withGuest } from "./guest";
 import { SETTINGS_ICON, TAB_ICONS } from "./parts";
 import { Bridge, PairingHandle, PairingLookup, RunRow } from "./types";
 import { Devices, fillApprove, pairBody, pairErrorText, pairLetters, showCode, ttl } from "./views/devices";
@@ -295,7 +295,8 @@ function tabFromUrl() {
   return t === "journey" && !isGuest() && run?.view === "dexonly" ? "dex" : t && Object.hasOwn(VIEWS, t) ? t : "playthroughs";
 }
 function render() {
-  if (isGuest() && ui.tab === "journey" && !run && !opening && !sampleLoading && !ui.loadError) {
+  if (run?.id === "guest-sample" && ui.tab !== "journey") closeRun();
+  if (isGuest() && !guestRows().length && ui.tab === "journey" && !run && !opening && !sampleLoading && !ui.loadError) {
     sampleLoading = true;
     const v = verOf("gold");
     void (loaded.get(v.pack) ? Promise.resolve(loaded.get(v.pack)!) : v.pack.load()).then(data => {
@@ -369,7 +370,7 @@ function render() {
       ? ""
       : signedIn
         ? avatar
-        : `<button class="avatar guest-avatar" data-signinsheet="1" data-k="signin" aria-label="Sign in">${partner("")}<span>Sign in</span></button>`);
+        : `<span class="acct">${avatar}<button class="signin" data-signinsheet="1" data-k="signin">Sign in</button></span>`);
   $("#footalert").innerHTML =
     a.isLoading || signedIn
       ? ""
