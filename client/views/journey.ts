@@ -189,7 +189,7 @@ export function Journey() {
     kitOn = P().kit.filter((k) => r.kit.has(k[0])).length;
   return focusLayout(`<div class="jny"><div class="colmain">
   <section class="s-where" aria-labelledby="where-h">
-    <div class="where-k">Chapter ${cur + 1} · ${CHAPTERS[cur].title}</div>
+    <div class="where-k">${r.id === "guest-sample" ? '<span class="tag">Sample</span> Gold · ' : ""}Chapter ${cur + 1} · ${CHAPTERS[cur].title}</div>
     <div class="where-row">
       <h1 class="lg" id="where-h">${esc(r.here)}</h1>
       <span class="where-chev" aria-hidden="true"><svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span>
@@ -308,7 +308,7 @@ function focusLayout(html: string) {
   const get = (selector: string) => root.querySelector<HTMLElement>(selector);
   const story = R().journeyFocus === "story";
   get(".jny")!.classList.add(story ? "story" : "catch");
-  get(".where-row")!.insertAdjacentHTML("afterend", focusSwitch());
+  get(".where-row")!.insertAdjacentHTML("afterend", focusSwitch() + (isGuest() ? '<div class="gline"><span class="tag">Not signed in</span><button data-signinsheet="1">Sign in to save</button></div>' : ""));
   const tools = get(".where-tools")!;
   const menu = document.createElement("details");
   menu.className = "ptmenu";
