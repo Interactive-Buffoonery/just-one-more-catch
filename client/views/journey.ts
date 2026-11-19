@@ -135,7 +135,12 @@ function beat(id: string) {
           : e.by && EVENTS[e.by] && has(e.by)
             ? `Shown by: ${EVENTS[e.by].label}`
             : "A later step shows it's done";
-  return `<button class="beat" id="ev-${id}" data-event="${id}" data-k="ev-${id}" aria-pressed="${done}" ${lock ? `aria-disabled="true"` : ""}><span class="bx" aria-hidden="true"></span><span class="bt">${e.label}${why ? `<small>${why}</small>` : ""}</span>${done && !R().events.has(id) ? `<span class="auto" aria-hidden="true">auto</span><span class="sr">, marked done for you</span>` : ""}</button>${e.pick ? `<div class="pick"><div class="seg3" role="group" aria-label="${e.label}">${e.pick.options.map((n, i) => `<button type="button" data-pick="${id}" data-option="${n}" data-k="pick-${id}-${n}" aria-pressed="${eventPick(id) === n}">${e.pick!.names[i]}</button>`).join("")}</div></div>` : ""}`;
+  return `<button class="beat" id="ev-${id}" data-event="${id}" data-k="ev-${id}" aria-pressed="${done}" ${lock ? `aria-disabled="true"` : ""}><span class="bx" aria-hidden="true"></span><span class="bt">${e.label}${why ? `<small>${why}</small>` : ""}</span>${done && !R().events.has(id) ? `<span class="auto" aria-hidden="true">auto</span><span class="sr">, marked done for you</span>` : ""}</button>${done && e.catch ? beatCatch(e.catch, e.chap) : ""}${e.pick ? `<div class="pick"><div class="seg3" role="group" aria-label="${e.label}">${e.pick.options.map((n, i) => `<button type="button" data-pick="${id}" data-option="${n}" data-k="pick-${id}-${n}" aria-pressed="${eventPick(id) === n}">${e.pick!.names[i]}</button>`).join("")}</div></div>` : ""}`;
+}
+function beatCatch(n: number, chap: number) {
+  const p = DEX.find((x) => x.n === n);
+  const row = p?.rows.find((r) => r.chap === chap);
+  return p && row && visible(p) ? `<div class="beat-catch">${monRow(p, row, row.place)}</div>` : "";
 }
 const beats = (i: number) => {
   const list = Object.values(EVENTS).filter((e) => e.chap === i);

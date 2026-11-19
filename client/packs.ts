@@ -17,6 +17,7 @@ export type GameData = {
     chap: number;
     after?: string[];
     pick?: { options: number[]; names: string[]; tag: string };
+    catch?: number;
     by?: string;
   }[];
   dex: any[];
