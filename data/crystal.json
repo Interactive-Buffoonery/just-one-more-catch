@@ -79,7 +79,7 @@
     {"place": "Route 10", "n": 100, "m": "walk", "needs": ["surf"], "src": "https://bulbapedia.bulbagarden.net/wiki/Kanto_Route_10", "quote": "have moved into a new grassy patch located nearby"},
     {"place": "Violet City", "n": 175, "m": "gift-egg", "needs": ["Zephyr"]},
     {"place": "Goldenrod City Bills House", "n": 133, "m": "gift", "needs": ["Plain", "squirt-bottle", "bill"]},
-    {"place": "Route 36", "n": 185, "m": "squirt-bottle", "needs": ["Plain", "squirt-bottle"]},
+    {"place": "Route 36", "n": 185, "m": "squirt-bottle", "needs": ["squirt-bottle"]},
     {"place": "Roaming Johto", "n": 243, "m": "roaming-grass", "needs": ["beasts"]},
     {"place": "Roaming Johto", "n": 244, "m": "roaming-grass", "needs": ["beasts"]},
     {"place": "Ilex Forest", "n": 251, "m": "static", "needs": ["Elite Four", "gs-ball-ready"]},

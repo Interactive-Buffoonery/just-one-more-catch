@@ -5,6 +5,7 @@
 - https://bulbapedia.bulbagarden.net/wiki/Appendix:Crystal_walkthrough
 - https://strategywiki.org/wiki/Pok%C3%A9mon_Crystal
 - Nintendo Power Pokemon Crystal guide (2001): `(Nintendo Power 2001) - Pokemon Crystal_text.pdf`
+- Sudowoodo on Route 36 needs only the SquirtBottle, because the flower shop checks the Plain Badge before giving it: https://github.com/pret/pokecrystal/blob/9ce4c4e5068ffdf56e23ca3d8dc9178b2465d482/maps/GoldenrodFlowerShop.asm#L13-L26
 
 ### Crystal static map traces
 

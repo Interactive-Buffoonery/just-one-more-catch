@@ -1035,5 +1035,7 @@ button.spot.pick { width:100%; background:none; border:0; border-top:1px solid v
 @media (min-width:960px){.app .seg3.focus{width:300px}}
 
 .beats>.pick{padding:0 0 6px 32px}
+.beats>.beat-catch{padding:0 0 6px 32px}
+.beat-catch>.row{border-top:0}
 .beats>.pick .seg3{width:100%;grid-auto-columns:1fr;box-sizing:border-box}
 .beats>.pick .seg3 button[aria-pressed=true]::before{content:"\2713  ";color:var(--teal)}

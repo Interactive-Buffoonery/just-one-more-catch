@@ -435,6 +435,7 @@
       "chap": 2,
       "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route36.asm",
       "quote": "setevent EVENT_FOUGHT_SUDOWOODO",
+      "catch": 185,
       "after": [
         "squirt-bottle"
       ]
@@ -567,7 +568,6 @@
       "n": 185,
       "m": "squirt-bottle",
       "needs": [
-        "Plain",
         "squirt-bottle"
       ],
       "src": "https://github.com/pret/pokegold/blob/f2cde36f49b994c143bfd18582182302fdc76492/maps/Route36.asm",
