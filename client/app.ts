@@ -37,7 +37,7 @@ import {
   ymd,
   isGuest,
 } from "./game";
-import { moveGuestAvatar, moveGuestRuns, withGuest } from "./guest";
+import { guestRows, moveGuestAvatar, moveGuestRuns, withGuest } from "./guest";
 import { SETTINGS_ICON, TAB_ICONS } from "./parts";
 import { Bridge, PairingHandle, PairingLookup, RunRow } from "./types";
 import { Devices, fillApprove, pairBody, pairErrorText, pairLetters, showCode, ttl } from "./views/devices";
@@ -203,7 +203,6 @@ const TABS = [
   ["boxes", "Boxes"],
 ];
 const LOCKED: Record<string, [() => string, string]> = {
-  journey: [Journey, "Sign in or create a free account to track your current area, badges and items on the Journey tab."],
   boxes: [Boxes, "Sign in or create a free account to track your party, boxes and held items on the Boxes tab."],
 };
 function lockedView(tab: string) {
@@ -218,7 +217,7 @@ const tabButtons = (icons: boolean) =>
   }).join("");
 const LOCK = `<svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="5.5" width="8" height="5.5" rx="1.2" fill="currentColor"/><path d="M4 5.5V4a2 2 0 014 0v1.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>`;
 const VIEWS: Record<string, () => string> = {
-  journey: () => lockedView("journey"),
+  journey: Journey,
   dex: Dex,
   boxes: () => lockedView("boxes"),
   playthroughs: Runs,
@@ -246,7 +245,7 @@ function shell() {
   <div class="footer-brand"><a href="/about/" aria-label="About Just One More Catch">Just One More Catch</a></div>
   <p class="foot">Unofficial fan project, not affiliated with Nintendo, Creatures, GAME FREAK or The Pokémon Company. Free and non-commercial. Box art, sprites and badges © Nintendo, Creatures and GAME FREAK. Encounter data and sprites sourced from <a href="https://pokeapi.co" target="_blank" rel="noopener">PokeAPI</a>. Thank you!</p>
   <nav class="footnav" aria-label="About this site"><a href="/about/">About</a><a href="/resources/">Resources</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/whats-new/">What's New</a></nav></footer>
-  <div class="dock"><div id="toast"></div><div id="tabs"></div></div>
+  <div class="dock"><div id="guest-save-bar" class="toast guest-save-bar" hidden><span>Sign in to save</span><button data-signinsheet="1">Sign in</button></div><div id="toast"></div><div id="tabs"></div></div>
   <dialog class="sheet" id="sheet" aria-labelledby="sheet-title"><div class="sheetbody" id="sheetbody"></div></dialog>
   <div class="sr" aria-live="polite" id="live"></div>`;
 }
@@ -273,6 +272,40 @@ function searchDexGrid(q: string, now = false) {
   if (now) say();
   else resultsTimer = setTimeout(say, 400);
 }
+let sampleLoading = false;
+let guestPrompted = false;
+let guestNudge = false;
+const savesProgress = (d: DOMStringMap) =>
+  !!(d.event || d.pick || d.badge || d.kit || d.yes || d.safari || ["pick", "start", "begin"].includes(d.hunt || ""));
+let guestObserver: IntersectionObserver | undefined;
+function observeGuestCard() {
+  guestObserver?.disconnect();
+  const card = root.querySelector(".gline");
+  const bar = root.querySelector<HTMLElement>("#guest-save-bar");
+  if (!bar) return;
+  bar.hidden = true;
+  if (!card) return;
+  guestObserver = new IntersectionObserver(([entry]) => {
+    bar.hidden = entry.isIntersecting || !guestNudge;
+  });
+  guestObserver.observe(card);
+}
+function nudgeGuest(t: HTMLElement) {
+  if (!guestPrompted) {
+    guestPrompted = true;
+    openSheet({ kind: "signin" });
+  } else {
+    guestNudge = true;
+    t.classList.remove("nope");
+    void t.offsetWidth;
+    t.classList.add("nope");
+    setTimeout(() => t.classList.remove("nope"), 350);
+    const card = root.querySelector(".gline");
+    card?.classList.add("hi");
+    setTimeout(() => card?.classList.remove("hi"), 1200);
+    observeGuestCard();
+  }
+}
 function tabFromUrl() {
   if (IMPORT_PATH.test(location.pathname)) return "import";
   const path = Object.keys(PATHS).find((t) => PATHS[t] === location.pathname);
@@ -280,6 +313,17 @@ function tabFromUrl() {
   return t === "journey" && !isGuest() && run?.view === "dexonly" ? "dex" : t && Object.hasOwn(VIEWS, t) ? t : "playthroughs";
 }
 function render() {
+  if (run?.id === "guest-sample" && ui.tab !== "journey") closeRun();
+  if (isGuest() && !guestRows().length && ui.tab === "journey" && !run && !opening && !sampleLoading && !ui.loadError) {
+    sampleLoading = true;
+    const v = verOf("gold");
+    void (loaded.get(v.pack) ? Promise.resolve(loaded.get(v.pack)!) : v.pack.load()).then(data => {
+      loaded.set(v.pack, data);
+      if (isGuest() && !run && !opening) openRun({ id: "guest-sample", version: "gold", summary: { badges: [], caught: 0, party: [] }, createdAt: new Date().toISOString() }, data, "{}");
+      sampleLoading = false;
+      render();
+    }, () => { sampleLoading = false; ui.loadError = true; });
+  }
   loadShareStatuses(render);
   clearTimeout(resultsTimer);
   clearTimeout(typingTimer);
@@ -289,7 +333,8 @@ function render() {
   if (ui.tab === "journey" && !isGuest() && run?.view === "dexonly") ui.tab = "dex";
   const a = bridge.auth,
     signedIn = a.isAuthenticated;
-  const k = (document.activeElement as HTMLElement)?.dataset?.k;
+  if (signedIn) guestPrompted = guestNudge = false;
+  const k =(document.activeElement as HTMLElement)?.dataset?.k;
   const onImport = ui.tab === "import";
   const needsGame = !(isGuest() && LOCKED[ui.tab]) && !["playthroughs", "import", ...SETTINGS].includes(ui.tab);
   const loading = a.isLoading || !bridge.runs || (needsGame && !!opening);
@@ -330,15 +375,21 @@ function render() {
       : (ui.saveError
           ? `<p class="small" role="alert" style="text-align:center;margin:4px 0 16px;color:var(--coral)">${ui.saveError}</p>`
           : "") + VIEWS[ui.tab]();
+  if (isGuest() && ui.tab === "journey") observeGuestCard();
+  else {
+    guestObserver?.disconnect();
+    const bar = root.querySelector<HTMLElement>("#guest-save-bar");
+    if (bar) bar.hidden = true;
+  }
   const here = SETTINGS.includes(ui.tab) ? ` aria-current="page"` : "";
   const avatar = `<button class="avatar" data-tab="settings" data-k="avatar" aria-label="Settings and avatar, ${esc(trainerName())}"${here}>${partner("")}</button>`;
   $("#topright").innerHTML =
-    switcher(run?.id ?? opening) +
+    (run?.id === "guest-sample" ? "" : switcher(run?.id ?? opening)) +
     (a.isLoading
       ? ""
       : signedIn
         ? avatar
-        : `<span class="acct"><button class="signin" data-signinsheet="1" data-k="signin">Sign in</button>${avatar}</span>`);
+        : `<span class="acct">${avatar}<button class="signin" data-signinsheet="1" data-k="signin">Sign in</button></span>`);
   $("#footalert").innerHTML =
     a.isLoading || signedIn
       ? ""
@@ -445,6 +496,7 @@ function showSaveError(msg: string) {
   render();
 }
 function scheduleSave(delay = 800) {
+  if (run?.id === "guest-sample") return;
   if (!run) return;
   const id = run.id,
     state = dumpRun(run);
@@ -564,6 +616,7 @@ async function onClick(e: MouseEvent) {
     e.preventDefault();
   }
   const d = t.dataset;
+  if (isGuest() && savesProgress(d)) return nudgeGuest(t);
   if (d.act === "share" && d.run) {
     root.querySelectorAll<HTMLDetailsElement>("details.ptmenu[open]").forEach(el => el.open = false);
     showSheet({ kind: "share", id: d.run, owner: bridge.auth.userId, k: d.k }, () => {
