@@ -275,6 +275,8 @@ function searchDexGrid(q: string, now = false) {
 let sampleLoading = false;
 let guestPrompted = false;
 let guestNudge = false;
+const savesProgress = (d: DOMStringMap) =>
+  !!(d.event || d.pick || d.badge || d.kit || d.yes || d.safari || ["pick", "start", "begin"].includes(d.hunt || ""));
 let guestObserver: IntersectionObserver | undefined;
 function observeGuestCard() {
   guestObserver?.disconnect();
@@ -287,6 +289,22 @@ function observeGuestCard() {
     bar.hidden = entry.isIntersecting || !guestNudge;
   });
   guestObserver.observe(card);
+}
+function nudgeGuest(t: HTMLElement) {
+  if (!guestPrompted) {
+    guestPrompted = true;
+    openSheet({ kind: "signin" });
+  } else {
+    guestNudge = true;
+    t.classList.remove("nope");
+    void t.offsetWidth;
+    t.classList.add("nope");
+    setTimeout(() => t.classList.remove("nope"), 350);
+    const card = root.querySelector(".gline");
+    card?.classList.add("hi");
+    setTimeout(() => card?.classList.remove("hi"), 1200);
+    observeGuestCard();
+  }
 }
 function tabFromUrl() {
   if (IMPORT_PATH.test(location.pathname)) return "import";
@@ -315,7 +333,8 @@ function render() {
   if (ui.tab === "journey" && !isGuest() && run?.view === "dexonly") ui.tab = "dex";
   const a = bridge.auth,
     signedIn = a.isAuthenticated;
-  const k = (document.activeElement as HTMLElement)?.dataset?.k;
+  if (signedIn) guestPrompted = guestNudge = false;
+  const k =(document.activeElement as HTMLElement)?.dataset?.k;
   const onImport = ui.tab === "import";
   const needsGame = !(isGuest() && LOCKED[ui.tab]) && !["playthroughs", "import", ...SETTINGS].includes(ui.tab);
   const loading = a.isLoading || !bridge.runs || (needsGame && !!opening);
@@ -597,23 +616,7 @@ async function onClick(e: MouseEvent) {
     e.preventDefault();
   }
   const d = t.dataset;
-  if (isGuest() && (d.event || d.pick || d.badge || d.kit || d.yes || d.safari || ["pick", "start", "begin"].includes(d.hunt || ""))) {
-    if (!guestPrompted) {
-      guestPrompted = true;
-      openSheet({ kind: "signin" });
-    } else {
-      guestNudge = true;
-      t.classList.remove("nope");
-      void t.offsetWidth;
-      t.classList.add("nope");
-      setTimeout(() => t.classList.remove("nope"), 350);
-      const card = root.querySelector(".gline");
-      card?.classList.add("hi");
-      setTimeout(() => card?.classList.remove("hi"), 1200);
-      observeGuestCard();
-    }
-    return;
-  }
+  if (isGuest() && savesProgress(d)) return nudgeGuest(t);
   if (d.act === "share" && d.run) {
     root.querySelectorAll<HTMLDetailsElement>("details.ptmenu[open]").forEach(el => el.open = false);
     showSheet({ kind: "share", id: d.run, owner: bridge.auth.userId, k: d.k }, () => {

@@ -106,6 +106,52 @@ const guestRoute = runInNewContext(app.slice(app.indexOf("function tabFromUrl()"
   run: {view: "dexonly"}, VIEWS: {journey: true}, isGuest: () => true,
 });
 assert.equal(guestRoute, "journey");
+
+{
+  const sheets = [];
+  const classes = () => { const set = new Set(); return {set, add: c => set.add(c), remove: c => set.delete(c)}; };
+  const card = {classList: classes()};
+  const bar = {hidden: false};
+  const gate = runInNewContext(stripTypeScriptTypes(app.slice(app.indexOf("let guestPrompted"), app.indexOf("function tabFromUrl()"))) + "\n({savesProgress, nudgeGuest, state: () => ({guestPrompted, guestNudge})})", {
+    openSheet: s => sheets.push(s.kind), setTimeout() {}, IntersectionObserver: class { observe() {} disconnect() {} },
+    root: {querySelector: s => s === ".gline" ? card : s === "#guest-save-bar" ? bar : null},
+  });
+  for (const d of [{event: "1"}, {pick: "1"}, {badge: "1"}, {kit: "1"}, {yes: "1"}, {safari: "1"}, {hunt: "start"}]) assert(gate.savesProgress(d), JSON.stringify(d));
+  for (const d of [{tab: "dex"}, {hunt: "stop"}, {signinsheet: "1"}, {}]) assert(!gate.savesProgress(d), JSON.stringify(d));
+  const tick = {classList: classes(), offsetWidth: 0};
+  gate.nudgeGuest(tick);
+  assert.deepEqual(sheets, ["signin"]);
+  assert(!tick.classList.set.has("nope") && !gate.state().guestNudge);
+  gate.nudgeGuest(tick);
+  assert.deepEqual(sheets, ["signin"], "only the first saving tap opens the sheet");
+  assert(tick.classList.set.has("nope") && card.classList.set.has("hi") && gate.state().guestNudge);
+  assert(app.includes("if (signedIn) guestPrompted = guestNudge = false;"));
+}
+
+{
+  const sampleStart = stripTypeScriptTypes(app.slice(app.indexOf("function render() {"), app.indexOf("  loadShareStatuses(render);")) + "}");
+  const startSample = async ({rows = [], tab = "journey", current = null} = {}) => {
+    const opened = [];
+    let closed = false;
+    const ctx = {
+      run: current, opening: null, sampleLoading: false, ui: {tab}, isGuest: () => true, guestRows: () => rows,
+      verOf: () => ({pack: {load: async () => ({gold: true})}}), loaded: new Map(),
+      openRun: (row, data, state) => { opened.push({id: row.id, version: row.version, data, state}); ctx.run = row; },
+      closeRun: () => { closed = true; ctx.run = null; },
+    };
+    const render = runInNewContext(sampleStart + "\nrender", ctx);
+    ctx.render = () => {};
+    render();
+    await new Promise(r => setImmediate(r));
+    return {opened, closed};
+  };
+  assert.deepEqual((await startSample()).opened, [{id: "guest-sample", version: "gold", data: {gold: true}, state: "{}"}]);
+  assert.deepEqual((await startSample({rows: [{id: "guest-1"}]})).opened, [], "guests with playthroughs see their own");
+  assert.deepEqual((await startSample({tab: "dex"})).opened, []);
+  const left = await startSample({tab: "dex", current: {id: "guest-sample"}});
+  assert(left.closed, "leaving Journey closes the sample");
+}
+console.log("guest journey ok");
 const tabs = runInNewContext(stripTypeScriptTypes(app.slice(app.indexOf("const tabButtons"), app.indexOf("const VIEWS"))) + "\ntabButtons(true)", {
   LOCKED: {journey: true, boxes: true}, TABS: [["journey", "Journey"], ["boxes", "Boxes"]], TAB_ICONS: {journey: "<svg></svg>"},
   run: {view: "dexonly"}, ui: {tab: "journey"}, isGuest: () => true,
