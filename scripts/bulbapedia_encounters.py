@@ -114,9 +114,12 @@ def parse_page(title, text):
 
 
 def gap_fill(rows, covered):
-    """Presence anywhere in a PokeAPI table wins, independent of species."""
+    """Presence anywhere in a PokeAPI table wins, independent of species.
+
+    PokeAPI has no DexNav table, so DexNav hidden rows are never covered."""
     return [{**r, 'versions': versions} for r in rows
-            if (versions := [v for v in r['versions'] if (v, r['area'], r['method']) not in covered])]
+            if (versions := [v for v in r['versions']
+                             if 'DexNav hidden Pokémon' in r['conditions'] or (v, r['area'], r['method']) not in covered])]
 
 
 if __name__ == '__main__':

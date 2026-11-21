@@ -30,11 +30,14 @@ rows = parse_page('Granite Cave', page)
 assert [r['area'] for r in rows] == ['Granite Cave B1F', 'Granite Cave B1F', 'Granite Cave B2F']
 assert 'DexNav hidden Pokémon' in rows[1]['conditions']
 assert 'DexNav hidden Pokémon' not in rows[2]['conditions']
-# One API species owns the whole area/method table, including other species.
+# One API species owns the whole area/method table, including other species,
+# except DexNav hidden rows, which PokeAPI does not list.
 covered = {('omega-ruby', 'Granite Cave B1F', 'walk')}
 filled = gap_fill(rows, covered)
-assert all(not (r['area'] == 'Granite Cave B1F' and 'omega-ruby' in r['versions']) for r in filled)
-assert next(r for r in filled if r['n'] == 532)['versions'] == ['alpha-sapphire']
+assert all(not (r['area'] == 'Granite Cave B1F' and 'omega-ruby' in r['versions'])
+           for r in filled if 'DexNav hidden Pokémon' not in r['conditions'])
+assert not any(r['n'] == 303 for r in filled)
+assert next(r for r in filled if r['n'] == 532)['versions'] == ['omega-ruby', 'alpha-sapphire'], 'DexNav rows have no API table'
 assert next(r for r in filled if r['n'] == 302)['versions'] == ['alpha-sapphire']
 assert gap_fill(rows, set()) == rows
 assert all(r['method'] != 'surf' for r in rows)
@@ -65,7 +68,7 @@ for p in game['dex']:
         if r.get('src') == 'bulbapedia': assert r['url'].startswith('https://bulbapedia.bulbagarden.net/wiki/')
         if 'DexNav hidden Pokémon' in r['cond']: assert 'primal' in (r['need'] or [])
 assert any(r['m'] == 'seaweed' for r in mon(369)['rows'])
-assert any(r['m'] == 'old-rod' and r['src'] == 'bulbapedia' for r in mon(129)['rows'])
+assert any(r['m'] == 'old-rod' and r.get('src') == 'bulbapedia' for r in mon(129)['rows'])
 print('ORAS: template parsing, versions, table precedence, provenance and integration ok')
 eon = {(n, r['m']): r['v'] for n in (380, 381) for r in mon(n)['rows']}
 assert eon == {(380, 'static'): 'o', (380, 'gift'): 'a', (381, 'static'): 'a', (381, 'gift'): 'o'}, eon

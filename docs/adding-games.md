@@ -23,7 +23,8 @@ and `read-guide` for independent access verification and scanned guide evidence.
   Return the uncertain rows and the evidence needed to settle them.
 
 ORAS opts into cached Bulbapedia tables to fill missing `(version, area, method)`
-tables only. Any PokeAPI row owns that whole table; fallback rows retain `src`
+tables only. Any PokeAPI row owns that whole table, except DexNav hidden rows,
+which PokeAPI does not list; fallback rows retain `src`
 and `url` so a cache refresh can retire them. Refresh candidates with
 `python3 scripts/bulbapedia_encounters.py`, then rebuild `oras`.
 
