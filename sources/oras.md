@@ -191,6 +191,8 @@ Sylveon retains the cached [PokeAPI Eevee chain](https://pokeapi.co/api/v2/evolu
 
 Implementation verification: 721 catalog entries, 272 directly encountered species, 154 distinct generated areas, 1,328 combined-version rows (306 API; 1,013 location-table gap fills; nine hand-written fossil revivals), 19 chapters and 24 events. Hoenn dex: 132/211 have direct encounters; family closure through evolution/breeding reaches 210/211, excluding event-only Jirachi. All eight existing generated encounter packs rebuild byte-identically. The supplied cache omitted `pokedex_4.json`; for this comparison it was reconstructed locally from the supplied read-only PokeAPI `pokemon_dex_numbers.csv` and `pokemon_species.csv`, without fetching the API.
 
+2026-11-21 refresh: the 28 species whose ORAS rows changed in PokeAPI #1732 were refreshed from [PokeAPI/api-data@508fd7c3](https://github.com/PokeAPI/api-data/tree/508fd7c3a7d54ac175e00afe420b11a5af983bd6), which was generated from PokeAPI `cd5f6c62` and matches its ORAS CSV rows exactly. The pack keeps 1,327 combined-version rows (421 API; 897 gap fills; nine fossil revivals). Every route and method keeps the same species; Route 104 North's horde Zigzagoon moves from level 2 to 3, matching [Serebii](https://www.serebii.net/pokearth/hoenn/route104.shtml).
+
 
 - **Second source and runtime:** PKHeX now second-sources the starters,
   fossil revivals, eggs, gifts, statics, Hoopa-ring and Soaring legendaries,
@@ -204,11 +206,19 @@ Implementation verification: 721 catalog entries, 272 directly encountered speci
 
 ## Open questions
 
-- **Upstream coverage remains partial.** The pack now fills missing ORAS
+- **Upstream coverage remains partial.** The pack fills missing ORAS
   tables from cached Bulbapedia location pages, keeping PokeAPI primary per
   version/area/method. The generated rows retain provenance. Rebuild after
-  refreshing the API cache to retire covered fallback tables. Upstream
-  issues #1456/#621 and partial PR #1542 remain the background for this gap.
+  refreshing the API cache to retire covered fallback tables. PokeAPI
+  [#1732](https://github.com/PokeAPI/pokeapi/pull/1732) (merged 2026-11-20)
+  now covers walking, surfing, fishing and seaweed on Routes 101-110; issues
+  #1456/#621 cover the rest. DexNav hidden rows stay as fallback rows because
+  PokeAPI has no DexNav table.
+
+- **Route 110 surf rates:** PokeAPI lists Tentacool 65% and Wingull 30%;
+  the [Route 110](https://bulbapedia.bulbagarden.net/wiki/Hoenn_Route_110)
+  page lists 60% and 35%. [Serebii](https://www.serebii.net/pokearth/hoenn/route110.shtml)
+  gives only Common/Uncommon. The pack follows PokeAPI.
 
 - **Daily Mirage tables:** all 32 API daily-spot areas are retained, but only
   the generic Mirage spot page was cached. Individual spot ordinary-water,
