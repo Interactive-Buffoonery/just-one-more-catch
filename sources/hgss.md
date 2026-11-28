@@ -31,3 +31,5 @@ Refreshed the full cached API snapshot from PokeAPI/api-data commit
 `c0b639fa76e4a17054cacbac47f2e6b3ca0e9505` and rebuilt all 16 packs.
 Corrected S.S. Anne Dock swarm conditions for Magikarp and Wingull; split Good Rod Magikarp into 40% ordinary and 25% swarm rows. No species/location/method combination disappeared.
 Source: https://github.com/PokeAPI/api-data/tree/c0b639fa76e4a17054cacbac47f2e6b3ca0e9505/data/api/v2/pokemon
+
+Confirmed Vermilion Port (T06) Magikarp and Wingull swarm rows, including Good Rod Magikarp at 40% ordinary plus 25% additional swarm slots, against pret/pokeheartgold `files/fielddata/encountdata/gs_enc_data.json` and `src/field/encounter_check.c` at `6bf138d6035aa6b43d6f8f4132a12df70f86dcec`: https://github.com/pret/pokeheartgold/blob/6bf138d6035aa6b43d6f8f4132a12df70f86dcec/files/fielddata/encountdata/gs_enc_data.json and https://github.com/pret/pokeheartgold/blob/6bf138d6035aa6b43d6f8f4132a12df70f86dcec/src/field/encounter_check.c#L174-L213.
