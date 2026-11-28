@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { chance, fiftyAt, unitFor, eggTarget, masudaOdds, parseHunt } from "../client/hunt.ts";
+import { chance, fiftyAt, unitFor, eggTarget, masudaOdds, parseHunt, renamedPlace } from "../client/hunt.ts";
 import hgss from "../client/data/hgss.ts";
 import gs from "../client/data/gs.ts";
 assert.equal(chance(0, 8192), 0);
@@ -24,3 +24,8 @@ console.log("hunt checks passed");
 const placeHunt = { ...hunt, species: 0, kind: "walk", unit: "encounters", method: "full" };
 assert.deepEqual(parseHunt(placeHunt), placeHunt);
 for (const bad of [{kind: ""}, {kind: 1}, {species: 1}, {unit: "eggs"}, {method: "masuda"}, {kind: undefined}]) assert.equal(parseHunt({...placeHunt, ...bad}), undefined);
+
+const oldPlace = "Vermilion City S.S. Anne Dock", newPlace = "Vermilion City Harbor";
+for (const [places, expected] of [[[newPlace], newPlace], [[oldPlace], oldPlace], [[oldPlace, newPlace], oldPlace], [[], oldPlace]] as const)
+  assert.equal(renamedPlace(oldPlace, [{ rows: places.map((place) => ({ place })) }]), expected);
+assert.equal(renamedPlace(oldPlace, hgss.dex), newPlace);
