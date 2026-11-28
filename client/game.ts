@@ -1,5 +1,5 @@
 import { ONE_TIME as oneTimeMethods } from "./encounter-methods.ts";
-import { parseHunt } from "./hunt.ts";
+import { parseHunt, renamedPlace } from "./hunt.ts";
 import { acquisition } from "../shared/journal";
 import { badgeName as sharedBadgeName, needLabel as sharedNeedLabel } from "./need-labels.ts";
 import { GameData, Pack, VERSIONS } from "./packs";
@@ -487,9 +487,7 @@ export function openRun(row: RunRow, data: GameData, state: string) {
   byName = Object.fromEntries(DEX.map((p) => [p.name, p]));
   byN = Object.fromEntries(DEX.map((p) => [p.n, p]));
   if (run.hunt && !run.hunt.kind && !byN[run.hunt.species]) run.hunt = undefined;
-  const RENAMED_PLACES: Record<string, string> = { "Vermilion City S.S. Anne Dock": "Vermilion City Harbor" };
-  const renamedPlace = run.hunt && RENAMED_PLACES[run.hunt.place];
-  if (run.hunt && renamedPlace && !DEX.some((p) => p.rows.some((r) => r.place === run!.hunt!.place)) && DEX.some((p) => p.rows.some((r) => r.place === renamedPlace))) run.hunt.place = renamedPlace;
+  if (run.hunt) run.hunt.place = renamedPlace(run.hunt.place, DEX);
   for (const m of run.mons) {
     const p = byN[m.n],
       form = p?.forms?.find((f) => f.id === m.form) || p?.forms?.[0];

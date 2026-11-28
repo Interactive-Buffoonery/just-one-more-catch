@@ -6,7 +6,6 @@
   "drop": ["^Unknown All ", "^Pokemart$"],
   "rename": {
     "Vermilion City Ss Anne Dock": "Vermilion City Harbor",
-    "Vermilion City S.S. Anne Dock": "Vermilion City Harbor",
     "Violet City Poke Mart": "Violet City Pokemon Center",
     "Pewter City Pewter Museum Of Science": "Pewter Museum of Science",
     "Embedded Tower Groundon Room": "Embedded Tower",

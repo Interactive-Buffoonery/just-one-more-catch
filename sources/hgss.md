@@ -36,4 +36,4 @@ Confirmed Vermilion Port (T06) Magikarp and Wingull swarm rows, including Good R
 
 ## 2026-11-28: Vermilion City Harbor
 
-HGSS labels the reused PokeAPI S.S. Anne dock area as Vermilion City Harbor. [Serebii](https://serebii.net/pokearth/kanto/4th/vermilioncity.shtml) labels it "Harbor" and describes access to the S.S. Aqua; [Altissimo](https://altissimo1.github.io/Main-Series/Kanto-Locations/vermilion-city.html) uses "Vermilion Harbor" in its HGSS notes. Neither source confirms the on-screen in-game name. Other packs retain their existing dock name.
+The HGSS pack renames PokeAPI's reused S.S. Anne dock area to Vermilion City Harbor, since in HGSS the S.S. Aqua docks there. [Serebii](https://serebii.net/pokearth/kanto/4th/vermilioncity.shtml) labels it "Harbor" and describes access to the S.S. Aqua; [Altissimo](https://altissimo1.github.io/Main-Series/Kanto-Locations/vermilion-city.html) uses "Vermilion Harbor" in its HGSS notes. Neither source confirms the on-screen in-game name. Other packs retain their existing dock name.

@@ -25,6 +25,13 @@ export function parseHunt(h: any): Hunt | undefined {
   return { ...(h.kind === undefined ? {} : { kind: h.kind }), species: h.species, place: h.place, unit: h.unit, method: h.method, odds: +h.odds, count: +h.count, startedAt: h.startedAt };
 }
 
+const RENAMED_PLACES: Record<string, string> = { "Vermilion City S.S. Anne Dock": "Vermilion City Harbor" };
+// Only when this pack renamed the place, so other games keep their own names.
+export function renamedPlace(place: string, dex: { rows: { place: string }[] }[]) {
+  const next = RENAMED_PLACES[place], has = (pl: string) => dex.some((p) => p.rows.some((r) => r.place === pl));
+  return next && !has(place) && has(next) ? next : place;
+}
+
 // The game's dex already excludes species introduced in later generations.
 export function eggTarget(speciesId: number, dex: { n: number; name: string; from: string | null; canBreed?: boolean }[], gen: number): number | null {
   if (gen < 2) return null;
