@@ -487,6 +487,9 @@ export function openRun(row: RunRow, data: GameData, state: string) {
   byName = Object.fromEntries(DEX.map((p) => [p.name, p]));
   byN = Object.fromEntries(DEX.map((p) => [p.n, p]));
   if (run.hunt && !run.hunt.kind && !byN[run.hunt.species]) run.hunt = undefined;
+  const RENAMED_PLACES: Record<string, string> = { "Vermilion City S.S. Anne Dock": "Vermilion City Harbor" };
+  const renamedPlace = run.hunt && RENAMED_PLACES[run.hunt.place];
+  if (run.hunt && renamedPlace && !DEX.some((p) => p.rows.some((r) => r.place === run!.hunt!.place)) && DEX.some((p) => p.rows.some((r) => r.place === renamedPlace))) run.hunt.place = renamedPlace;
   for (const m of run.mons) {
     const p = byN[m.n],
       form = p?.forms?.find((f) => f.id === m.form) || p?.forms?.[0];

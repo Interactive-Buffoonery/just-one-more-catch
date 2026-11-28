@@ -24,3 +24,14 @@ console.log("hunt checks passed");
 const placeHunt = { ...hunt, species: 0, kind: "walk", unit: "encounters", method: "full" };
 assert.deepEqual(parseHunt(placeHunt), placeHunt);
 for (const bad of [{kind: ""}, {kind: 1}, {species: 1}, {unit: "eggs"}, {method: "masuda"}, {kind: undefined}]) assert.equal(parseHunt({...placeHunt, ...bad}), undefined);
+
+// Exercise the inline migration against old, renamed and unrelated pack rows.
+const { readFileSync } = await import("node:fs");
+const migration = readFileSync(new URL("../client/game.ts", import.meta.url), "utf8").split("  const RENAMED_PLACES:")[1]!.split("  for (const m of run.mons)")[0]!;
+const migrate = new Function("run", "DEX", "const RENAMED_PLACES" + migration.replace("Record<string, string>", "").replaceAll("run!.hunt!", "run.hunt"));
+const oldPlace = "Vermilion City S.S. Anne Dock", newPlace = "Vermilion City Harbor";
+for (const [places, expected] of [[[newPlace], newPlace], [[oldPlace], oldPlace], [[oldPlace, newPlace], oldPlace], [[], oldPlace]] as const) {
+  const run = { hunt: { place: oldPlace } };
+  migrate(run, [{ rows: places.map((place) => ({ place })) }]);
+  assert.equal(run.hunt.place, expected);
+}

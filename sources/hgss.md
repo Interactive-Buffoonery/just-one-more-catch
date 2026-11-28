@@ -33,3 +33,7 @@ Corrected S.S. Anne Dock swarm conditions for Magikarp and Wingull; split Good R
 Source: https://github.com/PokeAPI/api-data/tree/c0b639fa76e4a17054cacbac47f2e6b3ca0e9505/data/api/v2/pokemon
 
 Confirmed Vermilion Port (T06) Magikarp and Wingull swarm rows, including Good Rod Magikarp at 40% ordinary plus 25% additional swarm slots, against pret/pokeheartgold `files/fielddata/encountdata/gs_enc_data.json` and `src/field/encounter_check.c` at `6bf138d6035aa6b43d6f8f4132a12df70f86dcec`: https://github.com/pret/pokeheartgold/blob/6bf138d6035aa6b43d6f8f4132a12df70f86dcec/files/fielddata/encountdata/gs_enc_data.json and https://github.com/pret/pokeheartgold/blob/6bf138d6035aa6b43d6f8f4132a12df70f86dcec/src/field/encounter_check.c#L174-L213.
+
+## 2026-11-28: Vermilion City Harbor
+
+HGSS labels the reused PokeAPI S.S. Anne dock area as Vermilion City Harbor. [Serebii](https://serebii.net/pokearth/kanto/4th/vermilioncity.shtml) labels it "Harbor" and describes access to the S.S. Aqua; [Altissimo](https://altissimo1.github.io/Main-Series/Kanto-Locations/vermilion-city.html) uses "Vermilion Harbor" in its HGSS notes. Neither source confirms the on-screen in-game name. Other packs retain their existing dock name.
