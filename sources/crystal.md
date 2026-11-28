@@ -101,8 +101,7 @@ These are static map checks, not cartridge/emulator verification.
 
 None right now.
 
-
-### PokeAPI refresh — 2026-11-28
+## PokeAPI refresh, 2026-11-28
 
 Refreshed the full cached API snapshot from PokeAPI/api-data commit
 `c0b639fa76e4a17054cacbac47f2e6b3ca0e9505` and rebuilt all 16 packs.

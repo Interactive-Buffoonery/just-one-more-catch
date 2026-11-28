@@ -25,8 +25,7 @@
 
 - Fuchsia City: are the headbutt trees behind the Cut tree? Bulbapedia says the northern half needs Cut, and the zone has one Cut tree (https://github.com/pret/pokeheartgold/blob/6bf138d6035aa6b43d6f8f4132a12df70f86dcec/files/fielddata/eventdata/zone_event/053_T08.json#L98-L103), but tree positions and collision are not in the decompilation.
 
-
-### PokeAPI refresh — 2026-11-28
+## PokeAPI refresh, 2026-11-28
 
 Refreshed the full cached API snapshot from PokeAPI/api-data commit
 `c0b639fa76e4a17054cacbac47f2e6b3ca0e9505` and rebuilt all 16 packs.
