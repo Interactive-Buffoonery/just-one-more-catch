@@ -24,3 +24,11 @@
 - Mt. Silver: pret's encounter tables (https://github.com/pret/pokeheartgold/blob/6bf138d6035aa6b43d6f8f4132a12df70f86dcec/files/fielddata/encountdata/gs_enc_data.json) match PokeAPI areas by species: 1f is 1F (D41R0101), mountainside is the lower mountainside (D41R0103), 3f is the Expert Belt chamber (D41R0104), 2f is Moltres's chamber (D41R0105), 1f-top is 2F (D41R0106), and 4f and top are 3F (D41R0107) and the upper mountainside (D41R0102), in an order the species can't tell apart. Bulbapedia gates the lower and upper mountainside, 2F and 3F on Rock Climb and the Expert Belt chamber on Surf and Waterfall (https://bulbapedia.bulbagarden.net/wiki/Mt._Silver_Cave). Golduck, Quagsire and Misdreavus appear only behind one of those gates, so they need an either-or gate that the pack cannot express.
 
 - Fuchsia City: are the headbutt trees behind the Cut tree? Bulbapedia says the northern half needs Cut, and the zone has one Cut tree (https://github.com/pret/pokeheartgold/blob/6bf138d6035aa6b43d6f8f4132a12df70f86dcec/files/fielddata/eventdata/zone_event/053_T08.json#L98-L103), but tree positions and collision are not in the decompilation.
+
+
+### PokeAPI refresh — 2026-11-28
+
+Refreshed the full cached API snapshot from PokeAPI/api-data commit
+`c0b639fa76e4a17054cacbac47f2e6b3ca0e9505` and rebuilt all 16 packs.
+Corrected S.S. Anne Dock swarm conditions for Magikarp and Wingull; split Good Rod Magikarp into 40% ordinary and 25% swarm rows. No species/location/method combination disappeared.
+Source: https://github.com/PokeAPI/api-data/tree/c0b639fa76e4a17054cacbac47f2e6b3ca0e9505/data/api/v2/pokemon
