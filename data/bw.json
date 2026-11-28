@@ -48,7 +48,8 @@
     "Ns Castle Throne Room": "N's Castle Throne Room",
     "Challengers Cave 1F": "Challenger's Cave 1F",
     "Challengers Cave B1F": "Challenger's Cave B1F",
-    "Challengers Cave B2F": "Challenger's Cave B2F"
+    "Challengers Cave B2F": "Challenger's Cave B2F",
+    "Nacrene City Dyes House": "Nacrene City"
   },
   "needs": {
     "Dreamyard B1F": {
@@ -1308,100 +1309,6 @@
   },
   "bulbapedia_gap_fill": "data/bw-bulbapedia.json",
   "extra_encounters": [
-    {
-      "n": 548,
-      "versions": [
-        "black"
-      ],
-      "area": "Nacrene City",
-      "method": "npc-trade",
-      "lo": 15,
-      "hi": 15,
-      "chance": 100,
-      "conditions": [],
-      "src": "bulbapedia",
-      "url": "https://bulbapedia.bulbagarden.net/wiki/Nacrene_City",
-      "quote": "{{catch/entry5|548|Petilil|yes|no|no|Trade|15|all=One|tradenum=546|tradename=Cottonee|type1=grass}}"
-    },
-    {
-      "n": 546,
-      "versions": [
-        "white"
-      ],
-      "area": "Nacrene City",
-      "method": "npc-trade",
-      "lo": 15,
-      "hi": 15,
-      "chance": 100,
-      "conditions": [],
-      "src": "bulbapedia",
-      "url": "https://bulbapedia.bulbagarden.net/wiki/Nacrene_City",
-      "quote": "{{catch/entry5|546|Cottonee|no|yes|no|Trade|15|all=One|tradenum=548|tradename=Petilil|type1=grass}}"
-    },
-    {
-      "n": 550,
-      "versions": [
-        "black",
-        "white"
-      ],
-      "area": "Driftveil City",
-      "method": "npc-trade",
-      "lo": 25,
-      "hi": 25,
-      "chance": 100,
-      "conditions": [],
-      "src": "bulbapedia",
-      "url": "https://bulbapedia.bulbagarden.net/wiki/Driftveil_City",
-      "quote": "{{Catch/entry5|550|Basculin|yes|no|no|Trade|25|all=One|type1=Water|tradename=Minccino|tradenum=572|form=Red-Striped}}\n{{Catch/entry5|550B|Basculin|no|yes|no|Trade|25|all=One|type1=Water|tradename=Minccino|tradenum=572|form=Blue-Striped}}"
-    },
-    {
-      "n": 587,
-      "versions": [
-        "black",
-        "white"
-      ],
-      "area": "Unova Route 7",
-      "method": "npc-trade",
-      "lo": 30,
-      "hi": 30,
-      "chance": 100,
-      "conditions": [],
-      "src": "bulbapedia",
-      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_7",
-      "quote": "{{catch/entry5|587|Emolga|yes|yes|no|Trade|30|all=One|type1=electric|type2=flying|tradename=Boldore|tradenum=525}}"
-    },
-    {
-      "n": 479,
-      "versions": [
-        "black",
-        "white"
-      ],
-      "area": "Unova Route 15",
-      "method": "npc-trade",
-      "lo": 60,
-      "hi": 60,
-      "chance": 100,
-      "conditions": [],
-      "src": "bulbapedia",
-      "url": "https://bulbapedia.bulbagarden.net/wiki/Unova_Route_15",
-      "quote": "{{Catch/entry5|479|Rotom|yes|yes|no|Trade|60|all=One|type1=Electric|type2=Ghost|tradenum=132|tradename=Ditto}}"
-    },
-    {
-      "n": 446,
-      "versions": [
-        "black",
-        "white"
-      ],
-      "area": "Undella Town",
-      "method": "npc-trade",
-      "lo": 60,
-      "hi": 60,
-      "chance": 100,
-      "conditions": [],
-      "src": "bulbapedia",
-      "url": "https://bulbapedia.bulbagarden.net/wiki/In-game_trade#Pokémon_Black_and_White",
-      "quote": "| [[Undella Town]]<br><small>({{season|summer}})</small>"
-    },
     {
       "n": 555,
       "versions": [

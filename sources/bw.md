@@ -360,3 +360,10 @@ The existing gap-fill format now supplies the six NPC-trade species and
   monkey gift, but do not consume a gift choice. Fossils likewise keep all
   item-qualified choices. The existing tracker does not model those choices
   as exclusive state. No new acquisition rows were invented for them.
+
+## PokeAPI refresh, 2026-11-28
+
+Refreshed the full cached API snapshot from PokeAPI/api-data commit
+`c0b639fa76e4a17054cacbac47f2e6b3ca0e9505` and rebuilt all 16 packs.
+PokeAPI now supplies the six previously supplemented NPC trades. Retired those six supplemental rows and mapped Nacrene City Dyes House to Nacrene City, preserving existing trade locations, levels, partners and seasonal conditions. No species/location/method combination disappeared.
+Source: https://github.com/PokeAPI/api-data/tree/c0b639fa76e4a17054cacbac47f2e6b3ca0e9505/data/api/v2/pokemon

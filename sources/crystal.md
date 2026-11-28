@@ -100,3 +100,12 @@ These are static map checks, not cartridge/emulator verification.
 ## Open questions
 
 None right now.
+
+## PokeAPI refresh, 2026-11-28
+
+Refreshed the full cached API snapshot from PokeAPI/api-data commit
+`c0b639fa76e4a17054cacbac47f2e6b3ca0e9505` and rebuilt all 16 packs.
+Corrected Route 13 time conditions and rates, and consolidated Route 42 Golbat to 15% at night. Levels are unchanged. No species/location/method combination disappeared.
+Source: https://github.com/PokeAPI/api-data/tree/c0b639fa76e4a17054cacbac47f2e6b3ca0e9505/data/api/v2/pokemon
+
+Confirmed Route 13 species, levels and time/rate splits and Route 42 level-16 Golbat at 15% at night against pret/pokecrystal `data/wild/kanto_grass.asm` and `data/wild/johto_grass.asm` at `3c813b0b4d82b39bf62185aceffb76fd6026c70b`: https://github.com/pret/pokecrystal/blob/3c813b0b4d82b39bf62185aceffb76fd6026c70b/data/wild/kanto_grass.asm and https://github.com/pret/pokecrystal/blob/3c813b0b4d82b39bf62185aceffb76fd6026c70b/data/wild/johto_grass.asm.
